@@ -362,3 +362,4 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_21_maven/em/external/rest-gui/webgoat/target
 
 /jdk_8_maven/cs/rest/original/swagger-petstore/target
+/jdk_8_maven/em/embedded/rest/swagger-petstore/target
