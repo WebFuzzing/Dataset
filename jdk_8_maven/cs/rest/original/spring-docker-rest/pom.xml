@@ -7,8 +7,9 @@
 	<artifactId>rest-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
-	<name>rest-api</name>
+<!--	MODIFIED-->
+	<name>spring-docker-rest</name>
+	<!--	MODIFIED-->
 	<description>Building REST API using Spring Boot</description>
 
 	<parent>
@@ -106,7 +107,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<finalName>spring-boot-rest-api-v1</finalName>
+<!--					MODIFIED-->
+					<finalName>spring-docker-rest</finalName>
+					<classifier>sut</classifier>
+<!--					MODIFIED-->
 				</configuration>
 			</plugin>
 			<plugin>

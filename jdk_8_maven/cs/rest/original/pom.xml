@@ -27,6 +27,7 @@
         <module>spring-actuator-demo</module>
         <module>swagger-petstore</module>
         <module>spring-ecommerce</module>
+        <module>spring-docker-rest</module>
     </modules>
 
 
