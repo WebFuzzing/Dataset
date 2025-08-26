@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-em-embedded-grpc</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>evomaster-benchmark-em-embedded-grpc-scs</artifactId>

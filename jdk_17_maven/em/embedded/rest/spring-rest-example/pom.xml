@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-jdk17-em-embedded-rest</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>evomaster-benchmark-jdk17-em-embedded-rest-spring-rest-example</artifactId>

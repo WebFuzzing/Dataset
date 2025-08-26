@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-jdk11-em-external-graphql</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>

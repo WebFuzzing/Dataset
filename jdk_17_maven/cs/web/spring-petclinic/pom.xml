@@ -33,7 +33,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!-- Important for reproducible builds. Update using e.g. ./mvnw versions:set -DnewVersion=... -->
-    <project.build.outputTimestamp>2025-08-26T12:54:13Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-08-26T13:10:56Z</project.build.outputTimestamp>
 
     <!-- Web dependencies -->
     <webjars-bootstrap.version>5.2.3</webjars-bootstrap.version>

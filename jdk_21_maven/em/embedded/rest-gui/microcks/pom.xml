@@ -11,7 +11,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-jdk21-em-embedded-rest-gui</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencyManagement>
