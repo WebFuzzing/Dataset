@@ -1,4 +1,4 @@
-# EMB
+# WFD
 
 [![DOI](https://zenodo.org/badge/94008854.svg)](https://zenodo.org/badge/latestdoi/94008854)
 
