@@ -12,24 +12,24 @@ We collected several different systems running on the JVM, in different programm
 In this documentation, we will refer to these projects as System Under Test (SUT).
 Currently, the SUTs are either _REST_,  _GraphQL_ or _RPC_ APIs.
 
-This dataset was previously known as EMB. It was rebranded into WFD since version 4.0.0.
+> This dataset was previously known as EMB. It was rebranded into WFD since version 4.0.0.
 
 This collection of SUTs was originally assembled for easing experimentation with the fuzzer called [EvoMaster](http://evomaster.org).
 However, finding this type of application is not trivial among open-source projects.
 Furthermore, it is not simple to sort out all the technical details on how to set these applications up and start them in a simple, uniform approach.
 Therefore, this repository provides the important contribution of providing all these necessary scripts for researchers that need this kind of case study.
 
-__Black-box Testing__. For each SUT, we provide Docker Compose scripts to start the APIs with all their needed dependencies (e.g., databases). APIs are configured with mitmproxy and JaCoCo to collect information on the fuzzing results.   
+__Black-box Testing__. For each SUT, we provide Docker Compose scripts (under the [dockerfiles](dockerfiles) folder) to start the APIs with all their needed dependencies (e.g., databases). APIs are configured with _mitmproxy_ and _JaCoCo_ to collect information on the fuzzing results.   
 
-__White-box Testing__. For each SUT, we implemented _driver_ classes, which can programmatically _start_, _stop_ and _reset_ the state of SUT (e.g., data in SQL databases).
+__White-box Testing__. For each SUT, we implemented _driver_ classes for _EvoMaster_ (currently the only existing white-box fuzzer for the JVM), which can programmatically _start_, _stop_ and _reset_ the state of SUT (e.g., data in SQL databases).
 As well as enable setting up different properties in a _uniform_ way, like choosing TCP port numbers for the HTTP servers.
 If a SUT uses any external services (e.g., a SQL database), these will be automatically started via Docker in these driver classes.
 
-**NOTE**: version 1.6.1 was last one in which we still updated drivers for JavaScript and C\#. Those SUTs are not built anymore by default, and latest versions of *EvoMaster* might not work on those old drivers. Updating drivers for different programming languages (and re-implement white-box heuristics) is a massive amount of work, which unfortunately has little to no value for the scientific community (based on our experience). Those SUTs are still here in WFD to enable *black-box* experiments (and to be able to replicate old experiments), but unfortunately not for *white-box* testing with latest versions of *EvoMaster*.
+**NOTE**: version 1.6.1 was last one in which we still updated drivers for JavaScript and C\#. Those SUTs are not built anymore by default, and latest versions of *EvoMaster* might not work on those old drivers. Updating drivers for different programming languages (and re-implement white-box heuristics) is a massive amount of work, which unfortunately has little to no value for the scientific community (based on our experience). Those SUTs are still here in WFD to be able to replicate old experiments, but unfortunately not for *white-box* testing with latest versions of *EvoMaster*.
 
 
 
-A video providing some high level overview of EMB can be found [here](https://youtu.be/wJs34ATgLEw).
+An old video (2023) providing some high level overview of EMB can be found [here](https://youtu.be/wJs34ATgLEw).
 
 [![EMB YouTube Video](https://img.youtube.com/vi/wJs34ATgLEw/0.jpg)](https://www.youtube.com/watch?v=wJs34ATgLEw)
 
@@ -58,6 +58,7 @@ In *IEEE International Conference on Software Testing, Validation and Verificati
 The projects were selected based on searches using keywords on GitHub APIs, using convenience sampling.
 Several SUTs were looked at, in which we discarded the ones that would not compile, would crash at startup, would use obscure/unpopular libraries with no documentation to get them started, are too trivial, student projects, etc.
 Where possible, we tried to prioritize/sort based on number of _stars_ on GitHub.
+When authors of other fuzzers used some other open-source JVM APIs in their studies, we included them here into WFD.  
 
 
 Note that some of these open-source projects might be no longer supported, whereas others are still developed and updated.
@@ -72,6 +73,10 @@ For the RESTful APIs, each API has an endpoint where the OpenAPI/Swagger schemas
 For simplicity, all schemas are also available as JSON/YML files under the folder [openapi-swagger](./openapi-swagger).
 
 > **IMPORTANT**: More details (e.g., #LOCs and used databases) on these APIs can be found [in this table](statistics/table_emb.md).
+
+Real-world APIs require authentication. 
+How to setup authentication information, based on the current content of the initialized databases, is expressed in [Web Fuzzing Commons (WFC)](https://github.com/WebFuzzing/Commons) format. 
+Auth configuration files can found in the [auth](auth) folder. 
 
 
 ### REST: Java/Kotlin (36)
@@ -238,14 +243,15 @@ To use WFD, you need to clone this repository:
 git clone https://github.com/WebFuzzing/Dataset.git
 ```
 
-There are 2 main use cases for WFD:
+There are at least 2 main use cases for WFD:
 
-* Run experiments with _EvoMaster_
+* Run experiments black-box fuzzers
 
-* Run experiments with other tools
+* Run experiments with white-box _EvoMaster_
+
 
 Everything can be setup by running the script `scripts/dist.py`.
-Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, NPM, as well as Docker.
+Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, JDK 21, NPM, as well as Docker.
 Also, you will need to setup environment variables like `JAVA_HOME_8`, `JAVA_HOME_11`,  `JAVA_HOME_17` and `JAVA_HOME_21`.
 The script will issue error messages if any prerequisite is missing.
 Once the script is completed, all the SUTs will be available under the `dist` folder, and a `dist.zip` will be created as well (if `scripts/dist.py` is run with `True` as input).
@@ -301,14 +307,8 @@ In latest versions of Maven, you need to create an authorization token in GitHub
 
 
 In the built `dist` folder, the files will be organized as follows:
- `<name>-sut.jar` will be the non-instrumented SUTs, whereas their executable drivers will be called `<name>-evomaster-runner.jar`.
- Instrumentation can be done at runtime by attaching the `evomaster-agent.jar` JavaAgent. If you are running experiments with EvoMaster, this will be automatically attached when running experiments with `exp.py` (available in the EvoMaster's repository). Or it can be attached manually with JVM option `-Devomaster.instrumentation.jar.path=evomaster-agent.jar` when starting the driver.
-
-
-
-For running experiments with EvoMaster, you can also "start" each driver directly from an IDE (e.g., IntelliJ).
-Each of these drivers has a "main" method that is running a REST API (binding on default port 40100), where each operation (like start/stop/reset the SUT) can be called via an HTTP message by EvoMaster.
-
+ `<name>-sut.jar` will be the non-instrumented SUTs, whereas their executable drivers for white-box testing will be called `<name>-evomaster-runner.jar`.
+ Instrumentation can be done at runtime by attaching the `evomaster-agent.jar` JavaAgent. If you are running experiments with EvoMaster, this will be automatically attached when running experiments with experiment scripts (discussed in next section). Or it can be attached manually with JVM option `-Devomaster.instrumentation.jar.path=evomaster-agent.jar` when starting the driver.
 
 
 You can also build (and install) each module separately, based on needs.
@@ -325,9 +325,23 @@ For thr JVM, each module has 2 submodules, called `cs` (short for "Case Study") 
 `cs` contains all the source code of the different SUTs, whereas `em` contains all the drivers.
 Note: building a top-module will build as well all of its internal submodules.
 
-The driver classes for Java  are called `EmbeddedEvoMasterController`.
+The _EvoMaster_ driver classes for Java  are called `EmbeddedEvoMasterController`.
 Note that Java also has a different kind of driver called `ExternalEvoMasterController`.
 The difference is that in External the SUT is started on a separated process, and not running in the same JVM of the driver itself.
+
+
+### Running Experiments 
+
+To simplify the running of experiments, we provide different scripts under the [experiments](experiments) folder:
+
+1) __bb-exp.py__: to set up black-box experiments, generating Bash scripts.
+2) __wb-exp.py__: to set up white-box experiments, generating Bash scripts.
+3) __schedule.py__: to enable running and scheduling Bash job scripts in parallel. 
+
+
+
+For debugging/experimenting with EvoMaster in white-box testing, you can also "start" each driver directly from an IDE (e.g., IntelliJ).
+Each of these drivers has a "main" method that is running a REST API (binding on default port 40100), where each operation (like start/stop/reset the SUT) can be called via an HTTP message by EvoMaster.
 
 
 
