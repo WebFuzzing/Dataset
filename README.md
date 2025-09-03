@@ -46,7 +46,13 @@ To see an example of using these drivers with EvoMaster to generate test cases, 
 
 ## Citation
 
-If you are using EMB in an academic work, you can cite the following:
+If you are using WFD in an academic work, you can cite the following:
+
+> O. Sahin, M. Zhang, A. Arcuri.
+**WFC/WFD: Web Fuzzing Commons, Dataset and Guidelines to Support Experimentation in REST API Fuzzing**.
+[arxiv 2509.01612](https://arxiv.org/abs/2509.01612)
+
+For the old version still called EMB, you can refer to:
 
 > A. Arcuri, M. Zhang, A. Golmohammadi, A. Belhadi, J. P. Galeotti, B. Marculescu, S. Seran.
  **EMB: A Curated Corpus of Web/Enterprise Applications And Library Support for Software Testing Research**.
