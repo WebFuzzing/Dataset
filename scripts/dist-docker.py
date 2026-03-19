@@ -59,7 +59,7 @@ def run(cmd, check=True):
 
 
 def run_build(compose, service, *, background=False, evomaster=False):
-    env_args = ["-e", "BUILD_EVOMASTER=true"] if evomaster else []
+    env_args = ["-e", f"BUILD_EVOMASTER={'true' if evomaster else 'false'}"]
     cmd = compose + ["-f", COMPOSE_FILE, "run", "--rm", "-T"] + env_args + [service]
     if background:
         return subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
