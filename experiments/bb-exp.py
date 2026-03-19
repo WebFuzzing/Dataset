@@ -71,7 +71,7 @@ class Sut:
 
 
 
-SLEEP=120
+SLEEP=180
 YAML="yaml"
 JSON="json"
 
@@ -214,11 +214,39 @@ def writeScript(basedir, code, port, tool, sut):
 def dockerId(port):
     return "id"+str(port)
 
+def getWaitForSutFunction():
+    s  = "wait_for_sut() {\n"
+    s += "    local host_port=\"$1\"\n"
+    s += "    local max_wait=\"${2:-600}\"\n"
+    s += "    local interval=10\n"
+    s += "    local elapsed=0\n"
+    s += "\n"
+    s += "    echo \"Waiting for SUT on port $host_port (max: ${max_wait}s)...\"\n"
+    s += "\n"
+    s += "    while [ $elapsed -lt $max_wait ]; do\n"
+    s += "        sleep $interval\n"
+    s += "        elapsed=$((elapsed + interval))\n"
+    s += "\n"
+    s += "        http_code=$(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 5 --max-time 10 \"http://localhost:$host_port\" 2>/dev/null)\n"
+    s += "        if [ -n \"$http_code\" ] && [ \"$http_code\" -ge 100 ] 2>/dev/null; then\n"
+    s += "            echo \"SUT is ready after ${elapsed}s (HTTP $http_code on port $host_port)\"\n"
+    s += "            return 0\n"
+    s += "        fi\n"
+    s += "\n"
+    s += "        echo \"Still waiting... ${elapsed}s / ${max_wait}s (port $host_port not responding)\"\n"
+    s += "    done\n"
+    s += "\n"
+    s += "    echo \"WARNING: Timeout after ${max_wait}s, proceeding anyway...\"\n"
+    s += "}\n\n"
+    return s
+
 def getScriptHead(port,tool,sut, exec_dir):
     s = ""
     s += "#!/bin/bash \n\n"
     s += "SUT=\"" + WFD_DIR + "/dockerfiles/"+sut.name+".yaml\" \n"
     s += "\n"
+
+    s += getWaitForSutFunction()
 
     # These environment variables are read inside Docker Compose
     # Must be on same line of docker, so that why using \.
@@ -234,8 +262,8 @@ def getScriptHead(port,tool,sut, exec_dir):
     #  Start SUT with Docker Compose
     s += "docker-compose --project-name "+dockerId(port)+" -f $SUT up --build --force-recreate " + getRedirectLog(getLogFile("sut",tool,sut.name,port)) + "  & \n\n"
 
-    # No easy way to check if all is up and running, so wait for enough time before fuzzing
-    s += "sleep " + str(sut.sleep) +"\n\n"
+    # Wait until HTTP endpoint on target port responds (or timeout)
+    s += "wait_for_sut " + str(port) + " " + str(sut.sleep) + "\n\n"
 
     return s
 
