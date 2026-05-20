@@ -582,6 +582,7 @@ def addJobBody(port, sut, seed, setting, configName):
             else:
                 label += "_" + str(ps[1])
 
+    params += " --blackBox false"
     params += " --testSuiteFileName=EM_" + sut.name.replace("-","_") + label + "_" + str(seed) + "_Test"
     params += " --labelForExperiments=" + label
     params += " --labelForExperimentConfigs=" + configName
