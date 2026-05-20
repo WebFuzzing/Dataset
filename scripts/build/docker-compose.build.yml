@@ -96,7 +96,7 @@ services:
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           gradle build -x test
         else
-          (cd cs && gradle build -x test)
+          gradle build -x test
         fi
         cp cs/rest/erc20-rest-service/build/libs/erc20-rest-service-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
@@ -161,7 +161,7 @@ services:
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           gradle build -x test
         else
-          (cd cs && gradle build -x test)
+          gradle build -x test
         fi
         cp cs/graphql/patio-api/build/libs/patio-api-sut.jar /dist/
         cp cs/rest/reservations-api/build/libs/reservations-api-sut.jar /dist/
@@ -226,7 +226,7 @@ services:
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           gradle build -x test -x spotlessCheck -x spotlessJavaCheck
         else
-          (cd cs && gradle build -x test -x spotlessCheck -x spotlessJavaCheck)
+          gradle build -x test -x spotlessCheck -x spotlessJavaCheck
         fi
         cp cs/rest/bibliothek/build/libs/bibliothek-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
