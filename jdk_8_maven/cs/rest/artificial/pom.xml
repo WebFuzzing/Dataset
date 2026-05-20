@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-cs-rest</artifactId>
-        <version>4.2.1-SNAPSHOT</version>
+        <version>4.3.0</version>
     </parent>
 
     <artifactId>evomaster-benchmark-cs-rest-artificial</artifactId>
