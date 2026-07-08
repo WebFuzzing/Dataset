@@ -47,7 +47,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <evomaster-version>6.0.1-SNAPSHOT</evomaster-version>
+        <evomaster-version>6.1.2-SNAPSHOT</evomaster-version>
     </properties>
 
     <build>
