@@ -107,6 +107,8 @@ Auth configuration files can found in the [auth](auth) folder.
 
 * **HTTP Patch Spring** (MIT), [jdk_11_maven/cs/rest/http-patch-spring](jdk_11_maven/cs/rest/http-patch-spring), from [https://github.com/cassiomolin/http-patch-spring](https://github.com/cassiomolin/http-patch-spring)
 
+* **Jasper** (MIT), [jdk_25_maven/cs/rest/jasper](jdk_25_maven/cs/rest/jasper), from [https://github.com/cjmalloy/jasper](https://github.com/cjmalloy/jasper)
+
 * **Languagetool** (LGPL), [jdk_8_maven/cs/rest/original/languagetool](jdk_8_maven/cs/rest/original/languagetool), from [https://github.com/languagetool-org/languagetool](https://github.com/languagetool-org/languagetool)
 
 * **Market** (MIT), [jdk_11_maven/cs/rest-gui/market](jdk_11_maven/cs/rest-gui/market), from [https://github.com/aleksey-lukyanets/market](https://github.com/aleksey-lukyanets/market)

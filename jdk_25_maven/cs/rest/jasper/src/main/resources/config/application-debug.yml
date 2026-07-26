@@ -1,0 +1,16 @@
+
+logging:
+  level:
+    ROOT: INFO
+    jasper: DEBUG
+    jasper.component.cron.Backfill: TRACE
+    org:
+      springframework:
+        boot:
+          actuate: DEBUG
+        security: DEBUG
+#        integration: DEBUG
+        web: DEBUG
+        cors: DEBUG
+    io:
+      fabric8: DEBUG

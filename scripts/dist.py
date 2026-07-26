@@ -76,6 +76,7 @@ JAVA_HOME_8 = os.environ.get('JAVA_HOME_8', '')
 JAVA_HOME_11 = os.environ.get('JAVA_HOME_11', '')
 JAVA_HOME_17 = os.environ.get('JAVA_HOME_17', '')
 JAVA_HOME_21 = os.environ.get('JAVA_HOME_21', '')
+JAVA_HOME_25 = os.environ.get('JAVA_HOME_25', '')
 
 SHELL = platform.system() == 'Windows'
 
@@ -98,6 +99,10 @@ def checkJavaVersions():
 
     if JAVA_HOME_21 == '':
         print("\nERROR: JAVA_HOME_21 environment variable is not defined")
+        exit(1)
+
+    if JAVA_HOME_25 == '':
+        print("\nERROR: JAVA_HOME_25 environment variable is not defined")
         exit(1)
 
 
@@ -296,6 +301,14 @@ def build_jdk_21_maven():
     copy(folder + "/em/external/rest-gui/microcks/target/microcks-evomaster-runner.jar", DIST)
 
 ####################
+def build_jdk_25_maven():
+    folder = "jdk_25_maven"
+    callMaven(folder, JAVA_HOME_25)
+
+    copy(folder + "/cs/rest/jasper/target/jasper-sut.jar", DIST)
+    copy(folder + "/em/external/rest/jasper/target/jasper-evomaster-runner.jar", DIST)
+
+####################
 def call_gradle(java_home, folder):
     env_vars = os.environ.copy()
     env_vars["JAVA_HOME"] = java_home
@@ -448,6 +461,7 @@ build_jdk_8_maven()
 build_jdk_11_maven()
 build_jdk_17_maven()
 build_jdk_21_maven()
+build_jdk_25_maven()
 build_jdk_8_gradle()
 build_jdk_11_gradle()
 build_jdk_17_gradle()

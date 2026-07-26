@@ -1,0 +1,32 @@
+# Development artifacts
+target/
+.github/
+.mvn/
+docs/
+.idea/
+storage/
+gatling/
+repl/
+.DS_Store
+
+# Documentation
+_includes/
+docs/
+*.md
+LICENSE
+
+# Git and config files not needed for build
+.git/
+.gitignore
+.gitattributes
+.editorconfig
+
+# Build scripts not used in Docker (image has its own Maven)
+mvnw
+mvnw.cmd
+Dockerfile
+
+# Scripts and local dev files
+docker-compose.yaml
+.dockerignore
+_config.yml

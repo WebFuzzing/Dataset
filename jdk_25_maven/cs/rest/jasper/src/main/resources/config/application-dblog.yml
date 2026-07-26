@@ -1,0 +1,12 @@
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.stat: DEBUG
+    org.hibernate.SQL_SLOW: INFO
+    org.hibernate.cache: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG
+    org.hibernate.orm.jdbc.batch: INFO
+    org.hibernate.engine.jdbc.spi: INFO

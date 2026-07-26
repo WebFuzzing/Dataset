@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="jhipster" id="00000000000000" context="test">
+		<createSequence sequenceName="sequence_generator" startValue="1050" incrementBy="50"/>
+		<createTable tableName="jhi_date_time_wrapper">
+			<column  name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="jhi_date_time_wrapperPK"/>
+			</column>
+			<column name="instant" type="timestamp"/>
+			<column name="local_date_time" type="timestamp"/>
+			<column name="offset_date_time" type="timestamp"/>
+			<column name="zoned_date_time" type="timestamp"/>
+			<column name="local_time" type="time"/>
+			<column name="offset_time" type="time"/>
+			<column name="local_date" type="date"/>
+		</createTable>
+	</changeSet>
+
+	<changeSet author="chris" id="00000000000001" dbms="postgresql">
+		<createTable tableName="ref">
+			<column name="url" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="title" type="TEXT"/>
+			<column name="comment" type="TEXT"/>
+			<column name="tags" type="JSONB"/>
+			<column name="sources" type="JSONB"/>
+			<column name="alternate_urls" type="JSONB"/>
+			<column name="plugins" type="JSONB"/>
+			<column name="metadata" type="JSONB"/>
+			<column name="published" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<sql>
+			CREATE INDEX ref_tags_index ON ref USING GIN(tags);
+			CREATE INDEX ref_expanded_tags_index ON ref USING GIN((metadata->'expandedTags'));
+			CREATE INDEX ref_sources_index ON ref USING GIN(sources);
+			CREATE INDEX ref_alternate_urls_index ON ref USING GIN(alternate_urls);
+			ALTER TABLE ref
+				ADD COLUMN textsearch_en tsvector
+					GENERATED ALWAYS AS (setweight(to_tsvector('english', coalesce(title, '')),'A') ||
+										 setweight(to_tsvector('english', coalesce(comment, '')), 'B') ||
+										 setweight(to_tsvector('english', url), 'C')) STORED;
+			CREATE INDEX ref_fulltext_index ON ref USING GIN(textsearch_en);
+		</sql>
+		<createIndex tableName="ref" indexName="ref_published_index">
+			<column name="published"/>
+		</createIndex>
+		<createIndex tableName="ref" indexName="ref_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<addUniqueConstraint tableName="ref" columnNames="modified, origin" />
+
+		<createTable tableName="ext">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="JSONB"/>
+			<column name="modified" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="ext" indexName="ext_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<addUniqueConstraint tableName="ext" columnNames="modified, origin" />
+
+		<createTable tableName="users">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="role" type="TEXT"/>
+			<column name="read_access" type="JSONB"/>
+			<column name="write_access" type="JSONB"/>
+			<column name="tag_read_access" type="JSONB"/>
+			<column name="tag_write_access" type="JSONB"/>
+			<column name="modified" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+			<column name="key" type="BYTEA"/>
+			<column name="pub_key" type="BYTEA"/>
+			<column name="authorized_keys" type="TEXT"/>
+			<column name="external" type="JSONB"/>
+		</createTable>
+		<createIndex tableName="users" indexName="users_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<addUniqueConstraint tableName="users" columnNames="modified, origin" />
+		<sql>
+			CREATE INDEX users_external_id ON users USING GIN((external->'ids'));
+		</sql>
+
+		<createTable tableName="plugin">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="JSONB"/>
+			<column name="defaults" type="JSONB"/>
+			<column name="schema" type="JSONB"/>
+			<column name="modified" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="plugin" indexName="plugin_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<addUniqueConstraint tableName="plugin" columnNames="modified, origin" />
+
+		<createTable tableName="template">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="JSONB"/>
+			<column name="defaults" type="JSONB"/>
+			<column name="schema" type="JSONB"/>
+			<column name="modified" type="TIMESTAMP">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="template" indexName="template_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<addUniqueConstraint tableName="template" columnNames="modified, origin" />
+
+	</changeSet>
+
+	<changeSet author="chris" id="00000000000002" dbms="postgresql">
+		<sql>CREATE OR REPLACE FUNCTION instr(text, text) RETURNS integer AS $$ SELECT strpos($1, $2) $$ LANGUAGE SQL IMMUTABLE;</sql>
+	</changeSet>
+
+</databaseChangeLog>
