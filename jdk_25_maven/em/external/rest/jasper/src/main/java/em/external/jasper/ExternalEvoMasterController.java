@@ -90,12 +90,13 @@ public class ExternalEvoMasterController extends ExternalSutController {
     public void postStart() {
         closeConnection();
         try {
+            Class.forName("org.postgresql.Driver");
             sqlConnection = DriverManager.getConnection(
                     postgres.getJdbcUrl(),
                     postgres.getUsername(),
                     postgres.getPassword());
             dbSpecifications = List.of(new DbSpecification(DatabaseType.POSTGRES, sqlConnection));
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

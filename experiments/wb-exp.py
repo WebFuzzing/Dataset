@@ -155,12 +155,14 @@ JDK_8 = "JDK_8"
 JDK_11 = "JDK_11"
 JDK_17 = "JDK_17"
 JDK_21 = "JDK_21"
+JDK_25 = "JDK_25"
 
 def isJava(sut):
     return (sut.platform == JDK_8
             or sut.platform == JDK_11
             or sut.platform == JDK_17
             or sut.platform == JDK_21
+            or sut.platform == JDK_25
             )
 
 class Sut:
@@ -190,6 +192,7 @@ SUTS = [
     Sut("genome-nexus",  JDK_8),
     Sut("gestaohospital",  JDK_8),
     Sut("http-patch-spring", JDK_11),
+    Sut("jasper", JDK_25),
     Sut("languagetool",  JDK_8),
     Sut("market",  JDK_11),
     Sut("microcks", JDK_21),
@@ -274,12 +277,16 @@ JAVA_HOME_21 = os.environ.get("JAVA_HOME_21", "")
 if JAVA_HOME_21 == "":
         raise Exception("You must specify a JAVA_HOME_21 env variable specifying where JDK 21 is installed")
 
+JAVA_HOME_25 = os.environ.get("JAVA_HOME_25", "")
+if JAVA_HOME_25 == "":
+        raise Exception("You must specify a JAVA_HOME_25 env variable specifying where JDK 25 is installed")
+
 JACOCO_AGENT = "not-defined"
 JACOCO_CLI = "not-defined"
 
 if JACOCO:
 
-    JACOCO_LOCATION = WFD + "/jacoco"
+    JACOCO_LOCATION = WFD_DIR + "/jacoco"
 
     JACOCO_AGENT = os.path.join(JACOCO_LOCATION, "jacocoagent.jar")
     JACOCO_CLI   = os.path.join(JACOCO_LOCATION, "jacococli.jar")
@@ -496,6 +503,8 @@ def getJavaExeByJDK(platform):
         path = JAVA_HOME_17 +"/bin/java"
     elif platform == JDK_21:
         path = JAVA_HOME_21 +"/bin/java"
+    elif platform == JDK_25:
+        path = JAVA_HOME_25 +"/bin/java"
     else:
         raise Exception("ERROR: unhandled JVM version: " + platform)
 

@@ -125,6 +125,7 @@ public class SecurityConfiguration {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.with(securityConfigurerAdapter(), Customizer.withDefaults())
 			.authorizeHttpRequests(r -> r
+				.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 				.requestMatchers("/api/**").permitAll()
 				.requestMatchers("/pub/api/**").permitAll()
 				.requestMatchers("/management/**").permitAll()
