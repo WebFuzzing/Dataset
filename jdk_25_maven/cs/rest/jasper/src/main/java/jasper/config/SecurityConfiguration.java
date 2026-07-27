@@ -133,7 +133,11 @@ public class SecurityConfiguration {
 			.csrf(c -> c
 				.csrfTokenRequestHandler(csrfRequestHandler())
 				.csrfTokenRepository(csrfTokenRepository())
-				.ignoringRequestMatchers("/pub/api/**") // Public API
+				.ignoringRequestMatchers(
+					profile("evomaster")
+						? new String[]{"/pub/api/**", "/api/**"}
+						: new String[]{"/pub/api/**"}
+				)
 			)
 		; // @formatter:on
 		return http.build();

@@ -75,7 +75,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
         ctx = SpringApplication.run(JasperApplication.class,
                 "--server.port=0",
-                "--spring.profiles.active=dev,api-docs",
+                "--spring.profiles.active=dev,api-docs,evomaster",
                 "--spring.datasource.url=" + postgres.getJdbcUrl(),
                 "--spring.datasource.username=" + postgres.getUsername(),
                 "--spring.datasource.password=" + postgres.getPassword(),
@@ -87,6 +87,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
                 // Disable mail, cache and other non-essential features
                 "--spring.mail.host=",
                 "--spring.cache.type=NONE",
+                "--springdoc.show-actuator=false",
                 "--management.server.port=-1"
         );
 

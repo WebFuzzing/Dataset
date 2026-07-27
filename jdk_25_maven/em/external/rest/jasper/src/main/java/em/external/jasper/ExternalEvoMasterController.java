@@ -122,7 +122,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     public String[] getInputParameters() {
         return new String[]{
                 "--server.port=" + sutPort,
-                "--spring.profiles.active=dev,api-docs",
+                "--spring.profiles.active=dev,api-docs,evomaster",
                 "--spring.datasource.url=" + postgres.getJdbcUrl(),
                 "--spring.datasource.username=" + postgres.getUsername(),
                 "--spring.datasource.password=" + postgres.getPassword(),
@@ -132,6 +132,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
                 "--jasper.allow-user-role-header=true",
                 "--spring.mail.host=",
                 "--spring.cache.type=NONE",
+                "--springdoc.show-actuator=false",
                 "--management.server.port=-1"
         };
     }
