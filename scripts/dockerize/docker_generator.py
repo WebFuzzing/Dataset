@@ -55,7 +55,6 @@ class DockerGenerator:
         self.swagger_url = str(sut[1]['SWAGGER_URL']) if str(sut[1]['SWAGGER_URL']) != 'nan' else ''
         self.target_url = str(sut[1]['TARGET_URL']) if str(sut[1]['TARGET_URL']) != 'nan' else ''
         self.copy_additional_files = bool(sut[1]['COPY_ADDITIONAL_FILES'])
-        self.is_mock_oauth = bool(sut[1]['MOCK_OAUTH'])
         self.database_config = json.loads(sut[1]['SERVICES']) if str(sut[1]['SERVICES']) != 'nan' else []
         self.depends_on = str(sut[1]['DEPENDS_ON']).split(';') if str(sut[1]['DEPENDS_ON']) != 'nan' else []
     # def prepare_run_docker(self):
@@ -124,7 +123,6 @@ class DockerGenerator:
         params = {
             'SUT_NAME': self.sut_name,
             'EXPOSE_PORT': self.expose_port,
-            'MOCK_OAUTH': self.is_mock_oauth,
             'DEPENDS_ON': self.depends_on
         }
 
