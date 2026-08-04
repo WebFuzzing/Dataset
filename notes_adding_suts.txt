@@ -140,3 +140,72 @@ As there are quite a few things to keep in mind, we list here the most important
 - If the SUT is a REST API, need to add its OpenAPI schema into "openapi-swagger" folder
 
 - If REST APIs, must support BB experiments via Docker files. This done in files under "scripts/dockerize".
+  The entry point is "scripts/createDockerFiles.py": it reads "scripts/dockerize/data/sut.csv", and, for each SUT
+  marked with Dockerized=TRUE, it calls "scripts/dockerize/docker_generator.py".
+  For each such SUT, this generates 2 files under the "dockerfiles" folder (from the Jinja2 templates in
+  "scripts/dockerize/templates"):
+  1) "NAME.dockerfile": the Docker image for the SUT itself, which copies "NAME-sut.jar" (and "jacocoagent.jar")
+     from the "dist" folder, and starts the SUT with the given JVM/input parameters.
+     This means "dist.py" must already handle the SUT (see previous point on Distribution).
+  2) "NAME.yaml": a docker-compose file, including any extra service the SUT depends on (eg databases).
+  Note: the JDK version used to select the Docker base image is NOT in "sut.csv": it is read from the RUNTIME
+  column of "statistics/data.csv" (values like "JDK 8", "JDK 11", "JDK 17" and "JDK 21", mapped to Amazon Corretto
+  Alpine images). So, the entry in "statistics/data.csv" must be present and correct before generating the Docker files.
+  Note: the generated compose file also includes a "mitmproxy" service, which reverse-proxies (and logs) all the
+  HTTP traffic toward the SUT (whose service is named "sut-NAME"). It is mitmproxy, not the SUT, that exposes
+  port 8080 (overridable with ${HOST_PORT}) on the host.
+  Inside its container, the SUT MUST listen on port 8080 (this is hardcoded, eg in the mitmproxy configuration),
+  so use the SUT input parameters (eg "--server.port=8080") to enforce it.
+
+  To add a new SUT, a new row must be added to "scripts/dockerize/data/sut.csv". Its columns are:
+
+  * NAME: the name of the SUT. Must match exactly the NAME used in "statistics/data.csv" (otherwise the generator
+    stops with an error), as well as the "NAME-sut.jar" file created for the external driver.
+  * Dockerized: TRUE/FALSE, whether the Docker files should be generated for this SUT. Should be TRUE for all
+    REST APIs (needed for BB experiments).
+  * JVM_PARAMETERS: JVM options (eg "-Dkey=value" and "-Xmx" settings) placed BEFORE "-jar NAME-sut.jar" in the
+    ENTRYPOINT of the generated dockerfile. Can be left empty.
+  * INPUT_PARAMETERS: program arguments placed AFTER "-jar NAME-sut.jar" (eg "--server.port=8080
+    --spring.profiles.active=dev"). This is the typical place to force port 8080 and to point the SUT to its
+    services in the compose file (note: services are reachable by their compose service name as hostname, eg
+    "jdbc:postgresql://db:5432/..." when the database service is called "db"). Can be left empty.
+  * SWAGGER_URL: the URL on which the running container serves its OpenAPI/Swagger schema
+    (eg "http://localhost:8080/v3/api-docs"). Used to fetch the schema in BB experiments.
+  * TARGET_URL: the base URL of the running SUT, typically "http://localhost:8080".
+  * COPY_ADDITIONAL_FILES: TRUE/FALSE. If TRUE, ALL files inside the folder
+    "scripts/dockerize/data/additional_files/NAME" are copied (COPY) into the working directory of the Docker image.
+    This is for SUTs needing extra files at runtime next to the JAR (eg configuration files such as YAML configs).
+    Note the folder MUST exist and MUST have the same name as the SUT (NAME), otherwise the generation fails.
+  * DEPENDS_ON: semicolon-separated list of service names the SUT container must wait for (rendered as
+    "depends_on" with a healthcheck condition in the compose file), eg "db" for SUTs whose database defines a
+    health_check_command. Usually left empty ("").
+  * SERVICES: a JSON array (quoted as a single CSV cell, with doubled "" for inner quotes) describing the extra
+    services (databases, mock servers, etc.) to add in the docker-compose file. Each JSON object supports:
+      - "name": service name in the compose file (optional, defaults to "db"). This is the hostname the SUT
+        uses to reach it.
+      - "image_name": the Docker image, eg "postgres:13.13", "mongo:6.0", "mysql:8.0".
+      - "tmp_fs": path mounted as tmpfs, typically the data folder of the database (eg "/var/lib/postgresql/data"),
+        so that each run starts with a clean state. Empty string if not needed.
+      - "environment": semicolon-separated list of "KEY: value" environment entries for the service
+        (eg "POSTGRES_PASSWORD: password;POSTGRES_DB: foo"). Empty string if none.
+      - "volume": semicolon-separated list of "host_path:container_path" mounts. Host paths here point into
+        "../scripts/dockerize/data/additional_files/NAME/..." (relative to the "dockerfiles" folder), eg to
+        provide DB init scripts ("/docker-entrypoint-initdb.d/...") or mock-server configs. Empty string if none.
+      - "port": optional "host:container" port mapping, if the service must be reachable from outside the
+        compose network (eg mock OAuth servers).
+      - "command": optional command overriding the image default (eg "mongod --replSet rs0 --bind_ip_all").
+      - "health_check_command": healthcheck command in Docker list form (eg ["CMD", "mysqladmin", "ping", "-h",
+        "localhost"]), or empty string "" for no healthcheck. Needed when the SUT uses DEPENDS_ON on this service.
+    Leave the whole cell empty if the SUT needs no extra services.
+    Note: if the SUT needs a mock OAuth2 server for authentication, that is defined here as well, as one more
+    service (see "familie-ba-sak" for an example using "mock-oauth2-server", with the exposed ${AUTH_PORT}).
+
+- if the SUT needs any extra file inside Docker (either copied into the SUT image via COPY_ADDITIONAL_FILES, or
+  mounted as a volume of a service in SERVICES), such file must be placed under
+  "scripts/dockerize/data/additional_files/NAME", where NAME is exactly the same name of the SUT used in "sut.csv".
+  See the existing subfolders there (eg "blogapi", "pay-publicapi", "webgoat") for examples.
+
+- after updating "sut.csv" (and "statistics/data.csv"), run "scripts/createDockerFiles.py" to (re)generate
+  "dockerfiles/NAME.dockerfile" and "dockerfiles/NAME.yaml", and commit them as well.
+  A good way to verify the setup is to build the SUT JARs (dist), start the compose file, and check that the
+  OpenAPI schema is reachable at SWAGGER_URL.
