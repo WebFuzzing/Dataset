@@ -63,9 +63,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     @Override
     public void resetStateOfSUT() {
-        try (ReflectionBasedRedisClient client =
-                     new ReflectionBasedRedisClient(redisHost, redisPort, 0)) {
+        ReflectionBasedRedisClient client = new ReflectionBasedRedisClient(redisHost, redisPort, 0);
+        try {
             client.flushAll();
+        } finally {
+            client.close();
         }
     }
 
