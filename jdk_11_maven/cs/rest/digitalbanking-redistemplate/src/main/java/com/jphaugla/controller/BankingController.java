@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.jphaugla.service.BankService;
@@ -24,22 +25,19 @@ public class BankingController {
 	private BankService bankService = BankService.getInstance();
 
 	private static final Logger logger = LoggerFactory.getLogger(BankingController.class);
-	// customer
+
 	@RequestMapping("/save_customer")
 	public String saveCustomer() throws ParseException {
 		bankService.saveSampleCustomer();
 		return "Done";
 	}
 
-
-	//  account
 	@RequestMapping("/save_account")
 	public String saveAccount() throws ParseException {
 		bankService.saveSampleAccount();
 		return "Done";
 	}
 
-	//  transaction
 	@RequestMapping("/save_transaction")
 	public String saveTransaction() throws ParseException {
 		bankService.saveSampleTransaction();
@@ -48,109 +46,107 @@ public class BankingController {
 
 	@GetMapping("/generateData")
 	@ResponseBody
-	public String generateData (@RequestParam Integer noOfCustomers, @RequestParam Integer noOfTransactions,
-								@RequestParam Integer noOfDays, @RequestParam String key_suffix,
-								@RequestParam Boolean pipelined)
+	public String generateData(@RequestParam Integer noOfCustomers, @RequestParam Integer noOfTransactions,
+							   @RequestParam Integer noOfDays, @RequestParam String key_suffix,
+							   @RequestParam Boolean pipelined)
 			throws ParseException, ExecutionException, InterruptedException, IllegalAccessException {
-
 		bankService.generateData(noOfCustomers, noOfTransactions, noOfDays, key_suffix, pipelined);
-
 		return "Done";
 	}
 
 	@GetMapping("/testPipeline")
 	@ResponseBody
-	public String testPipeline (@RequestParam Integer noOfRecords)
+	public String testPipeline(@RequestParam Integer noOfRecords)
 			throws ParseException, ExecutionException, InterruptedException, IllegalAccessException {
-
 		bankService.testPipeline(noOfRecords);
-
 		return "Done";
 	}
-	@GetMapping("/customerByPhone")
 
-	public Customer getCustomerByPhone(@RequestParam String phoneString) {
+	// EvoMaster: added explicit 404 branch when customer is not found
+	@GetMapping("/customerByPhone")
+	public ResponseEntity<Customer> getCustomerByPhone(@RequestParam String phoneString) {
 		logger.debug("In get customerByPhone with phone as " + phoneString);
-		return bankService.getCustomerByPhone(phoneString);
+		Customer customer = bankService.getCustomerByPhone(phoneString);
+		if (customer != null) {
+			return ResponseEntity.ok(customer);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
+	// EvoMaster: added explicit 404 branch when customer is not found
 	@GetMapping("/customerByEmail")
-
-	public Customer getCustomerByEmail(@RequestParam String email) {
+	public ResponseEntity<Customer> getCustomerByEmail(@RequestParam String email) {
 		logger.debug("IN get customerByEmail, email is " + email);
-		return bankService.getCustomerByEmail(email);
+		Customer customer = bankService.getCustomerByEmail(email);
+		if (customer != null) {
+			return ResponseEntity.ok(customer);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@GetMapping("/customerByStateCity")
-
 	public SearchResults<String, String> getCustomerByStateCity(@RequestParam String state, @RequestParam String city) {
 		logger.debug("IN get customerByState with state as " + state + " and city=" + city);
 		return bankService.getCustomerByStateCity(state, city);
 	}
-	@GetMapping("/customerByZipcodeLastname")
 
+	@GetMapping("/customerByZipcodeLastname")
 	public SearchResults<String, String> getCustomerIdsbyZipcodeLastname(@RequestParam String zipcode, @RequestParam String lastname) {
 		logger.debug("IN get getCustomerIdsbyZipcodeLastname with zipcode as " + zipcode + " and lastname=" + lastname);
 		return bankService.getCustomerIdsbyZipcodeLastname(zipcode, lastname);
 	}
-	@GetMapping("/merchantCategoryTransactions")
 
-	public SearchResults<String,String> getMerchantCategoryTransactions
-			(@RequestParam String merchantCategory, @RequestParam String account,
-			 @RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			 @RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+	@GetMapping("/merchantCategoryTransactions")
+	public SearchResults<String, String> getMerchantCategoryTransactions(
+			@RequestParam String merchantCategory, @RequestParam String account,
+			@RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
 			throws ParseException {
 		logger.debug("In getMerchantCategoryTransactions merchantCategory=" + merchantCategory + " account=" + account +
 				" from=" + startDate + " to=" + endDate);
 		return bankService.getMerchantCategoryTransactions(merchantCategory, account, startDate, endDate);
 	}
-	@GetMapping("/merchantTransactions")
 
-	public SearchResults<String,String> getMerchantTransactions
-			(@RequestParam String merchant, @RequestParam String account,
-			 @RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			 @RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
-				throws ParseException {
+	@GetMapping("/merchantTransactions")
+	public SearchResults<String, String> getMerchantTransactions(
+			@RequestParam String merchant, @RequestParam String account,
+			@RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+			throws ParseException {
 		logger.info("In getMerchantTransactions merchant=" + merchant + " account=" + account +
 				" from=" + startDate + " to=" + endDate);
 		return bankService.getMerchantTransactions(merchant, account, startDate, endDate);
 	}
 
-	@GetMapping ("/transactionStatusReport")
-
-	public AggregateResults<String>  transactionStatusReport () {
-		AggregateResults<String> keycounts = new AggregateResults<>();
+	@GetMapping("/transactionStatusReport")
+	public AggregateResults<String> transactionStatusReport() {
 		return bankService.transactionStatusReport();
-
 	}
-	@GetMapping("/returned_transactions")
 
-	public SearchResults<String,String> getReturnedTransaction () {
+	@GetMapping("/returned_transactions")
+	public SearchResults<String, String> getReturnedTransaction() {
 		logger.info("in bankcontroller getReturnedTransaction");
 		return bankService.getTransactionReturns();
 	}
 
 	@GetMapping("/statusChangeTransactions")
-
 	public AggregateResults<String> generateStatusChangeTransactions(@RequestParam String transactionStatus)
 			throws ParseException, IllegalAccessException, ExecutionException, InterruptedException {
-		 logger.info("generateStatusChangeTransactions transactionStatus=" + transactionStatus);
-		 AggregateResults<String> changeReport = new AggregateResults<>();
-
-		 changeReport.addAll(transactionStatusReport());
-		 bankService.transactionStatusChange(transactionStatus);
-		 changeReport.addAll(transactionStatusReport());
-
-		 return changeReport;
-
+		logger.info("generateStatusChangeTransactions transactionStatus=" + transactionStatus);
+		AggregateResults<String> changeReport = new AggregateResults<>();
+		changeReport.addAll(transactionStatusReport());
+		bankService.transactionStatusChange(transactionStatus);
+		changeReport.addAll(transactionStatusReport());
+		return changeReport;
 	}
 
 	@GetMapping("/creditCardTransactions")
-
-	public SearchResults<String, String> getCreditCardTransactions
-			(@RequestParam String creditCard,
-			 @RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			 @RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+	public SearchResults<String, String> getCreditCardTransactions(
+			@RequestParam String creditCard,
+			@RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
 			throws ParseException {
 		logger.debug("getCreditCardTransactions creditCard=" + creditCard +
 				" startDate=" + startDate + " endDate=" + endDate);
@@ -158,76 +154,78 @@ public class BankingController {
 	}
 
 	@GetMapping("/accountTransactions")
-
-	public SearchResults<String, String>  getAccountTransactions
-			(@RequestParam String accountNo,
-			 @RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-			 @RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+	public SearchResults<String, String> getAccountTransactions(
+			@RequestParam String accountNo,
+			@RequestParam(name = "from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+			@RequestParam(name = "to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
 			throws ParseException {
-		logger.debug("getCreditCardTransactions creditCard=" + accountNo +
+		logger.debug("getAccountTransactions accountNo=" + accountNo +
 				" startDate=" + startDate + " endDate=" + endDate);
 		return bankService.getAccountTransactions(accountNo, startDate, endDate);
-
 	}
 
-
 	@GetMapping("/addTag")
-
 	public void addTag(@RequestParam String transactionID,
 					   @RequestParam String tag, @RequestParam String operation) {
 		logger.debug("addTags with transactionID=" + transactionID + " tag is " + tag + " operation is " + operation);
 		bankService.addTag(transactionID, tag, operation);
 	}
 
+	// EvoMaster: added explicit 404 branch when transaction has no tags
 	@GetMapping("/getTags")
-	public HashSet <String> getTransactionTagList(@RequestParam String transactionID) {
+	public ResponseEntity<HashSet<String>> getTransactionTagList(@RequestParam String transactionID) {
 		logger.debug("getTags with transactionID=" + transactionID);
-		return bankService.getTransactionTagList(transactionID);
+		HashSet<String> tags = bankService.getTransactionTagList(transactionID);
+		if (tags != null && !tags.isEmpty()) {
+			return ResponseEntity.ok(tags);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@GetMapping("/getTaggedTransactions")
-
-	public SearchResults<String,String> getTaggedTransactions
-			(@RequestParam String accountNo, @RequestParam String tag)
+	public SearchResults<String, String> getTaggedTransactions(
+			@RequestParam String accountNo, @RequestParam String tag)
 			throws ParseException {
-		logger.debug("In getTaggedTransactions accountNo=" + accountNo + " tag=" + tag );
+		logger.debug("In getTaggedTransactions accountNo=" + accountNo + " tag=" + tag);
 		return bankService.getTaggedTransactions(accountNo, tag);
 	}
 
+	// EvoMaster: added explicit 404 branch when transaction is not found
 	@GetMapping("/getTransaction")
-	public Transaction getTransaction(@RequestParam String transactionID) {
+	public ResponseEntity<Transaction> getTransaction(@RequestParam String transactionID) {
 		Transaction transaction = bankService.getTransaction(transactionID);
-		return transaction;
+		if (transaction != null) {
+			return ResponseEntity.ok(transaction);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
-
+	// EvoMaster: added explicit 404 branch when customer is not found
 	@GetMapping("/customer")
-
-	public Optional<Customer> getCustomer(@RequestParam String customerId) {
-		return bankService.getCustomer(customerId);
+	public ResponseEntity<Customer> getCustomer(@RequestParam String customerId) {
+		Optional<Customer> customer = bankService.getCustomer(customerId);
+		if (customer.isPresent()) {
+			return ResponseEntity.ok(customer.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@GetMapping("/deleteCustomer")
-
 	public int deleteCustomer(@RequestParam String customerString) {
 		return bankService.deleteCustomer(customerString);
 	}
 
 	@GetMapping("/deleteCustomerEmail")
-
 	public int deleteCustomerEmail(@RequestParam String customerId) {
 		return bankService.deleteCustomerEmail(customerId);
 	}
 
 	@PostMapping(value = "/postCustomer", consumes = "application/json", produces = "application/json")
-	public String postCustomer(@RequestBody Customer customer ) throws ParseException {
+	public String postCustomer(@RequestBody Customer customer) throws ParseException {
 		bankService.postCustomer(customer);
 		return "Done\n";
 	}
-
-
-
-
-
-
 }
