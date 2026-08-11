@@ -95,6 +95,8 @@ Auth configuration files can found in the [auth](auth) folder.
 
 * **CWA-Verification-Server** (Apache), [jdk_11_maven/cs/rest/cwa-verification-server](jdk_11_maven/cs/rest/cwa-verification-server), from [https://github.com/corona-warn-app/cwa-verification-server](https://github.com/corona-warn-app/cwa-verification-server)
 
+* **DigitalBanking-RedisTemplate** (not-known license), [jdk_11_maven/cs/rest/digitalbanking-redistemplate](jdk_11_maven/cs/rest/digitalbanking-redistemplate), from [https://github.com/redis-developer/digitalbanking-redistemplate](https://github.com/redis-developer/digitalbanking-redistemplate)
+
 * **ERC20 Rest Service** (not-known license), [jdk_8_gradle/cs/rest/erc20-rest-service](jdk_8_gradle/cs/rest/erc20-rest-service), from [https://github.com/web3labs/erc20-rest-service](https://github.com/web3labs/erc20-rest-service)
 
 * **Familie Ba Sak** (MIT), [jdk_17_maven/cs/rest/familie-ba-sak](jdk_17_maven/cs/rest/familie-ba-sak), from [https://github.com/navikt/familie-ba-sak](https://github.com/navikt/familie-ba-sak)

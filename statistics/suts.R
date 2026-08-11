@@ -12,6 +12,7 @@ suts <- function(){
 "blogapi",
 "catwatch",
 "cwa-verification",
+"digitalbanking-redistemplate",
 "erc20-rest-service",
 "familie-ba-sak",
 "features-service",

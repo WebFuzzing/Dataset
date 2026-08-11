@@ -1,0 +1,1380 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/postCustomer": {
+      "post": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "postCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactionStatusReport": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "transactionStatusReport",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregateResultsString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/testPipeline": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "testPipeline",
+        "parameters": [
+          {
+            "name": "noOfRecords",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/statusChangeTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "generateStatusChangeTransactions",
+        "parameters": [
+          {
+            "name": "transactionStatus",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregateResultsString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/returned_transactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getReturnedTransaction",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchantTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getMerchantTransactions",
+        "parameters": [
+          {
+            "name": "merchant",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchantCategoryTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getMerchantCategoryTransactions",
+        "parameters": [
+          {
+            "name": "merchantCategory",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "account",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getTransaction": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getTransaction",
+        "parameters": [
+          {
+            "name": "transactionID",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transaction"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getTags": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getTransactionTagList",
+        "parameters": [
+          {
+            "name": "transactionID",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getTaggedTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getTaggedTransactions",
+        "parameters": [
+          {
+            "name": "accountNo",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generateData": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "generateData",
+        "parameters": [
+          {
+            "name": "noOfCustomers",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "noOfTransactions",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "noOfDays",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "key_suffix",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pipelined",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deleteCustomer": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "deleteCustomer",
+        "parameters": [
+          {
+            "name": "customerString",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/deleteCustomerEmail": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "deleteCustomerEmail",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customer": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCustomer",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customerByZipcodeLastname": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCustomerIdsbyZipcodeLastname",
+        "parameters": [
+          {
+            "name": "zipcode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lastname",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customerByStateCity": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCustomerByStateCity",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customerByPhone": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCustomerByPhone",
+        "parameters": [
+          {
+            "name": "phoneString",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customerByEmail": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCustomerByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/creditCardTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getCreditCardTransactions",
+        "parameters": [
+          {
+            "name": "creditCard",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/addTag": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "addTag",
+        "parameters": [
+          {
+            "name": "transactionID",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/accountTransactions": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "getAccountTransactions",
+        "parameters": [
+          {
+            "name": "accountNo",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultsStringString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save_transaction": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveTransaction_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save_customer": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveCustomer_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save_account": {
+      "get": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_3",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_2",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_5",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_6",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "banking-controller"
+        ],
+        "operationId": "saveAccount_4",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "addressType": {
+            "type": "string"
+          },
+          "billPayEnrolled": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdDatetime": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "customerOriginSystem": {
+            "type": "string"
+          },
+          "customerStatus": {
+            "type": "string"
+          },
+          "customerType": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "governmentId": {
+            "type": "string"
+          },
+          "governmentIdType": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastUpdatedBy": {
+            "type": "string"
+          },
+          "middleName": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "queryHelperColumn": {
+            "type": "string"
+          },
+          "stateAbbreviation": {
+            "type": "string"
+          },
+          "zipcode": {
+            "type": "string"
+          },
+          "zipcode4": {
+            "type": "string"
+          }
+        }
+      },
+      "AggregateResultsString": {
+        "type": "array",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "DocumentStringString": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "sortKey": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "string"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "SearchResultsStringString": {
+        "type": "array",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        },
+        "items": {
+          "$ref": "#/components/schemas/DocumentStringString"
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "tranId": {
+            "type": "string"
+          },
+          "accountNo": {
+            "type": "string"
+          },
+          "amountType": {
+            "type": "string"
+          },
+          "merchant": {
+            "type": "string"
+          },
+          "referenceKeyType": {
+            "type": "string"
+          },
+          "referenceKeyValue": {
+            "type": "string"
+          },
+          "originalAmount": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "tranCd": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "initialDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "settlementDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "postingDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "type": "string"
+          },
+          "transactionReturn": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "transactionTags": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

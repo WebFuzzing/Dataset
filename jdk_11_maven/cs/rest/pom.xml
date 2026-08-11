@@ -14,6 +14,7 @@
 
     <modules>
         <module>cwa-verification-server</module>
+        <module>digitalbanking-redistemplate</module>
         <module>pay-publicapi</module>
         <module>tracking-system</module>
         <module>http-patch-spring</module>

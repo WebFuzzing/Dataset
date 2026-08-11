@@ -12,6 +12,7 @@
 |REST|__blogapi__|4787|89|52|Java|JDK 8|Maven|MySQL|&check;|
 |REST|__catwatch__|9636|106|14|Java|JDK 8|Maven|H2||
 |REST|__cwa-verification__|3955|47|5|Java|JDK 11|Maven|H2||
+|REST|__digitalbanking-redistemplate__|2062|27|24|Java|JDK 11|Maven|Redis||
 |REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
 |REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
 |REST|__features-service__|2275|39|18|Java|JDK 8|Maven|H2||
