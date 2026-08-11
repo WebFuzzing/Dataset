@@ -11,6 +11,16 @@ As there are quite a few things to keep in mind, we list here the most important
   Note that we have (tens of) thousands of files in EMB, and adding new stuff does have a toll on Git.
   So should avoid cases of adding something and then remove them later for some issues.
 
+- need to choose a NAME for the SUT. usually, it depends on the actual name from GitHub (eg some combination/adaptation
+  of the "author/name" GitHub identifier), but it does not necessarily mean it must be exactly the same.
+  Small modifications (especially if the name is generic or very long) can be done.
+  The reason is that NAME is used everywhere, including in the writing of the scientific articles.
+  You MUST discuss with supervisor before choosing the NAME (as the change of the name can impact thousands of files
+  if refactored).
+  This MUST be done before the first PR.
+
+- if the NAME is composed of 2 or more words, use "-" to separate them.
+
 - adding a new SUT should always be done on a branch of "develop", as needs to be reviewed.
 
 - need to check which built tool is used (e.g., Maven or Gradle), and which LTS version of the JDK is used.
@@ -62,15 +72,6 @@ As there are quite a few things to keep in mind, we list here the most important
   in the parent declaration you might need to add <relativePath/> to avoid an inconsistent Maven structure.
 
 - Gradle: should use same structure "jdk_X_Y/cs/<type>", but the build structure needs to be defined in settings.gradle.kts
-
-- need to choose a NAME for the SUT. usually, it depends on the actual name from GitHub (eg some combination/adaptation
-  of the "author/name" GitHub identifier), but it does not necessarily mean it must be exactly the same.
-  Small modifications (especially if the name is generic or very long) can be done.
-  The reason is that NAME is used everywhere, including in the writing of the scientific articles.
-  Might want to discuss with supervisor before choosing the NAME (as the change of the name can impact thousands of files
-  if refactored).
-
-- if the NAME is composed of 2 or more words, use "-" to separate them.
 
 - the README.md needs to be updated with info on the new SUT, under the proper group.
   Need to specify the license, folder location on EMB, and original source repositories.
