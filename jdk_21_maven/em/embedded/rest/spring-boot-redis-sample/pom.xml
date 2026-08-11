@@ -16,14 +16,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>id.my.hendisantika</groupId>
-                <artifactId>spring-boot-redis-sample</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
-                <version>3.5.6</version>
+                <version>4.1.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -31,6 +26,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>id.my.hendisantika</groupId>
+            <artifactId>spring-boot-redis-sample</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
