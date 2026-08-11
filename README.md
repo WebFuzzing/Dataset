@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (36)
+### REST: Java/Kotlin (37)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 
@@ -144,6 +144,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Spring-actuator-demo** (not-known license), [jdk_8_maven/cs/rest/original/spring-actuator-demo](jdk_8_maven/cs/rest/original/spring-actuator-demo), from [https://github.com/callicoder/spring-boot-actuator-demo](https://github.com/callicoder/spring-boot-actuator-demo)
 
 * **Spring-batch-rest** (Apache), [jdk_8_maven/cs/rest/original/spring-batch-rest](jdk_8_maven/cs/rest/original/spring-batch-rest), from [https://github.com/chrisgleissner/spring-batch-rest](https://github.com/chrisgleissner/spring-batch-rest)
+
+* **Spring Boot Redis Sample** (not-known license), [jdk_21_maven/cs/rest/spring-boot-redis-sample](jdk_21_maven/cs/rest/spring-boot-redis-sample), from [https://github.com/hendisantika/spring-boot-redis-sample](https://github.com/hendisantika/spring-boot-redis-sample)
 
 * **Spring Boot Restful API Example** (MIT), [jdk_17_maven/cs/rest/spring-rest-example](jdk_17_maven/cs/rest/spring-rest-example), from [https://github.com/phantasmicmeans/spring-boot-restful-api-example](https://github.com/phantasmicmeans/spring-boot-restful-api-example)
 

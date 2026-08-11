@@ -36,6 +36,7 @@ suts <- function(){
 "session-service",
 "spring-actuator-demo",
 "spring-batch-rest",
+"spring-boot-redis-sample",
 "spring-ecommerce",
 "spring-rest-example",
 "swagger-petstore",

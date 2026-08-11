@@ -36,6 +36,7 @@
 |REST|__session-service__|1471|15|8|Java|JDK 8|Maven|MongoDB||
 |REST|__spring-actuator-demo__|117|5|2|Java|JDK 8|Maven||&check;|
 |REST|__spring-batch-rest__|3668|65|5|Java|JDK 8|Maven|||
+|REST|__spring-boot-redis-sample__|868|18|4|Java|JDK 21|Maven|Redis||
 |REST|__spring-ecommerce__|2223|58|26|Java|JDK 8|Maven|MongoOB, Redis, Elasticsearch|&check;|
 |REST|__spring-rest-example__|1426|32|9|Java|JDK 17|Maven|MySQL||
 |REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||

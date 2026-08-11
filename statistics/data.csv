@@ -47,4 +47,4 @@ TRUE,signal-registration,gRPC,Java,JDK 17,Maven,177,13652,,UNDEFINED,5,FALSE,htt
 TRUE,webgoat,REST,Java,JDK 21,Maven,355,27638,H2,GPL,204,TRUE,https://github.com/WebGoat/WebGoat
 FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDEFINED
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
-
+TRUE,spring-boot-redis-sample,REST,Java,JDK 21,Maven,18,868,Redis,UNDEFINED,4,FALSE,https://github.com/hendisantika/spring-boot-redis-sample
