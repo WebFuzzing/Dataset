@@ -1,6 +1,6 @@
 package em.embedded.com.hendisantika;
 
-import com.hendisantika.SpringBootRedisSampleApplication;
+import id.my.hendisantika.springbootredissample.SpringBootRedisSampleApplication;
 import org.evomaster.client.java.controller.EmbeddedSutController;
 import org.evomaster.client.java.controller.InstrumentedSutStarter;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
