@@ -1,4 +1,4 @@
-package em.embedded.com.hendisantika;
+package em.embedded.id.my.hendisantika.springbootredissample;
 
 import id.my.hendisantika.springbootredissample.SpringBootRedisSampleApplication;
 import org.evomaster.client.java.controller.EmbeddedSutController;

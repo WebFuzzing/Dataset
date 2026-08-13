@@ -14,6 +14,7 @@
 
     <modules>
         <module>person-controller</module>
+        <module>spring-boot-redis-sample</module>
     </modules>
 
 </project>
