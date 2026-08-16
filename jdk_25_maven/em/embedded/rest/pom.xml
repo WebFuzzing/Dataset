@@ -11,4 +11,8 @@
     <artifactId>evomaster-benchmark-jdk25-em-embedded-rest</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>commafeed</module>
+    </modules>
+
 </project>

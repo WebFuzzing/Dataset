@@ -323,6 +323,7 @@ scripts/dockerize/dockerfiles
 /jdk_21_maven/em/embedded/rest/person-controller/target/
 /jdk_21_maven/em/external/rest/person-controller/target/
 /jdk_25_maven/em/external/rest/commafeed/target/
+/jdk_25_maven/em/embedded/rest/commafeed/target/
 /jdk_11_maven/em/embedded/rest/tracking-system/target/
 /jdk_11_maven/em/external/rest/tracking-system/target/
 /jdk_17_maven/em/embedded/rest/tiltaksgjennomforing/target/
