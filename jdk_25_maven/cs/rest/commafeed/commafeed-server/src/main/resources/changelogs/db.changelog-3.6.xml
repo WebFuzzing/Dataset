@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+	<changeSet id="position-required" author="athou">
+		<update tableName="FEEDCATEGORIES">
+			<column name="position" valueNumeric="0" />
+			<where>position is null</where>
+		</update>
+		<addNotNullConstraint tableName="FEEDCATEGORIES" columnName="position" columnDataType="int" />
+
+		<update tableName="FEEDSUBSCRIPTIONS">
+			<column name="position" valueNumeric="0" />
+			<where>position is null</where>
+		</update>
+		<addNotNullConstraint tableName="FEEDSUBSCRIPTIONS" columnName="position" columnDataType="int" />
+	</changeSet>
+
+	<changeSet id="drop-unused-last-full-refresh" author="athou">
+		<dropColumn tableName="USERS" columnName="last_full_refresh" />
+	</changeSet>
+
+</databaseChangeLog>

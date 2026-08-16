@@ -1,0 +1,55 @@
+package com.commafeed.security.password;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import lombok.Setter;
+
+import org.apache.commons.lang3.StringUtils;
+import org.passay.DefaultPasswordValidator;
+import org.passay.PasswordData;
+import org.passay.PasswordValidator;
+import org.passay.ValidationResult;
+import org.passay.rule.LengthRule;
+import org.passay.rule.WhitespaceRule;
+
+import java.util.List;
+
+public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+
+    @Setter private static int minimumPasswordLength;
+
+    @Override
+    public void initialize(ValidPassword constraintAnnotation) {
+        // nothing to do
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (StringUtils.isBlank(value)) {
+            return true;
+        }
+
+        PasswordValidator validator = buildPasswordValidator();
+        ValidationResult result = validator.validate(new PasswordData(value));
+
+        if (result.isValid()) {
+            return true;
+        }
+
+        List<String> messages = result.getMessages();
+        String message = String.join(System.lineSeparator(), messages);
+        context.buildConstraintViolationWithTemplate(message)
+                .addConstraintViolation()
+                .disableDefaultConstraintViolation();
+        return false;
+    }
+
+    private PasswordValidator buildPasswordValidator() {
+        return new DefaultPasswordValidator(
+                // length
+                new LengthRule(minimumPasswordLength, 256),
+                // no whitespace
+                new WhitespaceRule());
+    }
+}

@@ -1,0 +1,1167 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-10-28 13:47+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: cy\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/app/AboutPage.tsx
+msgid "<0>CommaFeed is an open-source project. Sources are hosted on </0><1>GitHub</1>."
+msgstr "<0>Mae CommaFeed yn brosiect ffynhonnell agored. Mae'r ffynonellau wedi'u hysbysebu ar </0><1>GitHub</1>."
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "<0>Have an account?</0><1>Log in!</1>"
+msgstr "<0>A oes gennych gyfrif?</0><1>Mewngofnodi!</1>"
+
+#: src/pages/app/DonatePage.tsx
+msgid "<0>Hey,</0><1>I'm Jérémie from Belgium and I've been working on CommaFeed in my free time for over 10 years now. Thanks for taking an interest in helping me continue supporting CommaFeed.</1>"
+msgstr "<0>Hei,</0><1>Jérémie o Wlad Belg ydw i ac rwyf wedi bod yn gweithio ar CommaFeed yn fy amser sbâr ers dros 10 mlynedd bellach. Diolch am ddangos diddordeb mewn fy helpu i barhau i gefnogi CommaFeed.</1>"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "<0>Need an account?</0><1>Sign up!</1>"
+msgstr "<0>Angen cyfrif?</0><1>Ymunwch!</1>"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "About"
+msgstr "Ynghylch"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Access token"
+msgstr "Tocyn mynediad"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Actions"
+msgstr "Camau gweithredu"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Add"
+msgstr "Ychwanegu"
+
+#: src/pages/app/AddPage.tsx
+msgid "Add category"
+msgstr "Ychwanegu categori"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Add user"
+msgstr "Ychwanegu defnyddiwr"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Admin"
+msgstr "Gweinyddol"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Admin user name"
+msgstr "Enw defnyddiwr gweinyddwr"
+
+#: src/components/content/add/CategorySelect.tsx
+#: src/components/header/Header.tsx
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "All"
+msgstr "Pawb"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Always"
+msgstr "Bob amser"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "An email has been sent if this address was registered. Check your inbox."
+msgstr "Mae e-bost wedi'i anfon os oedd y cyfeiriad hwn wedi'i gofrestru. "
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "An opml file is an XML file containing feed URLs and categories. You can get an OPML file by exporting your data from other feed reading services."
+msgstr "Mae ffeil opml yn ffeil XML sy'n cynnwys URLs porthiant a chategorïau. "
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Analyze feed"
+msgstr "Dadansoddi porthiant"
+
+#: src/components/AnnouncementDialog.tsx
+msgid "Announcement"
+msgstr "Cyhoeddiad"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "API key"
+msgstr "Allwedd API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "API token"
+msgstr "Tocyn API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "App token"
+msgstr "Tocyn ap"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Are you sure you want to delete category <0>{categoryName}</0>?"
+msgstr "Ydych chi'n siŵr eich bod am ddileu categori <0>{categoryName}</0>?"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Are you sure you want to delete user <0>{userName}</0> ?"
+msgstr "Ydych chi'n siŵr eich bod am ddileu defnyddiwr <0>{userName}</0> ?"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Are you sure you want to delete your account? There's no turning back!"
+msgstr "Ydych chi'n siŵr eich bod am ddileu eich cyfrif? "
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark all entries of <0>{sourceLabel}</0> as read?"
+msgstr "Ydych chi'n siŵr eich bod am farcio bod pob cofnod o <0>{sourceLabel}</0> wedi'i ddarllen?"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark entries older than {threshold} days of <0>{sourceLabel}</0> as read?"
+msgstr "Ydych chi'n siŵr eich bod am farcio cofnodion sy'n hŷn na {trothwy} diwrnod o <0>{sourceLabel}</0> fel rhai sydd wedi'u darllen?"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Are you sure you want to unsubscribe from <0>{feedName}</0>?"
+msgstr "Ydych chi'n siŵr eich bod am ddad-danysgrifio o <0>{feedName}</0>?"
+
+#: src/components/header/Header.tsx
+msgid "Asc"
+msgstr "Esgynol"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Auto-mark as read"
+msgstr "Hunan-farcio fel wedi'i ddarllen"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Back"
+msgstr "Yn ôl"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Back to log in"
+msgstr "Yn ôl i fewngofnodi"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Blue"
+msgstr "Glas"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Browser extension"
+msgstr "Estyniad porwr"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Browser extension required for Chrome"
+msgstr "Mae angen estyniad porwr ar gyfer Chrome"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Browser tab"
+msgstr "Tab porwr"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Build a filter expression to indicate what you want to read. Entries that don't match will be marked as read automatically."
+msgstr "Adeiladwch fynegiant hidlo i nodi'r hyn rydych chi am ei ddarllen. Bydd cofnodion nad ydynt yn cyfateb yn cael eu marcio fel rhai wedi'u darllen yn awtomatig."
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/ImportOpml.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Cancel"
+msgstr "Diddymu"
+
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AboutPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Category"
+msgstr "categori"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Changing password will generate a new API key"
+msgstr "Bydd newid cyfrinair yn cynhyrchu allwedd API newydd"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Check that the feed is working"
+msgstr "Gwiriwch fod y porthiant yn gweithio"
+
+#: src/pages/app/Layout.tsx
+msgid "Close menu"
+msgstr "Cau'r ddewislen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Cmd"
+msgstr "Cmd"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed browser extension version {browserExtensionVersion}."
+msgstr "Fersiwn estyniad porwr CommaFeed {browserExtensionVersion}."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Fever API. Use the following URL in your Fever-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "Mae CommaFeed yn gydnaws â'r Fever API. Defnyddiwch y URL canlynol yn eich cleient symudol sy'n gydnaws â Fever. Mewngofnodwch gyda'ch enw defnyddiwr a'ch <0>allwedd API</0>."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Google Reader API. Use the following URL in your Google Reader-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "Mae CommaFeed yn gydnaws â Google Reader API. Defnyddiwch y URL canlynol yn eich cleient symudol sy'n gydnaws â Google Reader. Mewngofnodwch gyda'ch enw defnyddiwr a'ch <0>allwedd API</0>."
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed next unread item"
+msgstr "CommaFeed eitem nesaf heb ei darllen"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed version {version} ({revision})."
+msgstr "Fersiwn CommaFeed {version} ({revision})."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Compact"
+msgstr "cryno"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Confirm"
+msgstr "Cadarnhau"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Confirm password"
+msgstr "Cadarnhau'r cyfrinair"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Confirm Password"
+msgstr "Cadarnhau Cyfrinair"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Cozy"
+msgstr "clyd"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Create Admin Account"
+msgstr "Creu Cyfrif Gweinyddwr"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Current password"
+msgstr "Cyfrinair presennol"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Custom code"
+msgstr "Cod arferol"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom CSS rules that will be applied"
+msgstr "Rheolau CSS arferol a fydd yn cael eu cymhwyso"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom JS code that will be executed on page load"
+msgstr "Cod JS arferol a fydd yn cael ei weithredu wrth lwytho'r dudalen"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Cyan"
+msgstr "Cyan"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+msgid "Dark"
+msgstr "Tywyll"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Date created"
+msgstr "Dyddiad creu"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "days"
+msgstr "diwrnodau"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete"
+msgstr "Dileu"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Delete account"
+msgstr "Dileu cyfrif"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete Category"
+msgstr "Dileu Categori"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Delete user"
+msgstr "Dileu defnyddiwr"
+
+#: src/components/header/Header.tsx
+msgid "Desc"
+msgstr "Rhag"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Detailed"
+msgstr "Manwl"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Disable \"Pull to refresh\" browser behavior"
+msgstr "Analluogi ymddygiad porwr \"Tynnu i adnewyddu\""
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+#: src/pages/app/SettingsPage.tsx
+msgid "Display"
+msgstr "Arddangos"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/DonatePage.tsx
+msgid "Donate"
+msgstr "Cyfrannu"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Download"
+msgstr "Lawrlwytho"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Drag link to bookmark bar"
+msgstr "Llusgwch y ddolen i'r bar nod tudalen"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "E-mail"
+msgstr "E-bost"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "E-mail address"
+msgstr "cyfeiriad e-bost"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Edit user"
+msgstr "Golygu defnyddiwr"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Enabled"
+msgstr "Wedi'i alluogi"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Enter"
+msgstr "Ewch i mewn"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Enter your current password to change profile settings"
+msgstr "Rhowch eich cyfrinair presennol i newid gosodiadau proffil"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entries to keep above the selected entry when scrolling"
+msgstr "Cofnodion i'w cadw uwchben y cofnod a ddewiswyd wrth sgrolio"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entry headers"
+msgstr "Penawdau cofnodion"
+
+#: src/components/Alert.tsx
+msgid "Error"
+msgstr "Gwall"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Expanded"
+msgstr "Ehangu"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Export your subscriptions and categories as an OPML file that can be imported in other feed reading services"
+msgstr "Allforio eich tanysgrifiadau a'ch categorïau fel ffeil OPML y gellir ei mewnforio i wasanaethau darllen porthiant eraill"
+
+#: src/components/header/Header.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Extension options"
+msgstr "Opsiynau estyniad"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Feed name"
+msgstr "Enw porthiant"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Feed URL"
+msgstr "URL porthiant"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Fetch all my feeds now"
+msgstr "Cyrchu fy holl borthiannau nawr"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API"
+msgstr "Fever API"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API URL"
+msgstr "URL Fever API"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Filtering expression"
+msgstr "Hidlo mynegiant"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Font size"
+msgstr "Maint ffont"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Force fetching feeds is not yet available."
+msgstr "Nid yw gorfodi nôl porthiannau ar gael eto."
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Forgot password?"
+msgstr "Wedi anghofio cyfrinair?"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generate an API key in your profile first."
+msgstr "Cynhyrchu allwedd API yn eich proffil yn gyntaf."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Generate new API key"
+msgstr "Cynhyrchu allwedd API newydd"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generated feed url"
+msgstr "url porthiant a gynhyrchir"
+
+#. placeholder {0}: truncate(props.entry.feedName, 30)
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Go to {0}"
+msgstr "Ewch i {0}"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Go to the All view"
+msgstr "Ewch i'r golwg Pawb"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Go to the API documentation."
+msgstr "Ewch i'r ddogfennaeth API."
+
+#: src/pages/app/AboutPage.tsx
+msgid "Goodies"
+msgstr "nwyddau"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API"
+msgstr ""
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API URL"
+msgstr ""
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Grape"
+msgstr "Grawnwin"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Gray"
+msgstr "Llwyd"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Green"
+msgstr "Gwyrdd"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Id"
+msgstr "Id"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "If the entry doesn't entirely fit on the screen"
+msgstr "Os nad yw'r cofnod yn ffitio'n gyfan gwbl ar y sgrin"
+
+#: src/pages/app/AboutPage.tsx
+msgid "If you encounter an issue, please report it on the issues page of the GitHub project."
+msgstr "Os byddwch yn dod ar draws mater, rhowch wybod amdano ar dudalen materion y prosiect GitHub."
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "Import"
+msgstr "Mewnforio"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "In expanded view, scrolling through entries mark them as read"
+msgstr "Mewn gwedd estynedig, mae sgrolio trwy gofnodion yn nodi eu bod wedi'u darllen"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Indigo"
+msgstr "Indigó"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Initial Setup"
+msgstr "Gosodiad Cychwynnol"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Invalid password reset link. Please request a new one."
+msgstr "Dolen ailosod cyfrinair annilys. Gofynnwch am un newydd."
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Keep unread"
+msgstr "Cadwch heb ei ddarllen"
+
+#: src/components/content/FeedEntries.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "Keyboard shortcuts"
+msgstr "llwybrau byr bysellfwrdd"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Language"
+msgstr "Iaith"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Last login date"
+msgstr "Dyddiad mewngofnodi diwethaf"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh"
+msgstr "adnewyddu diwethaf"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh message"
+msgstr "Neges adnewyddu ddiwethaf"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Light"
+msgstr "Golau"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Lime"
+msgstr "Leim"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Link"
+msgstr "Dolen"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Link to the documentation"
+msgstr "Dolen i'r ddogfennaeth"
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading profile..."
+msgstr "Wrthi'n llwytho proffil..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading settings..."
+msgstr "Wrthi'n llwytho gosodiadau..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading subscriptions..."
+msgstr "Yn llwytho tanysgrifiadau..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading tags..."
+msgstr "Wrthi'n llwytho tagiau..."
+
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Log in"
+msgstr "Mewngofnodi"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Logout"
+msgstr "Allgofnodi"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Long press"
+msgstr "Gwasg hir"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Manage users"
+msgstr "Rheoli defnyddwyr"
+
+#: src/components/header/Header.tsx
+msgid "Mark all as read"
+msgstr "Marciwch y cyfan wedi'i ddarllen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Mark all entries as read"
+msgstr "Marciwch bob cofnod wedi'i ddarllen"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read"
+msgstr "Marciwch ei fod wedi'i ddarllen"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read up to here"
+msgstr "Marciwch fel y darllenwyd hyd yma"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Mark entries in this feed as read after this number of days. Leave empty to disable."
+msgstr "Marciwch gofnodion yn y porthiant hwn fel rhai wedi'u darllen ar ôl y nifer hwn o ddiwrnodau. Gadewch yn wag i analluogi."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Metrics"
+msgstr "Metrigau"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Middle click"
+msgstr "Clic canol"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page down"
+msgstr "Symudwch y dudalen i lawr"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page up"
+msgstr "Symudwch y dudalen i fyny"
+
+#: src/components/RelativeDate.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "N/A"
+msgstr "Amh"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Name"
+msgstr "Enw"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Navigate to a subscription by entering its name"
+msgstr "Llywiwch i danysgrifiad trwy nodi ei enw"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Navigate to the next category/feed with unread entries when marking all entries as read"
+msgstr "Llywiwch i'r categori/porthiant nesaf gyda chofnodion heb eu darllen wrth farcio pob cofnod fel un wedi'i ddarllen"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Never"
+msgstr "Byth"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "New password"
+msgstr "Cyfrinair newydd"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "New Password"
+msgstr "Cyfrinair Newydd"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Newest first"
+msgstr "Y diweddaraf yn gyntaf"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/components/header/Header.tsx
+msgid "Next"
+msgstr "Nesaf"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Next refresh"
+msgstr "Adnewyddu nesaf"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Next unread item bookmarklet"
+msgstr "Llyfrnod yr eitem nesaf heb ei darllen"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "No more entries"
+msgstr "Dim mwy o gofnodion"
+
+#: src/components/content/ShareButtons.tsx
+msgid "No sharing options available."
+msgstr "Dim opsiynau rhannu ar gael."
+
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Nothing found"
+msgstr "Heb ddarganfod dim"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Oldest first"
+msgstr "Hynaf yn gyntaf"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On desktop"
+msgstr "Ar bwrdd gwaith"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile"
+msgstr "Ar ffôn symudol"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile, show action buttons at the bottom of the screen"
+msgstr "Ar ffonau symudol, dangoswch fotymau gweithredu ar waelod y sgrin"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Only applies to compact, cozy and detailed modes"
+msgstr "Yn berthnasol i foddau cryno, clyd a manwl yn unig"
+
+#: src/pages/ErrorPage.tsx
+msgid "Oops!"
+msgstr "Wps!"
+
+#: src/components/header/Header.tsx
+msgid "Open CommaFeed"
+msgstr "Agor CommaFeed"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab"
+msgstr "Agorwch y cofnod cyfredol mewn tab newydd"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab in the background"
+msgstr "Agorwch y cofnod cyfredol mewn tab newydd yn y cefndir"
+
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/OpenExternalLink.tsx
+msgid "Open link"
+msgstr "Dolen agored"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new background tab"
+msgstr "Agor dolen mewn tab cefndir newydd"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new tab"
+msgstr "Agor dolen mewn tab newydd"
+
+#: src/pages/app/Layout.tsx
+msgid "Open menu"
+msgstr "Agor dewislen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open next entry"
+msgstr "Agor y cofnod nesaf"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open previous entry"
+msgstr "Agor cofnod blaenorol"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open/close current entry"
+msgstr "Agor / cau'r cofnod cyfredol"
+
+#: src/pages/app/AddPage.tsx
+msgid "OPML"
+msgstr "OPML"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "OPML export"
+msgstr "Allforio OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file"
+msgstr "Ffeil OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file is required"
+msgstr "Mae angen ffeil OPML"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Orange"
+msgstr "Oren"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Order"
+msgstr "Trefn"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Parent"
+msgstr "rhiant"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Parent Category"
+msgstr "Categori Rhiant"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Password"
+msgstr "cyfrinair"
+
+#: src/hooks/useValidationRules.ts
+msgid "Password must be at least {minimumPasswordLength} characters"
+msgstr "Rhaid i'r cyfrinair fod o leiaf {minimumPasswordLength} nod"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Password Recovery"
+msgstr "Adfer Cyfrinair"
+
+#: src/hooks/useValidationRules.ts
+msgid "Passwords do not match"
+msgstr "Nid yw cyfrineiriau yn cyfateb"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Pink"
+msgstr "Pinc"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Position"
+msgstr "Safle"
+
+#: src/components/header/Header.tsx
+msgid "Previous"
+msgstr "Blaenorol"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Primary color"
+msgstr "Lliw sylfaenol"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Profile"
+msgstr "Proffil"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notification service"
+msgstr "Gwasanaeth hysbysu gwthio"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Push notifications"
+msgstr "Hysbysiadau gwthio"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Push notifications are not configured in your user settings."
+msgstr "Nid yw hysbysiadau gwthio wedi'u ffurfweddu yn eich gosodiadau defnyddiwr."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notifications are not enabled on this CommaFeed instance."
+msgstr "Nid yw hysbysiadau gwthio wedi'u galluogi ar yr achos CommaFeed hwn."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Receive push notifications"
+msgstr "Derbyn hysbysiadau gwthio"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Receive push notifications when new feed entries are discovered. Enable \"Receive push notifications\" in the settings of each feed for which you want to receive notifications."
+msgstr "Derbyn hysbysiadau gwthio pan ddarganfyddir cofnodion porthiant newydd. Galluogi \"Derbyn hysbysiadau gwthio\" yng ngosodiadau pob porthiant yr ydych am dderbyn hysbysiadau ar ei gyfer."
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Recover password"
+msgstr "Adfer cyfrinair"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Red"
+msgstr "Coch"
+
+#: src/components/header/Header.tsx
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Refresh"
+msgstr "Adnewyddu"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Registrations are closed on this CommaFeed instance"
+msgstr "Mae cofrestriadau ar gau ar yr achos CommaFeed hwn"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Reset Password"
+msgstr "Ailosod Cyfrinair"
+
+#: src/pages/app/AboutPage.tsx
+msgid "REST API"
+msgstr "REST API"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Right click"
+msgstr "Clic dde"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Save"
+msgstr "Arbed"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll selected entry to the top of the page"
+msgstr "Sgroliwch y cofnod a ddewiswyd i frig y dudalen"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll smoothly when navigating between entries"
+msgstr "Sgroliwch yn esmwyth wrth lywio rhwng cofnodion"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scrolling"
+msgstr "Sgrolio"
+
+#: src/components/header/Header.tsx
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Search"
+msgstr "Chwilio"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select next unread feed/category"
+msgstr "Dewiswch y porthiant/categori nesaf heb ei ddarllen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select previous unread feed/category"
+msgstr "Dewiswch y porthiant/categori blaenorol heb ei ddarllen"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Server URL"
+msgstr "URL y gweinydd"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on next entry without opening it"
+msgstr "Gosodwch ffocws ar y cofnod nesaf heb ei agor"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on previous entry without opening it"
+msgstr "Gosod ffocws ar gofnod blaenorol heb ei agor"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Settings"
+msgstr "Gosodiadau"
+
+#: src/app/user/slice.ts
+msgid "Settings saved."
+msgstr "Gosodiadau wedi'u cadw."
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Share"
+msgstr "Rhannu"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Sharing sites"
+msgstr "Rhannu gwefannau"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Shift"
+msgstr "shifft"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show CommaFeed's own context menu on right click"
+msgstr "Dangos dewislen cyd-destun CommaFeed ei hun ar glic dde"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show confirmation when marking all entries as read"
+msgstr "Dangos cadarnhad wrth farcio pob cofnod fel un wedi'i ddarllen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (desktop)"
+msgstr "Dangos dewislen cofnodion (penbwrdd)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (mobile)"
+msgstr "Dangos dewislen cofnodion (symudol)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show external link icon"
+msgstr "Dangos eicon dolen allanol"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show feeds and categories with no unread entries"
+msgstr "Dangos ffrydiau a chategorïau heb unrhyw gofnodion heb eu darllen"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show keyboard shortcut help"
+msgstr "Dangos cymorth llwybr byr bysellfwrdd"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show native menu (desktop)"
+msgstr "Dangos dewislen frodorol (penbwrdd)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show star icon"
+msgstr "Dangos eicon seren"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab favicon"
+msgstr "Dangos nifer heb ei ddarllen yn ffaficon y tab"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab title"
+msgstr "Dangos nifer heb ei ddarllen yn nheitl y tab"
+
+#: src/pages/auth/RegistrationPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Sign up"
+msgstr "Cofrestrwch"
+
+#: src/pages/ErrorPage.tsx
+msgid "Something bad just happened..."
+msgstr "Mae rhywbeth drwg newydd ddigwydd ..."
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Space"
+msgstr "Gofod"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Star"
+msgstr "seren"
+
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "Starred"
+msgstr "serennog"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AddPage.tsx
+msgid "Subscribe"
+msgstr "Tanysgrifio"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Subscribe to the feed"
+msgstr "Tanysgrifio i'r porthiant"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Subscribe URL"
+msgstr "Tanysgrifio URL"
+
+#: src/components/Alert.tsx
+msgid "Success"
+msgstr "Llwyddiant"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Swipe header to the left"
+msgstr "Sychwch y pennawd i'r chwith"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to dark theme"
+msgstr "Newid i thema dywyll"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to light theme"
+msgstr "Newid i thema golau"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "System"
+msgstr "System"
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Tags"
+msgstr "Tagiau"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Teal"
+msgstr "Corhwyad"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test"
+msgstr "Prawf"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test notification sent successfully."
+msgstr "Anfonwyd yr hysbysiad prawf yn llwyddiannus."
+
+#: src/components/content/add/Subscribe.tsx
+msgid "The URL for the feed you want to subscribe to. You can also use the website's url directly and CommaFeed will try to find the feed in the page."
+msgstr "Y URL ar gyfer y porthwr rydych chi am danysgrifio iddo. "
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Theme"
+msgstr "Thema"
+
+#. placeholder {0}: feed.filterLegacy
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "This feed has a legacy filter that cannot be edited and is not applied. Please recreate the filter using the new expression editor. The legacy filter expression was: <0>{0}</0>"
+msgstr "Mae gan y porthiant hwn hen hidlydd na ellir ei olygu ac nid yw'n cael ei gymhwyso. Crëwch yr hidlydd eto gan ddefnyddio'r golygydd mynegiant newydd. Yr hen fynegiant hidlo oedd: <0>{0}</0>"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "This is your API key. It can be used for some read-only API operations and grants access to the Fever API and the Google Reader API. Use the form at the bottom of the page to generate a new API key"
+msgstr "Dyma eich allwedd API. Gellir ei defnyddio ar gyfer rhai gweithrediadau API darllen-yn-unig ac mae'n rhoi mynediad i'r Fever API a'r Google Reader API. Defnyddiwch y ffurflen ar waelod y dudalen i gynhyrchu allwedd API newydd"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "This setting can cause scrolling issues on some browsers (e.g. Safari)"
+msgstr "Gall y gosodiad hwn achosi problemau sgrolio ar rai porwyr (e.g. Safari)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle read status of current entry"
+msgstr "Toglo statws darllen y cofnod cyfredol"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle sidebar"
+msgstr "Toglo bar ochr"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle starred status of current entry"
+msgstr "Toglo statws serennog y cofnod cyfredol"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Topic"
+msgstr "Pwnc"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Try out CommaFeed with the demo account: demo/demo"
+msgstr "Rhowch gynnig ar CommaFeed gyda'r cyfrif demo: demo / demo"
+
+#: src/pages/WelcomePage.tsx
+msgid "Try the demo!"
+msgstr "Rhowch gynnig ar y demo!"
+
+#: src/components/header/Header.tsx
+msgid "Unread"
+msgstr "Heb ei ddarllen"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Unstar"
+msgstr "dad-seren"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Unsubscribe"
+msgstr "Dad-danysgrifio"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "User key"
+msgstr "Allwedd defnyddiwr"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "User name"
+msgstr "Enw defnyddiwr"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "User Name or E-mail"
+msgstr "Enw Defnyddiwr neu E-bost"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Violet"
+msgstr "Fioled"
+
+#: src/components/Alert.tsx
+msgid "Warning"
+msgstr "Rhybudd"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Website"
+msgstr "Gwefan"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Welcome! This appears to be the first time you're running CommaFeed. Please create an administrator account to get started."
+msgstr "Croeso! Ymddengys mai dyma'r tro cyntaf i chi redeg CommaFeed. Creuwch gyfrif gweinyddwr i ddechrau."
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Yellow"
+msgstr "Melyn"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "You don't have any subscriptions yet. Why not try adding one by clicking on the + sign at the top of the page?"
+msgstr "Nid oes gennych unrhyw danysgrifiadau eto. Pam na rhoi cynnig ar ychwanegu un trwy glicio ar y marc + ar dop y dudalen?"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Your feeds have been queued for refresh."
+msgstr "Mae eich porthiannau wedi'u rhoi mewn ciw i'w hadnewyddu."
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Your password has been changed. You can now log in with your new password."
+msgstr "Mae eich cyfrinair wedi cael ei newid. Gallwch nawr fewngofnodi gyda'ch cyfrinair newydd."

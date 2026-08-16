@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<changeSet id="add-detailed-social-options" author="athou">
+		<validCheckSum>8:58e8060bba0ec9d448f4346eb35d815c</validCheckSum>
+		<addColumn tableName="USERSETTINGS">
+			<column name="email" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="gmail" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="facebook" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="twitter" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="googleplus" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="tumblr" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="pocket" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="instapaper" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="buffer" type="BOOLEAN"></column>
+		</addColumn>
+		<addColumn tableName="USERSETTINGS">
+			<column name="readability" type="BOOLEAN"></column>
+		</addColumn>
+
+		<dropColumn tableName="USERSETTINGS" columnName="socialButtons" />
+
+		<update tableName="USERSETTINGS">
+			<column name="email" valueBoolean="true"></column>
+			<column name="gmail" valueBoolean="true"></column>
+			<column name="facebook" valueBoolean="true"></column>
+			<column name="twitter" valueBoolean="true"></column>
+			<column name="googleplus" valueBoolean="true"></column>
+			<column name="tumblr" valueBoolean="true"></column>
+			<column name="pocket" valueBoolean="true"></column>
+			<column name="instapaper" valueBoolean="true"></column>
+			<column name="buffer" valueBoolean="true"></column>
+			<column name="readability" valueBoolean="true"></column>
+		</update>
+	</changeSet>
+
+	<changeSet id="delete-settings" author="athou">
+		<dropTable tableName="APPLICATIONSETTINGS" />
+	</changeSet>
+
+</databaseChangeLog>

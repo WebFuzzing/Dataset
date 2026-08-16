@@ -1,0 +1,1167 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-10-28 13:47+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ja\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: https://github.com/dai\n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/app/AboutPage.tsx
+msgid "<0>CommaFeed is an open-source project. Sources are hosted on </0><1>GitHub</1>."
+msgstr "<0>CommaFeed はオープンソースのプロジェクトです。 ソースは以下でホストされています </0><1>GitHub</1>。"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "<0>Have an account?</0><1>Log in!</1>"
+msgstr "<0>アカウントをお持ちですか?</0><1>ログインしてください!</1>"
+
+#: src/pages/app/DonatePage.tsx
+msgid "<0>Hey,</0><1>I'm Jérémie from Belgium and I've been working on CommaFeed in my free time for over 10 years now. Thanks for taking an interest in helping me continue supporting CommaFeed.</1>"
+msgstr "<0>こんにちは、</0><1>私はベルギーのジェレミーです。私はこれまで 10 年以上、CommaFeed のオープンソースプロジェクトを無料で開発してきました。あなたの関心に感謝します。</1>"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "<0>Need an account?</0><1>Sign up!</1>"
+msgstr "<0>アカウントが必要ですか?</0><1>サインアップ!</1>"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "About"
+msgstr "About"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Access token"
+msgstr "アクセストークン"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Actions"
+msgstr "アクション"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Add"
+msgstr "追加"
+
+#: src/pages/app/AddPage.tsx
+msgid "Add category"
+msgstr "カテゴリを追加"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Add user"
+msgstr "ユーザー追加"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Admin"
+msgstr "管理者"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Admin user name"
+msgstr "管理者ユーザー名"
+
+#: src/components/content/add/CategorySelect.tsx
+#: src/components/header/Header.tsx
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "All"
+msgstr "すべて"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Always"
+msgstr "常に"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "An email has been sent if this address was registered. Check your inbox."
+msgstr "このアドレスに確認メールを送信しました。受信箱を確認してください。"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "An opml file is an XML file containing feed URLs and categories. You can get an OPML file by exporting your data from other feed reading services."
+msgstr "opmlファイルは、フィードのURLとカテゴリを含むXMLファイルです。OPMLファイルは他のフィードサービスからエクスポートして取得することができます"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Analyze feed"
+msgstr "フィードを分析する"
+
+#: src/components/AnnouncementDialog.tsx
+msgid "Announcement"
+msgstr "お知らせ"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "API key"
+msgstr "APIキー"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "API token"
+msgstr "APIトークン"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "App token"
+msgstr "アプリトークン"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Are you sure you want to delete category <0>{categoryName}</0>?"
+msgstr "カテゴリ <0>{categoryName}</0> を削除してもよろしいですか？"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Are you sure you want to delete user <0>{userName}</0> ?"
+msgstr "ユーザー <0>{userName}</0> を削除してもよろしいですか？"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Are you sure you want to delete your account? There's no turning back!"
+msgstr "本当にアカウントを削除しますか？元には戻せません！"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark all entries of <0>{sourceLabel}</0> as read?"
+msgstr "<0>{sourceLabel}</0> のすべてのエントリーを既読にしますか？"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark entries older than {threshold} days of <0>{sourceLabel}</0> as read?"
+msgstr "<0>{sourceLabel}</0> の {threshold} 日より前のエントリーを既読としてマークしてもよろしいですか？"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Are you sure you want to unsubscribe from <0>{feedName}</0>?"
+msgstr "<0>{feedName}</0> の登録を解除してもよろしいですか？"
+
+#: src/components/header/Header.tsx
+msgid "Asc"
+msgstr "昇順"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Auto-mark as read"
+msgstr "自動的に既読にする"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Back"
+msgstr "戻る"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Back to log in"
+msgstr "ログインに戻る"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Blue"
+msgstr "ブルー"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Browser extension"
+msgstr "ブラウザー拡張"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Browser extension required for Chrome"
+msgstr "Chromeのブラウザー拡張が必要です"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Browser tab"
+msgstr "ブラウザータブ"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Build a filter expression to indicate what you want to read. Entries that don't match will be marked as read automatically."
+msgstr "読みたい内容を指定するためのフィルタ式を作成します。一致しないエントリは自動的に既読としてマークされます。"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/ImportOpml.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AboutPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Category"
+msgstr "カテゴリー"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Changing password will generate a new API key"
+msgstr "パスワードを変更すると、新しいAPIキーが生成されます"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Check that the feed is working"
+msgstr "フィードが動作していることを確認してください"
+
+#: src/pages/app/Layout.tsx
+msgid "Close menu"
+msgstr "メニューを閉じる"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Cmd"
+msgstr "Cmd"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed browser extension version {browserExtensionVersion}."
+msgstr "CommaFeed ブラウザー拡張機能のバージョンは {browserExtensionVersion} です。"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Fever API. Use the following URL in your Fever-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "CommaFeedはFever APIと互換性があります。Fever互換のモバイルクライアントで次のURLを使用してください。ユーザー名と <0>API キー</0> でログインしてください。"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Google Reader API. Use the following URL in your Google Reader-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "CommaFeedはGoogle Reader APIと互換性があります。Google Reader互換のモバイルクライアントで次のURLを使用してください。ユーザー名と <0>API キー</0> でログインしてください。"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed next unread item"
+msgstr "CommaFeed 次の未読アイテム"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed version {version} ({revision})."
+msgstr "CommaFeed バージョン {version} ({revision})。"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Compact"
+msgstr "コンパクト"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Confirm"
+msgstr "確認"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Confirm password"
+msgstr "パスワード確認"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Confirm Password"
+msgstr "パスワードの確認"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Cozy"
+msgstr "Cozy"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Create Admin Account"
+msgstr "管理者アカウントの作成"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Current password"
+msgstr "現在のパスワード"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Custom code"
+msgstr "カスタムコード"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom CSS rules that will be applied"
+msgstr "適用されるカスタムCSSルール"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom JS code that will be executed on page load"
+msgstr "ページ読み込み時に実行されるカスタムJSコード"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Cyan"
+msgstr "シアン"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+msgid "Dark"
+msgstr "ダーク"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Date created"
+msgstr "作成日"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "days"
+msgstr "日"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete"
+msgstr "削除"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Delete account"
+msgstr "アカウント削除"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete Category"
+msgstr "カテゴリーを削除"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Delete user"
+msgstr "ユーザーの削除"
+
+#: src/components/header/Header.tsx
+msgid "Desc"
+msgstr "説明"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Detailed"
+msgstr "詳細"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Disable \"Pull to refresh\" browser behavior"
+msgstr "ブラウザの「プルして更新」動作を無効にする"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+#: src/pages/app/SettingsPage.tsx
+msgid "Display"
+msgstr "ディスプレイ"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/DonatePage.tsx
+msgid "Donate"
+msgstr "寄付"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Download"
+msgstr "ダウンロード"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Drag link to bookmark bar"
+msgstr "リンクをブックマークバーにドラッグ"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "E-mail"
+msgstr "メール"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "E-mail address"
+msgstr "メールアドレス"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Edit user"
+msgstr "ユーザーの編集"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Enabled"
+msgstr "有効"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Enter"
+msgstr "入力"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Enter your current password to change profile settings"
+msgstr "プロファイル設定を変更するには、現在のパスワードを入力してください"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entries to keep above the selected entry when scrolling"
+msgstr "エントリーを選択したとき、読みやすさに応じたスクロール調整を行います。"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entry headers"
+msgstr "エントリーヘッダー"
+
+#: src/components/Alert.tsx
+msgid "Error"
+msgstr "エラー"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Expanded"
+msgstr "拡張"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Export your subscriptions and categories as an OPML file that can be imported in other feed reading services"
+msgstr "サブスクリプションとカテゴリを、他のフィード読み取りサービスにインポートできる OPML ファイルとしてエクスポートします"
+
+#: src/components/header/Header.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Extension options"
+msgstr "拡張機能オプション"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Feed name"
+msgstr "フィード名"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Feed URL"
+msgstr "フィード URL"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Fetch all my feeds now"
+msgstr "すべてのフィードを今すぐ取得"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API"
+msgstr "Fever API"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API URL"
+msgstr "Fever API URL"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Filtering expression"
+msgstr "フィルタリング式"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Font size"
+msgstr "フォントサイズ"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Force fetching feeds is not yet available."
+msgstr "フィードの強制フェッチはまだ利用できません。"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Forgot password?"
+msgstr "パスワードをお忘れですか？"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generate an API key in your profile first."
+msgstr "最初にプロファイルでAPIキーを生成します。"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Generate new API key"
+msgstr "新しいAPIキーを生成する"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generated feed url"
+msgstr "生成されたフィードURL"
+
+#. placeholder {0}: truncate(props.entry.feedName, 30)
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Go to {0}"
+msgstr "{0} に移動"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Go to the All view"
+msgstr "すべてのビューに移動"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Go to the API documentation."
+msgstr "APIドキュメントに移動します。"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Goodies"
+msgstr "グッズ"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API"
+msgstr ""
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API URL"
+msgstr ""
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Grape"
+msgstr "グレープ"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Gray"
+msgstr "グレー"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Green"
+msgstr "グリーン"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Id"
+msgstr "ID"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "If the entry doesn't entirely fit on the screen"
+msgstr "エントリーが画面に完全に収まらない場合"
+
+#: src/pages/app/AboutPage.tsx
+msgid "If you encounter an issue, please report it on the issues page of the GitHub project."
+msgstr "問題が発生した場合は、GitHubプロジェクトのissuesページで報告してください。"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "Import"
+msgstr "インポート"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "In expanded view, scrolling through entries mark them as read"
+msgstr "展開ビューでエントリーをスクロールすると、それらが既読としてマークされます"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Indigo"
+msgstr "インディゴ"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Initial Setup"
+msgstr "初期設定"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Invalid password reset link. Please request a new one."
+msgstr "無効なパスワードリセットリンクです。新しいリンクをリクエストしてください。"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Keep unread"
+msgstr "未読のままにする"
+
+#: src/components/content/FeedEntries.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "Keyboard shortcuts"
+msgstr "キーボードショートカット"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Language"
+msgstr "言語"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Last login date"
+msgstr "最終ログイン日"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh"
+msgstr "最終更新"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh message"
+msgstr "最終更新メッセージ"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Light"
+msgstr "ライト"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Lime"
+msgstr "ライム"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Link"
+msgstr "リンク"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Link to the documentation"
+msgstr "ドキュメントへのリンク"
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading profile..."
+msgstr "プロファイルを読み込んでいます..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading settings..."
+msgstr "設定を読み込んでいます..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading subscriptions..."
+msgstr "サブスクリプションを読み込んでいます..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading tags..."
+msgstr "タグを読み込んでいます..."
+
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Log in"
+msgstr "ログイン"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Logout"
+msgstr "ログアウト"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Long press"
+msgstr "長押し"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Manage users"
+msgstr "ユーザーの管理"
+
+#: src/components/header/Header.tsx
+msgid "Mark all as read"
+msgstr "すべて既読にする"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Mark all entries as read"
+msgstr "すべてのエントリーを既読にする"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read"
+msgstr "既読にする"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read up to here"
+msgstr "ここまで既読にする"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Mark entries in this feed as read after this number of days. Leave empty to disable."
+msgstr "この日数経過後に、このフィードのエントリを既読としてマークします。無効にするには空のままにしてください。"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Metrics"
+msgstr "メトリックス"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Middle click"
+msgstr "中クリック"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page down"
+msgstr "ページを下に移動"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page up"
+msgstr "ページを上に移動"
+
+#: src/components/RelativeDate.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "N/A"
+msgstr "該当なし"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Name"
+msgstr "名前"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Navigate to a subscription by entering its name"
+msgstr "名前を入力してサブスクリプションに移動します"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Navigate to the next category/feed with unread entries when marking all entries as read"
+msgstr "すべてのエントリーを既読にするとき、未読エントリーのある次のカテゴリ/フィードに移動する"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Never"
+msgstr "しない"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "New password"
+msgstr "新しいパスワード"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "New Password"
+msgstr "新しいパスワード"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Newest first"
+msgstr "最新順"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/components/header/Header.tsx
+msgid "Next"
+msgstr "次へ"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Next refresh"
+msgstr "次の更新"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Next unread item bookmarklet"
+msgstr "次の未読アイテムのブックマークレット"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "No more entries"
+msgstr "これ以上エントリーはありません"
+
+#: src/components/content/ShareButtons.tsx
+msgid "No sharing options available."
+msgstr "共有オプションは利用できません。"
+
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Nothing found"
+msgstr "何も見つかりませんでした"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Oldest first"
+msgstr "古い順"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On desktop"
+msgstr "デスクトップ"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile"
+msgstr "モバイル"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile, show action buttons at the bottom of the screen"
+msgstr "モバイルでは、画面の下部にアクションボタンを表示します"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Only applies to compact, cozy and detailed modes"
+msgstr "これはコンパクト/cozy/詳細モードでのみ適用されます"
+
+#: src/pages/ErrorPage.tsx
+msgid "Oops!"
+msgstr "おっと！"
+
+#: src/components/header/Header.tsx
+msgid "Open CommaFeed"
+msgstr "CommaFeedを開く"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab"
+msgstr "現在のエントリーを新しいタブで開く"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab in the background"
+msgstr "現在のエントリーを新しいバックグラウンドタブで開く"
+
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/OpenExternalLink.tsx
+msgid "Open link"
+msgstr "リンクを開く"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new background tab"
+msgstr "リンクを新しいバックグラウンドタブで開く"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new tab"
+msgstr "リンクを新しいタブで開く"
+
+#: src/pages/app/Layout.tsx
+msgid "Open menu"
+msgstr "メニューを開く"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open next entry"
+msgstr "次のエントリーを開く"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open previous entry"
+msgstr "前のエントリーを開く"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open/close current entry"
+msgstr "現在のエントリーを開く/閉じる"
+
+#: src/pages/app/AddPage.tsx
+msgid "OPML"
+msgstr "OPML"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "OPML export"
+msgstr "OPML エクスポート"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file"
+msgstr "OPMLファイル"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file is required"
+msgstr "OPMLファイルは必要です"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Orange"
+msgstr "オレンジ"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Order"
+msgstr "オーダー"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Parent"
+msgstr "親"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Parent Category"
+msgstr "親カテゴリ"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Password"
+msgstr "パスワード"
+
+#: src/hooks/useValidationRules.ts
+msgid "Password must be at least {minimumPasswordLength} characters"
+msgstr "パスワードは {minimumPasswordLength} 文字以上である必要があります"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Password Recovery"
+msgstr "パスワード回復"
+
+#: src/hooks/useValidationRules.ts
+msgid "Passwords do not match"
+msgstr "パスワードが一致しません"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Pink"
+msgstr "ピンク"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Position"
+msgstr "位置"
+
+#: src/components/header/Header.tsx
+msgid "Previous"
+msgstr "前へ"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Primary color"
+msgstr "プライマリカラー"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Profile"
+msgstr "プロフィール"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notification service"
+msgstr "プッシュ通知サービス"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Push notifications"
+msgstr "プッシュ通知"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Push notifications are not configured in your user settings."
+msgstr "ユーザー設定でプッシュ通知が設定されていません。"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notifications are not enabled on this CommaFeed instance."
+msgstr "この CommaFeed インスタンスではプッシュ通知が有効になっていません。"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Receive push notifications"
+msgstr "プッシュ通知を受け取る"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Receive push notifications when new feed entries are discovered. Enable \"Receive push notifications\" in the settings of each feed for which you want to receive notifications."
+msgstr "新しいフィードエントリが発見されたときにプッシュ通知を受け取ります。通知を受け取りたい各フィードの設定で「プッシュ通知を受け取る」を有効にしてください。"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Recover password"
+msgstr "パスワードの回復"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Red"
+msgstr "レッド"
+
+#: src/components/header/Header.tsx
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Refresh"
+msgstr "リフレッシュ"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Registrations are closed on this CommaFeed instance"
+msgstr "このCommaFeedインスタンスの登録は終了しています"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Reset Password"
+msgstr "パスワードをリセット"
+
+#: src/pages/app/AboutPage.tsx
+msgid "REST API"
+msgstr "REST API"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Right click"
+msgstr "右クリック"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Save"
+msgstr "保存"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll selected entry to the top of the page"
+msgstr "エントリーを選択したときのスクロール調整"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll smoothly when navigating between entries"
+msgstr "エントリー間を移動するときにスムーズにスクロールする"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scrolling"
+msgstr "スクロール"
+
+#: src/components/header/Header.tsx
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Search"
+msgstr "検索"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select next unread feed/category"
+msgstr "次の未読フィード/カテゴリを選択"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select previous unread feed/category"
+msgstr "前の未読フィード/カテゴリを選択"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Server URL"
+msgstr "サーバーURL"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on next entry without opening it"
+msgstr "次のエントリーを開かずにフォーカスする"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on previous entry without opening it"
+msgstr "前のエントリーを開かずにフォーカスする"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Settings"
+msgstr "設定"
+
+#: src/app/user/slice.ts
+msgid "Settings saved."
+msgstr "設定が保存されました。"
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Share"
+msgstr "シェア"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Sharing sites"
+msgstr "共有サイト"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Shift"
+msgstr "Shift"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show CommaFeed's own context menu on right click"
+msgstr "右クリックでCommaFeedのコンテキストメニューを表示する"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show confirmation when marking all entries as read"
+msgstr "すべてのエントリーを既読にするときに確認を表示する"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (desktop)"
+msgstr "エントリーメニューを表示する(デスクトップ)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (mobile)"
+msgstr "エントリーメニューを表示する(モバイル)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show external link icon"
+msgstr "外部リンクアイコンを表示する"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show feeds and categories with no unread entries"
+msgstr "未読エントリーのないフィードとカテゴリーを表示する"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show keyboard shortcut help"
+msgstr "キーボード ショートカットのヘルプを表示"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show native menu (desktop)"
+msgstr "ネイティブメニューを表示する(デスクトップ)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show star icon"
+msgstr "スターアイコンを表示する"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab favicon"
+msgstr "未読数をタブのアイコンに表示する"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab title"
+msgstr "未読数をタブのタイトルに表示する"
+
+#: src/pages/auth/RegistrationPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Sign up"
+msgstr "サインアップ"
+
+#: src/pages/ErrorPage.tsx
+msgid "Something bad just happened..."
+msgstr "何か悪いことが起きました..."
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Space"
+msgstr "Space"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Star"
+msgstr "スター"
+
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "Starred"
+msgstr "スター付き"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AddPage.tsx
+msgid "Subscribe"
+msgstr "購読する"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Subscribe to the feed"
+msgstr "フィードを購読する"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Subscribe URL"
+msgstr "購読URL"
+
+#: src/components/Alert.tsx
+msgid "Success"
+msgstr "成功"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Swipe header to the left"
+msgstr "ヘッダーを左にスワイプ"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to dark theme"
+msgstr "ダークテーマに切り替え"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to light theme"
+msgstr "ライトテーマに切り替え"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "System"
+msgstr "システム"
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Tags"
+msgstr "タグ"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Teal"
+msgstr "ティール"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test"
+msgstr "テスト"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test notification sent successfully."
+msgstr "テスト通知が正常に送信されました。"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "The URL for the feed you want to subscribe to. You can also use the website's url directly and CommaFeed will try to find the feed in the page."
+msgstr "購読したいフィードのURL。ウェブサイトのURLを直接使用して、CommaFeedはページ内のフィードを検索します。"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Theme"
+msgstr "テーマ"
+
+#. placeholder {0}: feed.filterLegacy
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "This feed has a legacy filter that cannot be edited and is not applied. Please recreate the filter using the new expression editor. The legacy filter expression was: <0>{0}</0>"
+msgstr "このフィードには、編集できず適用もされない古い形式のフィルタがあります。新しい式エディタを使用してフィルタを再作成してください。古いフィルタ式は次のとおりでした: <0>{0}</0>"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "This is your API key. It can be used for some read-only API operations and grants access to the Fever API and the Google Reader API. Use the form at the bottom of the page to generate a new API key"
+msgstr "これはあなたのAPIキーです。一部の読み取り専用API操作に使用でき、Fever APIおよびGoogle Reader APIへのアクセスを許可します。新しいAPIキーを生成するには、ページ下部のフォームを使用してください"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "This setting can cause scrolling issues on some browsers (e.g. Safari)"
+msgstr "この設定により、一部のブラウザ（Safari など）でスクロールの問題が発生する可能性があります。"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle read status of current entry"
+msgstr "現在のエントリーの読み取りステータスを切り替えます"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle sidebar"
+msgstr "サイドバーを切り替える"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle starred status of current entry"
+msgstr "現在のエントリーのスターステータスを切り替える"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Topic"
+msgstr "トピック"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Try out CommaFeed with the demo account: demo/demo"
+msgstr "デモアカウントでCommaFeedを試す: demo/demo"
+
+#: src/pages/WelcomePage.tsx
+msgid "Try the demo!"
+msgstr "デモを試す！"
+
+#: src/components/header/Header.tsx
+msgid "Unread"
+msgstr "未読"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Unstar"
+msgstr "スターを外す"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Unsubscribe"
+msgstr "退会"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "User key"
+msgstr "ユーザーキー"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "User name"
+msgstr "ユーザー名"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "User Name or E-mail"
+msgstr "ユーザー名またはメールアドレス"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Violet"
+msgstr "バイオレット"
+
+#: src/components/Alert.tsx
+msgid "Warning"
+msgstr "警告"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Website"
+msgstr "ウェブサイト"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Welcome! This appears to be the first time you're running CommaFeed. Please create an administrator account to get started."
+msgstr "ようこそ！CommaFeedを初めて実行するようです。開始するには管理者アカウントを作成してください。"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Yellow"
+msgstr "イエロー"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "You don't have any subscriptions yet. Why not try adding one by clicking on the + sign at the top of the page?"
+msgstr "まだサブスクリプションがありません。上部の + 記号をクリックして1つ追加してみませんか？"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Your feeds have been queued for refresh."
+msgstr "フィードの更新がキューに登録されました。"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Your password has been changed. You can now log in with your new password."
+msgstr "パスワードが変更されました。新しいパスワードでログインできます。"

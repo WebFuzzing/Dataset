@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<changeSet id="use-timestamps" author="athou">
+		<validCheckSum>9:bf66bf7def9ec3dab1f365f7230d92cf</validCheckSum>
+		<modifyDataType tableName="FEEDS" columnName="lastUpdated" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDS" columnName="lastPublishedDate" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDS" columnName="lastEntryDate" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDS" columnName="disabledUntil" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDENTRIES" columnName="inserted" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDENTRIES" columnName="updated" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDENTRYSTATUSES" columnName="entryInserted" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="FEEDENTRYSTATUSES" columnName="entryUpdated" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="USERS" columnName="lastLogin" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="USERS" columnName="created" newDataType="${timestamp_type}" />
+		<modifyDataType tableName="USERS" columnName="recoverPasswordTokenDate" newDataType="${timestamp_type}" />
+	</changeSet>
+
+	<changeSet id="mobile-footer-setting" author="athou">
+		<addColumn tableName="USERSETTINGS">
+			<column name="mobileFooter" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+</databaseChangeLog>

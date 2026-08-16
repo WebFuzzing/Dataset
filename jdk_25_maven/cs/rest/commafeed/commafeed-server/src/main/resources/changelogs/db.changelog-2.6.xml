@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<changeSet id="remove-googleplus-readability" author="athou">
+		<dropColumn tableName="USERSETTINGS" columnName="googleplus" />
+		<dropColumn tableName="USERSETTINGS" columnName="readability" />
+	</changeSet>
+
+	<changeSet id="add-content-media" author="athou">
+		<addColumn tableName="FEEDENTRYCONTENTS">
+			<column name="mediaDescription" type="CLOB" />
+		</addColumn>
+		<addColumn tableName="FEEDENTRYCONTENTS">
+			<column name="mediaThumbnailUrl" type="VARCHAR(2048)" />
+		</addColumn>
+		<addColumn tableName="FEEDENTRYCONTENTS">
+			<column name="mediaThumbnailWidth" type="INT" />
+		</addColumn>
+		<addColumn tableName="FEEDENTRYCONTENTS">
+			<column name="mediaThumbnailHeight" type="INT" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="rename-filter-avoid-keyword" author="athou">
+		<validCheckSum>8:39e5a9ff312af90d82f87c88abf1c66d</validCheckSum>
+		<renameColumn tableName="FEEDSUBSCRIPTIONS" oldColumnName="filter" newColumnName="filtering_expression"
+					  columnDataType="VARCHAR(4096)" />
+	</changeSet>
+
+</databaseChangeLog>

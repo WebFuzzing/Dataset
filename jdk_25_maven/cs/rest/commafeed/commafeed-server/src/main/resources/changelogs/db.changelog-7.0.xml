@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<changeSet id="cel-filtering-expressions" author="athou">
+		<addColumn tableName="FEEDSUBSCRIPTIONS">
+			<column name="filtering_expression_legacy" type="VARCHAR(4096)">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<update tableName="FEEDSUBSCRIPTIONS">
+			<column name="filtering_expression_legacy" valueComputed="filtering_expression" />
+		</update>
+		<update tableName="FEEDSUBSCRIPTIONS">
+			<column name="filtering_expression" valueComputed="NULL" />
+		</update>
+	</changeSet>
+
+	<changeSet id="add-push-notification-settings" author="athou">
+		<addColumn tableName="USERSETTINGS">
+			<column name="push_notification_type" type="VARCHAR(16)" />
+			<column name="push_notification_server_url" type="VARCHAR(1024)" />
+			<column name="push_notification_user_id" type="VARCHAR(512)" />
+			<column name="push_notification_user_secret" type="VARCHAR(512)" />
+			<column name="push_notification_topic" type="VARCHAR(256)" />
+		</addColumn>
+		<addColumn tableName="FEEDSUBSCRIPTIONS">
+			<column name="push_notifications_enabled" type="BOOLEAN" valueBoolean="false">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="add-auto-mark-as-read-after-days" author="athou">
+		<addColumn tableName="FEEDSUBSCRIPTIONS">
+			<column name="auto_mark_as_read_after_days" type="INT">
+				<constraints nullable="true" />
+			</column>
+		</addColumn>
+		<createIndex indexName="feedsubscriptions_automark_index" tableName="FEEDSUBSCRIPTIONS">
+			<column name="auto_mark_as_read_after_days" />
+		</createIndex>
+	</changeSet>
+
+</databaseChangeLog>

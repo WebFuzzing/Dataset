@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.commafeed</groupId>
+	<artifactId>commafeed</artifactId>
+	<version>7.3.0</version>
+	<name>CommaFeed</name>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>25</maven.compiler.release>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.15.0</version>
+				<configuration>
+					<parameters>true</parameters>
+
+					<!-- treat warnings as errors -->
+					<!-- https://stackoverflow.com/a/33823355/ -->
+					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<!-- enable annotation processing -->
+						<arg>-proc:full</arg>
+
+						<!-- disable the "processing" linter because we have annotations that are processed at runtime -->
+						<!-- https://stackoverflow.com/a/76126981/ -->
+						<!-- disable the "classfile" linter because it generates "file missing" warnings about annotations with the "provided" scope -->
+						<arg>-Xlint:all,-processing,-classfile</arg>
+						<arg>-Werror</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>commafeed-client</module>
+		<module>commafeed-server</module>
+	</modules>
+
+</project>
