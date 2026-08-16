@@ -88,10 +88,18 @@
                 <extensions>true</extensions>
                 <configuration>
                     <properties>
-                        <quarkus.package.output-name>commafeed-${project.version}</quarkus.package.output-name>
-                        <quarkus.package.runner-suffix>
-                            -${build.database}-${os.detected.name}-${os.detected.arch}-runner
-                        </quarkus.package.runner-suffix>
+                        <!--          MODIFIED-->
+                        <!-- EMB needs a single self-contained "commafeed-sut.jar": the default
+                             fast-jar is a directory tree, and the original name carried the
+                             version and the build machine's OS/arch. -->
+                        <quarkus.package.jar.type>uber-jar</quarkus.package.jar.type>
+                        <quarkus.package.output-name>commafeed</quarkus.package.output-name>
+                        <quarkus.package.runner-suffix>-sut</quarkus.package.runner-suffix>
+<!--                        <quarkus.package.output-name>commafeed-${project.version}</quarkus.package.output-name>-->
+<!--                        <quarkus.package.runner-suffix>-->
+<!--                            -${build.database}-${os.detected.name}-${os.detected.arch}-runner-->
+<!--                        </quarkus.package.runner-suffix>-->
+                        <!--          MODIFIED-->
                     </properties>
                 </configuration>
             </plugin>
@@ -152,6 +160,13 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <!--          MODIFIED-->
+                            <!-- This zips target/quarkus-app/, which no longer exists after
+                                 switching the package type to uber-jar above, so it fails with
+                                 "archive cannot be empty". It builds CommaFeed's own release
+                                 archive and has no role in EMB. -->
+                            <skipAssembly>true</skipAssembly>
+                            <!--          MODIFIED-->
                             <finalName>commafeed-${project.version}-${build.database}-jvm</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>

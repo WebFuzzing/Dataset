@@ -155,12 +155,14 @@ JDK_8 = "JDK_8"
 JDK_11 = "JDK_11"
 JDK_17 = "JDK_17"
 JDK_21 = "JDK_21"
+JDK_25 = "JDK_25"
 
 def isJava(sut):
     return (sut.platform == JDK_8
             or sut.platform == JDK_11
             or sut.platform == JDK_17
             or sut.platform == JDK_21
+            or sut.platform == JDK_25
             )
 
 class Sut:
@@ -183,6 +185,7 @@ SUTS = [
     Sut("bibliothek",  JDK_17),
     Sut("blogapi",JDK_8),
     Sut("catwatch",  JDK_8),
+    Sut("commafeed",  JDK_25),
     Sut("cwa-verification",  JDK_11),
     Sut("erc20-rest-service", JDK_8),
     Sut("familie-ba-sak",JDK_17),

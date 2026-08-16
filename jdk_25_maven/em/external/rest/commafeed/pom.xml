@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>evomaster-benchmark-jdk25-em-external-rest-commafeed</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.evomaster</groupId>
+        <artifactId>evomaster-benchmark-jdk25-em-external-rest</artifactId>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+
+    <dependencies>
+        <!--
+            The driver starts an H2 server in TCP mode and connects to it, so that EvoMaster can
+            inspect the SUT's database. The SUT gets the same database through a jdbc:h2:tcp:// URL.
+            Version must match the one used by the SUT (com.h2database:h2:2.4.240 in
+            commafeed-server), otherwise the TCP client and server can disagree on the protocol.
+        -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.4.240</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>commafeed-evomaster-runner</finalName>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>em.external.commafeed.ExternalEvoMasterController
+                                        </Main-Class>
+                                        <Premain-Class>org.evomaster.client.java.instrumentation.InstrumentingAgent
+                                        </Premain-Class>
+                                        <Agent-Class>org.evomaster.client.java.instrumentation.InstrumentingAgent
+                                        </Agent-Class>
+                                        <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                                        <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -48,6 +48,11 @@ if JAVA_HOME_21 == '':
     print("\nERROR: JAVA_HOME_21 environment variable is not defined")
     exit(1)
 
+JAVA_HOME_25 = os.environ.get('JAVA_HOME_25', '')
+if JAVA_HOME_25 == '':
+    print("\nERROR: JAVA_HOME_25 environment variable is not defined")
+    exit(1)
+
 
 SHELL = platform.system() == 'Windows'
 
@@ -140,6 +145,7 @@ if target == "em":
     replaceInPom("jdk_11_maven/pom.xml")
     replaceInPom("jdk_17_maven/pom.xml")
     replaceInPom("jdk_21_maven/pom.xml")
+    replaceInPom("jdk_25_maven/pom.xml")
 
     replaceInGradle("jdk_8_gradle/build.gradle")
     replaceInGradle("jdk_11_gradle/build.gradle")
@@ -152,6 +158,7 @@ if target == "wfd":
     versionSetMaven("/jdk_11_maven",JAVA_HOME_11)
     versionSetMaven("/jdk_17_maven",JAVA_HOME_17)
     versionSetMaven("/jdk_21_maven",JAVA_HOME_21)
+    versionSetMaven("/jdk_25_maven",JAVA_HOME_25)
 
 # We no longer support those in EMB... not enough resources. although might change in future
 #replaceAllJs()

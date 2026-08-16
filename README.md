@@ -85,13 +85,15 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (36)
+### REST: Java/Kotlin (37)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 
 * **Blog** (AGPL), [jdk_8_maven/cs/rest/original/blogapi](jdk_8_maven/cs/rest/original/blogapi), from [https://github.com/osopromadze/Spring-Boot-Blog-REST-API](https://github.com/osopromadze/Spring-Boot-Blog-REST-API)
 
 * **CatWatch** (Apache), [jdk_8_maven/cs/rest/original/catwatch](jdk_8_maven/cs/rest/original/catwatch), from [https://github.com/zalando-incubator/catwatch](https://github.com/zalando-incubator/catwatch)
+
+* **CommaFeed** (Apache), [jdk_25_maven/cs/rest/commafeed](jdk_25_maven/cs/rest/commafeed), from [https://github.com/Athou/commafeed](https://github.com/Athou/commafeed)
 
 * **CWA-Verification-Server** (Apache), [jdk_11_maven/cs/rest/cwa-verification-server](jdk_11_maven/cs/rest/cwa-verification-server), from [https://github.com/corona-warn-app/cwa-verification-server](https://github.com/corona-warn-app/cwa-verification-server)
 
@@ -263,8 +265,8 @@ docker-compose -f dockerfiles/reservations-api.yaml up
 ```
 
 _White-box_ testing: everything can be setup by running the script `scripts/dist.py`.
-Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, JDK 21, NPM, as well as Docker.
-Also, you will need to setup environment variables like `JAVA_HOME_8`, `JAVA_HOME_11`,  `JAVA_HOME_17` and `JAVA_HOME_21`.
+Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, JDK 21, JDK 25, NPM, as well as Docker.
+Also, you will need to setup environment variables like `JAVA_HOME_8`, `JAVA_HOME_11`,  `JAVA_HOME_17`, `JAVA_HOME_21` and `JAVA_HOME_25`.
 The script will issue error messages if any prerequisite is missing.
 Once the script is completed, not only all the SUTs will be available under the `dist` folder, but also all the _driver_ executables for _EvoMaster_. 
 

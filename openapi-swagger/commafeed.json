@@ -1,0 +1,2835 @@
+{
+  "openapi" : "3.1.0",
+  "components" : {
+    "schemas" : {
+      "AddCategoryRequest" : {
+        "description" : "Add Category Request",
+        "type" : "object",
+        "required" : [ "name" ],
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "name",
+            "maxLength" : 128,
+            "minLength" : 1
+          },
+          "parentId" : {
+            "type" : "string",
+            "description" : "parent category id, if any",
+            "maxLength" : 128
+          }
+        }
+      },
+      "AdminSaveUserRequest" : {
+        "description" : "Save User information",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "user id"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "user name"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "user email, if any"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "user password"
+          },
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "account status"
+          },
+          "admin" : {
+            "type" : "boolean",
+            "description" : "user is admin"
+          }
+        },
+        "required" : [ "name", "enabled", "admin" ]
+      },
+      "Category" : {
+        "description" : "Entry details",
+        "type" : "object",
+        "required" : [ "id", "name", "children", "feeds", "expanded", "position" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "category id"
+          },
+          "parentId" : {
+            "type" : "string",
+            "description" : "parent category id"
+          },
+          "parentName" : {
+            "type" : "string",
+            "description" : "parent category name"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "category id"
+          },
+          "children" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Category"
+            },
+            "description" : "category children categories"
+          },
+          "feeds" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Subscription"
+            },
+            "description" : "category feeds"
+          },
+          "expanded" : {
+            "type" : "boolean",
+            "description" : "whether the category is expanded or collapsed"
+          },
+          "position" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "position of the category in the list"
+          }
+        }
+      },
+      "CategoryModificationRequest" : {
+        "description" : "Category modification request",
+        "type" : "object",
+        "required" : [ "id" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "id"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "new name, null if not changed",
+            "maxLength" : 128
+          },
+          "parentId" : {
+            "type" : "string",
+            "description" : "new parent category id",
+            "maxLength" : 128
+          },
+          "position" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "new display position, null if not changed"
+          }
+        }
+      },
+      "CollapseRequest" : {
+        "description" : "Mark Request",
+        "type" : "object",
+        "required" : [ "id", "collapse" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "category id"
+          },
+          "collapse" : {
+            "type" : "boolean",
+            "description" : "collapse"
+          }
+        }
+      },
+      "Entries" : {
+        "description" : "List of entries with some metadata",
+        "type" : "object",
+        "required" : [ "name", "errorCount", "timestamp", "hasMore", "entries", "ignoredReadStatus" ],
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "name of the feed or the category requested"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "error or warning message"
+          },
+          "errorCount" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "times the server tried to refresh the feed and failed"
+          },
+          "feedLink" : {
+            "type" : "string",
+            "description" : "URL of the website, extracted from the feed, only filled if querying for feed entries, not category entries"
+          },
+          "timestamp" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "list generation timestamp"
+          },
+          "hasMore" : {
+            "type" : "boolean",
+            "description" : "if the query has more elements"
+          },
+          "offset" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "the requested offset"
+          },
+          "limit" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "the requested limit"
+          },
+          "entries" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Entry"
+            },
+            "description" : "list of entries"
+          },
+          "ignoredReadStatus" : {
+            "type" : "boolean",
+            "description" : "if true, the unread flag was ignored in the request, all entries are returned regardless of their read status"
+          }
+        }
+      },
+      "Entry" : {
+        "type" : "object",
+        "description" : "Entry details",
+        "required" : [ "id", "guid", "title", "content", "rtl", "date", "insertedDate", "feedId", "feedName", "feedUrl", "feedLink", "iconUrl", "url", "read", "starred", "markable", "tags" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "entry id"
+          },
+          "guid" : {
+            "type" : "string",
+            "description" : "entry guid"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "entry title"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "entry content"
+          },
+          "categories" : {
+            "type" : "string",
+            "description" : "comma-separated list of categories"
+          },
+          "rtl" : {
+            "type" : "boolean",
+            "description" : "whether entry content and title are rtl"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "entry author"
+          },
+          "enclosureUrl" : {
+            "type" : "string",
+            "description" : "entry enclosure url, if any"
+          },
+          "enclosureType" : {
+            "type" : "string",
+            "description" : "entry enclosure mime type, if any"
+          },
+          "mediaDescription" : {
+            "type" : "string",
+            "description" : "entry media description, if any"
+          },
+          "mediaThumbnailUrl" : {
+            "type" : "string",
+            "description" : "entry media thumbnail url, if any"
+          },
+          "mediaThumbnailWidth" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "entry media thumbnail width, if any"
+          },
+          "mediaThumbnailHeight" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "entry media thumbnail height, if any"
+          },
+          "date" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "entry publication date"
+          },
+          "insertedDate" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "entry insertion date in the database"
+          },
+          "feedId" : {
+            "type" : "string",
+            "description" : "feed id"
+          },
+          "feedName" : {
+            "type" : "string",
+            "description" : "feed name"
+          },
+          "feedUrl" : {
+            "type" : "string",
+            "description" : "this entry's feed url"
+          },
+          "feedLink" : {
+            "type" : "string",
+            "description" : "this entry's website url"
+          },
+          "iconUrl" : {
+            "type" : "string",
+            "description" : "The favicon url to use for this feed"
+          },
+          "url" : {
+            "type" : "string",
+            "description" : "entry url"
+          },
+          "read" : {
+            "type" : "boolean",
+            "description" : "read status"
+          },
+          "starred" : {
+            "type" : "boolean",
+            "description" : "starred status"
+          },
+          "markable" : {
+            "type" : "boolean",
+            "description" : "whether the entry is still markable (old entry statuses are discarded)"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : "tags"
+          }
+        }
+      },
+      "FeedInfo" : {
+        "description" : "Feed details",
+        "type" : "object",
+        "required" : [ "url", "title" ],
+        "properties" : {
+          "url" : {
+            "type" : "string",
+            "description" : "url"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
+      "FeedInfoRequest" : {
+        "description" : "Feed information request",
+        "type" : "object",
+        "required" : [ "url" ],
+        "properties" : {
+          "url" : {
+            "type" : "string",
+            "description" : "feed url",
+            "maxLength" : 4096,
+            "minLength" : 1
+          }
+        }
+      },
+      "FeedModificationRequest" : {
+        "description" : "Feed modification request",
+        "type" : "object",
+        "required" : [ "id" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "id"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "new name, null if not changed",
+            "maxLength" : 128
+          },
+          "categoryId" : {
+            "type" : "string",
+            "description" : "new parent category id",
+            "maxLength" : 128
+          },
+          "position" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "new display position, null if not changed"
+          },
+          "filter" : {
+            "type" : "string",
+            "description" : "CEL string evaluated on new entries to mark them as read if they do not match",
+            "maxLength" : 4096
+          },
+          "pushNotificationsEnabled" : {
+            "type" : "boolean",
+            "description" : "whether to send push notifications for new entries of this feed"
+          },
+          "autoMarkAsReadAfterDays" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "automatically mark entries as read after this many days (null to disable)"
+          }
+        }
+      },
+      "IDRequest" : {
+        "type" : "object",
+        "required" : [ "id" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "IconDisplayMode" : {
+        "type" : "string",
+        "enum" : [ "always", "never", "on_desktop", "on_mobile" ]
+      },
+      "InitialSetupRequest" : {
+        "description" : "Initial admin account setup request",
+        "type" : "object",
+        "required" : [ "name", "password" ],
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "admin username"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "admin password"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "admin email"
+          }
+        }
+      },
+      "Instant" : { },
+      "MarkRequest" : {
+        "description" : "Mark Request",
+        "type" : "object",
+        "required" : [ "id", "read" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "entry id, category id, 'all' or 'starred'",
+            "maxLength" : 128,
+            "minLength" : 1
+          },
+          "read" : {
+            "type" : "boolean",
+            "description" : "mark as read or unread"
+          },
+          "olderThan" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "mark only entries older than this"
+          },
+          "insertedBefore" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "pass the timestamp you got from the entry list to avoid marking entries that may have been fetched in the mean time and never displayed"
+          },
+          "keywords" : {
+            "type" : "string",
+            "description" : "only mark read if a feed has these keywords in the title or rss content",
+            "maxLength" : 128
+          },
+          "excludedSubscriptions" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int64"
+            },
+            "description" : "if marking a category or 'all', exclude those subscriptions from the marking"
+          }
+        }
+      },
+      "MultipleMarkRequest" : {
+        "description" : "Multiple Mark Request",
+        "type" : "object",
+        "required" : [ "requests" ],
+        "properties" : {
+          "requests" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MarkRequest"
+            },
+            "description" : "list of mark requests"
+          }
+        }
+      },
+      "PasswordResetConfirmationRequest" : {
+        "type" : "object",
+        "required" : [ "email", "token", "password" ],
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "description" : "email address for password recovery",
+            "maxLength" : 255,
+            "minLength" : 1
+          },
+          "token" : {
+            "type" : "string",
+            "description" : "password recovery token",
+            "minLength" : 1
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "new password",
+            "minLength" : 1
+          }
+        }
+      },
+      "PasswordResetRequest" : {
+        "type" : "object",
+        "required" : [ "email" ],
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "description" : "email address for password recovery",
+            "maxLength" : 255,
+            "minLength" : 1
+          }
+        }
+      },
+      "ProfileModificationRequest" : {
+        "description" : "Profile modification request",
+        "type" : "object",
+        "required" : [ "currentPassword" ],
+        "properties" : {
+          "currentPassword" : {
+            "type" : "string",
+            "description" : "current user password, required to change profile data",
+            "maxLength" : 128,
+            "minLength" : 1
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "changes email of the user, if specified",
+            "maxLength" : 255
+          },
+          "newPassword" : {
+            "type" : "string",
+            "description" : "changes password of the user, if specified"
+          },
+          "newApiKey" : {
+            "type" : "boolean",
+            "description" : "generate a new api key"
+          }
+        }
+      },
+      "PushNotificationSettings" : {
+        "type" : "object",
+        "description" : "User notification settings",
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/PushNotificationType",
+            "description" : "notification provider type",
+            "type" : "string"
+          },
+          "serverUrl" : {
+            "type" : "string",
+            "description" : "server URL for ntfy or gotify"
+          },
+          "userId" : {
+            "type" : "string",
+            "description" : "user Id"
+          },
+          "userSecret" : {
+            "type" : "string",
+            "description" : "user secret for authentication with the service"
+          },
+          "topic" : {
+            "type" : "string",
+            "description" : "topic"
+          }
+        }
+      },
+      "PushNotificationType" : {
+        "type" : "string",
+        "enum" : [ "ntfy", "gotify", "pushover" ]
+      },
+      "ReadingMode" : {
+        "type" : "string",
+        "enum" : [ "all", "unread" ]
+      },
+      "ReadingOrder" : {
+        "type" : "string",
+        "enum" : [ "asc", "desc" ]
+      },
+      "RegistrationRequest" : {
+        "type" : "object",
+        "required" : [ "name", "password", "email" ],
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "username, between 3 and 32 characters",
+            "minLength" : 3,
+            "maxLength" : 32
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "password",
+            "minLength" : 1
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "email address for password recovery",
+            "maxLength" : 255,
+            "minLength" : 1
+          }
+        }
+      },
+      "ScrollMode" : {
+        "type" : "string",
+        "enum" : [ "always", "never", "if_needed" ]
+      },
+      "ServerInfo" : {
+        "description" : "Server infos",
+        "type" : "object",
+        "properties" : {
+          "announcement" : {
+            "type" : "string"
+          },
+          "version" : {
+            "type" : "string"
+          },
+          "gitCommit" : {
+            "type" : "string"
+          },
+          "allowRegistrations" : {
+            "type" : "boolean"
+          },
+          "emailAddressRequired" : {
+            "type" : "boolean"
+          },
+          "smtpEnabled" : {
+            "type" : "boolean"
+          },
+          "demoAccountEnabled" : {
+            "type" : "boolean"
+          },
+          "websocketEnabled" : {
+            "type" : "boolean"
+          },
+          "websocketPingInterval" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "treeReloadInterval" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "forceRefreshCooldownDuration" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "initialSetupRequired" : {
+            "type" : "boolean"
+          },
+          "minimumPasswordLength" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "pushNotificationsEnabled" : {
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "version", "gitCommit", "allowRegistrations", "emailAddressRequired", "smtpEnabled", "demoAccountEnabled", "websocketEnabled", "websocketPingInterval", "treeReloadInterval", "forceRefreshCooldownDuration", "initialSetupRequired", "minimumPasswordLength", "pushNotificationsEnabled" ]
+      },
+      "Settings" : {
+        "description" : "User settings",
+        "type" : "object",
+        "properties" : {
+          "language" : {
+            "type" : "string",
+            "description" : "user's preferred language, english if none"
+          },
+          "readingMode" : {
+            "$ref" : "#/components/schemas/ReadingMode",
+            "description" : "user reads all entries or unread entries only",
+            "type" : "string"
+          },
+          "readingOrder" : {
+            "$ref" : "#/components/schemas/ReadingOrder",
+            "description" : "user reads entries in ascending or descending order",
+            "type" : "string"
+          },
+          "showRead" : {
+            "type" : "boolean",
+            "description" : "user wants category and feeds with no unread entries shown"
+          },
+          "scrollMarks" : {
+            "type" : "boolean",
+            "description" : "In expanded view, scroll through entries mark them as read"
+          },
+          "customCss" : {
+            "type" : "string",
+            "description" : "user's custom css for the website"
+          },
+          "customJs" : {
+            "type" : "string",
+            "description" : "user's custom js for the website"
+          },
+          "scrollSpeed" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "user's preferred scroll speed when navigating between entries"
+          },
+          "scrollMode" : {
+            "$ref" : "#/components/schemas/ScrollMode",
+            "description" : "whether to scroll to the selected entry",
+            "type" : "string"
+          },
+          "entriesToKeepOnTopWhenScrolling" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "number of entries to keep above the selected entry when scrolling"
+          },
+          "starIconDisplayMode" : {
+            "$ref" : "#/components/schemas/IconDisplayMode",
+            "description" : "whether to show the star icon in the header of entries",
+            "type" : "string"
+          },
+          "externalLinkIconDisplayMode" : {
+            "$ref" : "#/components/schemas/IconDisplayMode",
+            "description" : "whether to show the external link icon in the header of entries",
+            "type" : "string"
+          },
+          "markAllAsReadConfirmation" : {
+            "type" : "boolean",
+            "description" : "ask for confirmation when marking all entries as read"
+          },
+          "markAllAsReadNavigateToNextUnread" : {
+            "type" : "boolean",
+            "description" : "navigate to the next unread category or feed after marking all entries as read"
+          },
+          "customContextMenu" : {
+            "type" : "boolean",
+            "description" : "show commafeed's own context menu on right click"
+          },
+          "mobileFooter" : {
+            "type" : "boolean",
+            "description" : "on mobile, show action buttons at the bottom of the screen"
+          },
+          "unreadCountTitle" : {
+            "type" : "boolean",
+            "description" : "show unread count in the title"
+          },
+          "unreadCountFavicon" : {
+            "type" : "boolean",
+            "description" : "show unread count in the favicon"
+          },
+          "disablePullToRefresh" : {
+            "type" : "boolean",
+            "description" : "disable pull to refresh"
+          },
+          "primaryColor" : {
+            "type" : "string",
+            "description" : "primary theme color to use in the UI"
+          },
+          "sharingSettings" : {
+            "$ref" : "#/components/schemas/SharingSettings",
+            "description" : "sharing settings",
+            "type" : "object"
+          },
+          "pushNotificationSettings" : {
+            "$ref" : "#/components/schemas/PushNotificationSettings",
+            "description" : "push notification settings",
+            "type" : "object"
+          }
+        },
+        "required" : [ "readingMode", "readingOrder", "showRead", "scrollMarks", "scrollSpeed", "scrollMode", "entriesToKeepOnTopWhenScrolling", "starIconDisplayMode", "externalLinkIconDisplayMode", "markAllAsReadConfirmation", "markAllAsReadNavigateToNextUnread", "customContextMenu", "mobileFooter", "unreadCountTitle", "unreadCountFavicon", "disablePullToRefresh", "sharingSettings", "pushNotificationSettings" ]
+      },
+      "SharingSettings" : {
+        "type" : "object",
+        "description" : "User sharing settings",
+        "required" : [ "email", "gmail", "facebook", "twitter", "tumblr", "instapaper", "buffer" ],
+        "properties" : {
+          "email" : {
+            "type" : "boolean"
+          },
+          "gmail" : {
+            "type" : "boolean"
+          },
+          "facebook" : {
+            "type" : "boolean"
+          },
+          "twitter" : {
+            "type" : "boolean"
+          },
+          "tumblr" : {
+            "type" : "boolean"
+          },
+          "instapaper" : {
+            "type" : "boolean"
+          },
+          "buffer" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "StarRequest" : {
+        "description" : "Star Request",
+        "type" : "object",
+        "required" : [ "id", "feedId", "starred" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "id",
+            "maxLength" : 128,
+            "minLength" : 1
+          },
+          "feedId" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "feed id"
+          },
+          "starred" : {
+            "type" : "boolean",
+            "description" : "starred or not"
+          }
+        }
+      },
+      "SubscribeRequest" : {
+        "description" : "Subscription request",
+        "type" : "object",
+        "required" : [ "url", "title" ],
+        "properties" : {
+          "url" : {
+            "type" : "string",
+            "description" : "url of the feed",
+            "maxLength" : 4096,
+            "minLength" : 1
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "name of the feed for the user",
+            "maxLength" : 128,
+            "minLength" : 1
+          },
+          "categoryId" : {
+            "type" : "string",
+            "description" : "id of the user category to place the feed in",
+            "maxLength" : 128
+          }
+        }
+      },
+      "Subscription" : {
+        "type" : "object",
+        "description" : "User information",
+        "required" : [ "id", "name", "errorCount", "feedUrl", "feedLink", "iconUrl", "unread", "pushNotificationsEnabled" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "subscription id"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "subscription name"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "error message while fetching the feed"
+          },
+          "errorCount" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "error count"
+          },
+          "lastRefresh" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "last time the feed was refreshed"
+          },
+          "nextRefresh" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "next time the feed refresh is planned, null if refresh is already queued"
+          },
+          "feedUrl" : {
+            "type" : "string",
+            "description" : "this subscription's feed url"
+          },
+          "feedLink" : {
+            "type" : "string",
+            "description" : "this subscription's website url"
+          },
+          "iconUrl" : {
+            "type" : "string",
+            "description" : "The favicon url to use for this feed"
+          },
+          "unread" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "unread count"
+          },
+          "categoryId" : {
+            "type" : "string",
+            "description" : "category id"
+          },
+          "position" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "position of the subscription's in the list"
+          },
+          "newestItemTime" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "date of the newest item"
+          },
+          "filter" : {
+            "type" : "string",
+            "description" : "CEL string evaluated on new entries to mark them as read if they do not match"
+          },
+          "filterLegacy" : {
+            "type" : "string",
+            "description" : "JEXL legacy filter"
+          },
+          "pushNotificationsEnabled" : {
+            "type" : "boolean",
+            "description" : "whether to send push notifications for new entries of this feed"
+          },
+          "autoMarkAsReadAfterDays" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "automatically mark entries as read after this many days (null to disable)"
+          }
+        }
+      },
+      "TagRequest" : {
+        "description" : "Tag Request",
+        "type" : "object",
+        "required" : [ "entryId", "tags" ],
+        "properties" : {
+          "entryId" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "entry id"
+          },
+          "tags" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : "tags"
+          }
+        }
+      },
+      "UnreadCount" : {
+        "description" : "Unread count",
+        "type" : "object",
+        "properties" : {
+          "feedId" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "unreadCount" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "newestItemTime" : {
+            "$ref" : "#/components/schemas/Instant"
+          }
+        }
+      },
+      "UserModel" : {
+        "description" : "User information",
+        "type" : "object",
+        "required" : [ "id", "name", "enabled", "admin" ],
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64",
+            "description" : "user id"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "user name"
+          },
+          "email" : {
+            "type" : "string",
+            "description" : "user email, if any"
+          },
+          "apiKey" : {
+            "type" : "string",
+            "description" : "api key"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "user password, never returned by the api"
+          },
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "account status"
+          },
+          "created" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "account creation date"
+          },
+          "lastLogin" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "last login date"
+          },
+          "admin" : {
+            "type" : "boolean",
+            "description" : "user is admin"
+          },
+          "lastForceRefresh" : {
+            "$ref" : "#/components/schemas/Instant",
+            "description" : "user last force refresh"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "basicAuth" : {
+        "type" : "http",
+        "scheme" : "basic"
+      },
+      "SecurityScheme" : {
+        "type" : "http",
+        "scheme" : "basic",
+        "description" : "Authentication"
+      }
+    }
+  },
+  "info" : {
+    "title" : "CommaFeed API",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "/",
+    "description" : "CommaFeed API"
+  } ],
+  "security" : [ {
+    "basicAuth" : [ ]
+  } ],
+  "tags" : [ {
+    "name" : "Admin"
+  }, {
+    "name" : "Feed categories"
+  }, {
+    "name" : "Feed entries"
+  }, {
+    "name" : "Feeds"
+  }, {
+    "name" : "Server"
+  }, {
+    "name" : "Users"
+  } ],
+  "paths" : {
+    "/rest/admin/metrics" : {
+      "get" : {
+        "summary" : "Retrieve server metrics",
+        "tags" : [ "Admin" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "ADMIN" ]
+        } ]
+      }
+    },
+    "/rest/admin/user/delete" : {
+      "post" : {
+        "summary" : "Delete a user",
+        "description" : "Delete a user, and all his subscriptions",
+        "tags" : [ "Admin" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IDRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "ADMIN" ]
+        } ]
+      }
+    },
+    "/rest/admin/user/get/{id}" : {
+      "get" : {
+        "summary" : "Get user information",
+        "description" : "Get user information",
+        "tags" : [ "Admin" ],
+        "parameters" : [ {
+          "description" : "user id",
+          "required" : true,
+          "name" : "id",
+          "in" : "path",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserModel"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "ADMIN" ]
+        } ]
+      }
+    },
+    "/rest/admin/user/getAll" : {
+      "get" : {
+        "summary" : "Get all users",
+        "description" : "Get all users",
+        "tags" : [ "Admin" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UserModel"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "ADMIN" ]
+        } ]
+      }
+    },
+    "/rest/admin/user/save" : {
+      "post" : {
+        "summary" : "Save or update a user",
+        "description" : "Save or update a user. If the id is not specified, a new user will be created",
+        "tags" : [ "Admin" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AdminSaveUserRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "ADMIN" ]
+        } ]
+      }
+    },
+    "/rest/category/add" : {
+      "post" : {
+        "summary" : "Add a category",
+        "description" : "Add a new feed category",
+        "tags" : [ "Feed categories" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddCategoryRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/collapse" : {
+      "post" : {
+        "summary" : "Collapse a category",
+        "description" : "Save collapsed or expanded status for a category",
+        "tags" : [ "Feed categories" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CollapseRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/delete" : {
+      "post" : {
+        "summary" : "Delete a category",
+        "description" : "Delete an existing feed category",
+        "tags" : [ "Feed categories" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IDRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/entries" : {
+      "get" : {
+        "summary" : "Get category entries",
+        "description" : "Get a list of category entries",
+        "tags" : [ "Feed categories" ],
+        "parameters" : [ {
+          "description" : "comma-separated list of excluded subscription ids",
+          "name" : "excludedSubscriptionIds",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "id of the category, 'all' or 'starred'",
+          "required" : true,
+          "name" : "id",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "search for keywords in either the title or the content of the entries, separated by spaces",
+          "name" : "keywords",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "limit for paging, default 20, maximum 1000",
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 20
+          }
+        }, {
+          "description" : "only entries newer than this",
+          "name" : "newerThan",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "description" : "offset for paging",
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "description" : "ordering",
+          "name" : "order",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingOrder"
+            }, {
+              "default" : "desc"
+            } ]
+          }
+        }, {
+          "description" : "all entries or only unread ones",
+          "required" : true,
+          "name" : "readType",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingMode"
+            }, {
+              "default" : "unread"
+            } ]
+          }
+        }, {
+          "description" : "keep only entries tagged with this tag",
+          "name" : "tag",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Entries"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "category not found"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/entriesAsFeed" : {
+      "get" : {
+        "summary" : "Get category entries as feed",
+        "description" : "Get a feed of category entries",
+        "tags" : [ "Feed categories" ],
+        "parameters" : [ {
+          "description" : "comma-separated list of excluded subscription ids",
+          "name" : "excludedSubscriptionIds",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "id of the category, 'all' or 'starred'",
+          "required" : true,
+          "name" : "id",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "search for keywords in either the title or the content of the entries, separated by spaces",
+          "name" : "keywords",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "limit for paging, default 20, maximum 1000",
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 20
+          }
+        }, {
+          "description" : "only entries newer than this",
+          "name" : "newerThan",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "description" : "offset for paging",
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "description" : "date ordering",
+          "name" : "order",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingOrder"
+            }, {
+              "default" : "desc"
+            } ]
+          }
+        }, {
+          "description" : "all entries or only unread ones",
+          "required" : true,
+          "name" : "readType",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingMode"
+            }, {
+              "default" : "all"
+            } ]
+          }
+        }, {
+          "description" : "keep only entries tagged with this tag",
+          "name" : "tag",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/xml" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/get" : {
+      "get" : {
+        "summary" : "Get root category",
+        "description" : "Get all categories and subscriptions of the user",
+        "tags" : [ "Feed categories" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/mark" : {
+      "post" : {
+        "summary" : "Mark category entries",
+        "description" : "Mark feed entries of this category as read",
+        "tags" : [ "Feed categories" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MarkRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/modify" : {
+      "post" : {
+        "summary" : "Modify a category",
+        "description" : "Modify an existing feed category",
+        "tags" : [ "Feed categories" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CategoryModificationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/category/unreadCount" : {
+      "get" : {
+        "summary" : "Get unread count for feed subscriptions",
+        "tags" : [ "Feed categories" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UnreadCount"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/entry/mark" : {
+      "post" : {
+        "summary" : "Mark a feed entry",
+        "description" : "Mark a feed entry as read/unread",
+        "tags" : [ "Feed entries" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MarkRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/entry/markMultiple" : {
+      "post" : {
+        "summary" : "Mark multiple feed entries",
+        "description" : "Mark feed entries as read/unread",
+        "tags" : [ "Feed entries" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MultipleMarkRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/entry/star" : {
+      "post" : {
+        "summary" : "Star a feed entry",
+        "description" : "Mark a feed entry as read/unread",
+        "tags" : [ "Feed entries" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StarRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/entry/tag" : {
+      "post" : {
+        "summary" : "Set feed entry tags",
+        "tags" : [ "Feed entries" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TagRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/entry/tags" : {
+      "get" : {
+        "summary" : "Get list of tags for the user",
+        "description" : "Get list of tags for the user",
+        "tags" : [ "Feed entries" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/entries" : {
+      "get" : {
+        "summary" : "Get feed entries",
+        "description" : "Get a list of feed entries",
+        "tags" : [ "Feeds" ],
+        "parameters" : [ {
+          "description" : "id of the feed",
+          "required" : true,
+          "name" : "id",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "search for keywords in either the title or the content of the entries, separated by spaces",
+          "name" : "keywords",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "limit for paging, default 20, maximum 1000",
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 20
+          }
+        }, {
+          "description" : "only entries newer than this",
+          "name" : "newerThan",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "description" : "offset for paging",
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "description" : "ordering",
+          "name" : "order",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingOrder"
+            }, {
+              "default" : "desc"
+            } ]
+          }
+        }, {
+          "description" : "all entries or only unread ones",
+          "required" : true,
+          "name" : "readType",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingMode"
+            }, {
+              "default" : "unread"
+            } ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Entries"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "feed not found"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/entriesAsFeed" : {
+      "get" : {
+        "summary" : "Get feed entries as a feed",
+        "description" : "Get a feed of feed entries",
+        "tags" : [ "Feeds" ],
+        "parameters" : [ {
+          "description" : "id of the feed",
+          "required" : true,
+          "name" : "id",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "search for keywords in either the title or the content of the entries, separated by spaces",
+          "name" : "keywords",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "limit for paging, default 20, maximum 1000",
+          "name" : "limit",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 20
+          }
+        }, {
+          "description" : "only entries newer than this",
+          "name" : "newerThan",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "description" : "offset for paging",
+          "name" : "offset",
+          "in" : "query",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "description" : "date ordering",
+          "name" : "order",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingOrder"
+            }, {
+              "default" : "desc"
+            } ]
+          }
+        }, {
+          "description" : "all entries or only unread ones",
+          "required" : true,
+          "name" : "readType",
+          "in" : "query",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/ReadingMode"
+            }, {
+              "default" : "all"
+            } ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/xml" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/export" : {
+      "get" : {
+        "summary" : "OPML export",
+        "description" : "Export an OPML file of the user's subscriptions",
+        "tags" : [ "Feeds" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/xml" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/favicon/{id}" : {
+      "get" : {
+        "summary" : "Fetch a feed's icon",
+        "description" : "Fetch a feed's icon",
+        "tags" : [ "Feeds" ],
+        "parameters" : [ {
+          "description" : "subscription id",
+          "required" : true,
+          "name" : "id",
+          "in" : "path",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/fetch" : {
+      "post" : {
+        "summary" : "Fetch a feed",
+        "description" : "Fetch a feed by its url",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FeedInfoRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FeedInfo"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "feed not found"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/get/{id}" : {
+      "get" : {
+        "summary" : "get feed",
+        "tags" : [ "Feeds" ],
+        "parameters" : [ {
+          "description" : "user id",
+          "required" : true,
+          "name" : "id",
+          "in" : "path",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Subscription"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "feed not found"
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/import" : {
+      "post" : {
+        "summary" : "OPML import",
+        "description" : "Import an OPML file, posted as a FORM with the 'file' name",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "file" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/mark" : {
+      "post" : {
+        "summary" : "Mark feed entries",
+        "description" : "Mark feed entries as read (unread is not supported)",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/MarkRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/modify" : {
+      "post" : {
+        "summary" : "Modify a subscription",
+        "description" : "Modify a feed subscription",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FeedModificationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/refreshAll" : {
+      "get" : {
+        "summary" : "Queue all feeds of the user for refresh",
+        "description" : "Manually add all feeds of the user to the refresh queue",
+        "tags" : [ "Feeds" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/subscribe" : {
+      "get" : {
+        "summary" : "Subscribe to a feed",
+        "description" : "Subscribe to a feed",
+        "tags" : [ "Feeds" ],
+        "parameters" : [ {
+          "description" : "feed url",
+          "required" : true,
+          "name" : "url",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      },
+      "post" : {
+        "summary" : "Subscribe to a feed",
+        "description" : "Subscribe to a feed",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SubscribeRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/feed/unsubscribe" : {
+      "post" : {
+        "summary" : "Unsubscribe from a feed",
+        "description" : "Unsubscribe from a feed",
+        "tags" : [ "Feeds" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/IDRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/server/get" : {
+      "get" : {
+        "summary" : "Get server infos",
+        "description" : "Get server infos",
+        "tags" : [ "Server" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/server/proxy" : {
+      "get" : {
+        "summary" : "proxy image",
+        "tags" : [ "Server" ],
+        "parameters" : [ {
+          "description" : "image url",
+          "required" : true,
+          "name" : "u",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "image/png" : { }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/initialSetup" : {
+      "post" : {
+        "summary" : "Create the initial admin account",
+        "description" : "This endpoint is only available when no users exist in the database",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/InitialSetupRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/passwordReset" : {
+      "post" : {
+        "summary" : "send a password reset email",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PasswordResetRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/passwordResetCallback" : {
+      "post" : {
+        "summary" : "confirm password reset with new password",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PasswordResetConfirmationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/profile" : {
+      "post" : {
+        "summary" : "Save user's profile",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ProfileModificationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      },
+      "get" : {
+        "summary" : "Retrieve user's profile",
+        "tags" : [ "Users" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserModel"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/profile/deleteAccount" : {
+      "post" : {
+        "summary" : "Delete the user account",
+        "tags" : [ "Users" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/pushNotificationTest" : {
+      "post" : {
+        "summary" : "Send a test push notification",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PushNotificationSettings"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/register" : {
+      "post" : {
+        "summary" : "Register a new account",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    },
+    "/rest/user/settings" : {
+      "post" : {
+        "summary" : "Save user settings",
+        "description" : "Save user settings",
+        "tags" : [ "Users" ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Settings"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : { }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      },
+      "get" : {
+        "summary" : "Retrieve user settings",
+        "description" : "Retrieve user settings",
+        "tags" : [ "Users" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Settings"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Not Authorized"
+          },
+          "403" : {
+            "description" : "Not Allowed"
+          }
+        },
+        "security" : [ {
+          "basicAuth" : [ "USER" ]
+        } ]
+      }
+    }
+  }
+}
