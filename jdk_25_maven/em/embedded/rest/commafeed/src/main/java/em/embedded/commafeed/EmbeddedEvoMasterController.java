@@ -11,9 +11,6 @@ import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import io.quarkus.runtime.Quarkus;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -65,6 +62,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     private static final String DB_URL = "jdbc:h2:mem:commafeed_embedded;DB_CLOSE_DELAY=-1";
 
     private int sutPort;
+    private ClassLoader sutClassLoader;
     private Connection sqlConnection;
     private List<DbSpecification> dbSpecification;
 
@@ -79,8 +77,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     @Override
     public String startSut() {
-
-        sutPort = findFreePort();
 
         // Essential: without this, Quarkus's isolated classloader gets its own ExecutionTracer and
         // the instrumented SUT reports to a counter the driver never reads, giving 0% coverage.
@@ -97,18 +93,19 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
         // Quarkus reads config from system properties, not program arguments.
         // Same JVM as the SUT, so no H2 TCP server is needed: the driver opens the same URL.
-        System.setProperty("quarkus.http.port", String.valueOf(sutPort));
+        System.setProperty("quarkus.http.port", "0");
         System.setProperty("quarkus.datasource.db-kind", "h2");
         System.setProperty("quarkus.datasource.jdbc.url", DB_URL);
         System.setProperty("quarkus.datasource.username", "sa");
         System.setProperty("quarkus.datasource.password", "sa");
 
-        // Quarkus.run() blocks until shutdown, so it needs its own thread.
+        // Quarkus.run() returns once started here, but would block until shutdown on an
+        // augmented classpath, so give it its own thread.
         Thread thread = new Thread(() -> Quarkus.run(), "quarkus-sut");
         thread.setDaemon(true);
         thread.start();
 
-        waitUntilListening();
+        sutPort = waitForSutPort();
 
         try {
             Class.forName("org.h2.Driver");
@@ -128,12 +125,14 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     @Override
     public boolean isSutRunning() {
-        return isListening();
+        return quarkusPort() > 0;
     }
 
     @Override
     public void stopSut() {
+        // the thread started above is long gone: this stops the app's own threads
         Quarkus.blockingExit();
+        sutClassLoader = null;
         if (sqlConnection != null) {
             try {
                 sqlConnection.close();
@@ -186,26 +185,60 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     }
 
 
-    private static int findFreePort() {
-        try (ServerSocket socket = new ServerSocket(0)) {
-            socket.setReuseAddress(true);
-            return socket.getLocalPort();
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot find a free port for the SUT", e);
+    // Quarkus runs in its own classloader, so the handle to it has to be looked up once.
+    private int quarkusPort() {
+
+        if (sutClassLoader != null) {
+            return readPort(sutClassLoader);
+        }
+
+        for (Thread t : Thread.getAllStackTraces().keySet()) {
+            ClassLoader cl = t.getContextClassLoader();
+            if (cl == null || !cl.getClass().getName().contains("QuarkusClassLoader")) {
+                continue;
+            }
+            int port = readPort(cl);
+            if (port > 0) {
+                sutClassLoader = cl;
+                return port;
+            }
+        }
+
+        return 0;
+    }
+
+    // Same as "local.server.port" in the Spring drivers, but only reachable by reflection.
+    private static int readPort(ClassLoader cl) {
+        try {
+            Class<?> appClass = cl.loadClass("io.quarkus.runtime.Application");
+            Object app = appClass.getMethod("currentApplication").invoke(null);
+            if (app == null || !(Boolean) appClass.getMethod("isStarted").invoke(app)) {
+                return 0;
+            }
+            Object registry = appClass.getMethod("getValueRegistry").invoke(app);
+            Object key = cl.loadClass("io.quarkus.vertx.http.HttpServer").getField("HTTP_PORT").get(null);
+            Class<?> keyClass = cl.loadClass("io.quarkus.value.registry.ValueRegistry$RuntimeKey");
+            Object port = cl.loadClass("io.quarkus.value.registry.ValueRegistry")
+                    .getMethod("get", keyClass).invoke(registry, key);
+            return port == null ? 0 : (Integer) port;
+        } catch (Exception e) {
+            //wrong classloader, or a mismatch with this version of Quarkus
+            return 0;
         }
     }
 
     /*
         Liveness of the thread we started is NOT a usable signal: Quarkus.run() hands the
-        application over to its own "Quarkus Main Thread" and returns immediately. Poll the port.
+        application over to its own "Quarkus Main Thread" and returns immediately.
      */
-    private void waitUntilListening() {
+    private int waitForSutPort() {
 
         long deadline = System.currentTimeMillis() + 180_000;
 
         while (System.currentTimeMillis() < deadline) {
-            if (isListening()) {
-                return;
+            int port = quarkusPort();
+            if (port > 0) {
+                return port;
             }
             try {
                 Thread.sleep(250);
@@ -215,17 +248,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             }
         }
 
-        throw new IllegalStateException("The SUT did not start listening on port " + sutPort);
-    }
-
-    private boolean isListening() {
-        if (sutPort <= 0) {
-            return false;
-        }
-        try (Socket probe = new Socket("localhost", sutPort)) {
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+        throw new IllegalStateException("The SUT did not start, or quarkusPort() could not read it");
     }
 }
