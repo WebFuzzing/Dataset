@@ -455,6 +455,12 @@
 					</execution>
 				</executions>
 				<configuration>
+					<!--          MODIFIED-->
+					<!-- EMB expects a single self-contained "jasper-sut.jar". The classifier keeps the
+					     plain jar as the main artifact, which the embedded driver depends on. -->
+					<finalName>jasper</finalName>
+					<classifier>sut</classifier>
+					<!--          MODIFIED-->
 					<mainClass>${start-class}</mainClass>
 					<layers>
 						<enabled>true</enabled>

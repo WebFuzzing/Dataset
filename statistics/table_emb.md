@@ -19,6 +19,7 @@
 |REST|__genome-nexus__|30004|405|23|Java|JDK 8|Maven|MongoDB||
 |REST|__gestaohospital__|3506|33|20|Java|JDK 8|Maven|MongoDB||
 |REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||
+|REST|__jasper__|46791|337|61|Java|JDK 25|Maven|PostgreSQL|&check;|
 |REST|__languagetool__|174781|1385|2|Java|JDK 8|Maven|||
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
 |REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|

@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (37)
+### REST: Java/Kotlin (38)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 
@@ -108,6 +108,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Gestao Hospital** (not-known license), [jdk_8_maven/cs/rest-gui/gestaohospital](jdk_8_maven/cs/rest-gui/gestaohospital), from [https://github.com/ValchanOficial/GestaoHospital](https://github.com/ValchanOficial/GestaoHospital)
 
 * **HTTP Patch Spring** (MIT), [jdk_11_maven/cs/rest/http-patch-spring](jdk_11_maven/cs/rest/http-patch-spring), from [https://github.com/cassiomolin/http-patch-spring](https://github.com/cassiomolin/http-patch-spring)
+
+* **Jasper** (MIT), [jdk_25_maven/cs/rest/jasper](jdk_25_maven/cs/rest/jasper), from [https://github.com/cjmalloy/jasper](https://github.com/cjmalloy/jasper)
 
 * **Languagetool** (LGPL), [jdk_8_maven/cs/rest/original/languagetool](jdk_8_maven/cs/rest/original/languagetool), from [https://github.com/languagetool-org/languagetool](https://github.com/languagetool-org/languagetool)
 

@@ -308,6 +308,9 @@ def build_jdk_25_maven():
     copy(folder + "/cs/rest/commafeed/commafeed-server/target/commafeed-sut.jar", DIST)
     copy(folder + "/em/external/rest/commafeed/target/commafeed-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/jasper/target/jasper-sut.jar", DIST)
+    copy(folder + "/em/external/rest/jasper/target/jasper-evomaster-runner.jar", DIST)
+
 ####################
 def call_gradle(java_home, folder):
     env_vars = os.environ.copy()
