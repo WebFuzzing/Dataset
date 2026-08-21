@@ -1,0 +1,47 @@
+services:
+  gatling:
+    build: .
+    profiles:
+      - lt
+    network_mode: host
+    depends_on:
+      web:
+        condition: service_healthy
+      repl-web:
+        condition: service_healthy
+    environment:
+      GATLING_TEST: "${GATLING_TEST:-SmokeTest}"
+    volumes:
+      - ./report:/gatling/report
+  web:
+    build: ..
+    ports:
+      - 8081:80
+    healthcheck:
+      test: "curl -f http://localhost/management/health/readiness"
+    environment:
+      SPRING_LOGGING_LEVEL_ROOT: WARN
+      SPRING_PROFILES_ACTIVE: prod,sqlite,storage,scripts,proxy
+      SERVER_PORT: 80
+      JASPER_DEFAULT_ROLE: ROLE_ADMIN
+      JASPER_OVERRIDE_SERVER_MAX_REQUESTS: 1
+      JASPER_OVERRIDE_SERVER_MAX_CONCURRENT_REQUESTS: 100
+      JASPER_HEAP: 512m
+      JASPER_GC: "${JASPER_GC:-g1gc}"
+      JASPER_STORAGE: /var/lib/jasper
+  repl-web:
+    build: ..
+    ports:
+      - 8083:80
+    healthcheck:
+      test: "curl -f http://localhost/management/health/readiness"
+    environment:
+      SPRING_LOGGING_LEVEL_ROOT: WARN
+      SPRING_PROFILES_ACTIVE: prod,sqlite,scripts
+      SERVER_PORT: 80
+      JASPER_LOCAL_ORIGIN: '@repl'
+      JASPER_DEFAULT_ROLE: ROLE_ADMIN
+      JASPER_OVERRIDE_SERVER_WEB_ORIGINS: '@repl'
+      JASPER_HEAP: 256m
+      JASPER_GC: "${JASPER_GC:-g1gc}"
+      JASPER_STORAGE: /var/lib/jasper

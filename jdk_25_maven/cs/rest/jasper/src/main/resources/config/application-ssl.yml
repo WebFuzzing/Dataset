@@ -1,0 +1,7 @@
+
+server:
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: boot
+    keyStoreType: PKCS12
+    keyAlias: spring-boot

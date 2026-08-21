@@ -1,0 +1,113 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration is used for unit/integration tests.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+logging:
+  level:
+    ROOT: WARN
+    org.hibernate.orm.jdbc.batch: OFF
+    org.hibernate.orm.jdbc.error: OFF
+    org.hibernate.engine.jdbc.spi: OFF
+    jasper.component.Messages: OFF
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.orm.jdbc.bind: TRACE
+#    org.hibernate.stat: DEBUG
+#    org.hibernate.SQL_SLOW: INFO
+#    org.hibernate.cache: DEBUG
+#    org.springframework.orm.jpa: DEBUG
+#    org.springframework.transaction: DEBUG
+#    org.hibernate.orm.jdbc.batch: INFO
+#    org.hibernate.engine.jdbc.spi: INFO
+
+spring:
+  profiles:
+    active: 'test,scripts'
+  application:
+    name: jasper
+  datasource:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+      url: jdbc:tc:postgresql:14.2:///jasper?TC_TMPFS=/testtmpfs:rw
+      username: jasper
+      password:
+      hikari:
+          poolName: Hikari
+          auto-commit: false
+  http:
+    converters:
+      preferred-json-mapper: jackson2
+  cache:
+    type: NONE
+  jpa:
+    database-platform: jasper.config.PostgreSQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.hbm2ddl.auto: validate
+      hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+      hibernate.format_sql: true
+      hibernate.types.print.banner: false
+  liquibase:
+    analytics-enabled: false
+    contexts: test
+    change-log: classpath:config/liquibase/master.xml
+  mail:
+    host: localhost
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  messages:
+    basename: i18n/messages
+  task:
+    execution:
+      thread-name-prefix: jasper-task-
+      pool:
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: jasper-scheduling-
+      pool:
+        size: 1
+
+server:
+  port: 10344
+  address: localhost
+
+jasper:
+  default-role: ROLE_USER
+  node: ~/.bun/bin/bun
+  python: /usr/bin/python3
+  shell: /usr/bin/bash
+  storage: /tmp/jasper
+  cache-api: ''
+  override:
+    server:
+      web-origins:
+        - ''
+        - '@a'
+        - '@a.b'
+        - '@b'
+    security:
+      mode: 'jwt'
+      clientId: ''
+      base64-secret: 'MjY0ZWY2ZTZhYmJhMTkyMmE5MTAxMTg3Zjc2ZDlmZWUwYjk0MDgzODA0MDJiOTgyNTk4MmNjYmQ4Yjg3MmVhYjk0MmE0OGFmNzE2YTQ5ZjliMTEyN2NlMWQ4MjA5OTczYjU2NzAxYTc4YThkMzYxNzdmOTk5MTIxODZhMTkwMDM='

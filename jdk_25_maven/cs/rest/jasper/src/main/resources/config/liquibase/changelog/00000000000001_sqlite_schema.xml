@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet author="chris" id="00000000000003" dbms="sqlite">
+		<createTable tableName="ref">
+			<column name="url" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="title" type="TEXT"/>
+			<column name="comment" type="TEXT"/>
+			<column name="tags" type="TEXT"/>
+			<column name="sources" type="TEXT"/>
+			<column name="alternate_urls" type="TEXT"/>
+			<column name="plugins" type="TEXT"/>
+			<column name="metadata" type="TEXT"/>
+			<column name="published" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="created" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="modified" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="textsearch_en" type="TEXT"/>
+		</createTable>
+		<createIndex tableName="ref" indexName="ref_published_index">
+			<column name="published"/>
+		</createIndex>
+		<createIndex tableName="ref" indexName="ref_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<sql>CREATE UNIQUE INDEX ref_modified_origin_key ON ref (modified, origin);</sql>
+		<!-- FTS5 full-text search virtual table -->
+		<sql>CREATE VIRTUAL TABLE ref_fts USING fts5(title, comment, url, content=ref, content_rowid=rowid);</sql>
+		<!-- Triggers to keep FTS5 index in sync and store rowid in textsearch_en -->
+		<sql>
+			CREATE TRIGGER ref_fts_ai AFTER INSERT ON ref BEGIN
+				INSERT INTO ref_fts(rowid, title, comment, url) VALUES (new.rowid, new.title, new.comment, new.url);
+				UPDATE ref SET textsearch_en = CAST(new.rowid AS TEXT) WHERE rowid = new.rowid;
+			END;
+		</sql>
+		<sql>
+			CREATE TRIGGER ref_fts_ad AFTER DELETE ON ref BEGIN
+				INSERT INTO ref_fts(ref_fts, rowid, title, comment, url) VALUES('delete', old.rowid, old.title, old.comment, old.url);
+			END;
+		</sql>
+		<sql>
+			CREATE TRIGGER ref_fts_au AFTER UPDATE OF url, origin, title, comment, tags, sources, alternate_urls, plugins, metadata, published, created, modified ON ref BEGIN
+				INSERT INTO ref_fts(ref_fts, rowid, title, comment, url) VALUES('delete', old.rowid, old.title, old.comment, old.url);
+				INSERT INTO ref_fts(rowid, title, comment, url) VALUES (new.rowid, new.title, new.comment, new.url);
+				UPDATE ref SET textsearch_en = CAST(new.rowid AS TEXT) WHERE rowid = new.rowid;
+			END;
+		</sql>
+
+		<createTable tableName="ext">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="TEXT"/>
+			<column name="modified" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="ext" indexName="ext_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<sql>CREATE UNIQUE INDEX ext_modified_origin_key ON ext (modified, origin);</sql>
+
+		<createTable tableName="users">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="role" type="TEXT"/>
+			<column name="read_access" type="TEXT"/>
+			<column name="write_access" type="TEXT"/>
+			<column name="tag_read_access" type="TEXT"/>
+			<column name="tag_write_access" type="TEXT"/>
+			<column name="modified" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="key" type="BLOB"/>
+			<column name="pub_key" type="BLOB"/>
+			<column name="authorized_keys" type="TEXT"/>
+			<column name="external" type="TEXT"/>
+		</createTable>
+		<createIndex tableName="users" indexName="users_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<sql>CREATE UNIQUE INDEX users_modified_origin_key ON users (modified, origin);</sql>
+
+		<createTable tableName="plugin">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="TEXT"/>
+			<column name="defaults" type="TEXT"/>
+			<column name="schema" type="TEXT"/>
+			<column name="modified" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="plugin" indexName="plugin_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<sql>CREATE UNIQUE INDEX plugin_modified_origin_key ON plugin (modified, origin);</sql>
+
+		<createTable tableName="template">
+			<column name="tag" type="TEXT">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="origin" type="TEXT" defaultValue="">
+				<constraints primaryKey="true" nullable="false"/>
+			</column>
+			<column name="name" type="TEXT"/>
+			<column name="config" type="TEXT"/>
+			<column name="defaults" type="TEXT"/>
+			<column name="schema" type="TEXT"/>
+			<column name="modified" type="TEXT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createIndex tableName="template" indexName="template_modified_index">
+			<column name="modified"/>
+		</createIndex>
+		<sql>CREATE UNIQUE INDEX template_modified_origin_key ON template (modified, origin);</sql>
+
+	</changeSet>
+</databaseChangeLog>

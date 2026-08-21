@@ -1,0 +1,9 @@
+# Development artifacts
+target/
+report/
+.DS_Store
+
+# Scripts and local dev files
+docker-compose.yaml
+.dockerignore
+.gitignore
