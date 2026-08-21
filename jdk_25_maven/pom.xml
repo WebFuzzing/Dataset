@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.evomaster</groupId>
+    <artifactId>evomaster-benchmark-jdk25</artifactId>
+
+    <!--
+        To change version in all modules, use:
+        mvn versions:set -DnewVersion=a.b.c
+     -->
+    <version>4.3.1-SNAPSHOT</version>
+
+    <inceptionYear>2017</inceptionYear>
+    <name>EvoMaster Benchmark (EMB)</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>cs</module>
+        <module>em</module>
+    </modules>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/WebFuzzing/Dataset/issues</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/WebFuzzing/Dataset.git</connection>
+        <developerConnection>scm:git:https://github.com/WebFuzzing/Dataset.git</developerConnection>
+        <url>https://github.com/WebFuzzing/Dataset/tree/master</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>arcuri82</id>
+            <name>Andrea Arcuri</name>
+            <email>arcuri82@gmail.com</email>
+            <url>http://www.arcuriandrea.org</url>
+            <timezone>2</timezone>
+            <roles>
+                <role>Architect/Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <evomaster-version>6.1.2-SNAPSHOT</evomaster-version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <release>25</release>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>

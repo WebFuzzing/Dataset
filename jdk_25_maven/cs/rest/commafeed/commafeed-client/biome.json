@@ -1,0 +1,19 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.8/schema.json",
+    "formatter": {
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 140
+    },
+    "javascript": {
+        "formatter": {
+            "trailingCommas": "es5",
+            "semicolons": "asNeeded",
+            "arrowParentheses": "asNeeded"
+        }
+    },
+    "files": {
+        "includes": ["**", "!**/dist", "!**/node_modules", "!**/target", "!**/target-ide"]
+    }
+}

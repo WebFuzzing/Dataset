@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+	<changeSet id="delete-removed-settings" author="athou">
+		<dropColumn tableName="USERSETTINGS" columnName="theme" />
+		<dropColumn tableName="USERSETTINGS" columnName="viewMode" />
+	</changeSet>
+
+	<changeSet id="add-customjs-column" author="athou">
+		<addColumn tableName="USERSETTINGS">
+			<column name="customJs" type="CLOB" />
+		</addColumn>
+	</changeSet>
+
+</databaseChangeLog>

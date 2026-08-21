@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        folder: [jdk_8_maven, jdk_11_maven, jdk_17_maven, jdk_21_maven, jdk_8_gradle, jdk_11_gradle, jdk_17_gradle]
+        folder: [jdk_8_maven, jdk_11_maven, jdk_17_maven, jdk_21_maven, jdk_25_maven, jdk_8_gradle, jdk_11_gradle, jdk_17_gradle]
         include:
           # Maven
           - folder: jdk_8_maven
@@ -39,6 +39,9 @@ jobs:
             command: mvn clean install -DskipTests
           - folder: jdk_21_maven
             jdk-version: 21
+            command: mvn clean install -DskipTests
+          - folder: jdk_25_maven
+            jdk-version: 25
             command: mvn clean install -DskipTests
           # Gradle
           - folder: jdk_8_gradle

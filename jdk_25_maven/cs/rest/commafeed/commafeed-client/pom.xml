@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.commafeed</groupId>
+		<artifactId>commafeed</artifactId>
+		<version>7.3.0</version>
+	</parent>
+	<artifactId>commafeed-client</artifactId>
+	<name>CommaFeed Client</name>
+
+	<properties>
+		<!-- renovate: datasource=node-version depName=node -->
+		<node.version>v24.19.0</node.version>
+		<!-- renovate: datasource=npm depName=npm -->
+		<npm.version>12.0.2</npm.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>2.0.2</version>
+				<?m2e ignore?>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<nodeVersion>${node.version}</nodeVersion>
+							<npmVersion>${npm.version}</npmVersion>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<arguments>ci</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm run test</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<arguments>run test:ci</arguments>
+							<skip>${skipTests}</skip>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm run build</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<arguments>run build</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<id>copy web interface to resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/classes/META-INF/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>dist</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<!-- This profile is used to kill the Biome process on Windows -->
+		<!-- npm ci can fail if Biome is running (e.g., in the IDE) because it locks some files -->
+		<profile>
+			<id>kill-biome</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.6.3</version>
+						<executions>
+							<execution>
+								<id>kill-biome</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>taskkill</executable>
+									<arguments>
+										<argument>/F</argument>
+										<argument>/IM</argument>
+										<argument>biome.exe</argument>
+									</arguments>
+									<successCodes>
+										<successCode>0</successCode>
+										<!-- taskkill returns 128 if the process is not found, which is fine in this case -->
+										<successCode>128</successCode>
+									</successCodes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

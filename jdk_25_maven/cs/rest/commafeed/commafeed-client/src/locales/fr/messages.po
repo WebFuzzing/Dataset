@@ -1,0 +1,1167 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-04 18:51+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fr\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/app/AboutPage.tsx
+msgid "<0>CommaFeed is an open-source project. Sources are hosted on </0><1>GitHub</1>."
+msgstr "<0>CommaFeed est un projet open-source. Les sources sont hébergées sur </0><1>GitHub</1>."
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "<0>Have an account?</0><1>Log in!</1>"
+msgstr "<0>Déjà un compte ?</0><1>Connectez-vous !</1>"
+
+#: src/pages/app/DonatePage.tsx
+msgid "<0>Hey,</0><1>I'm Jérémie from Belgium and I've been working on CommaFeed in my free time for over 10 years now. Thanks for taking an interest in helping me continue supporting CommaFeed.</1>"
+msgstr "<0>Salut,</0><1>Je m'appelle Jérémie, je suis belge, et je développe CommaFeed sur mon temps libre depuis maintenant 10 ans. Merci de m'aider à continuer de maintenir CommaFeed.</1>"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "<0>Need an account?</0><1>Sign up!</1>"
+msgstr "<0>Besoin d'un compte ?</0><1>Enregistrez-vous !</1>"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "About"
+msgstr "À propos"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Access token"
+msgstr "Jeton d'accès"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Actions"
+msgstr "Actions"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Add"
+msgstr "Ajouter"
+
+#: src/pages/app/AddPage.tsx
+msgid "Add category"
+msgstr "Ajouter une catégorie"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Add user"
+msgstr "Ajouter un utilisateur"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Admin"
+msgstr "Administrateur"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Admin user name"
+msgstr "Nom de l'administrateur"
+
+#: src/components/content/add/CategorySelect.tsx
+#: src/components/header/Header.tsx
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "All"
+msgstr "Tout"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Always"
+msgstr "Toujours"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "An email has been sent if this address was registered. Check your inbox."
+msgstr "Un e-mail a été envoyé si cette adresse est enregistrée. Vérifiez votre boîte de réception."
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "An opml file is an XML file containing feed URLs and categories. You can get an OPML file by exporting your data from other feed reading services."
+msgstr "Un fichier OPML est un fichier XML contenant des URL de flux et des catégories. Vous pouvez obtenir un fichier OPML en exportant vos données à partir d'autres services de lecture de flux."
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Analyze feed"
+msgstr "Analyser le flux"
+
+#: src/components/AnnouncementDialog.tsx
+msgid "Announcement"
+msgstr "Annonces"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "API key"
+msgstr "Clé API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "API token"
+msgstr "Jeton API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "App token"
+msgstr "Jeton Appli"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Are you sure you want to delete category <0>{categoryName}</0>?"
+msgstr "Êtes-vous sûr de vouloir supprimer la catégorie <0>{categoryName}</0> ?"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Are you sure you want to delete user <0>{userName}</0> ?"
+msgstr "Êtes-vous sûr de vouloir supprimer l'utilisateur <0>{userName}</0> ?"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Are you sure you want to delete your account? There's no turning back!"
+msgstr "Êtes-vous sûr de vouloir supprimer définitivement votre compte ?"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark all entries of <0>{sourceLabel}</0> as read?"
+msgstr "Êtes-vous sûr de vouloir marquer toutes les entrées de <0>{sourceLabel}</0> comme lues ?"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark entries older than {threshold} days of <0>{sourceLabel}</0> as read?"
+msgstr "Êtes-vous sûr de vouloir marquer les entrées de <0>{sourceLabel}</0> plus anciennes que {threshold} jours comme lues ?"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Are you sure you want to unsubscribe from <0>{feedName}</0>?"
+msgstr "Êtes-vous sûr de vouloir vous désabonner de <0>{feedName}</0> ?"
+
+#: src/components/header/Header.tsx
+msgid "Asc"
+msgstr "Ascendant"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Auto-mark as read"
+msgstr "Marquer automatiquement comme lu"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Back"
+msgstr "Retour"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Back to log in"
+msgstr "Retour à la connexion"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Blue"
+msgstr "Bleu"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Browser extension"
+msgstr "Extension navigateur"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Browser extension required for Chrome"
+msgstr "L'extension navigateur est nécessaire sur Chrome"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Browser tab"
+msgstr "Onglet navigateur"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Build a filter expression to indicate what you want to read. Entries that don't match will be marked as read automatically."
+msgstr "Créez une expression régulière pour filtrer ce que vous voulez lire. Les entrées qui ne correspondent pas seront automatiquement marquées comme lues."
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/ImportOpml.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Cancel"
+msgstr "Annuler"
+
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AboutPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Category"
+msgstr "Catégorie"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Changing password will generate a new API key"
+msgstr "Changer de mot de passe générera une nouvelle clé API"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Check that the feed is working"
+msgstr "Vérifie que le flux fonctionne"
+
+#: src/pages/app/Layout.tsx
+msgid "Close menu"
+msgstr "Fermer le menu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Cmd"
+msgstr "Cmd"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed browser extension version {browserExtensionVersion}."
+msgstr "Extension CommaFeed pour navigateur version {browserExtensionVersion}."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Fever API. Use the following URL in your Fever-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "Commafeed est compatible avec l'API Fever, en inscrivant l'URL suivante dans votre client mobile compatible. Entrez votre nom d'utilisateur habituel, et votre <0>clef API</0> comme mot de passe."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Google Reader API. Use the following URL in your Google Reader-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "Commafeed est compatible avec l'API Google Reader, en inscrivant l'URL suivante dans votre client mobile compatible. Entrez votre nom d'utilisateur habituel, et votre <0>clef API</0> comme mot de passe."
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed next unread item"
+msgstr "CommaFeed prochain article non lu"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed version {version} ({revision})."
+msgstr "CommaFeed version {version} ({revision})."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Compact"
+msgstr "Compact"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Confirm"
+msgstr "Confirmer"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Cozy"
+msgstr "Cozy"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Create Admin Account"
+msgstr "Créer un compte adminstrateur"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Current password"
+msgstr "Mot de passe actuel"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Custom code"
+msgstr "Code personnalisé"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom CSS rules that will be applied"
+msgstr "Code CSS personnalisé qui sera appliqué"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom JS code that will be executed on page load"
+msgstr "Code JS personnalisé qui sera appliqué au chargement des pages"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Cyan"
+msgstr "Cyan"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+msgid "Dark"
+msgstr "Foncé"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Date created"
+msgstr "Date de création"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "days"
+msgstr "jours"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete"
+msgstr "Effacer"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Delete account"
+msgstr "Effacer le compte"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete Category"
+msgstr "Effacer la catégorie"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Delete user"
+msgstr "Effacer l'utilisateur"
+
+#: src/components/header/Header.tsx
+msgid "Desc"
+msgstr "Descendant"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Detailed"
+msgstr "Vue détaillée"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Disable \"Pull to refresh\" browser behavior"
+msgstr "Désactiver la fonction \"tirer pour rafraîchir\" du navigateur"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+#: src/pages/app/SettingsPage.tsx
+msgid "Display"
+msgstr "Affichage"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/DonatePage.tsx
+msgid "Donate"
+msgstr "Faire un don"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Download"
+msgstr "Télécharger"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Drag link to bookmark bar"
+msgstr "Déplacez le lien vers la barre de favoris"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "E-mail"
+msgstr "E-mail"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "E-mail address"
+msgstr "Adresse e-mail"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Edit user"
+msgstr "Modifier un utilisateur"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Enabled"
+msgstr "Actif"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Enter"
+msgstr "Entrer"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Enter your current password to change profile settings"
+msgstr "Entrez votre mot de passe actuel pour changer les paramètres du profil"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entries to keep above the selected entry when scrolling"
+msgstr "Nombre d'entrées à conserver au-dessus de l'entrée sélectionnée lors d'un défilement"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entry headers"
+msgstr "En-têtes de l'entrée"
+
+#: src/components/Alert.tsx
+msgid "Error"
+msgstr "Erreur"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Expanded"
+msgstr "Vue étendue"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Export your subscriptions and categories as an OPML file that can be imported in other feed reading services"
+msgstr "Exporter vos abonnements et catégories en tant que fichier OPML qui peut être importé dans d'autres services de lecture de flux"
+
+#: src/components/header/Header.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Extension options"
+msgstr "Options de l'extension"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Feed name"
+msgstr "Nom du flux"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Feed URL"
+msgstr "URL du flux"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Fetch all my feeds now"
+msgstr "Rafraîchir tous mes flux"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API"
+msgstr "API Fever"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API URL"
+msgstr "URL API Fever"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Filtering expression"
+msgstr "Expression de filtrage"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Font size"
+msgstr "Taille de police"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Force fetching feeds is not yet available."
+msgstr "La récupération forcée des flux n'est pas encore disponible."
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Forgot password?"
+msgstr "Mot de passe oublié ?"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generate an API key in your profile first."
+msgstr "Générez d'abord une clé API dans votre profil."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Generate new API key"
+msgstr "Générer une nouvelle clé API"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generated feed url"
+msgstr "URL du flux généré"
+
+#. placeholder {0}: truncate(props.entry.feedName, 30)
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Go to {0}"
+msgstr "Aller à {0}"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Go to the All view"
+msgstr "Aller à la catégorie Tout"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Go to the API documentation."
+msgstr "Aller à la documentation de l'API."
+
+#: src/pages/app/AboutPage.tsx
+msgid "Goodies"
+msgstr "Extensions"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API"
+msgstr ""
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API URL"
+msgstr ""
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Grape"
+msgstr "Bordeaux"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Gray"
+msgstr "Gris"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Green"
+msgstr "Vert"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Id"
+msgstr "Identifiant"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "If the entry doesn't entirely fit on the screen"
+msgstr "Si l'entrée ne tient pas entièrement sur l'écran"
+
+#: src/pages/app/AboutPage.tsx
+msgid "If you encounter an issue, please report it on the issues page of the GitHub project."
+msgstr "Si vous rencontrez un problème, merci de le signaler sur la page du projet GitHub."
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "Import"
+msgstr "Importer"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "In expanded view, scrolling through entries mark them as read"
+msgstr "En mode de lecture étendu, marquer les éléments comme lus lorsque la fenêtre descend."
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Indigo"
+msgstr "Indigo"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Initial Setup"
+msgstr "Configuration initiale"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Invalid password reset link. Please request a new one."
+msgstr "Lien de réinitialisation de mot de passse invalide. Recommencez la procédure."
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Keep unread"
+msgstr "Garder non lu"
+
+#: src/components/content/FeedEntries.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "Keyboard shortcuts"
+msgstr "Raccourcis clavier"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Language"
+msgstr "Langue"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Last login date"
+msgstr "Dernière connexion"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh"
+msgstr "Dernière mise à jour"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh message"
+msgstr "Dernier message de mise à jour"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Light"
+msgstr "Clair"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Lime"
+msgstr "Jaune-vert"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Link"
+msgstr "Lien"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Link to the documentation"
+msgstr "Lien vers la documentation"
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading profile..."
+msgstr "Chargement du profil..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading settings..."
+msgstr "Chargement des paramètres..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading subscriptions..."
+msgstr "Chargement des abonnements..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading tags..."
+msgstr "Chargement des marqueurs..."
+
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Log in"
+msgstr "Connexion"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Long press"
+msgstr "Appui long"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Manage users"
+msgstr "Gestion des utilisateurs"
+
+#: src/components/header/Header.tsx
+msgid "Mark all as read"
+msgstr "Tout marquer comme lu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Mark all entries as read"
+msgstr "Marquer toutes les entrées comme lues"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read"
+msgstr "Marquer comme lu"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read up to here"
+msgstr "Marquer comme lu jusqu'ici"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Mark entries in this feed as read after this number of days. Leave empty to disable."
+msgstr "Marquer les entrées de ce flux comme lues après ce nombre de jours. Laissez vide pour désactiver."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Metrics"
+msgstr "Métriques"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Middle click"
+msgstr "Clic milieu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page down"
+msgstr "Faites défiler la page vers le bas"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page up"
+msgstr "Faites défiler la page vers le haut"
+
+#: src/components/RelativeDate.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "N/A"
+msgstr "N/A"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Name"
+msgstr "Nom"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Navigate to a subscription by entering its name"
+msgstr "Naviguer vers un abonnement en entrant son nom"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Navigate to the next category/feed with unread entries when marking all entries as read"
+msgstr "Aller vers la catégorie/le flux comportant des entrées non lues suivant après avoir marqué toutes les entrées lues"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Never"
+msgstr "Jamais"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Newest first"
+msgstr "Plus récent en premier"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/components/header/Header.tsx
+msgid "Next"
+msgstr "Suivant"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Next refresh"
+msgstr "Prochaine mise à jour"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Next unread item bookmarklet"
+msgstr "Bookmarklet vers le prochain article non lu"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "No more entries"
+msgstr "Fin de la liste"
+
+#: src/components/content/ShareButtons.tsx
+msgid "No sharing options available."
+msgstr "Aucune option de partage disponible"
+
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Nothing found"
+msgstr "Aucun résultat"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Oldest first"
+msgstr "Du plus ancien au plus récent"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On desktop"
+msgstr "Version PC"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile"
+msgstr "Version mobile"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile, show action buttons at the bottom of the screen"
+msgstr "Sur mobile, afficher les boutons d'action en bas de l'écran"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Only applies to compact, cozy and detailed modes"
+msgstr "Ne fonctionne que dans les modes Compact, Cozy, et Vue détaillée"
+
+#: src/pages/ErrorPage.tsx
+msgid "Oops!"
+msgstr "Oups !"
+
+#: src/components/header/Header.tsx
+msgid "Open CommaFeed"
+msgstr "Ouvrir CommaFeed"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab"
+msgstr "Ouvrir l'entrée actuelle dans un nouvel onglet"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab in the background"
+msgstr "Ouvrir l'entrée actuelle dans un nouvel onglet en arrière-plan"
+
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/OpenExternalLink.tsx
+msgid "Open link"
+msgstr "Ouvrir le lien"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new background tab"
+msgstr "Ouvrir le lien dans un nouvel onglet en arrière-plan"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new tab"
+msgstr "Ouvrir le lien dans un nouvel onglet"
+
+#: src/pages/app/Layout.tsx
+msgid "Open menu"
+msgstr "Ouvrir le menu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open next entry"
+msgstr "Ouvrir l'entrée suivante"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open previous entry"
+msgstr "Ouvrir l'entrée précédente"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open/close current entry"
+msgstr "Ouvrir/fermer l'entrée actuelle"
+
+#: src/pages/app/AddPage.tsx
+msgid "OPML"
+msgstr "OPML"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "OPML export"
+msgstr "Export du fichier OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file"
+msgstr "Fichier OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file is required"
+msgstr "Vous devez fournir un fichier OPML"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Orange"
+msgstr "Orange"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Order"
+msgstr "Ordre"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Parent"
+msgstr "Parent"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Parent Category"
+msgstr "Catégorie parente"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Password"
+msgstr "Mot de passe"
+
+#: src/hooks/useValidationRules.ts
+msgid "Password must be at least {minimumPasswordLength} characters"
+msgstr "Le mot de passe doit mesurer au moins {minimumPasswordLength} caractères"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Password Recovery"
+msgstr "Récupération de mot de passe"
+
+#: src/hooks/useValidationRules.ts
+msgid "Passwords do not match"
+msgstr "Les mots de passe ne correspondent pas"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Pink"
+msgstr "Rose"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Position"
+msgstr "Position"
+
+#: src/components/header/Header.tsx
+msgid "Previous"
+msgstr "Précédent"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Primary color"
+msgstr "Couleur d'ambiance"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Profile"
+msgstr "Profil"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notification service"
+msgstr "Service de notifications Push"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Push notifications"
+msgstr "Notifications Push"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Push notifications are not configured in your user settings."
+msgstr "Les notifications Push ne sont pas configurées dans vos préférences."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notifications are not enabled on this CommaFeed instance."
+msgstr "Les notifications Push ne sont pas disponibles dans cette instance CommaFeed."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Receive push notifications"
+msgstr "Envoyer des notifications Push"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Receive push notifications when new feed entries are discovered. Enable \"Receive push notifications\" in the settings of each feed for which you want to receive notifications."
+msgstr "Permet de recevoir des notifications Push quand des nouvelles entrées sont découvertes pour un flux. Activez \"Envoyer des notifications Push\" dans les paramètres des flux pour lesquels vous souhaitez être notifié."
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Recover password"
+msgstr "Récupérer le mot de passe"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Red"
+msgstr "Rouge"
+
+#: src/components/header/Header.tsx
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Refresh"
+msgstr "Rafraîchir"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Registrations are closed on this CommaFeed instance"
+msgstr "Les inscriptions sont fermées sur cette instance de CommaFeed"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Reset Password"
+msgstr "Réinitialiser le mot de passe"
+
+#: src/pages/app/AboutPage.tsx
+msgid "REST API"
+msgstr "API REST"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Right click"
+msgstr "Clic droit"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Save"
+msgstr "Enregistrer"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll selected entry to the top of the page"
+msgstr "Faire défiler l'entrée sélectionnée vers le haut de la page"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll smoothly when navigating between entries"
+msgstr "Défilement animé lors de la navigation entre les entrées"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scrolling"
+msgstr "Défilement"
+
+#: src/components/header/Header.tsx
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Search"
+msgstr "Rechercher"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select next unread feed/category"
+msgstr "Sélectionner l'article non lu suivant/la catégorie non lue suivante"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select previous unread feed/category"
+msgstr "Sélectionner l'article non lu précédent/la catégorie non lue précédente"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Server URL"
+msgstr "URL du serveur"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on next entry without opening it"
+msgstr "Sélectionner l'article suivant sans l'ouvrir"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on previous entry without opening it"
+msgstr "Sélectionner l'article précédent sans l'ouvrir"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Settings"
+msgstr "Réglages"
+
+#: src/app/user/slice.ts
+msgid "Settings saved."
+msgstr "Réglages enregistrés."
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Share"
+msgstr "Partager"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Sharing sites"
+msgstr "Sites de partage"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Shift"
+msgstr "Maj"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show CommaFeed's own context menu on right click"
+msgstr "Afficher le menu contextuel de Commafeed lors d'un clic droit"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show confirmation when marking all entries as read"
+msgstr "Demander une confirmation avant de tout marquer comme lu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (desktop)"
+msgstr "Afficher les options de l'entrée (ordinateur)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (mobile)"
+msgstr "Afficher les options de l'entrée (mobile)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show external link icon"
+msgstr "Afficher l'icône du lien distant"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show feeds and categories with no unread entries"
+msgstr "Afficher les flux et les catégories pour lesquels tout est déjà lu"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show keyboard shortcut help"
+msgstr "Montrer les raccourcis clavier"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show native menu (desktop)"
+msgstr "Afficher les options du navigateur (ordinateur)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show star icon"
+msgstr "Afficher l'icône Favori"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab favicon"
+msgstr "Afficher le nombre d'entrées non lues dans la favicône de l'onglet"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab title"
+msgstr "Afficher le nombre d'entrées non lues dans le titre de l'onglet"
+
+#: src/pages/auth/RegistrationPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Sign up"
+msgstr "Créer un compte"
+
+#: src/pages/ErrorPage.tsx
+msgid "Something bad just happened..."
+msgstr "Quelque chose s'est mal passé..."
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Space"
+msgstr "Espace"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Star"
+msgstr "Ajouter aux favoris"
+
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "Starred"
+msgstr "Favoris"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AddPage.tsx
+msgid "Subscribe"
+msgstr "S'abonner"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Subscribe to the feed"
+msgstr "S'abonner au flux"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Subscribe URL"
+msgstr "URL pour s'abonner"
+
+#: src/components/Alert.tsx
+msgid "Success"
+msgstr "Succès"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Swipe header to the left"
+msgstr "Faire glisser le titre vers la gauche"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to dark theme"
+msgstr "Activer le mode sombre"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to light theme"
+msgstr "Activer le mode clair"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "System"
+msgstr "Système"
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Tags"
+msgstr "Marqueurs"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Teal"
+msgstr "Bleu-vert"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test"
+msgstr "Test"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test notification sent successfully."
+msgstr "Notification de test envoyée avec succès."
+
+#: src/components/content/add/Subscribe.tsx
+msgid "The URL for the feed you want to subscribe to. You can also use the website's url directly and CommaFeed will try to find the feed in the page."
+msgstr "L'URL du flux auquel vous souhaitez vous abonner. Vous pouvez aussi utiliser l'URL du site directement et CommaFeed va essayer de trouver le flux dans la page."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Theme"
+msgstr "Thème"
+
+#. placeholder {0}: feed.filterLegacy
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "This feed has a legacy filter that cannot be edited and is not applied. Please recreate the filter using the new expression editor. The legacy filter expression was: <0>{0}</0>"
+msgstr "Ce flux est configuré avec un filtre obsolète, qui ne peut être ni modifié ni appliqué. Vous devez recréer ce filtre à l'aide du nouvel éditeur d'expressions régulières. Le filtre configuré était : <0>{0}</0>"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "This is your API key. It can be used for some read-only API operations and grants access to the Fever API and the Google Reader API. Use the form at the bottom of the page to generate a new API key"
+msgstr "Ceci est votre clef API. Elle peut être utilisée pour certaines opérations en lecture seule et donne accès à l'API Fever et à l'API Google Reader. Utilisez le formulaire en bas de la page pour générer une nouvelle clef API"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "This setting can cause scrolling issues on some browsers (e.g. Safari)"
+msgstr "Cette fonctinnalité peut causer des problèmes de défilement sur certains navigateurs (Safari, par exemple)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle read status of current entry"
+msgstr "Marquer l'entrée actuelle comme lue/non lue"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle sidebar"
+msgstr "Montrer/cacher la barre latérale"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle starred status of current entry"
+msgstr "Montrer/cacher le statut favori de l'entrée"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Topic"
+msgstr "Sujet"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Try out CommaFeed with the demo account: demo/demo"
+msgstr "Essayez CommaFeed avec le compte de démonstration : demo/demo"
+
+#: src/pages/WelcomePage.tsx
+msgid "Try the demo!"
+msgstr "Essayez la version de démonstration !"
+
+#: src/components/header/Header.tsx
+msgid "Unread"
+msgstr "Non lu"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Unstar"
+msgstr "Retirer des favoris"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Unsubscribe"
+msgstr "Se désabonner"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "User key"
+msgstr "Clé utilisateur"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "User name"
+msgstr "Nom"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "User Name or E-mail"
+msgstr "Nom d'utilisateur ou e-mail"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Violet"
+msgstr "Violet"
+
+#: src/components/Alert.tsx
+msgid "Warning"
+msgstr "Attention"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Website"
+msgstr "Site web"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Welcome! This appears to be the first time you're running CommaFeed. Please create an administrator account to get started."
+msgstr "Bienvenue ! Il semble que ce soit le premier démarrage de Commafeed. Avant tout, vous devez créer un compte administrateur."
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Yellow"
+msgstr "Jaune"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "You don't have any subscriptions yet. Why not try adding one by clicking on the + sign at the top of the page?"
+msgstr "Vous n'avez pas encore d'abonnements. Pourquoi ne pas essayer d'en ajouter un en cliquant sur le signe + en haut de la page ?"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Your feeds have been queued for refresh."
+msgstr "Vos flux sont en cours de rafraîchissement"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Your password has been changed. You can now log in with your new password."
+msgstr "Votre mot de passe a été modifié. Vous pouvez vous connecter avec votre nouveau mot de passe."

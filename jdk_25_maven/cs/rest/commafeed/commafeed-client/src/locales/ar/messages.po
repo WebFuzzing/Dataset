@@ -1,0 +1,1167 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-10-28 13:47+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ar\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/app/AboutPage.tsx
+msgid "<0>CommaFeed is an open-source project. Sources are hosted on </0><1>GitHub</1>."
+msgstr "<0>CommaFeed هو مشروع مفتوح المصدر. يتم استضافة المصادر على </0><1>GitHub</1>."
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "<0>Have an account?</0><1>Log in!</1>"
+msgstr "<0> هل لديك حساب؟ </0> <1> تسجيل الدخول! </ 1>"
+
+#: src/pages/app/DonatePage.tsx
+msgid "<0>Hey,</0><1>I'm Jérémie from Belgium and I've been working on CommaFeed in my free time for over 10 years now. Thanks for taking an interest in helping me continue supporting CommaFeed.</1>"
+msgstr "<0>مرحبًا،</0><1>أنا جيريمي من بلجيكا وأنا أعمل على CommaFeed في وقت فراغي منذ أكثر من 10 سنوات. شكرًا لاهتمامك بمساعدتي في الاستمرار في دعم CommaFeed.</1>"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "<0>Need an account?</0><1>Sign up!</1>"
+msgstr "<0> هل تحتاج إلى حساب؟ </0> <1> اشترك! </ 1>"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "About"
+msgstr "حول"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Access token"
+msgstr "رمز الوصول"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Actions"
+msgstr "الإجراءات"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Add"
+msgstr "إضافة"
+
+#: src/pages/app/AddPage.tsx
+msgid "Add category"
+msgstr "إضافة فئة"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Add user"
+msgstr "إضافة مستخدم"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Admin"
+msgstr "إداري"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Admin user name"
+msgstr "اسم مستخدم المسؤول"
+
+#: src/components/content/add/CategorySelect.tsx
+#: src/components/header/Header.tsx
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "All"
+msgstr "الكل"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Always"
+msgstr "دائمًا"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "An email has been sent if this address was registered. Check your inbox."
+msgstr "تم إرسال بريد إلكتروني إذا تم تسجيل هذا العنوان. "
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "An opml file is an XML file containing feed URLs and categories. You can get an OPML file by exporting your data from other feed reading services."
+msgstr "ملف opml هو ملف XML يحتوي على عناوين URL للتغذية والفئات. "
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Analyze feed"
+msgstr "تحليل التغذية"
+
+#: src/components/AnnouncementDialog.tsx
+msgid "Announcement"
+msgstr "إعلان"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "API key"
+msgstr "مفتاح API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "API token"
+msgstr "رمز API"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "App token"
+msgstr "رمز التطبيق"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Are you sure you want to delete category <0>{categoryName}</0>?"
+msgstr "هل أنت متأكد أنك تريد حذف الفئة <0> {categoryName} </0>؟"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Are you sure you want to delete user <0>{userName}</0> ?"
+msgstr "هل أنت متأكد أنك تريد حذف المستخدم <0> {userName} </0>؟"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Are you sure you want to delete your account? There's no turning back!"
+msgstr "هل أنت متأكد أنك تريد حذف حسابك؟ "
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark all entries of <0>{sourceLabel}</0> as read?"
+msgstr "هل أنت متأكد أنك تريد تعليم كافة إدخالات <0> {sourceLabel} </0> كمقروءة؟"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Are you sure you want to mark entries older than {threshold} days of <0>{sourceLabel}</0> as read?"
+msgstr "هل أنت متأكد أنك تريد وضع علامة على الإدخالات الأقدم من {عتبة} يوم من <0> {sourceLabel} </0> كمقروءة؟"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Are you sure you want to unsubscribe from <0>{feedName}</0>?"
+msgstr "هل أنت متأكد أنك تريد إلغاء الاشتراك من <0> {feedName} </0>؟"
+
+#: src/components/header/Header.tsx
+msgid "Asc"
+msgstr "تصاعدي"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Auto-mark as read"
+msgstr "وضع علامة مقروء تلقائيًا"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Back"
+msgstr "العودة"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Back to log in"
+msgstr "العودة لتسجيل الدخول"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Blue"
+msgstr "أزرق"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Browser extension"
+msgstr "إضافة المتصفح"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Browser extension required for Chrome"
+msgstr "إضافة المتصفح مطلوبة لـ Chrome"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Browser tab"
+msgstr "علامة تبويب المتصفح"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Build a filter expression to indicate what you want to read. Entries that don't match will be marked as read automatically."
+msgstr "قم ببناء تعبير تصفية لتحديد ما تريد قراءته. سيتم وضع علامة مقروء على الإدخالات التي لا تتطابق تلقائيًا."
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/ImportOpml.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: src/components/content/add/AddCategory.tsx
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AboutPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Category"
+msgstr "الفئة"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Changing password will generate a new API key"
+msgstr "سيؤدي تغيير كلمة المرور إلى إنشاء مفتاح API جديد"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Check that the feed is working"
+msgstr "تأكد من عمل الخلاصة"
+
+#: src/pages/app/Layout.tsx
+msgid "Close menu"
+msgstr "إغلاق القائمة"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Cmd"
+msgstr "Cmd"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed browser extension version {browserExtensionVersion}."
+msgstr "إصدار إضافة متصفح CommaFeed هو {browserExtensionVersion}."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Fever API. Use the following URL in your Fever-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "CommaFeed متوافق مع Fever API. استخدم عنوان URL التالي في تطبيق الهاتف المتوافق مع Fever. قم بتسجيل الدخول باستخدام اسم المستخدم و <0>مفتاح API</0> الخاص بك."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "CommaFeed is compatible with the Google Reader API. Use the following URL in your Google Reader-compatible mobile client. Login with your username and your <0>API key</0>."
+msgstr "CommaFeed متوافق مع Google Reader API. استخدم عنوان URL التالي في تطبيق الهاتف المتوافق مع Google Reader. قم بتسجيل الدخول باستخدام اسم المستخدم و <0>مفتاح API</0> الخاص بك."
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed next unread item"
+msgstr "CommaFeed التالي العنصر غير المقروء"
+
+#: src/pages/app/AboutPage.tsx
+msgid "CommaFeed version {version} ({revision})."
+msgstr "إصدار CommaFeed هو {version} ({revision})."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Compact"
+msgstr "مضغوط"
+
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Confirm"
+msgstr "تأكيد"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Confirm password"
+msgstr "تأكيد كلمة المرور"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Confirm Password"
+msgstr "تأكيد كلمة المرور"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Cozy"
+msgstr "دافئ"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Create Admin Account"
+msgstr "إنشاء حساب مسؤول"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Ctrl"
+msgstr "السيطرة"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Current password"
+msgstr "كلمة المرور الحالية"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Custom code"
+msgstr "كود مخصص"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom CSS rules that will be applied"
+msgstr "قواعد CSS المخصصة التي سيتم تطبيقها"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Custom JS code that will be executed on page load"
+msgstr "كود JS المخصص الذي سيتم تنفيذه عند تحميل الصفحة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Cyan"
+msgstr "سيان"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+msgid "Dark"
+msgstr "داكن"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Date created"
+msgstr "تاريخ الإنشاء"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "days"
+msgstr "أيام"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete"
+msgstr "حذف"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Delete account"
+msgstr "حذف الحساب"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Delete Category"
+msgstr "حذف الفئة"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Delete user"
+msgstr "حذف المستخدم"
+
+#: src/components/header/Header.tsx
+msgid "Desc"
+msgstr "تنازلي"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Detailed"
+msgstr "مفصل"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Disable \"Pull to refresh\" browser behavior"
+msgstr "تعطيل سلوك المتصفح \"اسحب للتحديث\""
+
+#: src/components/header/ProfileMenu.tsx
+#: src/components/settings/DisplaySettings.tsx
+#: src/pages/app/SettingsPage.tsx
+msgid "Display"
+msgstr "عرض"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/app/DonatePage.tsx
+msgid "Donate"
+msgstr "تبرع"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Download"
+msgstr "تنزيل"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Drag link to bookmark bar"
+msgstr "اسحب الرابط إلى شريط الإشارات"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "E-mail"
+msgstr "البريد الإلكتروني"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "E-mail address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Edit user"
+msgstr "تحرير المستخدم"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Enabled"
+msgstr "ممكن"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Enter"
+msgstr "دخول"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Enter your current password to change profile settings"
+msgstr "أدخل كلمة المرور الحالية لتغيير إعدادات ملف التعريف"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entries to keep above the selected entry when scrolling"
+msgstr "عدد الإدخالات التي يجب الاحتفاظ بها فوق الإدخال المحدد عند التمرير"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Entry headers"
+msgstr "عناوين الإدخالات"
+
+#: src/components/Alert.tsx
+msgid "Error"
+msgstr "خطأ"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Expanded"
+msgstr "موسع"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Export your subscriptions and categories as an OPML file that can be imported in other feed reading services"
+msgstr "قم بتصدير اشتراكاتك وفئاتك كملف OPML يمكن استيراده في خدمات قراءة الأعلاف الأخرى"
+
+#: src/components/header/Header.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Extension options"
+msgstr "خيارات الإضافة"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Feed name"
+msgstr "اسم الخلاصة"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Feed URL"
+msgstr "موجز URL"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Fetch all my feeds now"
+msgstr "تحديث جميع الخلاصات الآن"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API"
+msgstr "Fever API"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Fever API URL"
+msgstr "رابط Fever API"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Filtering expression"
+msgstr "تصفية التعبير"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Font size"
+msgstr "حجم الخط"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Force fetching feeds is not yet available."
+msgstr "التحديث الإجباري للخلاصات غير متاح بعد."
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Forgot password?"
+msgstr "هل نسيت كلمة المرور؟"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generate an API key in your profile first."
+msgstr "قم بإنشاء مفتاح API في ملف التعريف الخاص بك أولاً."
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Generate new API key"
+msgstr "إنشاء مفتاح API جديد"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Generated feed url"
+msgstr "رابط الخلاصة المولدة"
+
+#. placeholder {0}: truncate(props.entry.feedName, 30)
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Go to {0}"
+msgstr "الذهاب إلى {0}"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Go to the All view"
+msgstr "اذهب إلى طريقة العرض \"الكل\""
+
+#: src/pages/app/AboutPage.tsx
+msgid "Go to the API documentation."
+msgstr "انتقل إلى وثائق API."
+
+#: src/pages/app/AboutPage.tsx
+msgid "Goodies"
+msgstr "الأشياء الجيدة"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API"
+msgstr ""
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "Google Reader API URL"
+msgstr ""
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Grape"
+msgstr "عنبي"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Gray"
+msgstr "رمادي"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Green"
+msgstr "أخضر"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Id"
+msgstr "المرجع نفسه"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "If the entry doesn't entirely fit on the screen"
+msgstr "إذا كان الإدخال لا يتناسب تمامًا مع الشاشة"
+
+#: src/pages/app/AboutPage.tsx
+msgid "If you encounter an issue, please report it on the issues page of the GitHub project."
+msgstr "إذا واجهت مشكلة ، فالرجاء الإبلاغ عنها على صفحة مشكلات مشروع GitHub."
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "Import"
+msgstr "استيراد"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "In expanded view, scrolling through entries mark them as read"
+msgstr "في العرض الموسع ، التمرير عبر الإدخالات وضع علامة عليها كمقروءة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Indigo"
+msgstr "نيلي"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Initial Setup"
+msgstr "الإعداد الأولي"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Invalid password reset link. Please request a new one."
+msgstr "رابط إعادة تعيين كلمة المرور غير صالح. يرجى طلب رابط جديد."
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Keep unread"
+msgstr "إبقاء غير مقروءة"
+
+#: src/components/content/FeedEntries.tsx
+#: src/pages/app/AboutPage.tsx
+msgid "Keyboard shortcuts"
+msgstr "اختصارات لوحة المفاتيح"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Language"
+msgstr "لغة"
+
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Last login date"
+msgstr "تاريخ آخر تسجيل دخول"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh"
+msgstr "التحديث الأخير"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Last refresh message"
+msgstr "آخر رسالة تحديث"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Light"
+msgstr "فاتح"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Lime"
+msgstr "ليموني"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+#: src/pages/app/TagDetailsPage.tsx
+msgid "Link"
+msgstr "رابط"
+
+#: src/components/settings/CustomCodeSettings.tsx
+msgid "Link to the documentation"
+msgstr "رابط الوثائق"
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading profile..."
+msgstr "تحميل ملف التعريف ..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading settings..."
+msgstr "تحميل الإعدادات ..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading subscriptions..."
+msgstr "تحميل الاشتراكات ..."
+
+#: src/hooks/useAppLoading.ts
+msgid "Loading tags..."
+msgstr "تحميل العلامات ..."
+
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Long press"
+msgstr "ضغط مطول"
+
+#: src/components/header/ProfileMenu.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+msgid "Manage users"
+msgstr "إدارة المستخدمين"
+
+#: src/components/header/Header.tsx
+msgid "Mark all as read"
+msgstr "تعليم الكل كمقروء"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+#: src/components/MarkAllAsReadConfirmationDialog.tsx
+msgid "Mark all entries as read"
+msgstr "تعليم كافة الإدخالات كمقروءة"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read"
+msgstr "وضع علامة كمقروء"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Mark as read up to here"
+msgstr "وضع علامة كمقروءة حتى هنا"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Mark entries in this feed as read after this number of days. Leave empty to disable."
+msgstr "ضع علامة مقروء على الإدخالات في هذه الخلاصة بعد هذا العدد من الأيام. اتركه فارغًا للتعطيل."
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Metrics"
+msgstr "المقاييس"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Middle click"
+msgstr "نقرة بالزر الأوسط"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page down"
+msgstr "تحريك الصفحة لأسفل"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Move the page up"
+msgstr "تحريك الصفحة لأعلى"
+
+#: src/components/RelativeDate.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "N/A"
+msgstr "لا"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/admin/AdminUsersPage.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Name"
+msgstr "الاسم"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Navigate to a subscription by entering its name"
+msgstr "انتقل إلى اشتراك بإدخال اسمه"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Navigate to the next category/feed with unread entries when marking all entries as read"
+msgstr "انتقل إلى الفئة/الخلاصة التالية التي تحتوي على إدخالات غير مقروءة عند تمييز الكل كمقروء"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Never"
+msgstr "أبدا"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "New password"
+msgstr "كلمة مرور جديدة"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "New Password"
+msgstr "كلمة مرور جديدة"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Newest first"
+msgstr "الأحدث أولاً"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/components/header/Header.tsx
+msgid "Next"
+msgstr "التالي"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Next refresh"
+msgstr "التحديث التالي"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Next unread item bookmarklet"
+msgstr "اختصار العنصر غير المقروء التالي"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "No more entries"
+msgstr "لا مزيد من الإدخالات"
+
+#: src/components/content/ShareButtons.tsx
+msgid "No sharing options available."
+msgstr "لا توجد خيارات مشاركة متاحة."
+
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Nothing found"
+msgstr "لم يتم العثور على شيء"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Oldest first"
+msgstr "الأقدم أولا"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On desktop"
+msgstr "على سطح المكتب"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile"
+msgstr "على الهاتف"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "On mobile, show action buttons at the bottom of the screen"
+msgstr "على الهاتف، أظهر أزرار الإجراءات في أسفل الشاشة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Only applies to compact, cozy and detailed modes"
+msgstr "ينطبق فقط على الأوضاع المضغوطة، والدافئة، والمفصلة"
+
+#: src/pages/ErrorPage.tsx
+msgid "Oops!"
+msgstr "عذراً!"
+
+#: src/components/header/Header.tsx
+msgid "Open CommaFeed"
+msgstr "افتح CommaFeed"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab"
+msgstr "فتح الإدخال الحالي في علامة تبويب جديدة"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open current entry in a new tab in the background"
+msgstr "فتح الإدخال الحالي في علامة تبويب جديدة في الخلفية"
+
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/OpenExternalLink.tsx
+msgid "Open link"
+msgstr "افتح الرابط"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new background tab"
+msgstr "افتح الرابط في علامة تبويب خلفية جديدة"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+msgid "Open link in new tab"
+msgstr "افتح الرابط في علامة تبويب جديدة"
+
+#: src/pages/app/Layout.tsx
+msgid "Open menu"
+msgstr "افتح القائمة"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open next entry"
+msgstr "فتح الإدخال التالي"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open previous entry"
+msgstr "فتح الإدخال السابق"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Open/close current entry"
+msgstr "فتح / إغلاق الإدخال الحالي"
+
+#: src/pages/app/AddPage.tsx
+msgid "OPML"
+msgstr "OPML"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "OPML export"
+msgstr "تصدير OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file"
+msgstr "ملف OPML"
+
+#: src/components/content/add/ImportOpml.tsx
+msgid "OPML file is required"
+msgstr "ملف OPML مطلوب"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Orange"
+msgstr "برتقالي"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Order"
+msgstr "ترتيب"
+
+#: src/components/content/add/AddCategory.tsx
+msgid "Parent"
+msgstr "والد"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+msgid "Parent Category"
+msgstr "الفئة الأصل"
+
+#: src/components/admin/UserEdit.tsx
+#: src/pages/auth/InitialSetupPage.tsx
+#: src/pages/auth/LoginPage.tsx
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: src/hooks/useValidationRules.ts
+msgid "Password must be at least {minimumPasswordLength} characters"
+msgstr "يجب أن تكون كلمة المرور على الأقل {minimumPasswordLength} أحرف"
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Password Recovery"
+msgstr "استعادة كلمة المرور"
+
+#: src/hooks/useValidationRules.ts
+msgid "Passwords do not match"
+msgstr "كلمات المرور غير متطابقة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Pink"
+msgstr "وردي"
+
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Position"
+msgstr "المنصب"
+
+#: src/components/header/Header.tsx
+msgid "Previous"
+msgstr "السابق"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Primary color"
+msgstr "اللون الأساسي"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notification service"
+msgstr "خدمة إشعارات الدفع"
+
+#: src/pages/app/SettingsPage.tsx
+msgid "Push notifications"
+msgstr "إشعارات الدفع"
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Push notifications are not configured in your user settings."
+msgstr "لم يتم تكوين إشعارات الدفع في إعدادات المستخدم الخاصة بك."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Push notifications are not enabled on this CommaFeed instance."
+msgstr "إشعارات الدفع غير مفعلة في مثيل CommaFeed هذا."
+
+#: src/components/ReceivePushNotificationsChechbox.tsx
+msgid "Receive push notifications"
+msgstr "تلقي إشعارات الدفع"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Receive push notifications when new feed entries are discovered. Enable \"Receive push notifications\" in the settings of each feed for which you want to receive notifications."
+msgstr "تلقي إشعارات الدفع عند اكتشاف إدخالات خلاصة جديدة. قم بتمكين \"تلقي إشعارات الدفع\" في إعدادات كل خلاصة تريد تلقي إشعارات لها."
+
+#: src/pages/auth/PasswordRecoveryPage.tsx
+msgid "Recover password"
+msgstr "استعادة كلمة السر"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Red"
+msgstr "أحمر"
+
+#: src/components/header/Header.tsx
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Refresh"
+msgstr "تحديث"
+
+#: src/pages/auth/RegistrationPage.tsx
+msgid "Registrations are closed on this CommaFeed instance"
+msgstr "تم إغلاق التسجيلات في مثيل CommaFeed هذا"
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Reset Password"
+msgstr "إعادة تعيين كلمة المرور"
+
+#: src/pages/app/AboutPage.tsx
+msgid "REST API"
+msgstr "REST API"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Right click"
+msgstr "نقرة بالزر الأيمن"
+
+#: src/components/admin/UserEdit.tsx
+#: src/components/settings/CustomCodeSettings.tsx
+#: src/components/settings/ProfileSettings.tsx
+#: src/components/settings/PushNotificationSettings.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Save"
+msgstr "حفظ"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll selected entry to the top of the page"
+msgstr "تمرير الإدخال المحدد إلى أعلى الصفحة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scroll smoothly when navigating between entries"
+msgstr "قم بالتمرير بسلاسة عند التنقل بين الإدخالات"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Scrolling"
+msgstr "التمرير"
+
+#: src/components/header/Header.tsx
+#: src/components/sidebar/TreeSearch.tsx
+msgid "Search"
+msgstr "بحث"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select next unread feed/category"
+msgstr "تحديد الخلاصة/الفئة التالية غير المقروءة"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Select previous unread feed/category"
+msgstr "تحديد الخلاصة/الفئة السابقة غير المقروءة"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Server URL"
+msgstr "رابط الخادم"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on next entry without opening it"
+msgstr "ضع التركيز على الإدخال التالي دون فتحه"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Set focus on previous entry without opening it"
+msgstr "ضع التركيز على الإدخال السابق دون فتحه"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Settings"
+msgstr "إعدادات"
+
+#: src/app/user/slice.ts
+msgid "Settings saved."
+msgstr "تم حفظ الإعدادات."
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Share"
+msgstr "مشاركة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Sharing sites"
+msgstr "مشاركة المواقع"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Shift"
+msgstr "الحلقة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show CommaFeed's own context menu on right click"
+msgstr "إظهار قائمة السياق الخاصة بـ CommaFeed عند النقر بزر الماوس الأيمن"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show confirmation when marking all entries as read"
+msgstr "إظهار تأكيد عند وضع علامة مقروء على كافة الإدخالات"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (desktop)"
+msgstr "إظهار قائمة الإدخال (سطح المكتب)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show entry menu (mobile)"
+msgstr "إظهار قائمة الإدخال (الهاتف)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show external link icon"
+msgstr "إظهار أيقونة الرابط الخارجي"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show feeds and categories with no unread entries"
+msgstr "إظهار موجز ويب والفئات التي لا تحتوي على إدخالات غير مقروءة"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show keyboard shortcut help"
+msgstr "إظهار تعليمات اختصار لوحة المفاتيح"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Show native menu (desktop)"
+msgstr "إظهار القائمة الأصلية (سطح المكتب)"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show star icon"
+msgstr "إظهار أيقونة النجمة"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab favicon"
+msgstr "إظهار عدد غير المقروء في أيقونة التبويب"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Show unread count in tab title"
+msgstr "إظهار عدد غير المقروء في عنوان التبويب"
+
+#: src/pages/auth/RegistrationPage.tsx
+#: src/pages/WelcomePage.tsx
+msgid "Sign up"
+msgstr "قم بالتسجيل"
+
+#: src/pages/ErrorPage.tsx
+msgid "Something bad just happened..."
+msgstr "شيء سيء حدث للتو ..."
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Space"
+msgstr "فضاء"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Star"
+msgstr "النجم"
+
+#: src/components/sidebar/Tree.tsx
+#: src/pages/app/CategoryDetailsPage.tsx
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "Starred"
+msgstr "مميز بنجمة"
+
+#: src/components/content/add/Subscribe.tsx
+#: src/pages/app/AddPage.tsx
+msgid "Subscribe"
+msgstr "اشتراك"
+
+#: src/components/content/add/Subscribe.tsx
+msgid "Subscribe to the feed"
+msgstr "الاشتراك في موجز ويب"
+
+#: src/pages/app/AboutPage.tsx
+msgid "Subscribe URL"
+msgstr "عنوان URL للاشتراك"
+
+#: src/components/Alert.tsx
+msgid "Success"
+msgstr "النجاح"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Swipe header to the left"
+msgstr "اسحب الرأس لليسار"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to dark theme"
+msgstr "التبديل إلى النسق الداكن"
+
+#: src/pages/WelcomePage.tsx
+msgid "Switch to light theme"
+msgstr "قم بالتبديل إلى النسق الفاتح"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "System"
+msgstr "النظام"
+
+#: src/components/content/FeedEntryFooter.tsx
+msgid "Tags"
+msgstr "الكلمات"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Teal"
+msgstr "أزرق مخضر"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test"
+msgstr "اختبار"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Test notification sent successfully."
+msgstr "تم إرسال إشعار الاختبار بنجاح."
+
+#: src/components/content/add/Subscribe.tsx
+msgid "The URL for the feed you want to subscribe to. You can also use the website's url directly and CommaFeed will try to find the feed in the page."
+msgstr "عنوان URL للتغذية التي تريد الاشتراك فيها. "
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Theme"
+msgstr "الموضوع"
+
+#. placeholder {0}: feed.filterLegacy
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "This feed has a legacy filter that cannot be edited and is not applied. Please recreate the filter using the new expression editor. The legacy filter expression was: <0>{0}</0>"
+msgstr "تحتوي هذه الخلاصة على فلتر قديم لا يمكن تحريره ولا يتم تطبيقه. يرجى إعادة إنشاء الفلتر باستخدام محرر التعبيرات الجديد. كان تعبير الفلتر القديم هو: <0>{0}</0>"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "This is your API key. It can be used for some read-only API operations and grants access to the Fever API and the Google Reader API. Use the form at the bottom of the page to generate a new API key"
+msgstr "هذا هو مفتاح API الخاص بك. يمكن استخدامه لبعض عمليات API للقراءة فقط ويمنح حق الوصول إلى Fever API و Google Reader API. استخدم النموذج الموجود أسفل الصفحة لإنشاء مفتاح API جديد"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "This setting can cause scrolling issues on some browsers (e.g. Safari)"
+msgstr "هذا الإعداد يمكن أن يسبب مشاكل في التمرير في بعض المتصفحات (مثل Safari)"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle read status of current entry"
+msgstr "تبديل قراءة حالة الإدخال الحالي"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle sidebar"
+msgstr "تبديل الشريط الجانبي"
+
+#: src/components/KeyboardShortcutsHelp.tsx
+msgid "Toggle starred status of current entry"
+msgstr "تبديل الحالة المميزة بنجمة للإدخال الحالي"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "Topic"
+msgstr "موضوع"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "Try out CommaFeed with the demo account: demo/demo"
+msgstr "جرب CommaFeed باستخدام الحساب التجريبي: demo/demo"
+
+#: src/pages/WelcomePage.tsx
+msgid "Try the demo!"
+msgstr "جرب النسخة التجريبية!"
+
+#: src/components/header/Header.tsx
+msgid "Unread"
+msgstr "غير مقروءة"
+
+#: src/components/content/FeedEntryContextMenu.tsx
+#: src/components/content/FeedEntryFooter.tsx
+#: src/components/content/header/Star.tsx
+msgid "Unstar"
+msgstr "إلغاء النجم"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Unsubscribe"
+msgstr "إلغاء الاشتراك"
+
+#: src/components/settings/PushNotificationSettings.tsx
+msgid "User key"
+msgstr "مفتاح المستخدم"
+
+#: src/components/settings/ProfileSettings.tsx
+msgid "User name"
+msgstr "اسم المستخدم"
+
+#: src/pages/auth/LoginPage.tsx
+msgid "User Name or E-mail"
+msgstr "اسم المستخدم أو البريد الإلكتروني"
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Violet"
+msgstr "بنفسجي"
+
+#: src/components/Alert.tsx
+msgid "Warning"
+msgstr "تحذير"
+
+#: src/pages/app/FeedDetailsPage.tsx
+msgid "Website"
+msgstr "موقع الكتروني"
+
+#: src/pages/auth/InitialSetupPage.tsx
+msgid "Welcome! This appears to be the first time you're running CommaFeed. Please create an administrator account to get started."
+msgstr "مرحباً! يبدو أن هذه هي المرة الأولى التي تقوم فيها بتشغيل CommaFeed. يرجى إنشاء حساب مسؤول للبدء."
+
+#: src/components/settings/DisplaySettings.tsx
+msgid "Yellow"
+msgstr "أصفر"
+
+#: src/pages/app/FeedEntriesPage.tsx
+msgid "You don't have any subscriptions yet. Why not try adding one by clicking on the + sign at the top of the page?"
+msgstr "ليس لديك أي اشتراكات حتى الآن. لمَ لا تحاول إضافة واحد بالنقر فوق علامة + في أعلى الصفحة؟"
+
+#: src/components/header/ProfileMenu.tsx
+msgid "Your feeds have been queued for refresh."
+msgstr "تم وضع خلاصاتك في قائمة الانتظار للتحديث."
+
+#: src/pages/auth/PasswordResetPage.tsx
+msgid "Your password has been changed. You can now log in with your new password."
+msgstr "تم تغيير كلمة المرور الخاصة بك. يمكنك الآن تسجيل الدخول باستخدام كلمة المرور الجديدة."

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<changeSet author="athou" id="create-app-settings">
+		<validCheckSum>7:6d3ad493d25dd9c50067e804efc9ffcc</validCheckSum>
+		<validCheckSum>7:896a68c1651397288c40f717ce0397b4</validCheckSum>
+		<validCheckSum>8:1b0879c4739d483c3b1d779e08fe770b</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="APPLICATIONSETTINGS" />
+			</not>
+		</preConditions>
+		<createTable tableName="APPLICATIONSETTINGS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="allowRegistrations" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="backgroundThreads" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="googleClientId" type="VARCHAR(255)" />
+			<column name="googleClientSecret" type="VARCHAR(255)" />
+			<column name="publicUrl" type="VARCHAR(255)" />
+			<column name="smtpHost" type="VARCHAR(255)" />
+			<column name="smtpPassword" type="VARCHAR(255)" />
+			<column name="smtpPort" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="smtpTls" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="smtpUserName" type="VARCHAR(255)" />
+			<column name="googleAnalyticsDomainName" type="VARCHAR(255)" />
+			<column name="googleAnalyticsTrackingCode" type="VARCHAR(255)" />
+			<column name="announcement" type="VARCHAR(255)" />
+			<column name="feedbackButton" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="heavyLoad" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="pubsubhubbub" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="databaseUpdateThreads" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="logLevel" type="VARCHAR(255)" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-ffe">
+		<validCheckSum>7:eccd6b37116ab35ee963aa46152e1ae5</validCheckSum>
+		<validCheckSum>7:ac622ab04aec79a7e5854d25511abaef</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEED_FEEDENTRIES" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEED_FEEDENTRIES">
+			<column name="FEEDENTRY_ID" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="FEED_ID" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-cat">
+		<validCheckSum>7:93155e15f0feabe936e1de35711bf85b</validCheckSum>
+		<validCheckSum>7:c52f258e54d34156208cbfd2d8547fbd</validCheckSum>
+		<validCheckSum>8:c59e763e4cc7d59ae58d843937cf4e77</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDCATEGORIES" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDCATEGORIES">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="collapsed" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="name" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
+			<column name="parent_id" type="BIGINT" />
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="position" type="INT" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-entries">
+		<validCheckSum>7:2d9e82da5573ac551df31a13f3bc40e5</validCheckSum>
+		<validCheckSum>7:c3cc179801e812635b53849301a1a1d1</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDENTRIES" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDENTRIES">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="guid" type="VARCHAR(2048)">
+				<constraints nullable="false" />
+			</column>
+			<column name="guidHash" type="VARCHAR(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="inserted" type="DATETIME" />
+			<column name="updated" type="DATETIME" />
+			<column name="url" type="VARCHAR(2048)" />
+			<column name="content_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-contents">
+		<validCheckSum>7:a2d83b0f7d1bf97a7553e94dd6100edf</validCheckSum>
+		<validCheckSum>7:1c45f6b6a6e7583dd4c090a4a3930758</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDENTRYCONTENTS" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDENTRYCONTENTS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="content" type="CLOB" />
+			<column name="enclosureType" type="VARCHAR(255)" />
+			<column name="enclosureUrl" type="VARCHAR(2048)" />
+			<column name="title" type="VARCHAR(2048)" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-statuses">
+		<validCheckSum>7:a9cf194a01c16b937a897aea934f09ae</validCheckSum>
+		<validCheckSum>7:6a386e0b08e98bdba9ce55e26ab90eba</validCheckSum>
+		<validCheckSum>8:ccfbff3df6f16c8686229c2da514e8b1</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDENTRYSTATUSES" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDENTRYSTATUSES">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="read_status" type="BOOLEAN" />
+			<column name="starred" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="entry_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="subscription_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-feeds">
+		<validCheckSum>7:e3a44d2e0f774dcb4efe36702c8d5f3f</validCheckSum>
+		<validCheckSum>7:604b2bb0b62b7f0529e50e63c2b2cf0c</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDS" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="disabledUntil" type="DATETIME" />
+			<column name="errorCount" type="INT">
+				<constraints nullable="false" />
+			</column>
+			<column name="lastUpdated" type="DATETIME" />
+			<column name="link" type="CLOB" />
+			<column name="message" type="CLOB" />
+			<column name="url" type="CLOB">
+				<constraints nullable="false" />
+			</column>
+			<column name="urlHash" type="VARCHAR(40)">
+				<constraints nullable="false" />
+			</column>
+			<column name="etagHeader" type="VARCHAR(255)" />
+			<column name="lastModifiedHeader" type="VARCHAR(64)" />
+			<column name="lastUpdateSuccess" type="DATETIME" />
+			<column name="pushHub" type="VARCHAR(2048)" />
+			<column name="pushTopic" type="VARCHAR(2048)" />
+			<column name="pushLastPing" type="DATETIME" />
+			<column name="lastPublishedDate" type="DATETIME" />
+			<column name="lastContentHash" type="VARCHAR(40)" />
+			<column name="averageEntryInterval" type="BIGINT" />
+			<column name="lastEntryDate" type="DATETIME" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-subs">
+		<validCheckSum>7:36e92eac052c7d2ce0ef75e3ec2cdf8d</validCheckSum>
+		<validCheckSum>7:248affcafffd2243f8b0d16750e17af0</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="FEEDSUBSCRIPTIONS" />
+			</not>
+		</preConditions>
+		<createTable tableName="FEEDSUBSCRIPTIONS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="title" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
+			<column name="category_id" type="BIGINT" />
+			<column name="feed_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="position" type="INT" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-seq">
+		<validCheckSum>7:6d68765b2116ba88680d69c03b3cefd2</validCheckSum>
+		<validCheckSum>7:6112f92b437b4d0ecfcdf038fd04ed2f</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="hibernate_sequences" />
+			</not>
+		</preConditions>
+		<createTable tableName="hibernate_sequences">
+			<column name="sequence_name" type="VARCHAR(255)" />
+			<column name="sequence_next_hi_value" type="INT" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-roles">
+		<validCheckSum>7:eefc98cfa1b9bbf51fa6acd7a0d49c1b</validCheckSum>
+		<validCheckSum>7:abbff58b88c8cebfb4548d17730a262d</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="USERROLES" />
+			</not>
+		</preConditions>
+		<createTable tableName="USERROLES">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="roleName" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-users">
+		<validCheckSum>7:750e0990a8edebd0252df7d4adc7aa7c</validCheckSum>
+		<validCheckSum>8:dd1676f356c3c70822d69d5103947948</validCheckSum>
+		<validCheckSum>8:ca2d6edef0263a78cab9cc0942972d50</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="USERS" />
+			</not>
+		</preConditions>
+		<createTable tableName="USERS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="disabled" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="email" type="VARCHAR(255)" />
+			<column name="name" type="VARCHAR(32)">
+				<constraints nullable="false" />
+			</column>
+			<column name="password" type="${blob_type}">
+				<constraints nullable="false" />
+			</column>
+			<column name="salt" type="${blob_type}">
+				<constraints nullable="false" />
+			</column>
+			<column name="lastLogin" type="DATETIME" />
+			<column name="apiKey" type="VARCHAR(40)" />
+			<column name="recoverPasswordToken" type="VARCHAR(40)" />
+			<column name="recoverPasswordTokenDate" type="DATETIME" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="create-user-settings">
+		<validCheckSum>7:985d6607a4350e032ea345d9a2f2f0c0</validCheckSum>
+		<validCheckSum>7:722eaff49d04d43c5b26da0929d3f707</validCheckSum>
+		<validCheckSum>8:451004f3bc72abac6a38d813881d3a87</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<tableExists tableName="USERSETTINGS" />
+			</not>
+		</preConditions>
+		<createTable tableName="USERSETTINGS">
+			<column name="id" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="customCss" type="CLOB" />
+			<column name="readingMode" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="readingOrder" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="showRead" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="user_id" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="socialButtons" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="scrollMarks" type="BOOLEAN">
+				<constraints nullable="false" />
+			</column>
+			<column name="viewMode" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="language" type="VARCHAR(4)" />
+			<column name="theme" type="VARCHAR(32)" />
+		</createTable>
+		<modifySql dbms="mysql">
+			<append value=" ENGINE INNODB CHARACTER SET utf8mb4" />
+		</modifySql>
+	</changeSet>
+
+	<changeSet author="athou" id="add-keys">
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<primaryKeyExists tableName="FEED_FEEDENTRIES" />
+			</not>
+		</preConditions>
+		<addPrimaryKey columnNames="FEEDENTRY_ID, FEED_ID"
+			tableName="FEED_FEEDENTRIES" />
+
+		<addForeignKeyConstraint baseColumnNames="FEED_ID"
+			baseTableName="FEED_FEEDENTRIES" constraintName="FKE50C03F13BFA4D81"
+			referencedColumnNames="id" referencedTableName="FEEDS" />
+
+		<addForeignKeyConstraint baseColumnNames="FEEDENTRY_ID"
+			baseTableName="FEED_FEEDENTRIES" constraintName="FKE50C03F1F21BCF3"
+			referencedColumnNames="id" referencedTableName="FEEDENTRIES" />
+
+		<addForeignKeyConstraint baseColumnNames="parent_id"
+			baseTableName="FEEDCATEGORIES" constraintName="FK15C8223AD60EB13"
+			referencedColumnNames="id" referencedTableName="FEEDCATEGORIES" />
+
+		<addForeignKeyConstraint baseColumnNames="user_id"
+			baseTableName="FEEDCATEGORIES" constraintName="FK15C8223A6D690261"
+			referencedColumnNames="id" referencedTableName="USERS" />
+
+		<addForeignKeyConstraint baseColumnNames="content_id"
+			baseTableName="FEEDENTRIES" constraintName="FKE8844512A0FBD10D"
+			referencedColumnNames="id" referencedTableName="FEEDENTRYCONTENTS" />
+
+		<addForeignKeyConstraint baseColumnNames="entry_id"
+			baseTableName="FEEDENTRYSTATUSES" constraintName="FKD6DCE994F46A5555"
+			referencedColumnNames="id" referencedTableName="FEEDENTRIES" />
+
+		<addForeignKeyConstraint baseColumnNames="subscription_id"
+			baseTableName="FEEDENTRYSTATUSES" constraintName="FKD6DCE994E181535F"
+			referencedColumnNames="id" referencedTableName="FEEDSUBSCRIPTIONS" />
+
+		<addForeignKeyConstraint baseColumnNames="category_id"
+			baseTableName="FEEDSUBSCRIPTIONS" constraintName="FK420395F8EDA2E63F"
+			referencedColumnNames="id" referencedTableName="FEEDCATEGORIES" />
+
+		<addForeignKeyConstraint baseColumnNames="feed_id"
+			baseTableName="FEEDSUBSCRIPTIONS" constraintName="FK420395F83BFA4D81"
+			referencedColumnNames="id" referencedTableName="FEEDS" />
+
+		<addForeignKeyConstraint baseColumnNames="user_id"
+			baseTableName="FEEDSUBSCRIPTIONS" constraintName="FK420395F86D690261"
+			referencedColumnNames="id" referencedTableName="USERS" />
+
+		<addForeignKeyConstraint baseColumnNames="user_id"
+			baseTableName="USERROLES" constraintName="FKBB5E59B26D690261"
+			referencedColumnNames="id" referencedTableName="USERS" />
+
+		<addForeignKeyConstraint baseColumnNames="user_id"
+			baseTableName="USERSETTINGS" constraintName="FKAE0194EE6D690261"
+			referencedColumnNames="id" referencedTableName="USERS" />
+	</changeSet>
+
+	<changeSet author="athou" id="create-indexes">
+		<validCheckSum>7:6b97555d8c1a170b1c07d088e068ec95</validCheckSum>
+		<preConditions onFail="MARK_RAN" onFailMessage="existing table skipping">
+			<not>
+				<indexExists tableName="FEEDENTRIES" indexName="updated_index" />
+			</not>
+		</preConditions>
+
+		<createIndex indexName="guidHash_index" tableName="FEEDENTRIES"
+			unique="false">
+			<column name="guidHash" />
+		</createIndex>
+
+		<createIndex indexName="updated_index" tableName="FEEDENTRIES"
+			unique="false">
+			<column name="updated" />
+		</createIndex>
+
+		<createIndex indexName="subscription_id" tableName="FEEDENTRYSTATUSES"
+			unique="false">
+			<column name="subscription_id" />
+			<column name="read_status" />
+		</createIndex>
+
+		<createIndex indexName="disabled_lastupdated_index"
+			tableName="FEEDS" unique="false">
+			<column name="disabledUntil" />
+			<column name="lastUpdated" />
+		</createIndex>
+
+		<createIndex indexName="disableduntil_index" tableName="FEEDS"
+			unique="false">
+			<column name="disabledUntil" />
+		</createIndex>
+
+		<createIndex indexName="lastupdated_index" tableName="FEEDS"
+			unique="false">
+			<column name="lastUpdated" />
+		</createIndex>
+
+		<createIndex indexName="urlHash_index" tableName="FEEDS"
+			unique="false">
+			<column name="urlHash" />
+		</createIndex>
+
+		<createIndex indexName="useremail_index" tableName="USERS"
+			unique="true">
+			<column name="email" />
+		</createIndex>
+
+		<createIndex indexName="username_index" tableName="USERS"
+			unique="true">
+			<column name="name" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

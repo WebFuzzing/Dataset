@@ -264,6 +264,32 @@ services:
         fi
         echo 'JDK 21 Maven build completed'
 
+  build-jdk25-maven:
+    build:
+      context: .
+      dockerfile: Dockerfile.jdk25
+    image: emb-build-jdk25
+    volumes:
+      - ${HOME}/.m2:/root/.m2
+      - ${DIST_FOLDER}:/dist
+      - ${JDK_25_MVN_FOLDER}:/build/jdk_25_maven
+    working_dir: /build/jdk_25_maven
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          mvn clean install -DskipTests
+        else
+          (cd cs && mvn clean install -DskipTests)
+        fi
+        cp cs/rest/commafeed/commafeed-server/target/commafeed-sut.jar /dist/
+        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          cp em/external/rest/commafeed/target/commafeed-evomaster-runner.jar /dist/
+        fi
+        echo 'JDK 25 Maven build completed'
+
 volumes:
   gradle-cache-jdk8:
   gradle-cache-jdk11:

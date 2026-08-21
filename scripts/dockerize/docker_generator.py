@@ -39,6 +39,10 @@ class DockerGenerator:
             {
                 'name': 'JDK 21',
                 'tag': 'amazoncorretto:21-alpine-jdk',
+            },
+            {
+                'name': 'JDK 25',
+                'tag': 'amazoncorretto:25-alpine-jdk',
             }
         ]
 

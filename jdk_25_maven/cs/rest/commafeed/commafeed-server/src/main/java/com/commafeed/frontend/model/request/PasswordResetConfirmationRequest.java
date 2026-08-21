@@ -1,0 +1,34 @@
+package com.commafeed.frontend.model.request;
+
+import com.commafeed.security.password.ValidPassword;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
+import lombok.Data;
+
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+@Data
+@Schema
+public class PasswordResetConfirmationRequest implements Serializable {
+
+    @Schema(description = "email address for password recovery", required = true)
+    @Email
+    @NotEmpty
+    @Size(max = 255)
+    private String email;
+
+    @Schema(description = "password recovery token", required = true)
+    @NotEmpty
+    private String token;
+
+    @Schema(description = "new password", required = true)
+    @NotEmpty
+    @ValidPassword
+    private String password;
+}

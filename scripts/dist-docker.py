@@ -20,7 +20,7 @@ PROJ_DIR = SCRIPT_DIR.parent
 COMPOSE_FILE = "./scripts/build/docker-compose.build.yml"
 ENV_FILE = SCRIPT_DIR / "build" / ".env"
 
-JDK_VERSIONS = ["8", "11", "17", "21"]
+JDK_VERSIONS = ["8", "11", "17", "21", "25"]
 BUILD_TOOLS = ["maven", "gradle"]
 
 ALL_SERVICES = [
@@ -31,6 +31,7 @@ ALL_SERVICES = [
     ("17", "maven"),
     ("17", "gradle"),
     ("21", "maven"),
+    ("25", "maven"),
 ]
 
 
@@ -148,7 +149,7 @@ def parse_args():
         nargs="?",
         default="all",
         metavar="JDK_VERSION",
-        help="8, 11, 17, 21, or 'all' (default: all)",
+        help="8, 11, 17, 21, 25, or 'all' (default: all)",
     )
     parser.add_argument(
         "build_tool",

@@ -11,6 +11,7 @@
 |REST|__bibliothek__|2176|33|8|Java|JDK 17|Gradle|MongoDB||
 |REST|__blogapi__|4787|89|52|Java|JDK 8|Maven|MySQL|&check;|
 |REST|__catwatch__|9636|106|14|Java|JDK 8|Maven|H2||
+|REST|__commafeed__|21287|201|44|Java|JDK 25|Maven|H2|&check;|
 |REST|__cwa-verification__|3955|47|5|Java|JDK 11|Maven|H2||
 |REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
 |REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
@@ -36,7 +37,7 @@
 |REST|__session-service__|1471|15|8|Java|JDK 8|Maven|MongoDB||
 |REST|__spring-actuator-demo__|117|5|2|Java|JDK 8|Maven||&check;|
 |REST|__spring-batch-rest__|3668|65|5|Java|JDK 8|Maven|||
-|REST|__spring-ecommerce__|2223|58|26|Java|JDK 8|Maven|MongoOB, Redis, Elasticsearch|&check;|
+|REST|__spring-ecommerce__|2223|58|26|Java|JDK 8|Maven|MongoDB, Redis, Elasticsearch|&check;|
 |REST|__spring-rest-example__|1426|32|9|Java|JDK 17|Maven|MySQL||
 |REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||
 |REST|__tiltaksgjennomforing__|27316|472|79|Java|JDK 17|Maven|PostgreSQL|&check;|

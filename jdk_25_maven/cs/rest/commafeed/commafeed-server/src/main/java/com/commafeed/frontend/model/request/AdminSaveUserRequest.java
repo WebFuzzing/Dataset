@@ -1,0 +1,34 @@
+package com.commafeed.frontend.model.request;
+
+import com.commafeed.security.password.ValidPassword;
+
+import lombok.Data;
+
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+@Schema(description = "Save User information")
+@Data
+public class AdminSaveUserRequest implements Serializable {
+
+    @Schema(description = "user id")
+    private Long id;
+
+    @Schema(description = "user name", required = true)
+    private String name;
+
+    @Schema(description = "user email, if any")
+    private String email;
+
+    @Schema(description = "user password")
+    @ValidPassword
+    private String password;
+
+    @Schema(description = "account status", required = true)
+    private boolean enabled;
+
+    @Schema(description = "user is admin", required = true)
+    private boolean admin;
+}

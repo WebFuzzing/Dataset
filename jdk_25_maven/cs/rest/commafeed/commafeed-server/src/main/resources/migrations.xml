@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+	<property name="blob_type" value="bytea" dbms="postgresql" />
+	<property name="blob_type" value="blob" dbms="h2,mysql,mariadb,mssql" />
+
+	<!-- liquibase uses the 'TIMESTAMP WITHOUT TIME ZONE' type by default, which is not a UTC timestamp -->
+	<!-- postgresql UTC timestamp is actually 'TIMESTAMP WITH TIME ZONE' -->
+	<!-- see https://stackoverflow.com/a/48069726 -->
+	<property name="timestamp_type" value="timestamp with time zone" dbms="postgresql" />
+	<property name="timestamp_type" value="timestamp" dbms="h2,mysql,mariadb,mssql" />
+
+	<include file="changelogs/db.changelog-1.0.xml" />
+	<include file="changelogs/db.changelog-1.1.xml" />
+	<include file="changelogs/db.changelog-1.2.xml" />
+	<include file="changelogs/db.changelog-1.3.xml" />
+	<include file="changelogs/db.changelog-1.4.xml" />
+	<include file="changelogs/db.changelog-1.5.xml" />
+	<include file="changelogs/db.changelog-2.1.xml" />
+	<include file="changelogs/db.changelog-2.2.xml" />
+	<include file="changelogs/db.changelog-2.6.xml" />
+	<include file="changelogs/db.changelog-3.2.xml" />
+	<include file="changelogs/db.changelog-3.5.xml" />
+	<include file="changelogs/db.changelog-3.6.xml" />
+	<include file="changelogs/db.changelog-3.8.xml" />
+	<include file="changelogs/db.changelog-3.9.xml" />
+	<include file="changelogs/db.changelog-4.0.xml" />
+	<include file="changelogs/db.changelog-4.1.xml" />
+	<include file="changelogs/db.changelog-4.2.xml" />
+	<include file="changelogs/db.changelog-4.3.xml" />
+	<include file="changelogs/db.changelog-4.4.xml" />
+	<include file="changelogs/db.changelog-5.1.xml" />
+	<include file="changelogs/db.changelog-5.2.xml" />
+	<include file="changelogs/db.changelog-5.3.xml" />
+	<include file="changelogs/db.changelog-5.8.xml" />
+	<include file="changelogs/db.changelog-5.11.xml" />
+	<include file="changelogs/db.changelog-5.12.xml" />
+	<include file="changelogs/db.changelog-7.0.xml" />
+	<include file="changelogs/db.changelog-7.2.xml" />
+
+</databaseChangeLog> 
