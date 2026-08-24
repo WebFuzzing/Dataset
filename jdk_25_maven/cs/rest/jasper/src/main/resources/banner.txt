@@ -1,0 +1,10 @@
+${AnsiColor.217}       _                               _
+${AnsiColor.1}      | |                            _| |_
+${AnsiColor.196}      | | __ _ ___ _ __   ___ _ __  |_   _|
+${AnsiColor.160}  _   | |/ _` / __| '_ \ / _ \ '__|   |_|
+${AnsiColor.160} | |__| | (_| \__ \ |_) |  __/ |     _____
+${AnsiColor.124}  \____/ \__,_|___/ .__/ \___|_|    |_____|
+${AnsiColor.88}                  | |
+${AnsiColor.52}                  |_|
+${AnsiColor.1}       ${application.title}             ${AnsiColor.DEFAULT}(${application.version})
+${AnsiColor.2} :: Spring Boot ::        ${AnsiColor.DEFAULT}(${spring-boot.version})

@@ -1,0 +1,26 @@
+# ===================================================================
+# Spring Boot test configuration for the "sqlite" profile.
+#
+# Overrides the base test configuration to use an in-memory SQLite
+# database instead of PostgreSQL via Testcontainers.
+# ===================================================================
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:file:jasper-test?mode=memory&cache=shared
+    username:
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      maximum-pool-size: 1
+      data-source-properties:
+        date_class: TEXT
+  jpa:
+    database-platform: jasper.config.SQLiteDialect
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.hbm2ddl.auto: none

@@ -1,0 +1,27 @@
+# ===================================================================
+# Spring Boot configuration for the "sqlite" profile.
+#
+# This configuration overrides the application.yml file to use SQLite
+# instead of PostgreSQL. Activate with: --spring.profiles.active=sqlite
+# Default database location: /var/lib/jasper/db.sqlite
+# ===================================================================
+
+spring:
+  datasource:
+    url: jdbc:sqlite:${jasper.storage:/var/lib/jasper}/db.sqlite
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      # SQLite only supports a single writer, so limit pool to 1 connection
+      maximum-pool-size: 1
+      data-source-properties:
+        date_class: TEXT
+  jpa:
+    database-platform: jasper.config.SQLiteDialect
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.hbm2ddl.auto: none
+jasper:
+  backfillIdleSec: 300
