@@ -12,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -51,9 +52,13 @@ public class CreateBooks implements CommandLineRunner {
             TypeReference<List<Book>> typeReference = new TypeReference<>() {
             };
 
-            Resource resource = resourceLoader.getResource("classpath:/data/books/");
-            File directory = resource.getFile();
-            File[] files = directory.listFiles((dir, name) -> name.endsWith(".json"));
+            //          MODIFIED
+            // In the packaged jar getFile() throws FileNotFoundException: class path resource
+            // [data/books/] cannot be resolved to absolute file path -> startup dies.
+            File[] files = Arrays.stream(new PathMatchingResourcePatternResolver()
+                            .getResources("classpath*:/data/books/*.json"))
+                    .map(r -> new File(r.getFilename())).toArray(File[]::new);
+            //          MODIFIED
 
             if (files == null || files.length == 0) {
                 log.warn("No JSON files found in /data/books/ directory.");

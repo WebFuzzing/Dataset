@@ -294,6 +294,9 @@ def build_jdk_21_maven():
     copy(folder + "/cs/rest/person-controller/target/person-controller-sut.jar", DIST)
     copy(folder + "/em/external/rest/person-controller/target/person-controller-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/redis-sample/target/redis-sample-sut.jar", DIST)
+    copy(folder + "/em/external/rest/redis-sample/target/redis-sample-evomaster-runner.jar", DIST)
+
     copy(folder + "/cs/rest-gui/webgoat/target/webgoat-sut.jar", DIST)
     copy(folder + "/em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar", DIST)
 

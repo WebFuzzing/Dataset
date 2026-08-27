@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (38)
+### REST: Java/Kotlin (39)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 
@@ -134,6 +134,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **ProxyPrint** (Apache), [jdk_8_maven/cs/rest/original/proxyprint](jdk_8_maven/cs/rest/original/proxyprint), from [https://github.com/ProxyPrint/proxyprint-kitchen](https://github.com/ProxyPrint/proxyprint-kitchen)
 
 * **Quartz Manager** (Apache), [jdk_11_maven/cs/rest-gui/quartz-manager](jdk_11_maven/cs/rest-gui/quartz-manager), from [https://github.com/fabioformosa/quartz-manager](https://github.com/fabioformosa/quartz-manager)
+
+* **Redis Sample** (not-known license), [jdk_21_maven/cs/rest/redis-sample](jdk_21_maven/cs/rest/redis-sample), from [https://github.com/hendisantika/spring-boot-redis-sample](https://github.com/hendisantika/spring-boot-redis-sample)
 
 * **Reservations API** (not-known license), [jdk_11_gradle/cs/rest/reservations-api](jdk_11_gradle/cs/rest/reservations-api), from [https://github.com/cyrilgavala/reservations-api](https://github.com/cyrilgavala/reservations-api)
 

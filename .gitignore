@@ -329,6 +329,9 @@ scripts/dockerize/dockerfiles
 /jdk_25_maven/cs/rest/jasper/target/
 /jdk_25_maven/em/external/rest/jasper/target/
 /jdk_25_maven/em/embedded/rest/jasper/target/
+/jdk_21_maven/cs/rest/redis-sample/target/
+/jdk_21_maven/em/external/rest/redis-sample/target/
+/jdk_21_maven/em/embedded/rest/redis-sample/target/
 /jdk_11_maven/em/embedded/rest/tracking-system/target/
 /jdk_11_maven/em/external/rest/tracking-system/target/
 /jdk_17_maven/em/embedded/rest/tiltaksgjennomforing/target/
