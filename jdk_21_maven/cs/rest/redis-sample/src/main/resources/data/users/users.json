@@ -1,0 +1,71 @@
+[
+  {
+    "id": "18c72298-80e6-401a-be63-eef50ed2f4c0",
+    "name": "Yuji Itadori",
+    "email": "yuji.itadori@jujutsukaisen.com",
+    "password": "hashedPasswordYuji",
+    "passwordConfirm": "hashedPasswordYuji",
+    "roles": [
+      {
+        "id": "admin",
+        "name": "admin"
+      }
+    ]
+  },
+  {
+    "id": "18c72298-80e6-401a-be63-eef50ed2f4c1",
+    "name": "Megumi Fushiguro",
+    "email": "megumi.fushiguro@jujutsukaisen.com",
+    "password": "hashedPasswordMegumi",
+    "passwordConfirm": "hashedPasswordMegumi",
+    "roles": [
+      {
+        "id": "customer",
+        "name": "customer"
+      }
+    ]
+  },
+  {
+    "id": "18c72298-80e6-401a-be63-eef50ed2f4c2",
+    "name": "Nobara Kugisaki",
+    "email": "nobara.kugisaki@jujutsukaisen.com",
+    "password": "hashedPasswordNobara",
+    "passwordConfirm": "hashedPasswordNobara",
+    "roles": [
+      {
+        "id": "customer",
+        "name": "customer"
+      }
+    ]
+  },
+  {
+    "id": "18c72298-80e6-401a-be63-eef50ed2f4c3",
+    "name": "Satoru Gojo",
+    "email": "satoru.gojo@jujutsukaisen.com",
+    "password": "hashedPasswordSatoru",
+    "passwordConfirm": "hashedPasswordSatoru",
+    "roles": [
+      {
+        "id": "customer",
+        "name": "customer"
+      }
+    ]
+  },
+  {
+    "id": "18c72298-80e6-401a-be63-eef50ed2f4c4",
+    "name": "Ryomen Sukuna",
+    "email": "ryomen.sukuna@jujutsukaisen.com",
+    "password": "hashedPasswordSukuna",
+    "passwordConfirm": "hashedPasswordSukuna",
+    "roles": [
+      {
+        "id": "customer",
+        "name": "customer"
+      },
+      {
+        "id": "customer",
+        "name": "customer"
+      }
+    ]
+  }
+]
