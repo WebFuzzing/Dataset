@@ -1,0 +1,18 @@
+services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data:/data
+    command: >
+      redis-server
+        --appendonly yes
+        --appendfilename "appendonly.aof"
+        --appendfsync everysec
+        --requirepass 53cret
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure

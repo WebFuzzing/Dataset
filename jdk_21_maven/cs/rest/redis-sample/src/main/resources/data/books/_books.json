@@ -1,0 +1,52 @@
+[
+  {
+    "id": "book123",
+    "title": "The Hitchhiker's Guide to the Galaxy",
+    "subtitle": "A Trilogy in Five Parts",
+    "description": "Seconds before the Earth is demolished to make way for a galactic freeway, Arthur Dent is plucked off the planet by his friend Ford Prefect, a researcher for the revised edition of The Hitchhiker's Guide to the Galaxy who, for the last fifteen years, has been posing as an out-of-work actor.",
+    "language": "English",
+    "pageCount": 224,
+    "thumbnail": "https://example.com/hitchhikers-guide-thumbnail.jpg",
+    "price": 12.99,
+    "currency": "USD",
+    "infoLink": "https://example.com/hitchhikers-guide-info",
+    "authors": [
+      "Douglas Adams"
+    ],
+    "categories": [
+      {
+        "id": "category_scifi",
+        "name": "Science Fiction"
+      },
+      {
+        "id": "category_humor",
+        "name": "Humor"
+      }
+    ]
+  },
+  {
+    "id": "book1234",
+    "title": "The Hitchhiker's Guide to the Galaxy",
+    "subtitle": "A Trilogy in Five Parts",
+    "description": "Seconds before the Earth is demolished to make way for a galactic freeway, Arthur Dent is plucked off the planet by his friend Ford Prefect, a researcher for the revised edition of The Hitchhiker's Guide to the Galaxy who, for the last fifteen years, has been posing as an out-of-work actor.",
+    "language": "English",
+    "pageCount": 212,
+    "thumbnail": "https://example.com/hitchhikers-guide-thumbnail.jpg",
+    "price": 12.99,
+    "currency": "USD",
+    "infoLink": "https://example.com/hitchhikers-guide-info",
+    "authors": [
+      "Douglas Adams"
+    ],
+    "categories": [
+      {
+        "id": "category_scifi",
+        "name": "Science Fiction"
+      },
+      {
+        "id": "category_humor",
+        "name": "Humor"
+      }
+    ]
+  }
+]
