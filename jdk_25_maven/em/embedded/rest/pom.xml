@@ -13,6 +13,7 @@
 
     <modules>
         <module>commafeed</module>
+        <module>jasper</module>
     </modules>
 
 </project>

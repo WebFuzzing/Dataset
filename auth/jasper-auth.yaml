@@ -1,0 +1,31 @@
+auth:
+  - name: admin
+    fixedHeaders:
+      - name: User-Tag
+        value: +user/admin
+      - name: User-Role
+        value: ROLE_ADMIN
+      - name: X-XSRF-TOKEN
+        value: evomaster
+      - name: Cookie
+        value: XSRF-TOKEN=evomaster
+  - name: alice
+    fixedHeaders:
+      - name: User-Tag
+        value: +user/alice
+      - name: User-Role
+        value: ROLE_USER
+      - name: X-XSRF-TOKEN
+        value: evomaster
+      - name: Cookie
+        value: XSRF-TOKEN=evomaster
+  - name: bob
+    fixedHeaders:
+      - name: User-Tag
+        value: +user/bob
+      - name: User-Role
+        value: ROLE_USER
+      - name: X-XSRF-TOKEN
+        value: evomaster
+      - name: Cookie
+        value: XSRF-TOKEN=evomaster

@@ -285,8 +285,10 @@ services:
           (cd cs && mvn clean install -DskipTests)
         fi
         cp cs/rest/commafeed/commafeed-server/target/commafeed-sut.jar /dist/
+        cp cs/rest/jasper/target/jasper-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/rest/commafeed/target/commafeed-evomaster-runner.jar /dist/
+          cp em/external/rest/jasper/target/jasper-evomaster-runner.jar /dist/
         fi
         echo 'JDK 25 Maven build completed'
 
