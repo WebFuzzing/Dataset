@@ -1,0 +1,2 @@
+ft.search Customer  "@stateAbbreviation:MN @city:Edina"
+ft.search Customer  "@stateAbbreviation:MN @city:Edina" return 2 fullName customerId

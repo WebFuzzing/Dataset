@@ -1,0 +1,1 @@
+java  -Djavax.net.debug=ssl -Djavax.net.ssl.keyStore=src/main/resources/ssl/client-keystore.p12 -Djavax.net.ssl.keyStorePassword=${KEYSTORE_PASSWORD} -Djavax.net.ssl.trustStore=src/main/resources/ssl/client-truststore.p12 -Djavax.net.ssl.trustStorePassword=${TRUSTSTORE_PASSWORD}  -jar  target/redis-0.0.1-SNAPSHOT.jar
