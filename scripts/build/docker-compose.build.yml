@@ -197,6 +197,7 @@ services:
         cp cs/rest/tiltaksgjennomforing/target/tiltaksgjennomforing-sut.jar /dist/
         cp cs/rest/ohsome-api/target/ohsome-api-sut.jar /dist/
         cp cs/rest/spring-rest-example/target/spring-rest-example-sut.jar /dist/
+        cp cs/rest/digitalbanking/target/digitalbanking-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/web/spring-petclinic/target/spring-petclinic-evomaster-runner.jar /dist/
           cp em/external/grpc/signal-registration/target/signal-registration-evomaster-runner.jar /dist/
@@ -204,6 +205,7 @@ services:
           cp em/external/rest/tiltaksgjennomforing/target/tiltaksgjennomforing-evomaster-runner.jar /dist/
           cp em/external/rest/ohsome-api/target/ohsome-api-evomaster-runner.jar /dist/
           cp em/external/rest/spring-rest-example/target/spring-rest-example-evomaster-runner.jar /dist/
+          cp em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar /dist/
         fi
         echo 'JDK 17 Maven build completed'
 

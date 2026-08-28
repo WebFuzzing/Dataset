@@ -353,6 +353,9 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_17_maven/em/external/rest/ohsome-api/target/
 
 /jdk_17_maven/cs/rest/spring-rest-example/target/
+/jdk_17_maven/cs/rest/digitalbanking/target/
+/jdk_17_maven/em/embedded/rest/digitalbanking/target/
+/jdk_17_maven/em/external/rest/digitalbanking/target/
 /jdk_17_maven/em/embedded/rest/spring-rest-example/target/
 /jdk_17_maven/em/external/rest/spring-rest-example/target/
 

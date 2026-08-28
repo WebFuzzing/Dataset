@@ -1,0 +1,70 @@
+services:
+  mitmproxy:
+    image: mitmproxy/mitmproxy:10.2.4
+    user: "0:0"
+    environment:
+      MITM_LOG_DIR: /custom-logs
+      MITM_LOG_FILE: ${MITM_LOG_FILE:-minlog.csv}
+    command: >
+      mitmdump 
+        --mode reverse:http://sut-digitalbanking:8080
+        --listen-host 0.0.0.0
+        --listen-port 8080
+        --set keep_host_header=true
+        -s /addons/minlog.py
+    volumes:
+      - ${HOST_LOG_DIR:-./mitm-logs}:/custom-logs
+      - ./addons:/addons:ro
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    depends_on:
+      - sut-digitalbanking
+  sut-digitalbanking:
+    build:
+      dockerfile: ./dockerfiles/digitalbanking.dockerfile
+      context: ..
+    environment:
+       AUTH_PORT: ${AUTH_PORT:-8081}
+    ports:
+      - "${JACOCO_PORT:-6300}:6300"
+    depends_on:
+      db:
+          condition: service_healthy
+      cassandra:
+          condition: service_healthy
+  db:
+    image: redis/redis-stack-server:7.4.0-v1
+    environment:
+      REDIS_ARGS: --requirepass jasonrocks
+    healthcheck:
+      test: redis-cli -a jasonrocks ping | grep PONG
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  cassandra:
+    image: cassandra:4.1
+    environment:
+      CASSANDRA_CLUSTER_NAME: test
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_ENDPOINT_SNITCH: SimpleSnitch
+      HEAP_NEWSIZE: 128M
+      MAX_HEAP_SIZE: 512M
+    healthcheck:
+      test: cqlsh -e "CREATE KEYSPACE IF NOT EXISTS banking WITH replication = {'class':'SimpleStrategy','replication_factor':1};CREATE TABLE IF NOT EXISTS banking.transaction (tranid text, accountno text, amounttype text, merchant text, referencekeytype text, referencekeyvalue text, originalamount text, amount text, trancd text, description text, initialdate text, settlementdate text, postingdate text, status text, disputeid text, transactionreturn text, location text, transactiontags text, primary key (tranid));"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  kafka:
+    image: apache/kafka:3.8.1
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
