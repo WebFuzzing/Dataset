@@ -9,6 +9,8 @@ import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.testcontainers.containers.GenericContainer;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
 
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private static final int NUMBER_OF_RATINGS = 5000;
 
     private static final int RATING_STARS = 5;
+
+    private static final String CACHE_KEY_PATTERN = "id.my.hendisantika.springbootredissample.*Cache::*";
 
     private static final GenericContainer redis = new GenericContainer("redis:" + REDIS_VERSION)
             .withCommand("redis-server", "--requirepass", REDIS_PASSWORD)
@@ -80,6 +84,10 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private final int sutPort;
 
     private String jarLocation;
+
+    private RedisClient redisClient;
+
+    private StatefulRedisConnection<String, String> redisConnection;
 
     public ExternalEvoMasterController() {
         this(DEFAULT_CONTROLLER_PORT, "../target/redis-sample-sut.jar", DEFAULT_SUT_PORT, 120, "java");
@@ -146,6 +154,9 @@ public class ExternalEvoMasterController extends ExternalSutController {
     @Override
     public void preStart() {
         redis.start();
+        redisClient = RedisClient.create("redis://:" + REDIS_PASSWORD + "@"
+                + redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+        redisConnection = redisClient.connect();
     }
 
     @Override
@@ -158,6 +169,13 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     @Override
     public void postStop() {
+        if (redisConnection != null) {
+            redisConnection.close();
+            redisClient.shutdown();
+            redisConnection = null;
+            redisClient = null;
+        }
+
         redis.stop();
     }
 
@@ -184,8 +202,19 @@ public class ExternalEvoMasterController extends ExternalSutController {
         return null;
     }
 
+    /*
+        Only the Spring Cache entries accumulate: the API is read-only, and the seeded data is
+        written once at startup by runners guarded on an empty repository, so it must survive.
+     */
     @Override
     public void resetStateOfSUT() {
+        if (redisConnection == null) {
+            return;
+        }
+        List<String> keys = redisConnection.sync().keys(CACHE_KEY_PATTERN);
+        if (!keys.isEmpty()) {
+            redisConnection.sync().del(keys.toArray(new String[0]));
+        }
     }
 
     @Override
