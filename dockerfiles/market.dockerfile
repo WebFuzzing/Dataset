@@ -5,13 +5,9 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-#ENV TOOL="undefined"
-#ENV RUN="0"
 
 ENTRYPOINT \
     java \
-#    unfortunately dumponexit is completely unreliable in Docker :(
-#    -javaagent:jacocoagent.jar=destfile=./jacoco/market__${TOOL}__${RUN}__jacoco.exec,append=false,dumponexit=true \
     -javaagent:jacocoagent.jar=output=tcpserver,address=*,port=6300,append=false,dumponexit=false \
     -Dspring.datasource.url="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1" -Dspring.datasource.username=sa -Dspring.datasource.password -jar market-sut.jar \
     --server.port=8080

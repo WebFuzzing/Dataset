@@ -75,6 +75,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
         ExternalEvoMasterController controller =
                 new ExternalEvoMasterController(controllerPort, jarLocation, sutPort, timeoutSeconds, command);
+        controller.setNeedsJdk17Options(true);
         InstrumentedSutStarter starter = new InstrumentedSutStarter(controller);
 
         starter.start();

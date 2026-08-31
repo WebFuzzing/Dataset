@@ -76,7 +76,7 @@ They are based on numerical and string-based functions previously used in the li
 We just re-implemented in different languages, and put them behind a web service.
 
 For the RESTful APIs, each API has an endpoint where the OpenAPI/Swagger schemas can be downloaded from.
-For simplicity, all schemas are also available as JSON/YML files under the folder [openapi-swagger](./openapi-swagger).
+For simplicity, all schemas are also available as JSON/YML files under the folder [openapi](openapi).
 
 > **IMPORTANT**: More details (e.g., #LOCs and used databases) on these APIs can be found [in this table](statistics/table_emb.md).
 

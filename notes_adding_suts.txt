@@ -138,7 +138,7 @@ As there are quite a few things to keep in mind, we list here the most important
   Note: dist.py can take a LOT of time... while debugging it, might want to temporarily disable (ie comment out) the
   build of the other top modules
 
-- If the SUT is a REST API, need to add its OpenAPI schema into "openapi-swagger" folder
+- If the SUT is a REST API, need to add its OpenAPI schema into "openapi" folder
 
 - If REST APIs, must support BB experiments via Docker files. This done in files under "scripts/dockerize".
   The entry point is "scripts/createDockerFiles.py": it reads "scripts/dockerize/data/sut.csv", and, for each SUT

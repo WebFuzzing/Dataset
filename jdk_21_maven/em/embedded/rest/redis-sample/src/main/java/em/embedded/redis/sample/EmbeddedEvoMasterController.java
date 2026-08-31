@@ -11,6 +11,8 @@ import org.evomaster.client.java.controller.problem.RestProblem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,8 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final int RATING_STARS = 5;
 
+    private static final String CACHE_KEY_PATTERN = "id.my.hendisantika.springbootredissample.*Cache::*";
+
     private static final GenericContainer redis = new GenericContainer("redis:" + REDIS_VERSION)
             .withCommand("redis-server", "--requirepass", REDIS_PASSWORD)
             .withExposedPorts(REDIS_PORT);
@@ -54,6 +58,10 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private ConfigurableApplicationContext ctx;
 
+    private RedisClient redisClient;
+
+    private StatefulRedisConnection<String, String> redisConnection;
+
     public EmbeddedEvoMasterController() {
         this(0);
     }
@@ -67,6 +75,9 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     public String startSut() {
 
         redis.start();
+        redisClient = RedisClient.create("redis://:" + REDIS_PASSWORD + "@"
+                + redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+        redisConnection = redisClient.connect();
 
         ctx = SpringApplication.run(SpringBootRedisSampleApplication.class, new String[]{
                 "--server.port=0",
@@ -102,6 +113,13 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             ctx = null;
         }
 
+        if (redisConnection != null) {
+            redisConnection.close();
+            redisClient.shutdown();
+            redisConnection = null;
+            redisClient = null;
+        }
+
         redis.stop();
     }
 
@@ -110,8 +128,19 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         return "id.my.hendisantika.springbootredissample.";
     }
 
+    /*
+        Only the Spring Cache entries accumulate: the API is read-only, and the seeded data is
+        written once at startup by runners guarded on an empty repository, so it must survive.
+     */
     @Override
     public void resetStateOfSUT() {
+        if (redisConnection == null) {
+            return;
+        }
+        List<String> keys = redisConnection.sync().keys(CACHE_KEY_PATTERN);
+        if (!keys.isEmpty()) {
+            redisConnection.sync().del(keys.toArray(new String[0]));
+        }
     }
 
 
