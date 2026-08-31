@@ -116,7 +116,7 @@ ENTRYPOINT [ "sh", "-c", "java -jar ${JACOCO_HOME}/jacococli.jar $@", "--" ]
 ###### NOTES ######
 ###################
 # Build
-# docker build -t webfuzzing/wfd-jacoco:<version>  -f Dockerfile-jacoco .
+# docker build -t webfuzzing/wfd-jacoco:<version>  -f jacoco.dockerfile .
 #
 # Run
 # docker run webfuzzing/wfd-jacoco:<version>  <options>
