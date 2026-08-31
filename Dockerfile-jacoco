@@ -109,7 +109,7 @@ COPY jdk_8_maven/cs/rest/original/user-management/target/classes  ${CLASS_FILES}
 COPY jdk_21_maven/cs/rest-gui/webgoat/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/webgoat/target/classes
 COPY jdk_8_maven/cs/rest/original/youtube-mock/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/youtube-mock/target/classes
 
-ENTRYPOINT exec java -jar ${JACOCO_HOME}/jacococli.jar
+ENTRYPOINT [ "sh", "-c", "java -jar ${JACOCO_HOME}/jacococli.jar $@", "--" ]
 
 
 ###################
