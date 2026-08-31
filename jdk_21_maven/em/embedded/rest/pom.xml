@@ -13,6 +13,7 @@
 
     <modules>
         <module>person-controller</module>
+        <module>redis-sample</module>
     </modules>
 
 </project>

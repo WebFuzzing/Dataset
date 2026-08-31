@@ -255,10 +255,12 @@ services:
           (cd cs && mvn clean install -DskipTests)
         fi
         cp cs/rest/person-controller/target/person-controller-sut.jar /dist/
+        cp cs/rest/redis-sample/target/redis-sample-sut.jar /dist/
         cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
         cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/rest/person-controller/target/person-controller-evomaster-runner.jar /dist/
+          cp em/external/rest/redis-sample/target/redis-sample-evomaster-runner.jar /dist/
           cp em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar /dist/
           cp em/external/rest-gui/microcks/target/microcks-evomaster-runner.jar /dist/
         fi

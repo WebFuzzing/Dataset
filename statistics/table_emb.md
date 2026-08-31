@@ -29,6 +29,7 @@
 |REST|__person-controller__|1112|16|12|Java|JDK 21|Maven|MongoDB||
 |REST|__proxyprint__|8338|73|74|Java|JDK 8|Maven|H2|&check;|
 |REST|__quartz-manager__|5068|129|11|Java|JDK 11|Maven||&check;|
+|REST|__redis-sample__|1006|18|4|Java|JDK 21|Maven|Redis||
 |REST|__reservations-api__|1853|39|7|Java|JDK 11|Gradle|MongoDB|&check;|
 |REST|__rest-ncs__|605|9|6|Java|JDK 8|Maven|||
 |REST|__rest-news__|857|11|7|Kotlin|JDK 8|Maven|H2||
