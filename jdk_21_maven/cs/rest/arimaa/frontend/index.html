@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdoptMe - Sistema de Adopción de Perros</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Cytoscape.js para visualización de grafos -->
+    <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🐕 AdoptMe</h1>
+                <p class="subtitle">Sistema Inteligente de Adopción de Perros</p>
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">Conectando...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-button active" data-tab="dashboard">Dashboard</button>
+            <button class="tab-button" data-tab="graph">Rutas & Grafos</button>
+            <button class="tab-button" data-tab="network">Redes & MST</button>
+            <button class="tab-button" data-tab="matching">Matching</button>
+            <button class="tab-button" data-tab="sorting">Ordenamiento</button>
+            <button class="tab-button" data-tab="transport">Transporte</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <div class="welcome-section">
+                    <h2>Bienvenido a AdoptMe</h2>
+                    <p>Sistema de gestión y optimización de adopciones de perros utilizando algoritmos avanzados.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Refugios</h3>
+                        <p class="stat-number" id="statsRefugios">-</p>
+                        <p class="stat-label">Total de refugios</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Perros</h3>
+                        <p class="stat-number" id="statsPerros">-</p>
+                        <p class="stat-label">Disponibles para adopción</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Adoptantes</h3>
+                        <p class="stat-number" id="statsAdoptantes">-</p>
+                        <p class="stat-label">Personas registradas</p>
+                    </div>
+                </div>
+
+                <div class="data-display">
+                    <div class="data-section">
+                        <h3>Refugios Disponibles</h3>
+                        <div id="refugiosList" class="data-list"></div>
+                    </div>
+                    <div class="data-section">
+                        <h3>Perros Disponibles</h3>
+                        <div id="perrosList" class="data-list"></div>
+                    </div>
+                    <div class="data-section">
+                        <h3>Adoptantes Registrados</h3>
+                        <div id="adoptantesList" class="data-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Graph Algorithms Tab -->
+            <section id="graph" class="tab-content">
+                <h2>Algoritmos de Rutas y Grafos</h2>
+
+                <!-- BFS/DFS -->
+                <div class="algorithm-section">
+                    <h3>🔍 BFS / DFS - Búsqueda de Caminos</h3>
+                    <p>Encuentra si existe un camino entre dos refugios usando BFS (anchura) o DFS (profundidad).</p>
+                    <div class="input-group">
+                        <label>Refugio Origen:</label>
+                        <select id="bfsFrom">
+                            <option value="A">Refugio A</option>
+                            <option value="B">Refugio B</option>
+                            <option value="C">Refugio C</option>
+                            <option value="D">Refugio D</option>
+                            <option value="E">Refugio E</option>
+                            <option value="F">Refugio F</option>
+                            <option value="G">Refugio G</option>
+                            <option value="H">Hub Central (H)</option>
+                            <option value="I">Refugio I</option>
+                            <option value="J">Refugio J</option>
+                            <option value="K">Refugio K</option>
+                            <option value="L">Refugio L</option>
+                            <option value="M">Refugio M</option>
+                            <option value="N">Refugio N</option>
+                            <option value="O">Refugio O</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Refugio Destino:</label>
+                        <select id="bfsTo">
+                            <option value="A">Refugio A</option>
+                            <option value="B">Refugio B</option>
+                            <option value="C">Refugio C</option>
+                            <option value="D">Refugio D</option>
+                            <option value="E">Refugio E</option>
+                            <option value="F">Refugio F</option>
+                            <option value="G">Refugio G</option>
+                            <option value="H">Hub Central (H)</option>
+                            <option value="I">Refugio I</option>
+                            <option value="J">Refugio J</option>
+                            <option value="K">Refugio K</option>
+                            <option value="L">Refugio L</option>
+                            <option value="M" selected>Refugio M</option>
+                            <option value="N">Refugio N</option>
+                            <option value="O">Refugio O</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="executeBFS()">Ejecutar BFS</button>
+                        <button class="btn btn-primary" onclick="executeDFS()">Ejecutar DFS</button>
+                    </div>
+                    <div id="bfsResult" class="result-box"></div>
+                </div>
+
+                <!-- Dijkstra -->
+                <div class="algorithm-section">
+                    <h3>📍 Dijkstra - Camino Más Corto</h3>
+                    <p>Calcula el camino más corto entre dos refugios considerando las distancias.</p>
+                    <div class="input-group">
+                        <label>Refugio Origen:</label>
+                        <select id="dijkstraFrom">
+                            <option value="A" selected>Refugio A</option>
+                            <option value="B">Refugio B</option>
+                            <option value="C">Refugio C</option>
+                            <option value="D">Refugio D</option>
+                            <option value="E">Refugio E</option>
+                            <option value="F">Refugio F</option>
+                            <option value="G">Refugio G</option>
+                            <option value="H">Hub Central (H)</option>
+                            <option value="I">Refugio I</option>
+                            <option value="J">Refugio J</option>
+                            <option value="K">Refugio K</option>
+                            <option value="L">Refugio L</option>
+                            <option value="M">Refugio M</option>
+                            <option value="N">Refugio N</option>
+                            <option value="O">Refugio O</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Refugio Destino:</label>
+                        <select id="dijkstraTo">
+                            <option value="A">Refugio A</option>
+                            <option value="B">Refugio B</option>
+                            <option value="C">Refugio C</option>
+                            <option value="D">Refugio D</option>
+                            <option value="E">Refugio E</option>
+                            <option value="F">Refugio F</option>
+                            <option value="G">Refugio G</option>
+                            <option value="H">Hub Central (H)</option>
+                            <option value="I">Refugio I</option>
+                            <option value="J">Refugio J</option>
+                            <option value="K">Refugio K</option>
+                            <option value="L">Refugio L</option>
+                            <option value="M" selected>Refugio M</option>
+                            <option value="N">Refugio N</option>
+                            <option value="O">Refugio O</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="executeDijkstra()">Calcular Ruta Óptima</button>
+                    <div id="dijkstraResult" class="result-box"></div>
+                </div>
+
+                <!-- TSP -->
+                <div class="algorithm-section">
+                    <h3>🗺️ TSP Branch & Bound - Ruta Óptima</h3>
+                    <p>Encuentra la ruta más corta que visita todos los refugios seleccionados (Problema del Viajante). Nota: Seleccionar muchos refugios (>8) puede tomar tiempo.</p>
+                    <div class="input-group">
+                        <label>Selecciona Refugios a Visitar: <span class="helper-text">(Usa Ctrl+Click para múltiples)</span></label>
+                        <div class="button-group" style="margin-bottom: var(--spacing-sm);">
+                            <button class="btn btn-secondary" onclick="selectAllTSP()">Seleccionar Todos</button>
+                            <button class="btn btn-secondary" onclick="clearAllTSP()">Limpiar Todo</button>
+                            <button class="btn btn-secondary" onclick="selectDefaultTSP()">Selección por Defecto</button>
+                        </div>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="tspNode" value="A" checked> Refugio A</label>
+                            <label><input type="checkbox" name="tspNode" value="B" checked> Refugio B</label>
+                            <label><input type="checkbox" name="tspNode" value="C" checked> Refugio C</label>
+                            <label><input type="checkbox" name="tspNode" value="D"> Refugio D</label>
+                            <label><input type="checkbox" name="tspNode" value="E"> Refugio E</label>
+                            <label><input type="checkbox" name="tspNode" value="F"> Refugio F</label>
+                            <label><input type="checkbox" name="tspNode" value="G"> Refugio G</label>
+                            <label><input type="checkbox" name="tspNode" value="H" checked> Hub Central (H)</label>
+                            <label><input type="checkbox" name="tspNode" value="I"> Refugio I</label>
+                            <label><input type="checkbox" name="tspNode" value="J"> Refugio J</label>
+                            <label><input type="checkbox" name="tspNode" value="K"> Refugio K</label>
+                            <label><input type="checkbox" name="tspNode" value="L"> Refugio L</label>
+                            <label><input type="checkbox" name="tspNode" value="M"> Refugio M</label>
+                            <label><input type="checkbox" name="tspNode" value="N"> Refugio N</label>
+                            <label><input type="checkbox" name="tspNode" value="O"> Refugio O</label>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="executeTSP()">Calcular Ruta TSP</button>
+                    <div id="tspResult" class="result-box"></div>
+                </div>
+            </section>
+
+            <!-- Network Algorithms Tab -->
+            <section id="network" class="tab-content">
+                <h2>Algoritmos de Redes y MST</h2>
+
+                <!-- Graph Visualization -->
+                <div class="algorithm-section">
+                    <h3>🗺️ Visualización del Grafo de Shelters</h3>
+                    <p>Visualiza la red completa de conexiones entre refugios con sus distancias.</p>
+                    <button class="btn btn-primary" onclick="showGraphVisualization()">Mostrar Grafo de Conexiones</button>
+                    <div id="graphContainer" style="display: none;">
+                        <div id="graphCanvas" style="width: 100%; height: 600px; border: 2px solid #3498db; border-radius: 8px; margin-top: 20px; background: #f8f9fa;"></div>
+                        <div class="graph-legend" style="margin-top: 15px; padding: 15px; background: #e8f4f8; border-radius: 8px;">
+                            <h4 style="margin: 0 0 10px 0;">📋 Leyenda</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                                <div><span style="display: inline-block; width: 16px; height: 16px; background: #3498db; border-radius: 50%; vertical-align: middle;"></span> Nodo (Shelter)</div>
+                                <div><span style="display: inline-block; width: 30px; height: 3px; background: #95a5a6; vertical-align: middle;"></span> Conexión NEAR</div>
+                                <div>💡 <strong>Tip:</strong> Arrastra los nodos para reorganizar</div>
+                                <div>🔍 <strong>Peso:</strong> Distancia en kilómetros</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kruskal/Prim -->
+                <div class="algorithm-section">
+                    <h3>🌳 MST - Árbol de Expansión Mínima</h3>
+                    <p>Calcula el árbol de expansión mínima para conectar todos los refugios con la menor distancia total.</p>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="executeMST('kruskal')">Algoritmo de Kruskal</button>
+                        <button class="btn btn-primary" onclick="executeMST('prim')">Algoritmo de Prim</button>
+                    </div>
+                    <div id="mstResult" class="result-box"></div>
+                </div>
+            </section>
+
+            <!-- Matching Tab -->
+            <section id="matching" class="tab-content">
+                <h2>Algoritmos de Matching</h2>
+
+                <!-- Greedy -->
+                <div class="algorithm-section">
+                    <h3>🎯 Greedy - Selección Voraz</h3>
+                    <p>Selecciona los mejores perros para un adoptante usando un algoritmo voraz basado en compatibilidad.</p>
+                    <div class="input-group">
+                        <label>Selecciona Adoptante:</label>
+                        <select id="greedyAdopter">
+                            <option value="P1">P1 - Camila ($25,000, Patio ✓, Niños ✓, Max: 2)</option>
+                            <option value="P2">P2 - Lucas ($18,000, Patio ✗, Niños ✗, Max: 1)</option>
+                            <option value="P3">P3 - Daniela ($30,000, Patio ✓, Niños ✗, Max: 3)</option>
+                            <option value="P4">P4 - Martin ($22,000, Patio ✓, Niños ✓, Max: 2)</option>
+                            <option value="P5">P5 - Sofia ($15,000, Patio ✗, Niños ✗, Max: 1)</option>
+                            <option value="P6">P6 - Roberto ($35,000, Patio ✓, Niños ✗, Max: 4)</option>
+                            <option value="P7">P7 - Ana ($20,000, Patio ✓, Niños ✓, Max: 1)</option>
+                            <option value="P8">P8 - Diego ($28,000, Patio ✗, Niños ✗, Max: 2)</option>
+                            <option value="P9">P9 - Julia ($40,000, Patio ✓, Niños ✓, Max: 3)</option>
+                            <option value="P10">P10 - Carlos ($12,000, Patio ✗, Niños ✗, Max: 1)</option>
+                            <option value="P11">P11 - Valeria ($32,000, Patio ✓, Niños ✗, Max: 5)</option>
+                            <option value="P12">P12 - Pedro ($24,000, Patio ✓, Niños ✓, Max: 2)</option>
+                            <option value="P13">P13 - Laura ($16,000, Patio ✗, Niños ✓, Max: 1)</option>
+                            <option value="P14">P14 - Andres ($45,000, Patio ✓, Niños ✗, Max: 4)</option>
+                            <option value="P15">P15 - Monica ($27,000, Patio ✓, Niños ✓, Max: 3)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="executeGreedy()">Ejecutar Greedy</button>
+                    <div id="greedyResult" class="result-box"></div>
+                </div>
+
+                <!-- Backtracking -->
+                <div class="algorithm-section">
+                    <h3>🔄 Backtracking - Asignación con Restricciones</h3>
+                    <p>Asigna múltiples perros a múltiples adoptantes respetando todas las restricciones (presupuesto, capacidad, compatibilidad).</p>
+                    <button class="btn btn-primary" onclick="executeBacktracking()">Ejecutar Backtracking</button>
+                    <div id="backtrackingResult" class="result-box"></div>
+                </div>
+            </section>
+
+            <!-- Sorting Tab -->
+            <section id="sorting" class="tab-content">
+                <h2>Algoritmos de Ordenamiento</h2>
+
+                <div class="algorithm-section">
+                    <h3>📊 Ordenar Perros</h3>
+                    <p>Ordena la lista de perros según diferentes criterios usando MergeSort o QuickSort.</p>
+                    <div class="input-group">
+                        <label>Criterio de Ordenamiento:</label>
+                        <select id="sortCriteria">
+                            <option value="priority">Prioridad</option>
+                            <option value="age">Edad</option>
+                            <option value="weight">Peso</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Algoritmo:</label>
+                        <select id="sortAlgorithm">
+                            <option value="mergesort">MergeSort (TimSort)</option>
+                            <option value="quicksort">QuickSort</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" onclick="executeSort()">Ordenar Perros</button>
+                    <div id="sortResult" class="result-box"></div>
+                </div>
+            </section>
+
+            <!-- Transport Tab -->
+            <section id="transport" class="tab-content">
+                <h2>Optimización de Transporte</h2>
+
+                <div class="algorithm-section">
+                    <h3>📦 Knapsack - Problema de la Mochila</h3>
+                    <p>Optimiza el transporte de perros maximizando la prioridad total dentro de la capacidad del vehículo (Programación Dinámica).</p>
+                    <div class="input-group">
+                        <label>Capacidad del Vehículo (kg):</label>
+                        <input type="number" id="vehicleCapacity" value="50" min="10" max="200">
+                    </div>
+                    <button class="btn btn-primary" onclick="executeKnapsack()">Optimizar Transporte</button>
+                    <div id="knapsackResult" class="result-box"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>AdoptMe - Programación III - UADE © 2024</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Procesando...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
