@@ -427,7 +427,7 @@ def createScriptForARATRL(sut, port, seed):
 
     start_tool_command += TIMEOUT_COMMAND + " "
     start_tool_command += "py \"" + ARAT_RL_LOCATION + "\" \\\n"
-    start_tool_command += " \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " http://localhost:" + str(port) + "  \\\n"
     start_tool_command += " " + str(MAX_TIME_SECONDS) + "  \\\n"
     start_tool_command += getRedirectLog(logs)
@@ -453,7 +453,7 @@ def createScriptForEvoMaster(sut, port, seed):
     start_tool_command += "java -jar \"" + EVOMASTER_JAR + "\" \\\n"
     start_tool_command += " --blackBox true  \\\n"
     start_tool_command += " --maxTime " + str(MAX_TIME_SECONDS) + "s  \\\n"
-    start_tool_command += " --bbSwaggerUrl \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " --bbSwaggerUrl \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " --bbTargetUrl http://localhost:" + str(port) + "  \\\n"
     start_tool_command += " --seed " + str(seed) + " \\\n"
     start_tool_command += " --showProgress false  \\\n"
@@ -488,7 +488,7 @@ def createScriptForLLAMA(sut, port, seed):
 
     start_tool_command += TIMEOUT_COMMAND + " "
     start_tool_command += "py \"" + LLAMA_REST_TEST_LOCATION + "/llamarest.py\" \\\n"
-    start_tool_command += " \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " http://localhost:" + str(port) + "  \\\n"
     start_tool_command += getRedirectLog(logs)
     start_tool_command += "\n\n"
@@ -510,7 +510,7 @@ def createScriptForSchemaThesis(sut, port, seed):
 
     start_tool_command = TIMEOUT_COMMAND + " "
     start_tool_command += "schemathesis run \\\n"
-    start_tool_command += " \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " --url http://localhost:" + str(port) + "  \\\n"
     start_tool_command += getRedirectLog(logs)
     start_tool_command += "\n\n"
@@ -536,7 +536,7 @@ def createScriptForRestler(sut, port, seed):
     start_tool_command += TIMEOUT_COMMAND + " "
     start_tool_command += "py \"" + RESTLER_LOCATION + "/restler-quick-start.py\" \\\n"
     start_tool_command += " --restler_drop_dir \"" + RESTLER_LOCATION +"/restler_bin\" \\\n"
-    start_tool_command += " --api_spec_path \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " --api_spec_path \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " --host localhost \\\n"
     start_tool_command += " --port " + str(port) + "  \\\n"
     start_tool_command += getRedirectLog(logs)
@@ -562,7 +562,7 @@ def createScriptForEmRest(sut, port, seed):
 
     start_tool_command += TIMEOUT_COMMAND + " "
     start_tool_command += "conda run -n emrest python -m src.alg \\\n"
-    start_tool_command += " --spec_file \"" + WFD_DIR + "/openapi-swagger/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
+    start_tool_command += " --spec_file \"" + WFD_DIR + "/openapi/" + sut.name + "."+sut.schemaformat + "\"  \\\n"
     start_tool_command += " --budget " + str(MAX_TIME_SECONDS) + "  \\\n"
     start_tool_command += " --server http://localhost:" + str(port) + "  \\\n"
     start_tool_command += " --exp_name emrest  --pict lib/pict-mac \\\n"
