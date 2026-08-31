@@ -1,0 +1,129 @@
+# Unfortunately this file must be on top root, instead of inside /jacoco folder, due to Dockers absurd limitations
+# when it comes to handle relative paths in COPY
+
+FROM amazoncorretto:21-alpine-jdk
+
+ENV JACOCO_HOME=/jacoco
+
+COPY jacoco/jacocoagent.jar ${JACOCO_HOME}/jacocoagent.jar
+COPY jacoco/jacococli.jar   ${JACOCO_HOME}/jacococli.jar
+COPY jacoco/version.txt     ${JACOCO_HOME}/version.txt
+
+ENV CLASS_FILES=/classfiles
+
+### IMPORTANT!!!: must be kept in sync with what declared in run-tools.py, which will need to be updated
+###               any time in this file we add a new entry to WFD
+COPY jdk_17_gradle/cs/rest/bibliothek/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/bibliothek/build/classes
+COPY jdk_8_maven/cs/rest/original/blogapi/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/blogapi/target/classes
+COPY jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes
+COPY jdk_11_maven/cs/rest/cwa-verification-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/cwa-verification-server/target/classes
+COPY jdk_8_gradle/cs/rest/erc20-rest-service/build/classes  ${CLASS_FILES}/jdk_8_gradle/cs/rest/erc20-rest-service/build/classes
+COPY jdk_17_maven/cs/rest/familie-ba-sak/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/familie-ba-sak/target/classes
+COPY jdk_8_maven/cs/rest/original/features-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/features-service/target/classes
+COPY jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes
+COPY jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes
+COPY jdk_8_maven/cs/rest-gui/genome-nexus/persistence/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/persistence/target/classes
+COPY jdk_8_maven/cs/rest-gui/genome-nexus/service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/service/target/classes
+COPY jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes
+COPY jdk_8_maven/cs/rest-gui/gestaohospital/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/gestaohospital/target/classes
+COPY jdk_11_maven/cs/rest/http-patch-spring/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/http-patch-spring/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/all/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/all/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ar/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ar/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ast/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ast/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/be/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/be/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/br/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/br/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ca/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ca/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/da/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/da/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/de/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/de/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/de-DE-x-simple-language/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/de-DE-x-simple-language/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/el/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/el/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/en/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/en/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/eo/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/eo/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/es/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/es/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/fa/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/fa/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/fr/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/fr/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ga/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ga/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/gl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/gl/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/is/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/is/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/it/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/it/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ja/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ja/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/km/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/km/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/lt/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/lt/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ml/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ml/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/nl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/nl/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pl/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ro/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ru/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ru/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sk/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sk/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sl/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sv/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sv/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ta/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ta/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/tl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/tl/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/uk/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/uk/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes
+COPY jdk_11_maven/cs/rest-gui/market/market-core/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-core/target/classes
+COPY jdk_11_maven/cs/rest-gui/market/market-rest/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-rest/target/classes
+COPY jdk_11_maven/cs/rest-gui/market/market-web/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-web/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/commons/model/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/commons/model/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/commons/util/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/commons/util/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/commons/util-el/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/commons/util-el/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/distro/uber/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/distro/uber/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes
+COPY jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes
+COPY jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes
+COPY jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes
+COPY jdk_8_maven/cs/rest-gui/ocvn/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/web/target/classes
+COPY jdk_17_maven/cs/rest/ohsome-api/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/ohsome-api/target/classes
+COPY jdk_11_maven/cs/rest/pay-publicapi/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/pay-publicapi/target/classes
+COPY jdk_21_maven/cs/rest/person-controller/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/person-controller/target/classes
+COPY jdk_8_maven/cs/rest/original/proxyprint/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/proxyprint/target/classes
+COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes
+COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes
+COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-persistence/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-persistence/target/classes
+COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-security/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-security/target/classes
+COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/classes
+COPY jdk_11_gradle/cs/rest/reservations-api/build/classes  ${CLASS_FILES}/jdk_11_gradle/cs/rest/reservations-api/build/classes
+COPY jdk_8_maven/cs/rest/artificial/ncs/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/artificial/ncs/target/classes
+COPY jdk_8_maven/cs/rest/artificial/news/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/artificial/news/target/classes
+COPY jdk_8_maven/cs/rest/artificial/scs/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/artificial/scs/target/classes
+COPY jdk_8_maven/cs/rest/original/restcountries/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/restcountries/target/classes
+COPY jdk_8_maven/cs/rest/original/scout-api/api/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/scout-api/api/target/classes
+COPY jdk_8_maven/cs/rest/original/scout-api/auth/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/scout-api/auth/target/classes
+COPY jdk_8_maven/cs/rest/original/scout-api/data-access/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/scout-api/data-access/target/classes
+COPY jdk_8_maven/cs/rest/original/scout-api/data-batch-jobs/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/scout-api/data-batch-jobs/target/classes
+COPY jdk_8_maven/cs/rest/original/session-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/session-service/target/classes
+COPY jdk_8_maven/cs/rest/original/spring-actuator-demo/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/spring-actuator-demo/target/classes
+COPY jdk_8_maven/cs/rest/original/spring-batch-rest/api/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/spring-batch-rest/api/target/classes
+COPY jdk_8_maven/cs/rest/original/spring-batch-rest/util/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/spring-batch-rest/util/target/classes
+COPY jdk_8_maven/cs/rest/original/spring-ecommerce/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/spring-ecommerce/target/classes
+COPY jdk_17_maven/cs/rest/spring-rest-example/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/spring-rest-example/target/classes
+COPY jdk_8_maven/cs/rest/original/swagger-petstore/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/swagger-petstore/target/classes
+COPY jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes
+COPY jdk_11_maven/cs/rest/tracking-system/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/tracking-system/target/classes
+COPY jdk_8_maven/cs/rest/original/user-management/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/user-management/target/classes
+COPY jdk_21_maven/cs/rest-gui/webgoat/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/webgoat/target/classes
+COPY jdk_8_maven/cs/rest/original/youtube-mock/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/youtube-mock/target/classes
+
+ENTRYPOINT exec java -jar ${JACOCO_HOME}/jacococli.jar
+
+
+###################
+###### NOTES ######
+###################
+# Build
+# docker build -t webfuzzing/wfd-jacoco:<version>  -f Dockerfile-jacoco .
+#
+# Run
+# docker run webfuzzing/wfd-jacoco:<version>  <options>
+#
+# Publish (latest, otherwise tag with :<version>)
+# docker login
+# docker push webfuzzing/wfd-jacoco
+#
+# Debugging
+# docker run -it --entrypoint sh  webfuzzing/wfd-jacoco:<version>
