@@ -83,6 +83,13 @@
             <version>2.2.4</version>
             <scope>test</scope>
         </dependency>
+        <!--          MODIFIED-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--          MODIFIED-->
     </dependencies>
 
     <build>
@@ -107,6 +114,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!--          MODIFIED-->
+                    <!-- WFD expects a single self-contained "redis-sample-sut.jar". The classifier keeps
+                         the plain jar as the main artifact, which the embedded driver depends on. -->
+                    <finalName>redis-sample</finalName>
+                    <classifier>sut</classifier>
+                    <!--          MODIFIED-->
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
