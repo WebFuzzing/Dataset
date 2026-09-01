@@ -32,3 +32,4 @@ services:
     image: mongo:3.6.2
     tmpfs:
       - '/data/db'
+    platform: linux/amd64

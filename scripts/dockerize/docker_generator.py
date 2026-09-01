@@ -145,6 +145,7 @@ class DockerGenerator:
                 'HEALTH_CHECK': health_check_command != "",
                 'HEALTH_CHECK_COMMAND': health_check_command,
                 'COMMAND': db['command'] if 'command' in db else None,
+                'PLATFORM': db['platform'] if 'platform' in db else None,
             }
             database_image = database_template.render(database_params)
             db_images.append(database_image)
