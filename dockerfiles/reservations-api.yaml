@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-reservations-api
   sut-reservations-api:
-    build:
-      dockerfile: ./dockerfiles/reservations-api.dockerfile
-      context: ..
+    image: webfuzzing/wfd-reservations-api:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/reservations-api.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

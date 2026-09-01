@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-ocvn
   sut-ocvn:
-    build:
-      dockerfile: ./dockerfiles/ocvn.dockerfile
-      context: ..
+    image: webfuzzing/wfd-ocvn:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/ocvn.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

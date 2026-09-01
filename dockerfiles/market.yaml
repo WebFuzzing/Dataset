@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-market
   sut-market:
-    build:
-      dockerfile: ./dockerfiles/market.dockerfile
-      context: ..
+    image: webfuzzing/wfd-market:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/market.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

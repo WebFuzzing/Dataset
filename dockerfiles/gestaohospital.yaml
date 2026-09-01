@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-gestaohospital
   sut-gestaohospital:
-    build:
-      dockerfile: ./dockerfiles/gestaohospital.dockerfile
-      context: ..
+    image: webfuzzing/wfd-gestaohospital:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/gestaohospital.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

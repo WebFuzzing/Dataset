@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-redis-sample
   sut-redis-sample:
-    build:
-      dockerfile: ./dockerfiles/redis-sample.dockerfile
-      context: ..
+    image: webfuzzing/wfd-redis-sample:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/redis-sample.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

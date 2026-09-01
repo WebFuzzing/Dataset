@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-familie-ba-sak
   sut-familie-ba-sak:
-    build:
-      dockerfile: ./dockerfiles/familie-ba-sak.dockerfile
-      context: ..
+    image: webfuzzing/wfd-familie-ba-sak:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/familie-ba-sak.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

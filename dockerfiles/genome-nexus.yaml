@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-genome-nexus
   sut-genome-nexus:
-    build:
-      dockerfile: ./dockerfiles/genome-nexus.dockerfile
-      context: ..
+    image: webfuzzing/wfd-genome-nexus:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/genome-nexus.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

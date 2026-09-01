@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-blogapi
   sut-blogapi:
-    build:
-      dockerfile: ./dockerfiles/blogapi.dockerfile
-      context: ..
+    image: webfuzzing/wfd-blogapi:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/blogapi.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:
