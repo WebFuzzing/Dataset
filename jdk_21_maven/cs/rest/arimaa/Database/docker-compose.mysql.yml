@@ -1,0 +1,26 @@
+services:
+  mysqldb:
+    image: mysql:9.5.0
+    container_name: arimaadockermysqldb
+    ports:
+      - "5000:3306"
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+
+    hostname: arimaadockermysqldb
+
+volumes:
+  mysql_data:
+    driver: local
