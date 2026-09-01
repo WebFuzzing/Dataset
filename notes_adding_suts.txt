@@ -210,3 +210,12 @@ As there are quite a few things to keep in mind, we list here the most important
   "dockerfiles/NAME.dockerfile" and "dockerfiles/NAME.yaml", and commit them as well.
   A good way to verify the setup is to build the SUT JARs (dist), start the compose file, and check that the
   OpenAPI schema is reachable at SWAGGER_URL.
+
+- The "jacoco.dockerfile" needs to be updated as well, with new "COPY" entries for each new "target/classes" folder.
+  Note that, in a multi-module maven project, not all modules need to be necessarily added.
+  Only all the modules involved in building the jar of the SUT must be added.
+  This requires to check how the SUT is built, and dependencies among its sub-modules.
+  Adding unrelated modules will negatively impact how coverage is measured with JaCoCo.
+
+- Given a SUT called X, its image needs to be published with name:tag "webfuzzing/wfd-X:FINAL".
+  As it requires authentication on Docker Hub, this must be done manually by the architect, after X is added to WFD.
