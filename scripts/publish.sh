@@ -31,6 +31,22 @@ find "$DOCKERFILES_DIR" -maxdepth 1 -name "*.dockerfile" -type f | while read -r
         exit -1
     fi
 
+#### WARNING: following commented-out on purpose. should only publish an image, once, and if in any rare
+####          occasion of updating.
+####          This also requires to run "docker login" with WF credentials for Docker Hub.
+####          As such, only architect can do this operation.
+
+    # Publish on Docker Hub
+#    echo "Publishing image: webfuzzing/wfd-$X:FINAL"
+#    docker push "webfuzzing/wfd-$X:FINAL"
+#
+#    if [ $? -eq 0 ]; then
+#        echo "Successfully published webfuzzing/wfd-$X:FINAL"
+#    else
+#        echo "Failed to publish webfuzzing/wfd-$X:FINAL"
+#        exit -1
+#    fi
+
 
     echo "---"
 done
