@@ -13,6 +13,7 @@
 |REST|__catwatch__|9636|106|14|Java|JDK 8|Maven|H2||
 |REST|__commafeed__|21287|201|44|Java|JDK 25|Maven|H2|&check;|
 |REST|__cwa-verification__|3955|47|5|Java|JDK 11|Maven|H2||
+|REST|__digitalbanking__|2835|27|56|Java|JDK 17|Maven|Redis, Cassandra||
 |REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
 |REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
 |REST|__features-service__|2275|39|18|Java|JDK 8|Maven|H2||

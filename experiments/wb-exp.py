@@ -187,6 +187,7 @@ SUTS = [
     Sut("catwatch",  JDK_8),
     Sut("commafeed",  JDK_25),
     Sut("cwa-verification",  JDK_11),
+    Sut("digitalbanking",  JDK_17),
     Sut("erc20-rest-service", JDK_8),
     Sut("familie-ba-sak",JDK_17),
     Sut("features-service",  JDK_8),

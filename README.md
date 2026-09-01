@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (39)
+### REST: Java/Kotlin (40)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 
@@ -96,6 +96,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **CommaFeed** (Apache), [jdk_25_maven/cs/rest/commafeed](jdk_25_maven/cs/rest/commafeed), from [https://github.com/Athou/commafeed](https://github.com/Athou/commafeed)
 
 * **CWA-Verification-Server** (Apache), [jdk_11_maven/cs/rest/cwa-verification-server](jdk_11_maven/cs/rest/cwa-verification-server), from [https://github.com/corona-warn-app/cwa-verification-server](https://github.com/corona-warn-app/cwa-verification-server)
+
+* **Digital Banking** (not-known license), [jdk_17_maven/cs/rest/digitalbanking](jdk_17_maven/cs/rest/digitalbanking), from [https://github.com/jphaugla/Redisearch-Digital-Banking-redisTemplate](https://github.com/jphaugla/Redisearch-Digital-Banking-redisTemplate)
 
 * **ERC20 Rest Service** (not-known license), [jdk_8_gradle/cs/rest/erc20-rest-service](jdk_8_gradle/cs/rest/erc20-rest-service), from [https://github.com/web3labs/erc20-rest-service](https://github.com/web3labs/erc20-rest-service)
 
@@ -267,6 +269,10 @@ _Black-box_ testing: you can build all the SUTs via Docker using  `scripts/dist-
 ```
 docker-compose -f dockerfiles/reservations-api.yaml up
 ```
+
+Note: for `digitalbanking`, run the fuzzer with `--endpointExclude "/generateData"`.
+That endpoint loops on its request parameters with no upper bound, and a large value makes the SUT unresponsive for the rest of the experiment.
+The white-box drivers already skip it.
 
 _White-box_ testing: everything can be setup by running the script `scripts/dist.py`.
 Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, JDK 21, JDK 25, NPM, as well as Docker.
