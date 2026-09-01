@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-features-service
   sut-features-service:
-    build:
-      dockerfile: ./dockerfiles/features-service.dockerfile
-      context: ..
+    image: webfuzzing/wfd-features-service:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/features-service.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-tiltaksgjennomforing
   sut-tiltaksgjennomforing:
-    build:
-      dockerfile: ./dockerfiles/tiltaksgjennomforing.dockerfile
-      context: ..
+    image: webfuzzing/wfd-tiltaksgjennomforing:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/tiltaksgjennomforing.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

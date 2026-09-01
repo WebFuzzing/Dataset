@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-scout-api
   sut-scout-api:
-    build:
-      dockerfile: ./dockerfiles/scout-api.dockerfile
-      context: ..
+    image: webfuzzing/wfd-scout-api:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/scout-api.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

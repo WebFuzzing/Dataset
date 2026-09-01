@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-http-patch-spring
   sut-http-patch-spring:
-    build:
-      dockerfile: ./dockerfiles/http-patch-spring.dockerfile
-      context: ..
+    image: webfuzzing/wfd-http-patch-spring:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/http-patch-spring.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

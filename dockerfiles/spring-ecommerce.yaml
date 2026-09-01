@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-spring-ecommerce
   sut-spring-ecommerce:
-    build:
-      dockerfile: ./dockerfiles/spring-ecommerce.dockerfile
-      context: ..
+    image: webfuzzing/wfd-spring-ecommerce:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/spring-ecommerce.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

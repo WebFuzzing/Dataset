@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-person-controller
   sut-person-controller:
-    build:
-      dockerfile: ./dockerfiles/person-controller.dockerfile
-      context: ..
+    image: webfuzzing/wfd-person-controller:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/person-controller.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

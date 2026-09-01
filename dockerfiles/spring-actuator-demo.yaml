@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-spring-actuator-demo
   sut-spring-actuator-demo:
-    build:
-      dockerfile: ./dockerfiles/spring-actuator-demo.dockerfile
-      context: ..
+    image: webfuzzing/wfd-spring-actuator-demo:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/spring-actuator-demo.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

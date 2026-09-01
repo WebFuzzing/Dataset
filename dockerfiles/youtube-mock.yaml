@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-youtube-mock
   sut-youtube-mock:
-    build:
-      dockerfile: ./dockerfiles/youtube-mock.dockerfile
-      context: ..
+    image: webfuzzing/wfd-youtube-mock:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/youtube-mock.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

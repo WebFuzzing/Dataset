@@ -31,3 +31,8 @@
 {% if COMMAND %}
     command: {{COMMAND}}
 {% endif %}
+
+{% if PLATFORM %}
+    platform: {{PLATFORM}}
+{% endif %}
+

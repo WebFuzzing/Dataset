@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-languagetool
   sut-languagetool:
-    build:
-      dockerfile: ./dockerfiles/languagetool.dockerfile
-      context: ..
+    image: webfuzzing/wfd-languagetool:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/languagetool.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

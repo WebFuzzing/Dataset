@@ -21,9 +21,10 @@ services:
       - sut-{{SUT_NAME}}
 
   sut-{{SUT_NAME}}:
-    build:
-      dockerfile: ./dockerfiles/{{SUT_NAME}}.dockerfile
-      context: ..
+    image: webfuzzing/wfd-{{SUT_NAME}}:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/{{SUT_NAME}}.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:

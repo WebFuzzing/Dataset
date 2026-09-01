@@ -20,9 +20,10 @@ services:
     depends_on:
       - sut-erc20-rest-service
   sut-erc20-rest-service:
-    build:
-      dockerfile: ./dockerfiles/erc20-rest-service.dockerfile
-      context: ..
+    image: webfuzzing/wfd-erc20-rest-service:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/erc20-rest-service.dockerfile
+#      context: ..
     environment:
        AUTH_PORT: ${AUTH_PORT:-8081}
     ports:
