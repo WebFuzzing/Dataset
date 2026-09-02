@@ -85,7 +85,9 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (39)
+### REST: Java/Kotlin (40)
+
+* **Arimaa** (not-known license), [jdk_21_maven/cs/rest/arimaa](jdk_21_maven/cs/rest/arimaa), from [https://github.com/KEAArimaaProject/arimaa-backend](https://github.com/KEAArimaaProject/arimaa-backend)
 
 * **Bibliothek** (MIT), [jdk_17_gradle/cs/rest/bibliothek](jdk_17_gradle/cs/rest/bibliothek), from [https://github.com/PaperMC/bibliothek](https://github.com/PaperMC/bibliothek)
 

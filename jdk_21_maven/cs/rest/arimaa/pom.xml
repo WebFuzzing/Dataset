@@ -146,11 +146,18 @@
             <version>3.2.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- MODIFIED -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <scope>test</scope>
         </dependency>
+        <!--          MODIFIED-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--          MODIFIED-->
     </dependencies>
     <dependencyManagement/>
 
@@ -161,6 +168,12 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.example.arimaabackend.ArimaaBackendApplication</mainClass>
+                    <!--          MODIFIED-->
+                    <!-- WFD expects a single self-contained "arimaa-sut.jar". The classifier keeps
+                         the plain jar as the main artifact, which the external driver depends on. -->
+                    <finalName>arimaa</finalName>
+                    <classifier>sut</classifier>
+                    <!--          MODIFIED-->
                 </configuration>
             </plugin>
             <plugin>
