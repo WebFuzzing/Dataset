@@ -1,0 +1,14 @@
+auth:
+  - name: wfd_admin
+    loginEndpointAuth:
+      payloadRaw: "{\"userid\": \"wfd_admin\", \"password\": \"Wfd-Pass1\"}"
+  - name: wfd_user
+    loginEndpointAuth:
+      payloadRaw: "{\"userid\": \"wfd_user\", \"password\": \"Wfd-Pass2\"}"
+
+authTemplate:
+    loginEndpointAuth:
+        endpoint: /login
+        verb: POST
+        contentType: application/json
+        expectCookies: true

@@ -27,6 +27,7 @@ COPY jdk_8_maven/cs/rest-gui/genome-nexus/service/target/classes  ${CLASS_FILES}
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes
 COPY jdk_8_maven/cs/rest-gui/gestaohospital/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/gestaohospital/target/classes
 COPY jdk_11_maven/cs/rest/http-patch-spring/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/http-patch-spring/target/classes
+COPY jdk_21_maven/cs/rest/joinus/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/joinus/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/all/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/all/target/classes

@@ -184,6 +184,12 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!--          MODIFIED-->
+					<!-- WFD expects a single self-contained "joinus-sut.jar". The classifier keeps
+					     the plain jar as the main artifact, which the embedded driver depends on. -->
+					<finalName>joinus</finalName>
+					<classifier>sut</classifier>
+					<!--          MODIFIED-->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
