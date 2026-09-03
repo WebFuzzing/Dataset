@@ -56,7 +56,7 @@ COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ml/
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/nl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/nl/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pl/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes
-COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ro/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/pt/target/classes
+COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ro/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ro/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ru/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/ru/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sk/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sk/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sl/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/sl/target/classes
