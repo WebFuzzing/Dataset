@@ -1,0 +1,24 @@
+# Neo4j (Graph DB)
+services:
+  neo4jdb:
+    image: neo4j:5.26
+    container_name: arimaadockerneo4jdb
+    ports:
+      - "7474:7474" # Browser / HTTP API
+      - "7687:7687" # Bolt
+    environment:
+      NEO4J_AUTH: ${SPRING_NEO4J_USERNAME}/${SPRING_NEO4J_PASSWORD}
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_import:/import
+    hostname: arimaadockerneo4jdb
+
+volumes:
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+  neo4j_import:
+    driver: local
+

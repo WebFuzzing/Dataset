@@ -1,0 +1,15 @@
+# MongoDB (Document DB)
+services:
+  mongodb:
+    image: mongo:7
+    container_name: arimaadockermongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    hostname: arimaadockermongodb
+
+volumes:
+  mongodb_data:
+    driver: local
+
