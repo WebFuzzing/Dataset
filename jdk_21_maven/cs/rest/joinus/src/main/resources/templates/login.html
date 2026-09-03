@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JoinUs • Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2.5rem;
+            width: 360px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .25);
+            animation: fadeIn .6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card h1 {
+            margin-bottom: .25rem;
+            font-size: 1.9rem;
+            color: #333;
+            text-align: center;
+        }
+
+        .login-card p {
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            font-size: .85rem;
+            color: #555;
+            display: block;
+            margin-bottom: .3rem;
+        }
+
+        input {
+            width: 100%;
+            padding: .7rem .9rem;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            font-size: .95rem;
+            transition: border .2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: .75rem;
+            border: none;
+            border-radius: 12px;
+            background: #667eea;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .error {
+            margin-top: 1rem;
+            padding: .7rem;
+            border-radius: 8px;
+            background: #ffe4e4;
+            color: #b30000;
+            text-align: center;
+            font-size: .85rem;
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: .8rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h1>JoinUs</h1>
+    <p>Sign in to continue</p>
+
+    <form method="post" action="/login">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username" name="username" required autofocus>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required>
+        </div>
+
+        <button type="submit">Login</button>
+
+        <!-- Spring Security error flag -->
+        <div class="error" th:if="${param.error}">
+            Invalid username or password
+        </div>
+
+        <div class="error" th:if="${param.logout}">
+            You have been logged out
+        </div>
+    </form>
+
+    <div class="footer">
+        © 2026 JoinUs Platform
+    </div>
+</div>
+
+</body>
+</html>

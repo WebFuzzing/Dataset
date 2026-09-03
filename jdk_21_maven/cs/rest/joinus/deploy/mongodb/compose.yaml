@@ -1,0 +1,23 @@
+services:
+  mongo:
+    image: mongo:8.2.4-noble
+    container_name: "mongo${NODE_ID}"
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      RS_NAME: ${RS_NAME}
+    command: >
+      mongod
+      --replSet ${RS_NAME}
+      --bind_ip_all
+      --auth
+      --keyFile /etc/mongo-keyfile
+
+volumes:
+  mongo_data:
