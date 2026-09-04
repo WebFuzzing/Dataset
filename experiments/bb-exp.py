@@ -77,6 +77,7 @@ JSON="json"
 
 # To ge the SUTs, you need in EMB to run the script "scripts/dist.py"
 SUTS = [
+    Sut("arimaa",True,SLEEP,JSON,["jdk_21_maven/cs/rest/arimaa/target/classes"]),
     Sut("bibliothek",False,SLEEP,JSON,["jdk_17_gradle/cs/rest/bibliothek/build/classes"]),
     Sut("blogapi",True, SLEEP,JSON,["jdk_8_maven/cs/rest/original/blogapi/target/classes"]),
     Sut("catwatch",False,SLEEP,JSON,["jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes"]),

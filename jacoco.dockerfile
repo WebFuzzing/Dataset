@@ -13,6 +13,7 @@ ENV CLASS_FILES=/classfiles
 
 ### IMPORTANT!!!: must be kept in sync with what declared in run-tools.py, which will need to be updated
 ###               any time in this file we add a new entry to WFD
+COPY jdk_21_maven/cs/rest/arimaa/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/arimaa/target/classes
 COPY jdk_17_gradle/cs/rest/bibliothek/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/bibliothek/build/classes
 COPY jdk_8_maven/cs/rest/original/blogapi/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/blogapi/target/classes
 COPY jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes

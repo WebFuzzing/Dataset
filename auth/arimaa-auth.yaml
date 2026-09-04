@@ -1,0 +1,9 @@
+auth:
+  - name: wfd_admin1
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX2FkbWluMTpXZmQtQWRtaW4tUGFzczE=
+  - name: wfd_admin2
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX2FkbWluMjpXZmQtQWRtaW4tUGFzczI=
