@@ -6,7 +6,7 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/pay-publicapi/em_config.yaml .
+COPY ./dockerfiles/additional_files/pay-publicapi/em_config.yaml .
 
 
 

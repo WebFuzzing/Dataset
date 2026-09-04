@@ -1,0 +1,17 @@
+.git
+**/.idea
+**/*.iml
+
+# Source trees: only their compiled classes are copied (see jacoco.dockerfile)
+jdk_*/**
+!jdk_*/**/target/classes/**
+!jdk_*/**/build/classes/**
+
+# Never copied by any Dockerfile
+scripts
+experiments
+process_data
+statistics
+runner
+js_npm
+dotnet_3

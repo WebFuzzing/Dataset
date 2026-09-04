@@ -92,9 +92,9 @@ class DockerGenerator:
 
     def generate_dockerfiles(self):
         base_image = self.get_base_image(self.jdk_version)
-        save_folder_path = f"./scripts/dockerize/data/additional_files/{self.sut_name}"
+        save_folder_path = f"./dockerfiles/additional_files/{self.sut_name}"
         files = []
-        folder_name = os.path.join(self.SCRIPT_LOCATION, f"./data/additional_files/{self.sut_name}")
+        folder_name = os.path.join(self.DOCKER_FILE_FOLDER, f"additional_files/{self.sut_name}")
         if self.copy_additional_files:
             file_list = os.listdir(folder_name)
             for file in file_list:

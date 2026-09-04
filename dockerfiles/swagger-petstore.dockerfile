@@ -6,7 +6,7 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/swagger-petstore/inflector.yaml .
+COPY ./dockerfiles/additional_files/swagger-petstore/inflector.yaml .
 
 
 

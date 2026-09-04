@@ -6,7 +6,7 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/ocvn/init_db.sql .
+COPY ./dockerfiles/additional_files/ocvn/init_db.sql .
 
 
 

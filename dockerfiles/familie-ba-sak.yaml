@@ -43,6 +43,6 @@ services:
       SERVER_PORT: ${AUTH_PORT:-8081}
       JSON_CONFIG_PATH: /app/mockoauth2.json
     volumes:
-      - ../scripts/dockerize/data/additional_files/familie-ba-sak/mockoauth2.json:/app/mockoauth2.json
+      - ./additional_files/familie-ba-sak/mockoauth2.json:/app/mockoauth2.json
     ports:
       - '${AUTH_PORT:-8081}:${AUTH_PORT:-8081}'

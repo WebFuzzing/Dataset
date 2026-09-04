@@ -6,7 +6,7 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/ohsome-api/heidelberg.mv.db .
+COPY ./dockerfiles/additional_files/ohsome-api/heidelberg.mv.db .
 
 
 
