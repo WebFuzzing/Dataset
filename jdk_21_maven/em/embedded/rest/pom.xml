@@ -15,6 +15,7 @@
         <module>joinus</module>
         <module>person-controller</module>
         <module>redis-sample</module>
+        <module>arimaa</module>
     </modules>
 
 </project>

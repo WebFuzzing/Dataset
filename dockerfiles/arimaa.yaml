@@ -1,0 +1,70 @@
+services:
+  mitmproxy:
+    image: mitmproxy/mitmproxy:10.2.4
+    user: "0:0"
+    environment:
+      MITM_LOG_DIR: /custom-logs
+      MITM_LOG_FILE: ${MITM_LOG_FILE:-minlog.csv}
+    command: >
+      mitmdump 
+        --mode reverse:http://sut-arimaa:8080
+        --listen-host 0.0.0.0
+        --listen-port 8080
+        --set keep_host_header=true
+        -s /addons/minlog.py
+    volumes:
+      - ${HOST_LOG_DIR:-./mitm-logs}:/custom-logs
+      - ./addons:/addons:ro
+    ports:
+      - "${HOST_PORT:-8080}:8080"
+    depends_on:
+      - sut-arimaa
+  sut-arimaa:
+    image: webfuzzing/wfd-arimaa:FINAL
+#    build:
+#      dockerfile: ./dockerfiles/arimaa.dockerfile
+#      context: ..
+    environment:
+       AUTH_PORT: ${AUTH_PORT:-8081}
+    ports:
+      - "${JACOCO_PORT:-6300}:6300"
+    depends_on:
+      db:
+          condition: service_healthy
+      mongodb:
+          condition: service_healthy
+      neo4j:
+          condition: service_healthy
+  db:
+    image: mysql:9.5.0
+    environment:
+      MYSQL_DATABASE: arimaadockermysqldb
+      MYSQL_ROOT_PASSWORD: wfdRootPass123!
+    volumes:
+      - ../jdk_21_maven/cs/rest/arimaa/Database/mysql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: mysqladmin ping -h localhost -u root -pwfdRootPass123! --silent
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  mongodb:
+    image: mongo:7
+    volumes:
+      - ./additional_files/arimaa/arimaa-mongo-seed.js:/docker-entrypoint-initdb.d/arimaa-mongo-seed.js
+    healthcheck:
+      test: mongosh --quiet --eval "db.adminCommand('ping')"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+  neo4j:
+    image: neo4j:5.26
+    environment:
+      NEO4J_AUTH: neo4j/wfdNeo4jPass123
+    volumes:
+      - ./additional_files/arimaa/arimaa-neo4j-seed.cypher:/seed.cypher
+    healthcheck:
+      test: cypher-shell -u neo4j -p wfdNeo4jPass123 "MATCH (:WfdSeedComplete) RETURN 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    command: ["bash", "-c", '/startup/docker-entrypoint.sh neo4j & pid=$!; until cypher-shell -u neo4j -p wfdNeo4jPass123 "RETURN 1" >/dev/null 2>&1; do sleep 2; done; cypher-shell -u neo4j -p wfdNeo4jPass123 -f /seed.cypher; cypher-shell -u neo4j -p wfdNeo4jPass123 "CREATE (:WfdSeedComplete)"; wait $pid']
