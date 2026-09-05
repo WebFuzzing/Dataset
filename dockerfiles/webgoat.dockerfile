@@ -6,7 +6,7 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/webgoat/test.mv.db .
+COPY ./dockerfiles/additional_files/webgoat/test.mv.db .
 
 
 

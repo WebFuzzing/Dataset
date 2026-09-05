@@ -174,7 +174,7 @@ As there are quite a few things to keep in mind, we list here the most important
     (eg "http://localhost:8080/v3/api-docs"). Used to fetch the schema in BB experiments.
   * TARGET_URL: the base URL of the running SUT, typically "http://localhost:8080".
   * COPY_ADDITIONAL_FILES: TRUE/FALSE. If TRUE, ALL files inside the folder
-    "scripts/dockerize/data/additional_files/NAME" are copied (COPY) into the working directory of the Docker image.
+    "dockerfiles/additional_files/NAME" are copied (COPY) into the working directory of the Docker image.
     This is for SUTs needing extra files at runtime next to the JAR (eg configuration files such as YAML configs).
     Note the folder MUST exist and MUST have the same name as the SUT (NAME), otherwise the generation fails.
   * DEPENDS_ON: semicolon-separated list of service names the SUT container must wait for (rendered as
@@ -190,7 +190,7 @@ As there are quite a few things to keep in mind, we list here the most important
       - "environment": semicolon-separated list of "KEY: value" environment entries for the service
         (eg "POSTGRES_PASSWORD: password;POSTGRES_DB: foo"). Empty string if none.
       - "volume": semicolon-separated list of "host_path:container_path" mounts. Host paths here point into
-        "../scripts/dockerize/data/additional_files/NAME/..." (relative to the "dockerfiles" folder), eg to
+        "./additional_files/NAME/..." (relative to the "dockerfiles" folder), eg to
         provide DB init scripts ("/docker-entrypoint-initdb.d/...") or mock-server configs. Empty string if none.
       - "port": optional "host:container" port mapping, if the service must be reachable from outside the
         compose network (eg mock OAuth servers).
@@ -203,7 +203,9 @@ As there are quite a few things to keep in mind, we list here the most important
 
 - if the SUT needs any extra file inside Docker (either copied into the SUT image via COPY_ADDITIONAL_FILES, or
   mounted as a volume of a service in SERVICES), such file must be placed under
-  "scripts/dockerize/data/additional_files/NAME", where NAME is exactly the same name of the SUT used in "sut.csv".
+  "dockerfiles/additional_files/NAME", where NAME is exactly the same name of the SUT used in "sut.csv".
+  Note: this folder MUST be under "dockerfiles", as that is the only folder distributed by "wfd.dockerfile".
+  Paths pointing outside of it would break when WFD is distributed as a Docker image.
   See the existing subfolders there (eg "blogapi", "pay-publicapi", "webgoat") for examples.
 
 - after updating "sut.csv" (and "statistics/data.csv"), run "scripts/createDockerFiles.py" to (re)generate

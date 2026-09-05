@@ -39,8 +39,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: blogapi
     volumes:
-      - ../scripts/dockerize/data/additional_files/blogapi/blogapi.sql:/docker-entrypoint-initdb.d/blogapi.sql
-      - ../scripts/dockerize/data/additional_files/blogapi/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./additional_files/blogapi/blogapi.sql:/docker-entrypoint-initdb.d/blogapi.sql
+      - ./additional_files/blogapi/data.sql:/docker-entrypoint-initdb.d/data.sql
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 30s

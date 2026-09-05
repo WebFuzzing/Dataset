@@ -33,7 +33,7 @@ services:
     tmpfs:
       - '/data/db'
     volumes:
-      - ../scripts/dockerize/data/additional_files/reservations-api/mongo-init.js:/docker-entrypoint-initdb.d/01-init-replica.js
-      - ../scripts/dockerize/data/additional_files/reservations-api/mongo_import.sh:/docker-entrypoint-initdb.d/mongo_import.sh
-      - ../scripts/dockerize/data/additional_files/reservations-api/init.json:/fixtures/init.json
+      - ./additional_files/reservations-api/mongo-init.js:/docker-entrypoint-initdb.d/01-init-replica.js
+      - ./additional_files/reservations-api/mongo_import.sh:/docker-entrypoint-initdb.d/mongo_import.sh
+      - ./additional_files/reservations-api/init.json:/fixtures/init.json
     command: mongod --replSet rs0 --bind_ip_all

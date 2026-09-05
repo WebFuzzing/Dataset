@@ -6,9 +6,9 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./scripts/dockerize/data/additional_files/scout-api/init_db.sql .
+COPY ./dockerfiles/additional_files/scout-api/init_db.sql .
 
-COPY ./scripts/dockerize/data/additional_files/scout-api/scout_api_evomaster.yml .
+COPY ./dockerfiles/additional_files/scout-api/scout_api_evomaster.yml .
 
 
 

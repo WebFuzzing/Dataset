@@ -50,7 +50,7 @@ services:
   mongodb:
     image: mongo:7
     volumes:
-      - ../scripts/dockerize/data/additional_files/arimaa/arimaa-mongo-seed.js:/docker-entrypoint-initdb.d/arimaa-mongo-seed.js
+      - ./additional_files/arimaa/arimaa-mongo-seed.js:/docker-entrypoint-initdb.d/arimaa-mongo-seed.js
     healthcheck:
       test: mongosh --quiet --eval "db.adminCommand('ping')"
       interval: 30s
@@ -61,7 +61,7 @@ services:
     environment:
       NEO4J_AUTH: neo4j/wfdNeo4jPass123
     volumes:
-      - ../scripts/dockerize/data/additional_files/arimaa/arimaa-neo4j-seed.cypher:/seed.cypher
+      - ./additional_files/arimaa/arimaa-neo4j-seed.cypher:/seed.cypher
     healthcheck:
       test: cypher-shell -u neo4j -p wfdNeo4jPass123 "MATCH (:WfdSeedComplete) RETURN 1"
       interval: 30s
