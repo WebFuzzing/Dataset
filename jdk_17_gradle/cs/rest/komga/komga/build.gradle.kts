@@ -32,6 +32,11 @@ repositories {
   mavenCentral()
 }
 
+// MODIFIED: the WFD Docker build mounts only this level, so there is no .git to read
+gitProperties {
+  failOnNoGitDirectory = false
+}
+
 val benchmarkSourceSet =
   sourceSets.create("benchmark") {
     java {
