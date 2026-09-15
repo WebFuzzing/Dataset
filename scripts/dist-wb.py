@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-EVOMASTER_VERSION = "6.1.2-SNAPSHOT"
+EVOMASTER_VERSION = "6.2.1-SNAPSHOT"
 
 import sys
 import os
@@ -285,6 +285,9 @@ def build_jdk_17_maven():
 
     copy(folder + "/cs/rest/spring-rest-example/target/spring-rest-example-sut.jar", DIST)
     copy(folder + "/em/external/rest/spring-rest-example/target/spring-rest-example-evomaster-runner.jar", DIST)
+
+    copy(folder + "/cs/rest/digitalbanking/target/digitalbanking-sut.jar", DIST)
+    copy(folder + "/em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar", DIST)
 
 ####################
 def build_jdk_21_maven():

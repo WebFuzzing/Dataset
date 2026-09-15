@@ -84,6 +84,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!--          MODIFIED-->
+				<!-- WFD expects a single self-contained "digitalbanking-sut.jar". The classifier keeps
+				     the plain jar as the main artifact, which the embedded driver depends on. -->
+				<configuration>
+					<finalName>digitalbanking</finalName>
+					<classifier>sut</classifier>
+				</configuration>
+				<!--          MODIFIED-->
 			</plugin>
 		</plugins>
 	</build>

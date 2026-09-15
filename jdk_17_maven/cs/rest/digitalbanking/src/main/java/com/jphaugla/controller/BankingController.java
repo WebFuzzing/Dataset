@@ -53,7 +53,9 @@ public class BankingController {
 		return "Done";
 	}
 
-	@GetMapping("/generateData")
+	// MODIFIED: disabled this endpoint, as it creates one customer per requested unit with no
+	// upper bound, so a large noOfCustomers exhausts the heap and kills the SUT.
+	// @GetMapping("/generateData")
 	@ResponseBody
 	public String generateData (@RequestParam Integer noOfCustomers, @RequestParam Integer noOfTransactions,
 								@RequestParam Integer noOfDays, @RequestParam String key_suffix,

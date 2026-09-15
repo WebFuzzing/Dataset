@@ -76,7 +76,7 @@ def replace(file, regex, replacement):
 def replaceInDist():
     regex = re.compile(r'.*EVOMASTER_VERSION.*=.*".*".*')
     replacement = 'EVOMASTER_VERSION = "'+version+'"\n'
-    replace("scripts/dist.py", regex, replacement)
+    replace("scripts/dist-wb.py", regex, replacement)
 
 def replaceInDockerEnv():
     regex = re.compile(r'^EVOMASTER_VERSION\s*=\s*.*$')
