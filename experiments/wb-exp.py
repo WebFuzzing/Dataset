@@ -198,6 +198,7 @@ SUTS = [
     Sut("http-patch-spring", JDK_11),
     Sut("jasper",  JDK_25),
     Sut("joinus", JDK_21),
+    Sut("komga", JDK_17),
     Sut("languagetool",  JDK_8),
     Sut("lovemining", JDK_21),
     Sut("market",  JDK_11),

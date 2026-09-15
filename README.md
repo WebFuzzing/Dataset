@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (44)
+### REST: Java/Kotlin (45)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -118,6 +118,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Jasper** (MIT), [jdk_25_maven/cs/rest/jasper](jdk_25_maven/cs/rest/jasper), from [https://github.com/cjmalloy/jasper](https://github.com/cjmalloy/jasper)
 
 * **JoinUs** (not-known license), [jdk_21_maven/cs/rest/joinus](jdk_21_maven/cs/rest/joinus), from [https://github.com/KLAJDI16/joinUs](https://github.com/KLAJDI16/joinUs)
+
+* **Komga** (MIT), [jdk_17_gradle/cs/rest/komga](jdk_17_gradle/cs/rest/komga), from [https://github.com/gotson/komga](https://github.com/gotson/komga)
 
 * **Languagetool** (LGPL), [jdk_8_maven/cs/rest/original/languagetool](jdk_8_maven/cs/rest/original/languagetool), from [https://github.com/languagetool-org/languagetool](https://github.com/languagetool-org/languagetool)
 

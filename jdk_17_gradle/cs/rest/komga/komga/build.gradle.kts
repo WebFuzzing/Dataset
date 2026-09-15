@@ -5,17 +5,36 @@ import org.jetbrains.kotlin.util.prefixIfNot
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-  kotlin("jvm")
-  kotlin("plugin.spring")
-  kotlin("kapt")
+  // MODIFIED: versions come from komga's own root build, which WFD does not use
+  run {
+    val kotlinVersion = "2.4.10"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
+  }
   id("org.springframework.boot") version libs.versions.springboot.get()
   alias(libs.plugins.gradleGitProperties)
-  id("nu.studer.jooq") version "10.2.1"
+  // MODIFIED: 10.2.1 needs Gradle >= 8.6 and a JDK 21 Gradle JVM, this level is 8.5 / JDK 17.
+  // jOOQ codegen stays 3.19.35, only the "this-escape" SuppressWarnings hint differs
+  id("nu.studer.jooq") version "9.0"
   id("org.flywaydb.flyway") version "13.1.0"
   id("com.github.johnrengelman.processes") version "0.5.0"
   id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
   id("com.google.devtools.ksp") version "2.3.1"
   jacoco
+}
+
+// MODIFIED: set by komga's own root build, which WFD does not use
+group = "org.gotson"
+version = "1.26.3"
+
+repositories {
+  mavenCentral()
+}
+
+// MODIFIED: the WFD Docker build mounts only this level, so there is no .git to read
+gitProperties {
+  failOnNoGitDirectory = false
 }
 
 val benchmarkSourceSet =
@@ -181,6 +200,12 @@ tasks {
     enabled = true
   }
 
+  // MODIFIED: WFD expects a single self-contained jar named komga-sut.jar
+  bootJar {
+    archiveVersion.set("")
+    archiveClassifier.set("sut")
+  }
+
   register<Sync>("webuiCopyDist") {
     description = "Copies the WebUI build into resources/public"
     group = "web"
@@ -251,7 +276,8 @@ springBoot {
     excludes = setOf("time")
     properties {
       // but rerun if the gradle.properties file changed
-      inputs.file("$rootDir/gradle.properties")
+      // MODIFIED: rootDir is the WFD level here, komga's own root is one folder up
+      inputs.file("$projectDir/../gradle.properties")
     }
   }
 }
@@ -376,12 +402,13 @@ tasks.whenTaskAdded {
   }
 }
 
-tasks.runKtlintFormatOverMainSourceSet {
-  dependsOn("generateTasksJooq")
-}
-tasks.runKtlintCheckOverMainSourceSet {
-  dependsOn("generateTasksJooq")
-}
+// MODIFIED: ktlint is applied by komga's own root build, which WFD does not use
+// tasks.runKtlintFormatOverMainSourceSet {
+//   dependsOn("generateTasksJooq")
+// }
+// tasks.runKtlintCheckOverMainSourceSet {
+//   dependsOn("generateTasksJooq")
+// }
 tasks.compileKotlin {
   dependsOn("generateTasksJooq")
 }
@@ -399,11 +426,12 @@ tasks.jacocoTestReport {
   dependsOn(tasks.test)
 }
 
-configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
-  filter {
-    exclude("**/db/migration/**")
-  }
-}
+// MODIFIED: ktlint is applied by komga's own root build, which WFD does not use
+// configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+//   filter {
+//     exclude("**/db/migration/**")
+//   }
+// }
 
 project.afterEvaluate {
   tasks.named("forkedSpringBootRun") {

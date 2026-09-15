@@ -287,6 +287,10 @@ jdk_17_maven/em/embedded/rest/familie-ba-sak/target/
 /jdk_17_gradle/build/
 /jdk_17_gradle/em/embedded/rest/bibliothek/build/
 /jdk_17_gradle/em/external/rest/bibliothek/build/
+/jdk_17_gradle/.kotlin/
+/jdk_17_gradle/tmp/
+/jdk_17_gradle/em/embedded/rest/komga/build/
+/jdk_17_gradle/em/external/rest/komga/build/
 /jdk_17_maven/cs/grpc/signal-registration/target/
 /jdk_17_maven/em/embedded/grpc/signal-registration/target/
 /jdk_17_maven/em/external/grpc/signal-registration/target/

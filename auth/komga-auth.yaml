@@ -1,0 +1,17 @@
+auth:
+  - name: wfd_admin1
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX2FkbWluMUB3ZmQuaW52YWxpZDpXZmQtQWRtaW4tUGFzczE=
+  - name: wfd_admin2
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX2FkbWluMkB3ZmQuaW52YWxpZDpXZmQtQWRtaW4tUGFzczI=
+  - name: wfd_user1
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX3VzZXIxQHdmZC5pbnZhbGlkOldmZC1Vc2VyLVBhc3Mx
+  - name: wfd_user2
+    fixedHeaders:
+      - name: Authorization
+        value: Basic d2ZkX3VzZXIyQHdmZC5pbnZhbGlkOldmZC1Vc2VyLVBhc3My

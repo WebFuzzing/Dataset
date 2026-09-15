@@ -231,8 +231,10 @@ services:
           gradle build -x test -x spotlessCheck -x spotlessJavaCheck
         fi
         cp cs/rest/bibliothek/build/libs/bibliothek-sut.jar /dist/
+        cp cs/rest/komga/komga/build/libs/komga-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/rest/bibliothek/build/libs/bibliothek-evomaster-runner.jar /dist/
+          cp em/external/rest/komga/build/libs/komga-evomaster-runner.jar /dist/
         fi
         echo 'JDK 17 Gradle build completed'
 

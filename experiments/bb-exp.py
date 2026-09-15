@@ -94,6 +94,7 @@ SUTS = [
     Sut("gestaohospital",False,SLEEP,JSON,["jdk_8_maven/cs/rest-gui/gestaohospital/target/classes"]),
     Sut("http-patch-spring",False,SLEEP,JSON,["jdk_11_maven/cs/rest/http-patch-spring/target/classes"]),
     Sut("joinus",True,SLEEP,JSON,["jdk_21_maven/cs/rest/joinus/target/classes"]),
+    Sut("komga",True,SLEEP,JSON,["jdk_17_gradle/cs/rest/komga/komga/build/classes"]),
     Sut("languagetool",False,SLEEP,JSON,["jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes",
                                    "jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes",
                                    "jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/all/target/classes",
