@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (43)
+### REST: Java/Kotlin (44)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -100,6 +100,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **CommaFeed** (Apache), [jdk_25_maven/cs/rest/commafeed](jdk_25_maven/cs/rest/commafeed), from [https://github.com/Athou/commafeed](https://github.com/Athou/commafeed)
 
 * **CWA-Verification-Server** (Apache), [jdk_11_maven/cs/rest/cwa-verification-server](jdk_11_maven/cs/rest/cwa-verification-server), from [https://github.com/corona-warn-app/cwa-verification-server](https://github.com/corona-warn-app/cwa-verification-server)
+
+* **Digital Banking** (not-known license), [jdk_17_maven/cs/rest/digitalbanking](jdk_17_maven/cs/rest/digitalbanking), from [https://github.com/jphaugla/Redisearch-Digital-Banking-redisTemplate](https://github.com/jphaugla/Redisearch-Digital-Banking-redisTemplate)
 
 * **ERC20 Rest Service** (not-known license), [jdk_8_gradle/cs/rest/erc20-rest-service](jdk_8_gradle/cs/rest/erc20-rest-service), from [https://github.com/web3labs/erc20-rest-service](https://github.com/web3labs/erc20-rest-service)
 
