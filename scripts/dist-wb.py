@@ -383,6 +383,9 @@ def build_jdk_17_gradle():
     copy(folder + "/cs/rest/bibliothek/build/libs/bibliothek-sut.jar", DIST)
     copy(folder + "/em/external/rest/bibliothek/build/libs/bibliothek-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/komga/komga/build/libs/komga-sut.jar", DIST)
+    copy(folder + "/em/external/rest/komga/build/libs/komga-evomaster-runner.jar", DIST)
+
 
 # Building JavaScript projects
 # def buildJS(path, name):

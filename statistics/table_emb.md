@@ -24,6 +24,7 @@
 |REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||
 |REST|__jasper__|46791|337|61|Java|JDK 25|Maven|PostgreSQL|&check;|
 |REST|__joinus__|7906|101|37|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__komga__|62303|543|174|Kotlin|JDK 17|Gradle|SQLite|&check;|
 |REST|__languagetool__|174781|1385|2|Java|JDK 8|Maven|||
 |REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
