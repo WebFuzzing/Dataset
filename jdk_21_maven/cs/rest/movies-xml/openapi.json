@@ -1,0 +1,776 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "movies-xml",
+    "description": "An XML-only movie catalogue. Every request and response body is application/xml.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/movies/{id}": {
+      "get": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Fetch one movie",
+        "operationId": "byId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The movie",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No movie with that id",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Replace a movie in full",
+        "operationId": "replace",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The stored movie",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed or invalid document",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No movie with that id",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Title and year already taken",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Body is not application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Delete a movie",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "description": "No movie with that id",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Update only the fields present in the document",
+        "operationId": "patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The stored movie",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed or invalid document",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No movie with that id",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Title and year already taken",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Body is not application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "List movies, optionally filtered and sorted",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ACTION",
+                "COMEDY",
+                "DRAMA",
+                "HORROR",
+                "SCIFI"
+              ]
+            }
+          },
+          {
+            "name": "titleContains",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minYear",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "maxYear",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "minRating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching movies, possibly none",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoviesDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Create a movie",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed or invalid document",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Title and year already taken",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Body is not application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/movies/stats": {
+      "get": {
+        "tags": [
+          "movie-controller"
+        ],
+        "summary": "Per genre counts and average ratings",
+        "operationId": "stats",
+        "responses": {
+          "200": {
+            "description": "Catalogue statistics",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatsDto"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not supported on this path",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Client asked for a type other than application/xml",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ActorDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "billing": {
+            "maximum": 99,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32",
+            "xml": {
+              "name": "billing",
+              "attribute": true
+            }
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "actor"
+        }
+      },
+      "DirectorDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "nationality": {
+            "pattern": "^[A-Z]{2}$",
+            "type": "string",
+            "xml": {
+              "name": "nationality",
+              "attribute": true
+            }
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "director"
+        }
+      },
+      "MovieDto": {
+        "required": [
+          "director",
+          "genre",
+          "title",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "xml": {
+              "name": "id",
+              "attribute": true
+            }
+          },
+          "year": {
+            "maximum": 2100,
+            "minimum": 1888,
+            "type": "integer",
+            "format": "int32",
+            "xml": {
+              "name": "year",
+              "attribute": true
+            }
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "genre": {
+            "type": "string",
+            "enum": [
+              "ACTION",
+              "COMEDY",
+              "DRAMA",
+              "HORROR",
+              "SCIFI"
+            ]
+          },
+          "rating": {
+            "maximum": 10.0,
+            "exclusiveMaximum": false,
+            "minimum": 0.0,
+            "exclusiveMinimum": false,
+            "type": "number",
+            "format": "double"
+          },
+          "director": {
+            "$ref": "#/components/schemas/DirectorDto"
+          },
+          "cast": {
+            "maxItems": 10,
+            "minItems": 0,
+            "type": "array",
+            "xml": {
+              "name": "cast",
+              "wrapped": true
+            },
+            "items": {
+              "$ref": "#/components/schemas/ActorDto"
+            }
+          }
+        },
+        "xml": {
+          "name": "movie"
+        }
+      },
+      "ErrorDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "xml": {
+              "name": "status",
+              "attribute": true
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "error"
+        }
+      },
+      "MoviesDto": {
+        "type": "object",
+        "properties": {
+          "movies": {
+            "type": "array",
+            "xml": {
+              "name": "movie",
+              "wrapped": false
+            },
+            "items": {
+              "$ref": "#/components/schemas/MovieDto"
+            }
+          }
+        },
+        "xml": {
+          "name": "movies"
+        }
+      },
+      "GenreStatsDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "xml": {
+              "name": "name",
+              "attribute": true
+            }
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64",
+            "xml": {
+              "name": "count",
+              "attribute": true
+            }
+          },
+          "averageRating": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "xml": {
+          "name": "genre"
+        }
+      },
+      "StatsDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64",
+            "xml": {
+              "name": "total",
+              "attribute": true
+            }
+          },
+          "genres": {
+            "type": "array",
+            "xml": {
+              "name": "genre",
+              "wrapped": false
+            },
+            "items": {
+              "$ref": "#/components/schemas/GenreStatsDto"
+            }
+          }
+        },
+        "xml": {
+          "name": "stats"
+        }
+      }
+    }
+  }
+}
