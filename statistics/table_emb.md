@@ -29,6 +29,7 @@
 |REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
 |REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|
+|REST|__movies-xml__|2502|22|7|Java|JDK 21|Maven|H2||
 |REST|__ocvn__|45521|526|258|Java|JDK 8|Maven|H2, MongoDB|&check;|
 |REST|__ohsome-api__|14166|87|134|Java|JDK 17|Maven|OSHDB||
 |REST|__pay-publicapi__|34576|377|10|Java|JDK 11|Maven|Redis|&check;|

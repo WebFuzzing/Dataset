@@ -203,6 +203,7 @@ SUTS = [
     Sut("lovemining", JDK_21),
     Sut("market",  JDK_11),
     Sut("microcks", JDK_21),
+    Sut("movies-xml", JDK_21),
     Sut("ocvn",  JDK_8),
     Sut("ohsome-api", JDK_17),
     Sut("pay-publicapi",JDK_11),
