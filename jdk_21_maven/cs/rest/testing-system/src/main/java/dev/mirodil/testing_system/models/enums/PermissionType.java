@@ -1,0 +1,21 @@
+package dev.mirodil.testing_system.models.enums;
+
+public enum PermissionType {
+    VIEW_PROFILE,
+    MANAGE_PROFILE,
+    VIEW_ASSIGNED_TEST,
+    VIEW_ASSIGNED_TEST_RESULTS,
+
+    VIEW_ASSIGNED_TEST_TAKERS,
+    VIEW_ALL_TEST_TAKERS,
+    MANAGE_TEST_TAKERS,
+    
+    MANAGE_ALL_USERS,
+    VIEW_ALL_TESTS,
+    MANAGE_OWN_TESTS,
+    MANAGE_ALL_TESTS,
+
+    VIEW_ALL_TEST_RESULTS,
+    MANAGE_TEST_EVENTS,
+    MONITOR_TESTS
+}
