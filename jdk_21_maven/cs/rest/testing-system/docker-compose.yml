@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+   app:
+      container_name: testing-system
+      build:
+         context: .
+         dockerfile: docker/Dockerfile
+      ports:
+         - "8080:8080"
+      env_file:
+         - .env
+      environment:
+         SPRING_DATASOURCE_URL: ${POSTGRES_URL}
+         SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+         SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+         SECRET_KEY: ${SECRET_KEY}
+         SPRING_DATA_REDIS_HOST: redis
+      depends_on:
+         - db
+         - redis
+      networks:
+         - testing-network
+
+   db:
+      image: postgres:17.2
+      container_name: postgres
+      restart: always
+      environment:
+         POSTGRES_DB: ${POSTGRES_DB}
+         POSTGRES_USER: ${POSTGRES_USER}
+         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      networks:
+         - testing-network
+      volumes:
+         - ./docker/postgres_data:/var/lib/postgresql/data
+         - ./docker/sql:/docker-entrypoint-initdb.d
+
+   redis:
+      image: redis:7.4
+      container_name: redis
+      restart: always
+      networks:
+         - testing-network
+
+networks:
+   testing-network:
+      driver: bridge
+
+volumes:
+   postgres_data:
