@@ -1,0 +1,392 @@
+openapi: 3.0.3
+info:
+  title: GDPR-Friendly KV Store API
+  version: 0.1.0
+  description: |
+    Subject-centric key–value API layered over DynamoDB with audit, retention, and erasure semantics.
+    All timestamps are epoch millis (int64). Server echoes X-Request-Id in responses when provided.
+
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+tags:
+  - name: Subjects
+    description: Subject lifecycle and subject-wide erasure
+  - name: Records
+    description: Per-subject records (create/update/read/delete)
+  - name: System
+    description: Service health and version metadata
+
+components:
+  parameters:
+    SubjectId:
+      name: subject_id
+      in: path
+      required: true
+      description: Opaque, stable identifier of the data subject (e.g., "sub_123").
+      schema: { type: string }
+    RecordKey:
+      name: record_key
+      in: path
+      required: true
+      description: Caller-defined item key within the subject (e.g., "order#123", "pref:email").
+      schema: { type: string }
+    XRequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      description: Optional idempotency/correlation id. The server will echo this value back.
+      schema: { type: string }
+
+  headers:
+    XRequestId:
+      description: Echo of the inbound X-Request-Id or server-generated id.
+      schema: { type: string }
+    ETag:
+      description: Version tag for concurrency/clients (e.g., record version).
+      schema: { type: string }
+      example: "1"
+
+  schemas:
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: Stable error code
+          enum:
+            - VALIDATION_FAILED
+            - INVALID_PURPOSE
+            - SUBJECT_NOT_FOUND
+            - RECORD_NOT_FOUND
+            - READ_SUPPRESSED_TOMBSTONE
+            - INTERNAL_SERVER_ERROR
+        message:
+          type: string
+        details:
+          description: Optional machine-readable details/context
+          type: object
+          additionalProperties: true
+
+    SubjectCreateRequest:
+      type: object
+      required: [subject_id, residency]
+      properties:
+        subject_id:
+          type: string
+        residency:
+          type: string
+        flags:
+          type: object
+          additionalProperties: true
+      example:
+        subject_id: sub_123
+        residency: EU
+        flags: { blocked: false }
+
+    Subject:
+      type: object
+      required: [subject_id, created_at, residency]
+      properties:
+        subject_id: { type: string }
+        created_at: { type: integer, format: int64 }
+        residency:   { type: string }
+      example:
+        subject_id: sub_123
+        created_at: 1724512300000
+        residency: EU
+
+    PutItemRequest:
+      type: object
+      required: [purpose, value]
+      properties:
+        purpose:
+          type: string
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: string
+      example:
+        purpose: FULFILLMENT
+        value: { email: "jess@example.com" }
+
+    RecordSummary:
+      type: object
+      required: [subject_id, record_key, version, created_at]
+      properties:
+        subject_id: { type: string }
+        record_key: { type: string }
+        version: { type: integer, format: int32 }
+        created_at: { type: integer, format: int64 }
+      example:
+        subject_id: sub_123
+        record_key: pref:email
+        version: 1
+        created_at: 1724512399000
+
+    Record:
+      type: object
+      required: [subject_id, record_key, version, purpose, value, created_at]
+      properties:
+        subject_id: { type: string }
+        record_key: { type: string }
+        version: { type: integer, format: int32 }
+        purpose: { type: string }
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: string
+        created_at: { type: integer, format: int64 }
+        updated_at: { type: integer, format: int64, nullable: true }
+        tombstoned: { type: boolean, nullable: true }
+        tombstoned_at: { type: integer, format: int64, nullable: true }
+      example:
+        subject_id: sub_123
+        record_key: pref:email
+        version: 1
+        purpose: FULFILLMENT
+        value: { email: "jess@example.com" }
+        updated_at: 1724512399000
+
+    DeleteItemResponse:
+      type: object
+      required: [subject_id, record_key, tombstoned, tombstoned_at, purge_due_at]
+      properties:
+        subject_id: { type: string }
+        record_key: { type: string }
+        tombstoned: { type: boolean }
+        tombstoned_at: { type: integer, format: int64 }
+        purge_due_at: { type: integer, format: int64 }
+      example:
+        subject_id: sub_123
+        record_key: pref:email
+        tombstoned: true
+        tombstoned_at: 1724512405000
+        purge_due_at: 1727114405000
+
+    DeleteSubjectResponse:
+      type: object
+      required: [subject_id, erasure_in_progress]
+      properties:
+        subject_id: { type: string }
+        erasure_in_progress: { type: boolean }
+      example:
+        subject_id: sub_123
+        erasure_in_progress: true
+
+  responses:
+    ValidationFailed:
+      description: 400 validation error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: VALIDATION_FAILED
+            message: subject_id must be non-empty
+
+    InvalidPurpose:
+      description: 400 invalid purpose
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: INVALID_PURPOSE
+            message: Purpose UNKNOWN_PURPOSE is not configured
+
+    SubjectNotFound:
+      description: 404 subject not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: SUBJECT_NOT_FOUND
+            message: Subject sub_123 not found
+
+    RecordNotFound:
+      description: 404 record not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: RECORD_NOT_FOUND
+            message: Record pref:email not found for subject sub_123
+
+    ReadSuppressed:
+      description: 410 read suppressed due to tombstone
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: READ_SUPPRESSED_TOMBSTONE
+            message: Item pref:email is tombstoned
+    InternalError:
+      description: 500 internal error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error: INTERNAL_SERVER_ERROR
+            message: Unexpected server error. Try again later.
+
+paths:
+  /subjects:
+    post:
+      tags: [Subjects]
+      summary: Create a subject
+      operationId: createSubject
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubjectCreateRequest' }
+      responses:
+        '201':
+          description: Subject created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Subject' }
+        '200':
+          description: Idempotent re-create
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Subject' }
+        '400': { $ref: '#/components/responses/ValidationFailed' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /subjects/{subject_id}/records/{record_key}:
+    put:
+      tags: [Records]
+      summary: Create or update a record
+      operationId: putItem
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/SubjectId'
+        - $ref: '#/components/parameters/RecordKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PutItemRequest' }
+      responses:
+        '200':
+          description: Record created or updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RecordSummary' }
+        '400': { $ref: '#/components/responses/ValidationFailed' }
+        '404': { $ref: '#/components/responses/SubjectNotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+    get:
+      tags: [Records]
+      summary: Get a record (suppressed if tombstoned)
+      operationId: getItem
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/SubjectId'
+        - $ref: '#/components/parameters/RecordKey'
+      responses:
+        '200':
+          description: Record found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Record' }
+        '404': { $ref: '#/components/responses/RecordNotFound' }
+        '410': { $ref: '#/components/responses/ReadSuppressed' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+    delete:
+      tags: [Records]
+      summary: Tombstone a record (idempotent)
+      operationId: deleteItem
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/SubjectId'
+        - $ref: '#/components/parameters/RecordKey'
+      responses:
+        '200':
+          description: Record tombstoned (or already tombstoned)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DeleteItemResponse' }
+        '404': { $ref: '#/components/responses/RecordNotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /subjects/{subject_id}:
+    delete:
+      tags: [Subjects]
+      summary: Subject-wide erasure
+      operationId: deleteSubject
+      parameters:
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/SubjectId'
+      responses:
+        '200':
+          description: Erasure initiated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DeleteSubjectResponse' }
+        '404': { $ref: '#/components/responses/SubjectNotFound' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /health:
+    get:
+      tags: [System]
+      summary: Health check
+      description: Lightweight endpoint for readiness/liveness probes.
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, timestamp]
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  timestamp:
+                    type: integer
+                    format: int64
+                    description: Epoch millis of the response
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /version:
+    get:
+      tags: [System]
+      summary: Version check
+      description: Returns build/version metadata of the running service.
+      operationId: versionCheck
+      responses:
+        '200':
+          description: Version info
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [version, build, git_commit, timestamp]
+                properties:
+                  version:
+                    type: string
+                    example: 0.1.0
+                  build:
+                    type: string
+                    example: "2025-08-30.1"
+                  git_commit:
+                    type: string
+                    example: "a1b2c3d4"
+                  timestamp:
+                    type: integer
+                    format: int64
+                    example: 1724512500000
+        '500': { $ref: '#/components/responses/InternalError' }
+
+security: []

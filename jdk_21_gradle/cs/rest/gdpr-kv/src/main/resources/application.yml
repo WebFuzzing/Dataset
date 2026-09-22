@@ -1,0 +1,21 @@
+app:
+  env: local
+server:
+  port: 8080
+  aws:
+    region: us-west-2
+    endpoint: http://localhost:4566   # LocalStack
+    use-localstack: true
+logging:
+  pattern:
+    level: "%5p [req:%X{requestId}]"
+audit:
+  retention:
+    enabled: false  # Set to true to enable automatic audit log deletion
+    schedule: "0 0 2 * * *"  # Daily at 2am (cron: sec min hour day month weekday)
+    retention-days: 730  # 2 years default retention period
+purge:
+  sweeper:
+    enabled: false  # Set to true to enable automatic purging of tombstoned records
+    schedule: "0 */15 * * * *"  # Every 15 minutes (cron: sec min hour day month weekday)
+    lookback-hours: 24  # Number of hours worth of purge buckets to check per run
