@@ -109,6 +109,7 @@ COPY jdk_8_maven/cs/rest/original/spring-batch-rest/util/target/classes  ${CLASS
 COPY jdk_8_maven/cs/rest/original/spring-ecommerce/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/spring-ecommerce/target/classes
 COPY jdk_17_maven/cs/rest/spring-rest-example/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/spring-rest-example/target/classes
 COPY jdk_8_maven/cs/rest/original/swagger-petstore/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/swagger-petstore/target/classes
+COPY jdk_21_maven/cs/rest/testing-system/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/testing-system/target/classes
 COPY jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes
 COPY jdk_11_maven/cs/rest/tracking-system/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/tracking-system/target/classes
 COPY jdk_8_maven/cs/rest/original/user-management/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/user-management/target/classes

@@ -265,6 +265,7 @@ services:
         cp cs/rest/joinus/target/joinus-sut.jar /dist/
         cp cs/rest/lovemining/target/lovemining-sut.jar /dist/
         cp cs/rest/movies-xml/target/movies-xml-sut.jar /dist/
+        cp cs/rest/testing-system/target/testing-system-sut.jar /dist/
         cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
         cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
@@ -275,6 +276,7 @@ services:
           cp em/external/rest/joinus/target/joinus-evomaster-runner.jar /dist/
           cp em/external/rest/lovemining/target/lovemining-evomaster-runner.jar /dist/
           cp em/external/rest/movies-xml/target/movies-xml-evomaster-runner.jar /dist/
+          cp em/external/rest/testing-system/target/testing-system-evomaster-runner.jar /dist/
           cp em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar /dist/
           cp em/external/rest-gui/microcks/target/microcks-evomaster-runner.jar /dist/
         fi
