@@ -1,0 +1,8 @@
+{
+  "subject_id": "sub_123",
+  "created_at": 1725412345000,
+  "request_id": "test-req",
+  "residency": "EU",
+  "erasure_in_progress": true,
+  "erasure_requested_at": 1725419999000
+}

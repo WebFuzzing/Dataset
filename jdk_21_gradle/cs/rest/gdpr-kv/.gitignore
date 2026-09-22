@@ -1,0 +1,58 @@
+# ----------------------------
+# Java / Gradle
+# ----------------------------
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Logs
+*.log
+*.tmp
+
+# IDEs and Editors
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.class
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# ----------------------------
+# Spring Boot
+# ----------------------------
+# Local dev files
+*.env
+*.localstack/
+application-local.yml
+application-local.properties
+
+# ----------------------------
+# Docker
+# ----------------------------
+/.localstack/
+/docker-compose.override.yml
+
+# ----------------------------
+# Misc
+# ----------------------------
+# Archive/backup files
+*.zip
+*.tar
+*.tar.gz
+
+# Exclude test reports and coverage
+/test-output/
+/reports/
+/jacoco/
+
+
+# Claude AI Context (local only)
+.claude/
+CLAUDE_CONTEXT.md
+.claude_history

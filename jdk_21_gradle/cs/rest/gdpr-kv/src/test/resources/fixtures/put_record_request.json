@@ -1,0 +1,8 @@
+{
+  "subject_id": "demo_subject_001",
+  "record_key": "pref:email",
+  "purpose": "DEMO_PURPOSE",
+  "value": {
+    "email": "demo@example.com"
+  }
+}
