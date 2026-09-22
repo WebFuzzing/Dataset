@@ -144,6 +144,7 @@ SUTS = [
                                     "jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes",
                                     "jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes",
                                     "jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes"]),
+    Sut("movies-xml",False,SLEEP,JSON,["jdk_21_maven/cs/rest/movies-xml/target/classes"]),
     Sut("ocvn",True,SLEEP,JSON,["jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes",
                            "jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes",
                            "jdk_8_maven/cs/rest-gui/ocvn/web/target/classes"]),

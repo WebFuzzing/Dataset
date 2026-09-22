@@ -348,6 +348,9 @@ scripts/dockerize/dockerfiles
 /jdk_21_maven/cs/rest/lovemining/target/
 /jdk_21_maven/em/external/rest/lovemining/target/
 /jdk_21_maven/em/embedded/rest/lovemining/target/
+/jdk_21_maven/cs/rest/movies-xml/target/
+/jdk_21_maven/em/external/rest/movies-xml/target/
+/jdk_21_maven/em/embedded/rest/movies-xml/target/
 /jdk_21_maven/cs/rest/testing-system/target/
 /jdk_21_maven/em/external/rest/testing-system/target/
 /jdk_21_maven/em/embedded/rest/testing-system/target/

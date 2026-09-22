@@ -309,6 +309,8 @@ def build_jdk_21_maven():
     copy(folder + "/em/external/rest/joinus/target/joinus-evomaster-runner.jar", DIST)
     copy(folder + "/cs/rest/lovemining/target/lovemining-sut.jar", DIST)
     copy(folder + "/em/external/rest/lovemining/target/lovemining-evomaster-runner.jar", DIST)
+    copy(folder + "/cs/rest/movies-xml/target/movies-xml-sut.jar", DIST)
+    copy(folder + "/em/external/rest/movies-xml/target/movies-xml-evomaster-runner.jar", DIST)
     copy(folder + "/cs/rest/testing-system/target/testing-system-sut.jar", DIST)
     copy(folder + "/em/external/rest/testing-system/target/testing-system-evomaster-runner.jar", DIST)
 

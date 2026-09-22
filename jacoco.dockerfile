@@ -80,6 +80,7 @@ COPY jdk_21_maven/cs/rest-gui/microcks/distro/uber/target/classes  ${CLASS_FILES
 COPY jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes
 COPY jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes
 COPY jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes
+COPY jdk_21_maven/cs/rest/movies-xml/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/movies-xml/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/web/target/classes

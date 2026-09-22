@@ -57,4 +57,5 @@ TRUE,komga,REST,Kotlin,JDK 17,Gradle,543,62303,SQLite,MIT,174,TRUE,https://githu
 TRUE,testing-system,REST,Java,JDK 21,Maven,72,3692,PostgreSQL;Redis,MIT,11,TRUE,https://github.com/mirodilkamilov/testing-system
 FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDEFINED
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
+TRUE,movies-xml,REST,Java,JDK 21,Maven,22,2502,H2,LGPL,7,FALSE,https://github.com/suarezrominajulieta/movies-xml
 
