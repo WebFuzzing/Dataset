@@ -172,6 +172,7 @@ SUTS = [
     Sut("spring-ecommerce",True,SLEEP,JSON,["jdk_8_maven/cs/rest/original/spring-ecommerce/target/classes"]),
     Sut("spring-rest-example",False,SLEEP,JSON,["jdk_17_maven/cs/rest/spring-rest-example/target/classes"]),
     Sut("swagger-petstore",False,SLEEP,JSON,["jdk_8_maven/cs/rest/original/swagger-petstore/target/classes"]),
+    Sut("testing-system",True,SLEEP,JSON,["jdk_21_maven/cs/rest/testing-system/target/classes"]),
     Sut("tiltaksgjennomforing",True,SLEEP,JSON,["jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes"]),
     Sut("tracking-system",True,SLEEP,JSON,["jdk_11_maven/cs/rest/tracking-system/target/classes"]),
     Sut("user-management",False,SLEEP,JSON,["jdk_8_maven/cs/rest/original/user-management/target/classes"]),

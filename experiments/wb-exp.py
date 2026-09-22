@@ -222,6 +222,7 @@ SUTS = [
     Sut("spring-ecommerce", JDK_8),
     Sut("spring-rest-example", JDK_17),
     Sut("swagger-petstore",JDK_8),
+    Sut("testing-system", JDK_21),
     Sut("tiltaksgjennomforing",JDK_17),
     Sut("tracking-system",JDK_11),
     Sut("user-management",JDK_8),
