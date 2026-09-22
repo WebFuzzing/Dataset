@@ -56,4 +56,5 @@ TRUE,digitalbanking,REST,Java,JDK 17,Maven,27,2835,Redis;Cassandra,UNDEFINED,55,
 TRUE,komga,REST,Kotlin,JDK 17,Gradle,543,62303,SQLite,MIT,174,TRUE,https://github.com/gotson/komga
 FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDEFINED
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
+TRUE,movies-xml,REST,Java,JDK 21,Maven,22,2502,H2,LGPL,7,FALSE,https://github.com/suarezrominajulieta/movies-xml
 

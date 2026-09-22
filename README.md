@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (45)
+### REST: Java/Kotlin (46)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -128,6 +128,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Market** (MIT), [jdk_11_maven/cs/rest-gui/market](jdk_11_maven/cs/rest-gui/market), from [https://github.com/aleksey-lukyanets/market](https://github.com/aleksey-lukyanets/market)
 
 * **Microcks** (Apache), [jdk_21_maven/cs/rest-gui/microcks](jdk_21_maven/cs/rest-gui/microcks), from [https://github.com/microcks/microcks](https://github.com/microcks/microcks)
+
+* **Movies XML** (LGPL), [jdk_21_maven/cs/rest/movies-xml](jdk_21_maven/cs/rest/movies-xml), from [https://github.com/suarezrominajulieta/movies-xml](https://github.com/suarezrominajulieta/movies-xml)
 
 * **NCS**, [jdk_8_maven/cs/rest/artificial/ncs](jdk_8_maven/cs/rest/artificial/ncs), (not-known license, artificial numerical examples coming from different sources)
 

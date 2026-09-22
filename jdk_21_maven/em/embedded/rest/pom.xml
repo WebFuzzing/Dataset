@@ -18,6 +18,7 @@
         <module>redis-sample</module>
         <module>arimaa</module>
         <module>lovemining</module>
+        <module>movies-xml</module>
     </modules>
 
 </project>
