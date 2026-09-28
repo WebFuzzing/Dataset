@@ -19,6 +19,7 @@
         <module>arimaa</module>
         <module>lovemining</module>
         <module>movies-xml</module>
+        <module>testing-system</module>
     </modules>
 
 </project>

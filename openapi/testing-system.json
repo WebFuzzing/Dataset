@@ -1,0 +1,765 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Testing System REST API Documentation",
+    "description": "Welcome to the Testing System REST API! This backend application facilitates the management of testing activities, including test creation, participation, and automatic result evaluation. Designed with scalability, security, and modularity in mind, this API empowers both administrators and test takers to efficiently handle testing processes.\n\nKey Features:\n\n- **User Management**: Admins manage accounts and assign tests, while test takers participate seamlessly with autosave functionality.\n- **Test Management**: Create and manage tests with diverse question types (MCQs, checkboxes, true/false, text-based).\n- **Results Management**: Automated result evaluation with detailed summaries and pass/fail statuses.\n\nExplore the API endpoints interactively via Swagger-UI or use the [Postman collection](https://www.postman.com/mirodil-dev/workspace/testing-system) for pre-configured examples. The source code is accessible through the [GitHub repository.](https://github.com/mirodilkamilov/testing-system)\n\n**_Note: 🚧 This project is a work in progress. Some interruptions may occur in the production environment. 🚧_**",
+    "contact": {
+      "name": "Mirodil Kamilov",
+      "url": "https://www.linkedin.com/in/mirodilkamilov",
+      "email": "mirodilkamilov@gmail.com"
+    },
+    "license": {
+      "name": "MIT licence",
+      "url": "https://github.com/mirodilkamilov/testing-system/blob/main/LICENSE"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://testing.mirodil.dev/api",
+      "description": "PROD ENV"
+    },
+    {
+      "url": "http://localhost:8080/api",
+      "description": "Local ENV"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/test-taker/register": {
+      "post": {
+        "tags": [
+          "test-taker-controller"
+        ],
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestTakerRegisterRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "summary": "Login (for all user roles)",
+        "description": "Authenticate using email and password. **Default Admin Credentials: email:** info@mirodil.dev, **password:** 12345",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLoginRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "summary": "Get all users",
+        "description": "Retrieve a paginated list of users with optional sorting and filters (cannot add field in swagger-ui 😅. So, recommend using my Postman collection).\n\nExample usage: users?page=0&size=7&sort=userId&email=info",
+        "operationId": "getAllUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Zero-based page index (0..N)",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "The size of the page to be returned",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseUserResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "createUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreateRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/test-taker/profile": {
+      "get": {
+        "tags": [
+          "test-taker-controller"
+        ],
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapResponseWithContentKeyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapResponseWithContentKeyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/test-events": {
+      "get": {
+        "tags": [
+          "test-event-controller"
+        ],
+        "operationId": "getAllTestEvents",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PageWithFilterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResponseTestEventResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/test-events/{id}": {
+      "get": {
+        "tags": [
+          "test-event-controller"
+        ],
+        "operationId": "getTestEventById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapResponseWithContentKeyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/test-events/{id}/test-attempt": {
+      "get": {
+        "tags": [
+          "test-event-controller"
+        ],
+        "operationId": "getTestAttempt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapResponseWithContentKeyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/profile": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "getProfile_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WrapResponseWithContentKeyObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TestTakerRegisterRequestDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 50,
+            "minLength": 5
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 5
+          },
+          "fname": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "lname": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ]
+          }
+        },
+        "required": [
+          "fname",
+          "gender",
+          "lname",
+          "password"
+        ]
+      },
+      "UserLoginRequestDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 50,
+            "minLength": 5
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 5
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "UserCreateRequestDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 50,
+            "minLength": 5
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 5
+          },
+          "fname": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "lname": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "TEST_TAKER",
+              "ADMIN"
+            ]
+          }
+        },
+        "required": [
+          "fname",
+          "gender",
+          "lname",
+          "password",
+          "role"
+        ]
+      },
+      "WrapResponseWithContentKeyObject": {
+        "type": "object",
+        "properties": {
+          "content": {}
+        }
+      },
+      "PagedResponseUserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponseDTO"
+            }
+          },
+          "page": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userRole": {
+            "type": "string",
+            "enum": [
+              "TEST_TAKER",
+              "ADMIN"
+            ]
+          },
+          "email": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ACTIVE",
+              "BLOCKED"
+            ]
+          },
+          "fname": {
+            "type": "string"
+          },
+          "lname": {
+            "type": "string"
+          },
+          "isAccountNonLocked": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "path": {
+            "type": "string",
+            "format": "uri"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "VIEW_PROFILE",
+                "MANAGE_PROFILE",
+                "VIEW_ASSIGNED_TEST",
+                "VIEW_ASSIGNED_TEST_RESULTS",
+                "VIEW_ASSIGNED_TEST_TAKERS",
+                "VIEW_ALL_TEST_TAKERS",
+                "MANAGE_TEST_TAKERS",
+                "MANAGE_ALL_USERS",
+                "VIEW_ALL_TESTS",
+                "MANAGE_OWN_TESTS",
+                "MANAGE_ALL_TESTS",
+                "VIEW_ALL_TEST_RESULTS",
+                "MANAGE_TEST_EVENTS",
+                "MONITOR_TESTS"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "FilterCriteriaObject": {
+        "type": "object",
+        "properties": {
+          "attribute": {
+            "type": "string"
+          },
+          "operators": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "values": {
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "PageWithFilterRequest": {
+        "type": "object",
+        "description": "Custom pageable request with filters",
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "filters": {
+            "type": "array",
+            "description": "Map of filter criteria. Add as query parameters (e.g., ?scorePercentage>=70&scorePercentage<=90&isPassed=true,false).",
+            "items": {
+              "$ref": "#/components/schemas/FilterCriteriaObject"
+            }
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PagedResponseTestEventResponseDTO": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TestEventResponseDTO"
+            }
+          },
+          "page": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "links": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TestEventResponseDTO": {
+        "type": "object",
+        "properties": {
+          "testEventId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "testTaker": {
+            "$ref": "#/components/schemas/UserResponseDTO"
+          },
+          "test": {
+            "$ref": "#/components/schemas/TestResponseDTO"
+          },
+          "eventDatetime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING_APPROVAL",
+              "SCHEDULED",
+              "RESCHEDULED",
+              "CANCELLED",
+              "COMPLETED",
+              "IN_PROGRESS",
+              "POSTPONED",
+              "EXPIRED",
+              "TECHNICAL_ERROR_OCCURRED"
+            ]
+          },
+          "scorePoints": {
+            "type": "number",
+            "format": "float"
+          },
+          "scorePercentage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPassed": {
+            "type": "boolean"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "path": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "TestResponseDTO": {
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "noOfQuestions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "passingPercentage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "shouldShuffle": {
+            "type": "boolean"
+          },
+          "shouldRandomlyPick": {
+            "type": "boolean"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "in": "header",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

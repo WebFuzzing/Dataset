@@ -33,7 +33,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class AuthUtil {
     private static final long ONE_DAY_IN_SECONDS = 24 * 60 * 60;
-    private static final String secretKeyPlain = System.getenv("SECRET_KEY");
+    // MODIFIED
+    // System property fallback: the embedded driver shares the JVM and cannot set an env var.
+    private static final String secretKeyPlain = System.getProperty("SECRET_KEY", System.getenv("SECRET_KEY"));
+    // MODIFIED
     private static final SecretKey key = Keys.hmacShaKeyFor(secretKeyPlain.getBytes());
     private static PasswordEncoder passwordEncoder;
     private static StringRedisTemplate redisTemplate;
