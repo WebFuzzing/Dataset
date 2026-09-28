@@ -426,3 +426,4 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 
 /jdk_21_maven/em/embedded/rest-gui/microcks/target
 /jdk_21_maven/em/external/rest-gui/microcks/target
+/statistics/http-verbs.tex
