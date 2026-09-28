@@ -1,0 +1,439 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/subjects/{subjectId}": {
+      "put": {
+        "tags": [
+          "subject-controller"
+        ],
+        "operationId": "putSubject",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutSubjectHttpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "subject-controller"
+        ],
+        "operationId": "deleteSubject",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Request-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectDeletionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subjects/{subjectId}/records/{recordKey}": {
+      "put": {
+        "tags": [
+          "record-controller"
+        ],
+        "operationId": "putRecord",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutRecordHttpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "record-controller"
+        ],
+        "operationId": "deleteRecord",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recordKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subjects/{subjectId}/records": {
+      "get": {
+        "tags": [
+          "record-controller"
+        ],
+        "operationId": "getAllRecords",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecordResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subjects/{subjectId}/audit-events": {
+      "get": {
+        "tags": [
+          "audit-event-controller"
+        ],
+        "operationId": "getAllAuditEvents",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuditEventResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "health-controller"
+        ],
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PutSubjectHttpRequest": {
+        "type": "object",
+        "properties": {
+          "residency": {
+            "type": "string"
+          }
+        }
+      },
+      "SubjectResponse": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "residency": {
+            "type": "string"
+          },
+          "erasure_in_progress": {
+            "type": "boolean"
+          },
+          "erasure_requested_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "JsonNode": {
+        "type": "object"
+      },
+      "PutRecordHttpRequest": {
+        "required": [
+          "purpose"
+        ],
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/JsonNode"
+          }
+        }
+      },
+      "RecordResponse": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string"
+          },
+          "record_key": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/JsonNode"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updated_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "retention_days": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AuditEventResponse": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string"
+          },
+          "ts_ulid": {
+            "type": "string"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "CREATE_SUBJECT",
+              "CREATE_SUBJECT_REQUESTED",
+              "CREATE_SUBJECT_COMPLETED",
+              "CREATE_SUBJECT_FAILED",
+              "PUT_REQUESTED",
+              "PUT_FAILED",
+              "PUT_SUCCESS",
+              "PUT_NEW_ITEM_SUCCESS",
+              "PUT_UPDATE_ITEM_SUCCESS",
+              "GET_REQUESTED",
+              "GET_FAILURE",
+              "GET_SUCCESS",
+              "DELETE_ITEM_REQUESTED",
+              "DELETE_ITEM_FAILURE",
+              "DELETE_ITEM_ALREADY_TOMBSTONED",
+              "DELETE_ITEM_SUCCESSFUL",
+              "DELETE_SUBJECT_REQUESTED",
+              "DELETE_SUBJECT_NO_SUBJECT",
+              "DELETE_SUBJECT_FAILURE",
+              "DELETE_SUBJECT_SUCCESS",
+              "SUBJECT_ERASURE_REQUESTED",
+              "SUBJECT_ERASURE_STARTED",
+              "SUBJECT_ERASURE_FAILED",
+              "SUBJECT_ERASURE_COMPLETED",
+              "PURGE_CANDIDATE_IDENTIFIED",
+              "PURGE_CANDIDATE_SUCCESSFUL",
+              "PURGE_CANDIDATE_FAILED"
+            ]
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "prev_hash": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "item_key": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "SubjectDeletionResponse": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "$ref": "#/components/schemas/SubjectResponse"
+          },
+          "records_deleted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total_records": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    }
+  }
+}
