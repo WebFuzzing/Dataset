@@ -219,5 +219,9 @@ As there are quite a few things to keep in mind, we list here the most important
   This requires to check how the SUT is built, and dependencies among its sub-modules.
   Adding unrelated modules will negatively impact how coverage is measured with JaCoCo.
 
+- The script `http-verbs.py` needs to be run to recompute `http-verbs.csv`.
+  Once done, the function `markdown()` in `http-verbs.R` needs to be executed to update `http-verbs.md`.
+
 - Given a SUT called X, its image needs to be published with name:tag "webfuzzing/wfd-X:FINAL".
   As it requires authentication on Docker Hub, this must be done manually by the architect, after X is added to WFD.
+

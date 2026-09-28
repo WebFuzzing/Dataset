@@ -78,7 +78,7 @@ We just re-implemented in different languages, and put them behind a web service
 For the RESTful APIs, each API has an endpoint where the OpenAPI/Swagger schemas can be downloaded from.
 For simplicity, all schemas are also available as JSON/YML files under the folder [openapi](openapi).
 
-> **IMPORTANT**: More details (e.g., #LOCs and used databases) on these APIs can be found [in this table](statistics/table_emb.md).
+> **IMPORTANT**: More details (e.g., #LOCs and used databases) on these APIs can be found in  [table_wfd.md](statistics/table_wfd.md). Info on distribution of HTTP verbs in REST APIs can be found in [http-verbs.md](statistics/http-verbs.md).
 
 Real-world APIs require authentication. 
 How to setup authentication information, based on the current content of the initialized databases, is expressed in [Web Fuzzing Commons (WFC)](https://github.com/WebFuzzing/Commons) format. 

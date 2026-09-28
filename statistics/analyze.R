@@ -28,7 +28,7 @@ markdown <- function (){
   # skip industrial APIs that are not stored in EMB
   dt <- dt[dt$EMB==TRUE,]
 
-  TABLE <- "./table_emb.md"
+  TABLE <- "./table_wfd.md"
   unlink(TABLE)
   sink(TABLE, append = TRUE, split = TRUE)
 
