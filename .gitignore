@@ -432,3 +432,4 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_21_gradle/cs/rest/gdpr-kv/build/
 /jdk_21_gradle/em/embedded/rest/gdpr-kv/build/
 /jdk_21_gradle/em/external/rest/gdpr-kv/build/
+/statistics/http-verbs.tex
