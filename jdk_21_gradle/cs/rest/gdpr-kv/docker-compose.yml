@@ -1,0 +1,26 @@
+services:
+  localstack:
+    image: localstack/localstack:3.6
+    container_name: localstack
+    ports:
+      - "4566:4566"   # LocalStack edge endpoint
+      - "4571:4571"
+    environment:
+      - SERVICES=dynamodb, sts
+      - DEFAULT_REGION=us-west-2
+      - AWS_DEFAULT_REGION=us-west-2
+      - DEBUG=0
+    volumes:
+      - ./.localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin:latest
+    container_name: dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://localstack:4566
+      - AWS_REGION=us-west-2
+    depends_on:
+      - localstack

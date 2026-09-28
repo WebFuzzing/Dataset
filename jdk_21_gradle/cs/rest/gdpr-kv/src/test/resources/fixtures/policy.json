@@ -1,0 +1,6 @@
+{
+  "purpose": "DEMO_PURPOSE",
+  "retention_days": 30,
+  "description": "Demo retention policy",
+  "last_updated_at": 1726867200000
+}

@@ -1,0 +1,15 @@
+{
+  "subject_id": "subj-123",
+  "ts_ulid": "1726768765000_01JABCDE1234XYZ7890ABCD",
+  "event_type": "PUT_SUCCESS",
+  "request_id": "req-456",
+  "item_key": "orders#2025-09-20",
+  "purpose": "ORDER_FULFILLMENT",
+  "timestamp": 1726768765123,
+  "details": {
+    "status": "OK",
+    "count": 3
+  },
+  "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "hash": "to-be-recomputed-in-test"
+}
