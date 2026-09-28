@@ -69,7 +69,7 @@
   <allow class="org.apache.kafka.common.requests.DescribeLogDirsResponse.LogDirInfo" />
   <allow class="org.apache.kafka.common.requests.DescribeLogDirsResponse.ReplicaInfo" />
   <!-- Non-public APIs that are better imported than reimplemented -->
-  <allow class="org.apache.kafka.common.utils.internals.AppInfoParser" />
+  <allow class="org.apache.kafka.common.utils.AppInfoParser" />
   <allow class="org.apache.kafka.common.internals.KafkaFutureImpl" />
   <allow class="org.apache.kafka.common.header.internals.RecordHeader" />
 
@@ -146,7 +146,6 @@
   <allow class="org.apache.kafka.metadata.authorizer.StandardAuthorizer" />
   <allow class="org.apache.kafka.network.SocketServerConfigs" />
   <allow class="org.apache.kafka.raft.QuorumConfig" />
-  <allow class="org.apache.kafka.security.JaasTestUtils" />
   <allow class="org.apache.kafka.server.config.DelegationTokenManagerConfigs" />
   <allow class="org.apache.kafka.raft.KRaftConfigs" />
   <allow class="org.apache.kafka.server.config.ReplicationConfigs" />
@@ -157,6 +156,7 @@
   <!-- c. Non-public Confluent Community Kafka APIs -->
   <allow class="kafka.admin.AclCommand" />
   <allow class="kafka.security.authorizer.AclAuthorizer" />
+  <allow class="kafka.security.JaasTestUtils" />
   <allow class="kafka.server.KafkaConfig" />
   <allow class="kafka.server.KafkaServer" />
   <allow class="kafka.server.KafkaBroker" />

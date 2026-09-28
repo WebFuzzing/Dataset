@@ -28,7 +28,6 @@ public final class V3ResourcesFeature implements Feature {
     configurable.register(AlterBrokerConfigBatchAction.class);
     configurable.register(AlterClusterConfigBatchAction.class);
     configurable.register(AlterTopicConfigBatchAction.class);
-    configurable.register(AlterMultipleTopicsConfigsBatchAction.class);
     configurable.register(BrokerConfigsResource.class);
     configurable.register(BrokersResource.class);
     configurable.register(ClusterConfigsResource.class);

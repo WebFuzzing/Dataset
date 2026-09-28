@@ -62,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import kafka.security.JaasTestUtils;
 import kafka.server.KafkaBroker;
 import kafka.server.KafkaConfig;
 import kafka.server.QuorumTestHarness;
@@ -93,7 +94,6 @@ import org.apache.kafka.coordinator.group.GroupCoordinatorConfig;
 import org.apache.kafka.network.SocketServerConfigs;
 import org.apache.kafka.raft.KRaftConfigs;
 import org.apache.kafka.raft.QuorumConfig;
-import org.apache.kafka.security.JaasTestUtils;
 import org.apache.kafka.server.config.DelegationTokenManagerConfigs;
 import org.apache.kafka.server.config.ReplicationConfigs;
 import org.apache.kafka.server.config.ServerConfigs;
@@ -798,8 +798,7 @@ public abstract class ClusterTestHarness {
           JavaConverters.mapAsScalaMapConverter(
                   convertReplicasAssignmentToScalaCompatibleType(replicasAssignments))
               .asScala(),
-          topicConfig.stringPropertyNames().stream()
-              .collect(Collectors.toMap(name -> name, topicConfig::getProperty)));
+          topicConfig);
     }
   }
 
