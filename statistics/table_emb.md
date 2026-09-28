@@ -30,6 +30,7 @@
 |REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
 |REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|
+|REST|__movies-xml__|2502|22|7|Java|JDK 21|Maven|H2||
 |REST|__ocvn__|45521|526|258|Java|JDK 8|Maven|H2, MongoDB|&check;|
 |REST|__ohsome-api__|14166|87|134|Java|JDK 17|Maven|OSHDB||
 |REST|__pay-publicapi__|34576|377|10|Java|JDK 11|Maven|Redis|&check;|
@@ -49,6 +50,7 @@
 |REST|__spring-ecommerce__|2223|58|26|Java|JDK 8|Maven|MongoDB, Redis, Elasticsearch|&check;|
 |REST|__spring-rest-example__|1426|32|9|Java|JDK 17|Maven|MySQL||
 |REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||
+|REST|__testing-system__|3692|72|11|Java|JDK 21|Maven|PostgreSQL, Redis|&check;|
 |REST|__tiltaksgjennomforing__|27316|472|79|Java|JDK 17|Maven|PostgreSQL|&check;|
 |REST|__tracking-system__|5947|87|67|Java|JDK 11|Maven|H2|&check;|
 |REST|__user-management__|4274|69|21|Java|JDK 8|Maven|MySQL||

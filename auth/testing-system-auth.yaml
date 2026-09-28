@@ -1,0 +1,25 @@
+auth:
+  - name: WfdAdmin1
+    loginEndpointAuth:
+      payloadRaw: "{\"email\": \"wfd_admin1@wfd.invalid\", \"password\": \"Wfd-Admin-Pass1\"}"
+  - name: WfdAdmin2
+    loginEndpointAuth:
+      payloadRaw: "{\"email\": \"wfd_admin2@wfd.invalid\", \"password\": \"Wfd-Admin-Pass2\"}"
+  - name: WfdUser1
+    loginEndpointAuth:
+      payloadRaw: "{\"email\": \"wfd_user1@wfd.invalid\", \"password\": \"Wfd-User-Pass1\"}"
+  - name: WfdUser2
+    loginEndpointAuth:
+      payloadRaw: "{\"email\": \"wfd_user2@wfd.invalid\", \"password\": \"Wfd-User-Pass2\"}"
+
+authTemplate:
+    loginEndpointAuth:
+        endpoint: /api/auth/login
+        verb: POST
+        contentType: application/json
+        token:
+            extractFrom: body
+            extractSelector: /content/token/access
+            sendName: Authorization
+            sendIn: header
+            sendTemplate: "Bearer {token}"
