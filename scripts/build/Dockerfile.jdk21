@@ -1,5 +1,13 @@
 FROM maven:3.9-eclipse-temurin-21
 
+RUN apt-get update && \
+    apt-get install -y wget unzip && \
+    wget https://services.gradle.org/distributions/gradle-8.8-bin.zip && \
+    unzip gradle-8.8-bin.zip -d /opt && \
+    rm gradle-8.8-bin.zip && \
+    ln -s /opt/gradle-8.8/bin/gradle /usr/bin/gradle && \
+    apt-get clean
+
 WORKDIR /build
 
 CMD ["/bin/bash"]
