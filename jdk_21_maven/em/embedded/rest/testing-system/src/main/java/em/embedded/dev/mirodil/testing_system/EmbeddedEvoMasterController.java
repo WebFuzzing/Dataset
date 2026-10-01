@@ -17,10 +17,9 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -37,7 +36,8 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String API_DOCS_PATH = "/api/v3/api-docs";
 
-    private static final String SQL_DIR = "cs/rest/testing-system/docker/sql";
+    // Copy of cs/rest/testing-system/docker/sql, bundled so it does not depend on the working directory.
+    private static final String SQL_DIR = "testing-system-sql";
 
     private static final String POSTGRES_IMAGE = "postgres:17.2";
 
@@ -66,7 +66,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             .withEnv("POSTGRES_DB", POSTGRES_DB)
             .withEnv("POSTGRES_USER", POSTGRES_USER)
             .withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
-            .withCopyFileToContainer(MountableFile.forHostPath(SQL_DIR + "/01_create_tables.sql"),
+            .withCopyFileToContainer(MountableFile.forClasspathResource(SQL_DIR + "/01_create_tables.sql"),
                     "/docker-entrypoint-initdb.d/01_create_tables.sql")
             .withTmpFs(Collections.singletonMap("/var/lib/postgresql/data", "rw"))
             .withExposedPorts(POSTGRES_PORT)
@@ -141,12 +141,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
                 + "/" + POSTGRES_DB;
     }
 
-    // Reuses the SUT's own seed file, so driver and SUT cannot drift apart.
+    // Same seed file as the SUT's docker/sql/02_insert_data.sql; keep the two in sync.
     // EvoMaster splits the script on ";" alone and its parser rejects blank lines, hence the filter.
-    private static String initSql() {
-        try {
-            return Files.readAllLines(Paths.get(SQL_DIR, "02_insert_data.sql"), StandardCharsets.UTF_8)
-                    .stream()
+    private String initSql() {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream(SQL_DIR + "/02_insert_data.sql")) {
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8).lines()
                     .filter(line -> !line.trim().isEmpty())
                     .collect(Collectors.joining("\n")) + "\n" + WFD_ACCOUNTS;
         } catch (IOException e) {
