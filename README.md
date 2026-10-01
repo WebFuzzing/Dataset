@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (47)
+### REST: Java/Kotlin (48)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -116,6 +116,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **HTTP Patch Spring** (MIT), [jdk_11_maven/cs/rest/http-patch-spring](jdk_11_maven/cs/rest/http-patch-spring), from [https://github.com/cassiomolin/http-patch-spring](https://github.com/cassiomolin/http-patch-spring)
 
 * **Jasper** (MIT), [jdk_25_maven/cs/rest/jasper](jdk_25_maven/cs/rest/jasper), from [https://github.com/cjmalloy/jasper](https://github.com/cjmalloy/jasper)
+
+* **Kafka REST Proxy** (Confluent Community License), [jdk_17_maven/cs/rest/kafka-rest](jdk_17_maven/cs/rest/kafka-rest), from [https://github.com/confluentinc/kafka-rest](https://github.com/confluentinc/kafka-rest)
 
 * **JoinUs** (not-known license), [jdk_21_maven/cs/rest/joinus](jdk_21_maven/cs/rest/joinus), from [https://github.com/KLAJDI16/joinUs](https://github.com/KLAJDI16/joinUs)
 

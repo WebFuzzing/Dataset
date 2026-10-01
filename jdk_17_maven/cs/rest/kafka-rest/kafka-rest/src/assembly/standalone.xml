@@ -4,7 +4,8 @@
           http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <!-- Assembles a package that can run the kafka-rest server completely standalone, without any
          additional packaged dependencies. -->
-    <id>standalone</id>
+    <!--          MODIFIED: was "standalone"-->
+    <id>sut</id>
     <formats>
         <format>jar</format>
     </formats>
