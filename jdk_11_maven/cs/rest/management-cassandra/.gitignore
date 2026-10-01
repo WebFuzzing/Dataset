@@ -1,0 +1,47 @@
+astra-4.0/*.tgz
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+
+# DSE-related files
+dse-db*.jar
+dse-db*.pom
+dse-commons*.jar
+dse-commons*.pom
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+.factorypath
+
+*.launch
+.classpath
+.project
+.cassandra-bin
+
+# Intellij
+.idea
+*.iml
+*.ipr
+out/
+.idea_modules/
+.vscode/
+
+# Netbeans
+nb-configuration.xml
