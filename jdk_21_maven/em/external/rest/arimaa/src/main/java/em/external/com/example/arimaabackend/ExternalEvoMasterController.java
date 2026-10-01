@@ -2,6 +2,7 @@ package em.external.com.example.arimaabackend;
 
 import org.evomaster.client.java.controller.ExternalSutController;
 import org.evomaster.client.java.controller.InstrumentedSutStarter;
+import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.controller.api.dto.database.schema.DatabaseType;
@@ -362,6 +363,12 @@ public class ExternalEvoMasterController extends ExternalSutController {
     @Override
     public Object getMongoConnection() {
         return mongoClient;
+    }
+
+    /** Lets EvoMaster read the graph for its Neo4j heuristics and insert test data into it. */
+    @Override
+    public ReflectionBasedNeo4jClient getNeo4jConnection() {
+        return neo4jDriver == null ? null : new ReflectionBasedNeo4jClient(neo4jDriver);
     }
 
     @Override

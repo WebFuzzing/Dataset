@@ -3,11 +3,15 @@ package em.embedded.adoptme;
 import com.programacion3.adoptme.AdoptMApplication;
 import org.evomaster.client.java.controller.EmbeddedSutController;
 import org.evomaster.client.java.controller.InstrumentedSutStarter;
+import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
@@ -84,6 +88,9 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private ConfigurableApplicationContext ctx;
 
+    /** Driver over the same database the SUT uses, for EvoMaster to read the graph and insert test data. */
+    private Driver neo4jDriver;
+
     public EmbeddedEvoMasterController() {
         this(0);
     }
@@ -106,6 +113,10 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         });
 
         runCypher(BACKUP_SEEDED_ADOPTERS);
+
+        neo4jDriver = GraphDatabase.driver(
+                "bolt://" + neo4j.getHost() + ":" + neo4j.getMappedPort(NEO4J_BOLT_PORT),
+                AuthTokens.basic(NEO4J_USER, NEO4J_PASSWORD));
 
         return "http://localhost:" + getSutPort();
     }
@@ -131,6 +142,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             ctx = null;
         }
 
+        if (neo4jDriver != null) {
+            neo4jDriver.close();
+            neo4jDriver = null;
+        }
+
         neo4j.stop();
     }
 
@@ -150,6 +166,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         }
     }
 
+
+    /** Lets EvoMaster read the graph for its Neo4j heuristics and insert test data into it. */
+    @Override
+    public ReflectionBasedNeo4jClient getNeo4jConnection() {
+        return neo4jDriver == null ? null : new ReflectionBasedNeo4jClient(neo4jDriver);
+    }
 
     @Override
     public List<DbSpecification> getDbSpecifications() {

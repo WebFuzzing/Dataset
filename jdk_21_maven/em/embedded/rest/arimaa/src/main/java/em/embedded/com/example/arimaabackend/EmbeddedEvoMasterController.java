@@ -14,6 +14,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
@@ -318,6 +319,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     @Override
     public Object getMongoConnection() {
         return mongoClient;
+    }
+
+    /** Lets EvoMaster read the graph for its Neo4j heuristics and insert test data into it. */
+    @Override
+    public ReflectionBasedNeo4jClient getNeo4jConnection() {
+        return neo4jDriver == null ? null : new ReflectionBasedNeo4jClient(neo4jDriver);
     }
 
     @Override
