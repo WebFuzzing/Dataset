@@ -31,6 +31,7 @@ ALL_SERVICES = [
     ("17", "maven"),
     ("17", "gradle"),
     ("21", "maven"),
+    ("21", "gradle"),
     ("25", "maven"),
 ]
 

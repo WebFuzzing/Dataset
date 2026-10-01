@@ -284,6 +284,29 @@ services:
         fi
         echo 'JDK 21 Maven build completed'
 
+  build-jdk21-gradle:
+    build:
+      context: .
+      dockerfile: Dockerfile.jdk21
+    image: emb-build-jdk21
+    volumes:
+      - ${HOME}/.m2:/root/.m2
+      - gradle-cache-jdk21:/root/.gradle
+      - ${DIST_FOLDER}:/dist
+      - ${JDK_21_GRADLE_FOLDER}:/build/jdk_21_gradle
+    working_dir: /build/jdk_21_gradle
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        gradle build -x test
+        cp cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar /dist/
+        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          cp em/external/rest/gdpr-kv/build/libs/gdpr-kv-evomaster-runner.jar /dist/
+        fi
+        echo 'JDK 21 Gradle build completed'
+
   build-jdk25-maven:
     build:
       context: .
@@ -316,3 +339,4 @@ volumes:
   gradle-cache-jdk8:
   gradle-cache-jdk11:
   gradle-cache-jdk17:
+  gradle-cache-jdk21:

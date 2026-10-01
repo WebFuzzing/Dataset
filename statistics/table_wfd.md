@@ -19,6 +19,7 @@
 |REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
 |REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
 |REST|__features-service__|2275|39|18|Java|JDK 8|Maven|H2||
+|REST|__gdpr-kv__|6399|62|7|Java|JDK 21|Gradle|DynamoDB||
 |REST|__genome-nexus__|30004|405|23|Java|JDK 8|Maven|MongoDB||
 |REST|__gestaohospital__|3506|33|20|Java|JDK 8|Maven|MongoDB||
 |REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||

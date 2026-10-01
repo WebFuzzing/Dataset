@@ -150,6 +150,7 @@ if target == "em":
     replaceInGradle("jdk_8_gradle/build.gradle")
     replaceInGradle("jdk_11_gradle/build.gradle")
     replaceInGradle("jdk_17_gradle/build.gradle")
+    replaceInGradle("jdk_21_gradle/build.gradle")
     replaceInDist()
     replaceInDockerEnv()
 

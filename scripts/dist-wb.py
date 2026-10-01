@@ -393,6 +393,17 @@ def build_jdk_17_gradle():
     copy(folder + "/cs/rest/komga/komga/build/libs/komga-sut.jar", DIST)
     copy(folder + "/em/external/rest/komga/build/libs/komga-evomaster-runner.jar", DIST)
 
+####################
+def build_jdk_21_gradle():
+
+    java_home = JAVA_HOME_21
+    folder = "jdk_21_gradle"
+    call_gradle(java_home,folder)
+
+    # Copy JAR files
+    copy(folder + "/cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar", DIST)
+    copy(folder + "/em/external/rest/gdpr-kv/build/libs/gdpr-kv-evomaster-runner.jar", DIST)
+
 
 # Building JavaScript projects
 # def buildJS(path, name):
@@ -494,6 +505,7 @@ build_jdk_25_maven()
 build_jdk_8_gradle()
 build_jdk_11_gradle()
 build_jdk_17_gradle()
+build_jdk_21_gradle()
 
 ## Those are disabled for now... might support back in the future
 # build_js_npm()
