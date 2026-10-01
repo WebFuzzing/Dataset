@@ -15,6 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
+import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -93,6 +94,8 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private Connection sqlConnection;
 
+    private JedisPooled redisClient;
+
     private List<DbSpecification> dbSpecification;
 
     public EmbeddedEvoMasterController() {
@@ -109,6 +112,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
         postgres.start();
         redis.start();
+        redisClient = new JedisPooled(redis.getHost(), redis.getMappedPort(REDIS_PORT));
 
         System.setProperty("SECRET_KEY", SECRET_KEY);
 
@@ -174,6 +178,10 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             ctx = null;
         }
 
+        if (redisClient != null) {
+            redisClient.close();
+            redisClient = null;
+        }
         redis.stop();
         postgres.stop();
     }
@@ -194,8 +202,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         return "dev.mirodil.testing_system.";
     }
 
+    // Redis only holds the logout token blacklist; left as is, a token blacklisted in one test stays invalid in the next.
     @Override
     public void resetStateOfSUT() {
+        if (redisClient != null) {
+            redisClient.flushAll();
+        }
     }
 
     @Override

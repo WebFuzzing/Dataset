@@ -12,6 +12,7 @@ import org.evomaster.client.java.sql.DbSpecification;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
+import redis.clients.jedis.JedisPooled;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -118,6 +119,8 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private Connection sqlConnection;
 
+    private JedisPooled redisClient;
+
     private List<DbSpecification> dbSpecification;
 
     public ExternalEvoMasterController() {
@@ -198,6 +201,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     public void preStart() {
         postgres.start();
         redis.start();
+        redisClient = new JedisPooled(redis.getHost(), redis.getMappedPort(REDIS_PORT));
     }
 
     @Override
@@ -219,6 +223,10 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     @Override
     public void postStop() {
+        if (redisClient != null) {
+            redisClient.close();
+            redisClient = null;
+        }
         redis.stop();
         postgres.stop();
     }
@@ -240,8 +248,12 @@ public class ExternalEvoMasterController extends ExternalSutController {
         return "dev.mirodil.testing_system.";
     }
 
+    // Redis only holds the logout token blacklist; left as is, a token blacklisted in one test stays invalid in the next.
     @Override
     public void resetStateOfSUT() {
+        if (redisClient != null) {
+            redisClient.flushAll();
+        }
     }
 
     @Override
