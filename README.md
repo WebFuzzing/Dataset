@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (48)
+### REST: Java/Kotlin (49)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -126,6 +126,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Languagetool** (LGPL), [jdk_8_maven/cs/rest/original/languagetool](jdk_8_maven/cs/rest/original/languagetool), from [https://github.com/languagetool-org/languagetool](https://github.com/languagetool-org/languagetool)
 
 * **LoveMining** (not-known license), [jdk_21_maven/cs/rest/lovemining](jdk_21_maven/cs/rest/lovemining), from [https://github.com/Andryd22/LoveMining](https://github.com/Andryd22/LoveMining)
+
+* **Management API for Apache Cassandra** (Apache), [jdk_11_maven/cs/rest/management-cassandra](jdk_11_maven/cs/rest/management-cassandra), from [https://github.com/k8ssandra/management-api-for-apache-cassandra](https://github.com/k8ssandra/management-api-for-apache-cassandra)
 
 * **Market** (MIT), [jdk_11_maven/cs/rest-gui/market](jdk_11_maven/cs/rest-gui/market), from [https://github.com/aleksey-lukyanets/market](https://github.com/aleksey-lukyanets/market)
 

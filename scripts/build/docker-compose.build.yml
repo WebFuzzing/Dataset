@@ -131,6 +131,7 @@ services:
         cp cs/rest/pay-publicapi/target/pay-publicapi-sut.jar /dist/
         cp cs/rest/http-patch-spring/target/http-patch-spring-sut.jar /dist/
         cp cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/quartz-manager-sut.jar /dist/
+        cp cs/rest/management-cassandra/management-api-server/target/management-cassandra-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/rest/tracking-system/target/tracking-system-evomaster-runner.jar /dist/
           cp em/external/rest/cwa-verification/target/cwa-verification-evomaster-runner.jar /dist/
@@ -139,6 +140,7 @@ services:
           cp em/external/rest/pay-publicapi/target/pay-publicapi-evomaster-runner.jar /dist/
           cp em/external/rest/http-patch-spring/target/http-patch-spring-evomaster-runner.jar /dist/
           cp em/external/rest/quartz-manager/target/quartz-manager-evomaster-runner.jar /dist/
+          cp em/external/rest/management-cassandra/target/management-cassandra-evomaster-runner.jar /dist/
         fi
         echo 'JDK 11 Maven build completed'
 

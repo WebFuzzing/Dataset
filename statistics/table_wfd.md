@@ -28,6 +28,7 @@
 |REST|__komga__|62303|543|174|Kotlin|JDK 17|Gradle|SQLite|&check;|
 |REST|__languagetool__|174781|1385|2|Java|JDK 8|Maven|||
 |REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__management-cassandra__|35096|225|63|Java|JDK 11|Maven|Cassandra||
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
 |REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|
 |REST|__movies-xml__|2502|22|7|Java|JDK 21|Maven|H2||
