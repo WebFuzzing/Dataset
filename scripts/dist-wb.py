@@ -292,6 +292,9 @@ def build_jdk_17_maven():
     copy(folder + "/cs/rest/digitalbanking/target/digitalbanking-sut.jar", DIST)
     copy(folder + "/em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/kafka-rest/kafka-rest/target/kafka-rest-sut.jar", DIST)
+    copy(folder + "/em/external/rest/kafka-rest/target/kafka-rest-evomaster-runner.jar", DIST)
+
 ####################
 def build_jdk_21_maven():
     folder = "jdk_21_maven"
