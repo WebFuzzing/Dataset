@@ -770,25 +770,6 @@
         "summary" : "Decommission the *node I am connecting to*"
       }
     },
-    "/api/v0/ops/node/drain" : {
-      "post" : {
-        "operationId" : "drain",
-        "responses" : {
-          "200" : {
-            "content" : {
-              "text/plain" : {
-                "example" : "OK",
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            },
-            "description" : "Cassandra node drained successfully"
-          }
-        },
-        "summary" : "Drain the node (stop accepting writes and flush all tables)"
-      }
-    },
     "/api/v0/ops/node/encryption/internode/truststore/reload" : {
       "post" : {
         "operationId" : "reloadTruststore",

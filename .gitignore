@@ -411,6 +411,8 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_11_maven/cs/rest-gui/quartz-manager/target
 /jdk_11_maven/em/embedded/rest/quartz-manager/target
 /jdk_11_maven/em/external/rest/quartz-manager/target
+/jdk_11_maven/em/embedded/rest/management-cassandra/target
+/jdk_11_maven/em/external/rest/management-cassandra/target
 
 /jdk_8_maven/cs/rest/original/spring-ecommerce/target
 /jdk_8_maven/em/embedded/rest/spring-ecommerce/target

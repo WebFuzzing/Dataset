@@ -221,6 +221,8 @@ public class NodeOpsResources extends BaseResources {
         });
   }
 
+  // MODIFIED: out of the schema, drain leaves Cassandra unusable until restarted
+  @io.swagger.v3.oas.annotations.Hidden
   @POST
   @Path("/drain")
   @Operation(
