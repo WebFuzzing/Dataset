@@ -333,6 +333,13 @@ scripts/dockerize/dockerfiles
 /jdk_25_maven/cs/rest/jasper/target/
 /jdk_25_maven/em/external/rest/jasper/target/
 /jdk_25_maven/em/embedded/rest/jasper/target/
+/jdk_25_maven/cs/rest/kafka-producer-publisher/commons-news/target/
+/jdk_25_maven/cs/rest/kafka-producer-publisher/producer-api/target/
+/jdk_25_maven/cs/rest/kafka-producer-publisher/publisher-api/target/
+/jdk_25_maven/em/external/rest/kafka-producer/target/
+/jdk_25_maven/em/embedded/rest/kafka-producer/target/
+/jdk_25_maven/em/external/rest/kafka-publisher/target/
+/jdk_25_maven/em/embedded/rest/kafka-publisher/target/
 /jdk_21_maven/cs/rest/redis-sample/target/
 /jdk_21_maven/em/external/rest/redis-sample/target/
 /jdk_21_maven/em/embedded/rest/redis-sample/target/

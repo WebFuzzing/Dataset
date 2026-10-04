@@ -334,6 +334,12 @@ def build_jdk_25_maven():
     copy(folder + "/cs/rest/jasper/target/jasper-sut.jar", DIST)
     copy(folder + "/em/external/rest/jasper/target/jasper-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/kafka-producer-publisher/producer-api/target/kafka-producer-sut.jar", DIST)
+    copy(folder + "/em/external/rest/kafka-producer/target/kafka-producer-evomaster-runner.jar", DIST)
+
+    copy(folder + "/cs/rest/kafka-producer-publisher/publisher-api/target/kafka-publisher-sut.jar", DIST)
+    copy(folder + "/em/external/rest/kafka-publisher/target/kafka-publisher-evomaster-runner.jar", DIST)
+
 ####################
 def call_gradle(java_home, folder):
     env_vars = os.environ.copy()

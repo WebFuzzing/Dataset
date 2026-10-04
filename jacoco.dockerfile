@@ -32,6 +32,9 @@ COPY jdk_8_maven/cs/rest-gui/gestaohospital/target/classes  ${CLASS_FILES}/jdk_8
 COPY jdk_11_maven/cs/rest/http-patch-spring/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/http-patch-spring/target/classes
 COPY jdk_21_maven/cs/rest/joinus/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/joinus/target/classes
 COPY jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes
+COPY jdk_25_maven/cs/rest/kafka-producer-publisher/commons-news/target/classes  ${CLASS_FILES}/jdk_25_maven/cs/rest/kafka-producer-publisher/commons-news/target/classes
+COPY jdk_25_maven/cs/rest/kafka-producer-publisher/producer-api/target/classes  ${CLASS_FILES}/jdk_25_maven/cs/rest/kafka-producer-publisher/producer-api/target/classes
+COPY jdk_25_maven/cs/rest/kafka-producer-publisher/publisher-api/target/classes  ${CLASS_FILES}/jdk_25_maven/cs/rest/kafka-producer-publisher/publisher-api/target/classes
 COPY jdk_17_gradle/cs/rest/komga/komga/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/komga/komga/build/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes

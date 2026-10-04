@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>evomaster-benchmark-jdk25-em-embedded-rest-kafka-publisher</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.evomaster</groupId>
+        <artifactId>evomaster-benchmark-jdk25-em-embedded-rest</artifactId>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+    <!-- Embedded mode puts the SUT and the driver on one classpath, and the SUT's BOMs do not
+         apply here. Without them, testcontainers' slf4j-api 1.7 replaces the 2.x Spring Boot needs. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>4.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>2025.1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The SUT as a library -->
+        <dependency>
+            <groupId>com.ivanfranchin</groupId>
+            <artifactId>publisher-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- The "news" index is created by collector-service (not part of WFD) with these analyzers -->
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../../../../cs/rest/kafka-producer-publisher/collector-service/src/main/resources</directory>
+                <includes>
+                    <include>news-es-analysis.json</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>

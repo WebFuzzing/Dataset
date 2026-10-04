@@ -30,12 +30,14 @@
         <java.version>25</java.version>
     </properties>
     <modules>
-        <module>eureka-server</module>
+        <!-- MODIFIED: only the two REST APIs (and their shared Avro module) are part of WFD -->
+        <!-- <module>eureka-server</module> -->
         <module>producer-api</module>
-        <module>categorizer-service</module>
-        <module>collector-service</module>
+        <!-- <module>categorizer-service</module> -->
+        <!-- <module>collector-service</module> -->
         <module>publisher-api</module>
-        <module>news-client</module>
+        <!-- <module>news-client</module> -->
         <module>commons-news</module>
+        <!-- MODIFIED -->
     </modules>
 </project>

@@ -14,6 +14,8 @@
     <modules>
         <module>commafeed</module>
         <module>jasper</module>
+        <module>kafka-producer</module>
+        <module>kafka-publisher</module>
     </modules>
 
 </project>

@@ -60,4 +60,6 @@ FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDE
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
 TRUE,movies-xml,REST,Java,JDK 21,Maven,22,2502,H2,LGPL,7,FALSE,https://github.com/suarezrominajulieta/movies-xml
 TRUE,kafka-rest,REST,Java,JDK 17,Maven,475,81418,Kafka,Confluent,50,FALSE,https://github.com/confluentinc/kafka-rest
+TRUE,kafka-producer,REST,Java,JDK 25,Maven,10,855,Kafka,UNDEFINED,9,FALSE,https://github.com/ivangfr/spring-cloud-stream-kafka-elasticsearch
+TRUE,kafka-publisher,REST,Java,JDK 25,Maven,11,219,Elasticsearch,UNDEFINED,11,FALSE,https://github.com/ivangfr/spring-cloud-stream-kafka-elasticsearch
 

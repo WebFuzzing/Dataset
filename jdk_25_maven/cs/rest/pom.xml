@@ -15,6 +15,7 @@
     <modules>
         <module>commafeed</module>
         <module>jasper</module>
+        <module>kafka-producer-publisher</module>
     </modules>
 
 

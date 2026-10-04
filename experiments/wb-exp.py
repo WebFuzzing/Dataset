@@ -200,6 +200,8 @@ SUTS = [
     Sut("jasper",  JDK_25),
     Sut("joinus", JDK_21),
     Sut("kafka-rest", JDK_17),
+    Sut("kafka-producer", JDK_25),
+    Sut("kafka-publisher", JDK_25),
     Sut("komga", JDK_17),
     Sut("languagetool",  JDK_8),
     Sut("lovemining", JDK_21),

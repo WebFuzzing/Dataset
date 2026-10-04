@@ -172,6 +172,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!-- MODIFIED -->
+                    <!-- WFD expects a self-contained "kafka-producer-sut.jar"; the plain jar stays the main artifact for the embedded driver -->
+                    <finalName>kafka-producer</finalName>
+                    <classifier>sut</classifier>
+                    <!-- MODIFIED -->
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
