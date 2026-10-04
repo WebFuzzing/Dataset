@@ -181,7 +181,8 @@ public class ServerResource extends BaseResource {
     @POST
     public void reboot() throws StorageException {
         permissionsService.checkAdmin(getUserId());
-        System.exit(130);
+        // MODIFIED: exiting would kill the SUT (and the embedded driver's JVM) during fuzzing
+        // System.exit(130);
     }
 
 }

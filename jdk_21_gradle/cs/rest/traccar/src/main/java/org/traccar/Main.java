@@ -111,7 +111,8 @@ public final class Main {
         }
     }
 
-    public static void run(String configFile) {
+    // MODIFIED: returns the started services, so the embedded driver can stop them
+    public static List<LifecycleObject> run(String configFile) {
         try {
             injector = Guice.createInjector(new MainModule(configFile), new DatabaseModule(), new WebModule());
             logSystemInfo();
@@ -142,6 +143,8 @@ public final class Main {
                 }
                 injector.getInstance(ExecutorService.class).shutdown();
             }));
+            // MODIFIED
+            return services;
         } catch (Exception e) {
             Throwable unwrapped;
             if (e instanceof ProvisionException) {
@@ -152,6 +155,8 @@ public final class Main {
             LOGGER.error("Main method error", unwrapped);
             System.exit(1);
         }
+        // MODIFIED
+        return null;
     }
 
 }

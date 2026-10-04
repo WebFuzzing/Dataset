@@ -87,6 +87,7 @@ SUTS = [
     Sut("familie-ba-sak",True,SLEEP,JSON,["jdk_17_maven/cs/rest/familie-ba-sak/target/classes"]),
     Sut("features-service",False,SLEEP,JSON,["jdk_8_maven/cs/rest/original/features-service/target/classes"]),
     Sut("gdpr-kv",False,SLEEP,JSON,["jdk_21_gradle/cs/rest/gdpr-kv/build/classes"]),
+    Sut("traccar",True,SLEEP,JSON,["jdk_21_gradle/cs/rest/traccar/build/classes"]),
     Sut("genome-nexus",False,SLEEP,JSON,["jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes",
                                    "jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes",
                                    "jdk_8_maven/cs/rest-gui/genome-nexus/persistence/target/classes",
