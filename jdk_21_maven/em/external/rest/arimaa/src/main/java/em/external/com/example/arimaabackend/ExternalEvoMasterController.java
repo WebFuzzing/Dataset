@@ -76,11 +76,10 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private static final GenericContainer mysql = new GenericContainer(MYSQL_IMAGE)
             .withEnv("MYSQL_DATABASE", MYSQL_DATABASE)
             .withEnv("MYSQL_ROOT_PASSWORD", MYSQL_ROOT_PASSWORD)
-            .withCopyFileToContainer(MountableFile.forHostPath("cs/rest/arimaa/Database/mysql"), "/docker-entrypoint-initdb.d")
+            .withCopyFileToContainer(MountableFile.forClasspathResource("arimaa-mysql/"), "/docker-entrypoint-initdb.d")
             .withExposedPorts(MYSQL_PORT)
-            // First "ready for connections" is the temporary bootstrap server that runs the
-            // initdb.d scripts; the second is the real server, only up once they have finished.
-            .waitingFor(Wait.forLogMessage(".*ready for connections.*", 2))
+            // The bootstrap server running the initdb.d scripts listens on port 0; only the real one uses 3306.
+            .waitingFor(Wait.forLogMessage(".*mysqld: ready for connections.*port: 3306.*", 1))
             .withStartupTimeout(Duration.ofMinutes(3));
 
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
@@ -137,6 +136,8 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private String jarLocation;
 
+    private final String javaCommand;
+
     private Connection sqlConnection;
 
     private MongoClient mongoClient;
@@ -162,6 +163,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
         this.sutPort = sutPort;
         this.jarLocation = jarLocation;
         this.timeoutSeconds = timeoutSeconds;
+        this.javaCommand = command;
 
         setControllerPort(controllerPort);
         setJavaCommand(command);
@@ -258,7 +260,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private void runMigration() {
         try {
             ProcessBuilder pb = new ProcessBuilder(
-                    "java", "-jar", jarLocation,
+                    javaCommand, "-jar", jarLocation,
                     "--spring.profiles.active=migration",
                     "--spring.datasource.url=" + mysqlJdbcUrl(),
                     "--spring.datasource.username=" + MYSQL_APP_USER,
