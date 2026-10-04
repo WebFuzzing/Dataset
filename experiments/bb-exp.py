@@ -153,6 +153,7 @@ SUTS = [
     Sut("ohsome-api",False,SLEEP,JSON,["jdk_17_maven/cs/rest/ohsome-api/target/classes"]),
     Sut("pay-publicapi",True,SLEEP,JSON,["jdk_11_maven/cs/rest/pay-publicapi/target/classes"]),
     Sut("person-controller",False,SLEEP,JSON,["jdk_21_maven/cs/rest/person-controller/target/classes"]),
+    Sut("petclinic-rest",False,SLEEP,JSON,["jdk_17_maven/cs/rest/petclinic-rest/target/classes"]),
     Sut("proxyprint",True,SLEEP,JSON,["jdk_8_maven/cs/rest/original/proxyprint/target/classes"]),
     Sut("quartz-manager",True,SLEEP,JSON,["jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes",
                                           "jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes",

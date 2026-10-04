@@ -382,6 +382,9 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/
 /jdk_17_maven/em/embedded/rest/kafka-rest/target/
 /jdk_17_maven/em/external/rest/kafka-rest/target/
+/jdk_17_maven/cs/rest/petclinic-rest/target/
+/jdk_17_maven/em/embedded/rest/petclinic-rest/target/
+/jdk_17_maven/em/external/rest/petclinic-rest/target/
 /jdk_17_maven/em/embedded/rest/spring-rest-example/target/
 /jdk_17_maven/em/external/rest/spring-rest-example/target/
 
