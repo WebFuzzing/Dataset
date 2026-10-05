@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE properties SYSTEM 'http://java.sun.com/dtd/properties.dtd'>
 <properties>
-    <!-- WFD: no device protocol ports, no outgoing calls; schema and accounts are in traccar.mv.db, templates/ is copied to / -->
+    <!-- WFD: no device protocol ports, no outgoing calls; schema and accounts are in traccar.mv.db, templates/export (xlsx reports) is copied to / -->
     <entry key='web.port'>8080</entry>
     <entry key='web.path'>/mnt</entry>
     <entry key='web.override'>/tmp/override</entry>
