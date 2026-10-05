@@ -252,6 +252,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- MODIFIED -->
+                <configuration>
+                    <finalName>petclinic-rest</finalName>
+                    <classifier>sut</classifier>
+                </configuration>
+                <!-- MODIFIED -->
                 <executions>
                     <execution>
                         <!-- Spring Boot Actuator displays build-related information
