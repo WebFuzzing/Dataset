@@ -18,6 +18,7 @@
         <module>spring-rest-example</module>
         <module>digitalbanking</module>
         <module>kafka-rest</module>
+        <module>petclinic-rest</module>
 
 
         <!--        <module>signal-server</module>-->

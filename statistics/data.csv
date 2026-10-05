@@ -60,5 +60,7 @@ FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDE
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
 TRUE,movies-xml,REST,Java,JDK 21,Maven,22,2502,H2,LGPL,7,FALSE,https://github.com/suarezrominajulieta/movies-xml
 TRUE,kafka-rest,REST,Java,JDK 17,Maven,475,81418,Kafka,Confluent,50,FALSE,https://github.com/confluentinc/kafka-rest
+TRUE,management-cassandra,REST,Java,JDK 11,Maven,225,35096,Cassandra,Apache,63,FALSE,https://github.com/k8ssandra/management-api-for-apache-cassandra
+TRUE,petclinic-rest,REST,Java,JDK 17,Maven,109,8675,H2,Apache,43,FALSE,https://github.com/spring-petclinic/spring-petclinic-rest
 TRUE,traccar,REST,Java,JDK 21,Gradle,1478,141962,H2,Apache,117,TRUE,https://github.com/traccar/traccar
 

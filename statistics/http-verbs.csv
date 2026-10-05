@@ -20,6 +20,7 @@ kafka-rest,33,3,8,5,0,0,1,0,0,0
 komga,103,11,30,17,0,0,13,0,0,0
 languagetool,1,0,1,0,0,0,0,0,0,0
 lovemining,12,0,4,1,0,0,1,0,0,0
+management-cassandra,20,1,38,4,0,0,0,0,0,0
 market,7,3,2,1,0,0,0,0,0,0
 microcks,47,9,20,6,2,2,2,0,0,0
 movies-xml,3,1,1,1,0,0,1,0,0,0
@@ -27,6 +28,7 @@ ocvn,96,0,96,0,0,0,0,0,0,0
 ohsome-api,67,0,67,0,0,0,0,0,0,0
 pay-publicapi,9,0,7,0,0,0,0,0,0,0
 person-controller,5,2,2,3,0,0,0,0,0,0
+petclinic-rest,16,8,9,7,1,1,1,0,0,0
 proxyprint,48,14,30,10,5,4,4,0,0,0
 quartz-manager,8,1,2,0,0,0,0,0,0,0
 redis-sample,4,0,0,0,0,0,0,0,0,0

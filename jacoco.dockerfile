@@ -72,6 +72,8 @@ COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/uk/
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes
 COPY jdk_21_maven/cs/rest/lovemining/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/lovemining/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-core/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-core/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-rest/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-rest/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-web/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-web/target/classes
@@ -89,6 +91,7 @@ COPY jdk_8_maven/cs/rest-gui/ocvn/web/target/classes  ${CLASS_FILES}/jdk_8_maven
 COPY jdk_17_maven/cs/rest/ohsome-api/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/ohsome-api/target/classes
 COPY jdk_11_maven/cs/rest/pay-publicapi/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/pay-publicapi/target/classes
 COPY jdk_21_maven/cs/rest/person-controller/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/person-controller/target/classes
+COPY jdk_17_maven/cs/rest/petclinic-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/petclinic-rest/target/classes
 COPY jdk_8_maven/cs/rest/original/proxyprint/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/proxyprint/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes

@@ -21,6 +21,8 @@
     <jakarta.activation.version>2.1.4</jakarta.activation.version>
     <jakarta.validation.version>3.1.1</jakarta.validation.version>
     <jsr305.version>3.0.2</jsr305.version>
+    <!-- MODIFIED: honour -DskipTests, the tests need Linux and a Cassandra download -->
+    <skip.surefire.tests>${skipTests}</skip.surefire.tests>
   </properties>
   <dependencies>
     <dependency>
@@ -440,6 +442,8 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <!-- MODIFIED -->
+              <finalName>management-cassandra-sut</finalName>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
