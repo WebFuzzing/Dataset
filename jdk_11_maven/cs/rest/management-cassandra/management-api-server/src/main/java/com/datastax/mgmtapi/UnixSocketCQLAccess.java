@@ -71,8 +71,16 @@ public class UnixSocketCQLAccess {
   private final CqlSession session;
   private final EndPoint unixSocketEndpoint;
 
+  // MODIFIED: WFD, "host:port" of a TCP bridge to the agent's unix socket (no epoll, e.g. Windows)
+  public static final String TCP_BRIDGE_PROPERTY = "mgmtapi.cql.tcp";
+
+  // MODIFIED
+  public static boolean useTcpBridge() {
+    return System.getProperty(TCP_BRIDGE_PROPERTY) != null;
+  }
+
   public static Optional<CqlSession> get(File unixSocket) {
-    if (!unixSocket.exists()) {
+    if (!useTcpBridge() && !unixSocket.exists()) { // MODIFIED
       logger.debug(
           "Cannot create Driver CQLSession as the driver socket has not been created. This should resolve once Cassandra has started and created the socket at {}",
           unixSocket.getAbsolutePath());
@@ -101,11 +109,20 @@ public class UnixSocketCQLAccess {
   }
 
   private UnixSocketCQLAccess(File unixSocket) {
+    // MODIFIED
+    final String bridge = System.getProperty(TCP_BRIDGE_PROPERTY);
+    final SocketAddress bridgeAddress =
+        bridge == null
+            ? null
+            : new java.net.InetSocketAddress(
+                bridge.substring(0, bridge.lastIndexOf(':')),
+                Integer.parseInt(bridge.substring(bridge.lastIndexOf(':') + 1)));
     unixSocketEndpoint =
         new EndPoint() {
           @Override
           public SocketAddress resolve() {
-            return new DomainSocketAddress(unixSocket);
+            // MODIFIED
+            return bridgeAddress != null ? bridgeAddress : new DomainSocketAddress(unixSocket);
           }
 
           @Override
@@ -233,6 +250,8 @@ public class UnixSocketCQLAccess {
 
         @Override
         public Class<? extends Channel> channelClass() {
+          // MODIFIED
+          if (useTcpBridge()) return io.netty.channel.socket.nio.NioSocketChannel.class;
           return NativeTransport.nativeDomainSocketChannelClass();
         }
 
@@ -381,6 +400,8 @@ public class UnixSocketCQLAccess {
   }
 
   private static EventLoopGroup eventLoop() {
+    // MODIFIED
+    if (useTcpBridge()) return new io.netty.channel.nio.NioEventLoopGroup(2);
     return NativeTransport.nativeEventLoopGroup(2);
   }
 }

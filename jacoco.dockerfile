@@ -72,6 +72,8 @@ COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/uk/
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes
 COPY jdk_21_maven/cs/rest/lovemining/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/lovemining/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-core/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-core/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-rest/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-rest/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-web/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-web/target/classes

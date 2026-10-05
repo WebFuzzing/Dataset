@@ -14,6 +14,8 @@
   <packaging>pom</packaging>
   <name>DataStax Management API for Apache Cassandra</name>
   <properties>
+    <!-- MODIFIED: its LF check fails on Windows checkouts (CRLF), not needed for fuzzing -->
+    <xml-format.skip>true</xml-format.skip>
     <build.version.file>build_version.sh</build.version.file>
     <revision>0.1.0-SNAPSHOT</revision>
     <driver.version>4.19.2</driver.version>

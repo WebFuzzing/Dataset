@@ -461,6 +461,12 @@ public class Cli implements Runnable {
   }
 
   void preflightChecks() {
+    // MODIFIED: over the TCP bridge there is no local db binary, unix socket or epoll to check
+    if (UnixSocketCQLAccess.useTcpBridge()) {
+      checkTLSDeps();
+      checkUnixSocket();
+      return;
+    }
     checkNettyDeps();
     checkTLSDeps();
     checkDbCmd();
