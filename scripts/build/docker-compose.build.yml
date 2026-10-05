@@ -131,6 +131,7 @@ services:
         cp cs/rest/pay-publicapi/target/pay-publicapi-sut.jar /dist/
         cp cs/rest/http-patch-spring/target/http-patch-spring-sut.jar /dist/
         cp cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/quartz-manager-sut.jar /dist/
+        cp cs/rest/management-cassandra/management-api-server/target/management-cassandra-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/rest/tracking-system/target/tracking-system-evomaster-runner.jar /dist/
           cp em/external/rest/cwa-verification/target/cwa-verification-evomaster-runner.jar /dist/
@@ -139,6 +140,7 @@ services:
           cp em/external/rest/pay-publicapi/target/pay-publicapi-evomaster-runner.jar /dist/
           cp em/external/rest/http-patch-spring/target/http-patch-spring-evomaster-runner.jar /dist/
           cp em/external/rest/quartz-manager/target/quartz-manager-evomaster-runner.jar /dist/
+          cp em/external/rest/management-cassandra/target/management-cassandra-evomaster-runner.jar /dist/
         fi
         echo 'JDK 11 Maven build completed'
 
@@ -198,6 +200,8 @@ services:
         cp cs/rest/ohsome-api/target/ohsome-api-sut.jar /dist/
         cp cs/rest/spring-rest-example/target/spring-rest-example-sut.jar /dist/
         cp cs/rest/digitalbanking/target/digitalbanking-sut.jar /dist/
+        cp cs/rest/kafka-rest/kafka-rest/target/kafka-rest-sut.jar /dist/
+        cp cs/rest/petclinic-rest/target/petclinic-rest-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
           cp em/external/web/spring-petclinic/target/spring-petclinic-evomaster-runner.jar /dist/
           cp em/external/grpc/signal-registration/target/signal-registration-evomaster-runner.jar /dist/
@@ -206,6 +210,8 @@ services:
           cp em/external/rest/ohsome-api/target/ohsome-api-evomaster-runner.jar /dist/
           cp em/external/rest/spring-rest-example/target/spring-rest-example-evomaster-runner.jar /dist/
           cp em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar /dist/
+          cp em/external/rest/kafka-rest/target/kafka-rest-evomaster-runner.jar /dist/
+          cp em/external/rest/petclinic-rest/target/petclinic-rest-evomaster-runner.jar /dist/
         fi
         echo 'JDK 17 Maven build completed'
 

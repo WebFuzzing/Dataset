@@ -378,6 +378,13 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_17_maven/cs/rest/digitalbanking/target/
 /jdk_17_maven/em/embedded/rest/digitalbanking/target/
 /jdk_17_maven/em/external/rest/digitalbanking/target/
+/jdk_17_maven/cs/rest/kafka-rest/target/
+/jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/
+/jdk_17_maven/em/embedded/rest/kafka-rest/target/
+/jdk_17_maven/em/external/rest/kafka-rest/target/
+/jdk_17_maven/cs/rest/petclinic-rest/target/
+/jdk_17_maven/em/embedded/rest/petclinic-rest/target/
+/jdk_17_maven/em/external/rest/petclinic-rest/target/
 /jdk_17_maven/em/embedded/rest/spring-rest-example/target/
 /jdk_17_maven/em/external/rest/spring-rest-example/target/
 
@@ -407,6 +414,8 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_11_maven/cs/rest-gui/quartz-manager/target
 /jdk_11_maven/em/embedded/rest/quartz-manager/target
 /jdk_11_maven/em/external/rest/quartz-manager/target
+/jdk_11_maven/em/embedded/rest/management-cassandra/target
+/jdk_11_maven/em/external/rest/management-cassandra/target
 
 /jdk_8_maven/cs/rest/original/spring-ecommerce/target
 /jdk_8_maven/em/embedded/rest/spring-ecommerce/target

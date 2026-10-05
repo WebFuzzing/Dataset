@@ -266,6 +266,10 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.2</version>
                 <configuration>
+                    <!--          MODIFIED-->
+                    <!-- WFD expects "kafka-rest-sut.jar": the standalone assembly, see its id -->
+                    <finalName>kafka-rest</finalName>
+                    <!--          MODIFIED-->
                     <descriptors>
                         <descriptor>src/assembly/development.xml</descriptor>
                         <descriptor>src/assembly/package.xml</descriptor>

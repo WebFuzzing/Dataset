@@ -38,6 +38,11 @@
             <artifactId>testcontainers</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,0 +1,196 @@
+# Copyright DataStax, Inc, 2017
+#   Please review the included LICENSE file for more information.
+#
+ARG DSE_VERSION=6.8.64
+ARG DS_BASE_DEBIAN=ds-base-ubuntu-openjdk-11
+ARG BASETAG=11.0.27-6-us1-0ubuntu1-20.04
+FROM datastax/dse-server:${DSE_VERSION} AS dse-server-prep
+
+## Set up configuration variables
+#ENV DSE_HOME=/opt/dse
+#ENV DSE_AGENT_HOME=/opt/agent
+#
+## Get commandline parameters
+#ARG DSE_VERSION
+#ARG URL_PREFIX=https://downloads.datastax.com/enterprise
+#ARG TARBALL=dse-${DSE_VERSION}-bin.tar.gz
+#ARG DOWNLOAD_URL=${URL_PREFIX}/${TARBALL}
+#
+#ARG DSE_AGENT_VERSION=6.8.45
+#ARG DSE_AGENT_TARBALL=datastax-agent-${DSE_AGENT_VERSION}.tar.gz
+#ARG DSE_AGENT_DOWNLOAD_URL=${URL_PREFIX}/${DSE_AGENT_TARBALL}
+#ADD ${DOWNLOAD_URL} /${TARBALL}
+#ADD ${DSE_AGENT_DOWNLOAD_URL} /${DSE_AGENT_TARBALL}
+#RUN set -x \
+## Unpack tarball
+#    && mkdir -p "$DSE_HOME" \
+#    && tar -C "$DSE_HOME" --strip-components=1 -xzf /${TARBALL} \
+#    && rm /${TARBALL} \
+## Unpack Agent tarball
+#    && mkdir -p "$DSE_AGENT_HOME" \
+#    && tar -C "$DSE_AGENT_HOME" --strip-components=1 -xzf /${DSE_AGENT_TARBALL} \
+#    && rm /${DSE_AGENT_TARBALL} \
+## Use hard links to reduce the size impact of duplicate jars
+#    && apt-get update \
+#    && apt-get install -y --install-recommends rdfind \
+#    && rdfind -makehardlinks true -makeresultsfile false ${DSE_HOME} \
+#    && chmod -R g+w ${DSE_HOME} ${DSE_AGENT_HOME}
+#COPY dse/patches/remove-writable.patch /tmp
+#RUN patch ${DSE_HOME}/bin/dse < /tmp/remove-writable.patch
+
+#############################################################
+
+# The commented section below is what would be used to bundle the Management API
+# released artifacts into the DSE image. Since images built in this project are
+# being used to test the artifacts, we want to build them from source and embed
+# them into the image
+
+#FROM debian:buster as mgmtapi-setup
+#
+#WORKDIR /
+#
+#ENV MAAC_PATH /opt/management-api
+#ENV DSE_HOME /opt/dse
+#
+#ENV MGMTAPI_V=v0.1.45
+#
+#RUN \
+#  set -x \
+#  && apt-get update -y \
+#  && apt-get install -y wget unzip \
+#  && mkdir $MAAC_PATH \
+#  && mkdir $DSE_HOME \
+#  && mkdir /tmp/mgmtapi-jars \
+#  && cd /tmp/mgmtapi-jars \
+#  && wget -q "https://github.com/datastax/management-api-for-apache-cassandra/releases/download/$MGMTAPI_V/jars.zip" \
+#  && unzip jars.zip \
+#  && rm jars.zip \
+#  && find /tmp/mgmtapi-jars -name '*.jar' -type f -exec mv -t $MAAC_PATH -i '{}' + \
+#  && rm $MAAC_PATH/datastax-mgmtapi-agent-3* \
+#  && rm $MAAC_PATH/datastax-mgmtapi-agent-4* \
+#  && cd /tmp \
+#  && rm -rf /tmp/mgmtapi-jars \
+#  && echo DONE
+
+FROM --platform=$BUILDPLATFORM alpine:latest AS mgmtapi-setup
+
+WORKDIR /build
+
+ENV MAAC_PATH=/opt/management-api
+ENV DSE_HOME=/opt/dse
+
+COPY management-api-agent-dse-6.8/target/datastax-mgmtapi-agent*.jar ./
+COPY management-api-server/target/datastax-mgmtapi-server*.jar ./
+RUN mkdir -m 775 ${MAAC_PATH} && \
+    find /build -type f -name "datastax-mgmtapi*.jar" -exec mv -t $MAAC_PATH -i '{}' + && \
+    rm -rf $MAAC_PATH/datastax-mgmtapi*test* && \
+    cd ${MAAC_PATH} && \
+    ln -s datastax-mgmtapi-agent*.jar datastax-mgmtapi-agent.jar && \
+    ln -s datastax-mgmtapi-server*.jar datastax-mgmtapi-server.jar && \
+    chmod -R g+w ${MAAC_PATH}
+#############################################################
+
+###
+# Download CDC Agent jarfile
+###
+ARG CDC_AGENT_VERSION=2.3.2
+ARG CDC_AGENT_EDITION=agent-dse4
+# Download CDC agent
+ENV CDC_AGENT_PATH=/opt/cdc_agent
+ADD "https://github.com/datastax/cdc-apache-cassandra/releases/download/v${CDC_AGENT_VERSION}/${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar" ./
+RUN mkdir -m 775 ${CDC_AGENT_PATH} && \
+  mv ${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar ${CDC_AGENT_PATH}/ && \
+  cd ${CDC_AGENT_PATH}/ && \
+  ln -s ${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar cdc-agent.jar && \
+  chmod -R g+w ${CDC_AGENT_PATH}
+
+FROM datastax/${DS_BASE_DEBIAN}:${BASETAG} AS dse
+ARG DSE_VERSION
+ENV DSE_VERSION=${DSE_VERSION}
+
+LABEL maintainer="DataStax, Inc <info@datastax.com>"
+LABEL name="dse-server"
+LABEL vendor="DataStax, Inc"
+LABEL release="$DSE_VERSION"
+
+ENV DSE_HOME=/opt/dse
+ENV DSE_AGENT_HOME=/opt/agent
+ENV CASSANDRA_CONF=${DSE_HOME}/resources/cassandra/conf
+ENV MAAC_PATH=/opt/management-api
+ENV CDC_AGENT_PATH=/opt/cdc_agent
+ENV MGMT_AGENT_JAR="${MAAC_PATH}/datastax-mgmtapi-agent.jar"
+
+RUN set -x \
+# Add DSE user
+    && groupadd -r dse --gid=999 \
+    && useradd -m -d "$DSE_HOME" -r -g dse -G root --uid=999 dse
+
+COPY --chown=dse:root dse/files /
+
+COPY --chown=dse:root --from=dse-server-prep $DSE_HOME $DSE_HOME
+COPY --chown=dse:root --from=dse-server-prep $DSE_AGENT_HOME $DSE_AGENT_HOME
+
+# Create folders
+RUN (for dir in /var/lib/cassandra \
+                /var/lib/dsefs \
+                /var/lib/datastax-agent \
+                /var/log/cassandra \
+                /config ; do \
+        mkdir -p $dir && chown -R dse:root $dir && chmod 775 $dir ; \
+    done )
+
+# Use OSS Management API
+RUN rm -rf $DSE_HOME/resources/management-api; \
+  # remove cassandra-topology.properties file
+  rm "${CASSANDRA_CONF}/cassandra-topology.properties"
+COPY --chown=dse:root --from=mgmtapi-setup $MAAC_PATH $MAAC_PATH
+
+# Add CDC Agent
+COPY --chown=dse:root --from=mgmtapi-setup $CDC_AGENT_PATH $CDC_AGENT_PATH
+
+# Add management-api
+RUN if ! grep -qxF "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" < ${CASSANDRA_CONF}/cassandra-env.sh ; then \
+      echo "" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+      echo "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" >> ${CASSANDRA_CONF}/cassandra-env.sh ; \
+  fi
+# Add MCAC check to cassandra-env.sh
+RUN if ! grep -qxf "JVM_OPTS=\"\$JVM_OPTS -Dinsights.default_mode=disabled\"" < ${CASSANDRA_CONF}/cassandra-env.sh ; then \
+    echo "" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "if [ ! -z \"\$MGMT_API_DISABLE_MCAC\" ]; then" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "  JVM_OPTS=\"\$JVM_OPTS -Dinsights.default_mode=disabled\"" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "fi" >> ${CASSANDRA_CONF}/cassandra-env.sh ; \
+  fi
+# Fix COPY directory modes
+RUN chmod g+w ${MAAC_PATH} ${DSE_HOME} ${DSE_AGENT_HOME} ${CDC_AGENT_PATH}
+
+ENV PATH=$DSE_HOME/bin:$DSE_HOME/resources/cassandra/tools/bin:$PATH
+ENV HOME=$DSE_HOME
+WORKDIR $HOME
+
+USER dse
+
+# Expose DSE folders
+VOLUME ["/var/lib/cassandra", "/var/lib/dsefs", "/var/log/cassandra"]
+
+# CASSANDRA PORTS (INTRA-NODE, TLS INTRA-NODE, JMX, CQL, THRIFT, DSEFS INTRA-NODE, INTRA-NODE MESSAGING SERVICE)
+EXPOSE 7000 7001 7199 8609 9042 9160
+
+# DSE SEARCH (SOLR)
+EXPOSE 8983 8984
+
+# DSE ANALYTICS (SPARK)
+EXPOSE 4040 7077 7080 7081 8090 9999 18080
+
+# DSE GRAPH
+EXPOSE 8182
+
+# DSEFS
+EXPOSE 5598 5599
+
+EXPOSE 10000
+
+# DSE METRICS REPORTER PORT
+EXPOSE 9103 9000
+
+# Run DSE in foreground by default
+ENTRYPOINT [ "/entrypoint.sh", "dse", "cassandra", "-f" ]
