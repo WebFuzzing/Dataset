@@ -1,0 +1,1 @@
+DROP TABLE note_book;
