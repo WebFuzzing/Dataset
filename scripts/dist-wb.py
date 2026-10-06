@@ -409,6 +409,8 @@ def build_jdk_21_gradle():
     # Copy JAR files
     copy(folder + "/cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar", DIST)
     copy(folder + "/em/external/rest/gdpr-kv/build/libs/gdpr-kv-evomaster-runner.jar", DIST)
+    copy(folder + "/cs/rest/traccar/build/libs/traccar-sut.jar", DIST)
+    copy(folder + "/em/external/rest/traccar/build/libs/traccar-evomaster-runner.jar", DIST)
 
 
 # Building JavaScript projects

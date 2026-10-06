@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (51)
+### REST: Java/Kotlin (52)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -182,6 +182,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Testing System** (MIT), [jdk_21_maven/cs/rest/testing-system](jdk_21_maven/cs/rest/testing-system), from [https://github.com/mirodilkamilov/testing-system](https://github.com/mirodilkamilov/testing-system)
 
 * **Tiltaksgjennomføring** (MIT), [jdk_17_maven/cs/rest/tiltaksgjennomforing](jdk_17_maven/cs/rest/tiltaksgjennomforing), from [https://github.com/navikt/tiltaksgjennomforing-api](https://github.com/navikt/tiltaksgjennomforing-api)
+
+* **Traccar** (Apache), [jdk_21_gradle/cs/rest/traccar](jdk_21_gradle/cs/rest/traccar), from [https://github.com/traccar/traccar](https://github.com/traccar/traccar)
 
 * **User Management** (MIT), [jdk_8_maven/cs/rest/original/user-management](jdk_8_maven/cs/rest/original/user-management), from [https://github.com/andreagiassi/microservice-rbac-user-management](https://github.com/andreagiassi/microservice-rbac-user-management)
 

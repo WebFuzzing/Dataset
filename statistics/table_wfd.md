@@ -55,6 +55,7 @@
 |REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||
 |REST|__testing-system__|3692|72|11|Java|JDK 21|Maven|PostgreSQL, Redis|&check;|
 |REST|__tiltaksgjennomforing__|27316|472|79|Java|JDK 17|Maven|PostgreSQL|&check;|
+|REST|__traccar__|141962|1478|117|Java|JDK 21|Gradle|H2|&check;|
 |REST|__tracking-system__|5947|87|67|Java|JDK 11|Maven|H2|&check;|
 |REST|__user-management__|4274|69|21|Java|JDK 8|Maven|MySQL||
 |REST|__webgoat__|27638|355|204|Java|JDK 21|Maven|H2|&check;|

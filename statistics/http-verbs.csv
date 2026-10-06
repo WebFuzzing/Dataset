@@ -46,6 +46,7 @@ spring-rest-example,2,1,3,3,0,0,0,0,0,0
 swagger-petstore,8,2,6,3,0,0,0,0,0,0
 testing-system,7,0,4,0,0,0,0,0,0,0
 tiltaksgjennomforing,24,4,51,0,0,0,0,0,0,0
+traccar,59,13,29,16,0,0,0,0,0,0
 tracking-system,27,12,14,14,0,0,0,0,0,0
 user-management,7,2,7,5,0,0,0,0,0,0
 webgoat,50,10,112,8,8,8,8,0,0,0

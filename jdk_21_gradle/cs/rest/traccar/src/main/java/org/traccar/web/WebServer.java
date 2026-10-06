@@ -244,4 +244,14 @@ public class WebServer implements LifecycleObject {
         }
     }
 
+    // MODIFIED: expose the bound port, the embedded driver starts the server on port 0
+    public int getJettyPort() {
+        return ((org.eclipse.jetty.server.NetworkConnector) server.getConnectors()[0]).getLocalPort();
+    }
+
+    // MODIFIED: expose the server state for the embedded driver
+    public boolean isRunning() {
+        return server.isRunning();
+    }
+
 }
