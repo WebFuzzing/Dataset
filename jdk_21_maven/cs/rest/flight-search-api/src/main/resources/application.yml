@@ -1,0 +1,32 @@
+server:
+  port: 1133
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  data:
+    mongodb:
+      host: ${MONGO_DB_HOST:localhost}
+      port: ${MONGO_DB_PORT:27017}
+      database: ${MONGO_DB_NAME:flightdatabase}
+  application:
+    name: flightsearchapi
+
+# SWAGGER
+springdoc:
+  api-docs:
+    enabled: true
+  show-actuator: true
+
+# Prometheus
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+          - prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
