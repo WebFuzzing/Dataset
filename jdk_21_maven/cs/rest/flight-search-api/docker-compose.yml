@@ -1,0 +1,68 @@
+services:
+
+  mongodb:
+    image: "mongo:latest"
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - flightsearchapinetwork
+
+
+  flightsearchapi:
+    image: 'flightsearchapi:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flightsearchapi
+    restart: on-failure
+    env_file:
+      - .env  # Use the .env file for environment variables
+    ports:
+      - "1133:1133"
+    environment:
+      - server.port=1133
+      - spring.data.mongodb.host=mongodb
+      - spring.data.mongodb.port=${MONGO_DB_PORT}
+      - spring.data.mongodb.database=${MONGO_DB_NAME}
+    depends_on:
+      - mongodb
+    networks:
+      - flightsearchapinetwork
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./data/prometheus/config:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - flightsearchapinetwork
+
+  grafana:
+    image: "grafana/grafana-oss:latest"
+    pull_policy: always
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_DOMAIN=localhost
+    networks:
+      - flightsearchapinetwork
+
+volumes:
+  mongodb_data_container:
+
+networks:
+  flightsearchapinetwork:

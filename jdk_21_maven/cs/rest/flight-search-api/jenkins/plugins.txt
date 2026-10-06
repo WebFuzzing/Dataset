@@ -1,0 +1,7 @@
+workflow-aggregator
+git
+job-dsl
+ws-cleanup
+docker-plugin
+docker-workflow
+docker-commons

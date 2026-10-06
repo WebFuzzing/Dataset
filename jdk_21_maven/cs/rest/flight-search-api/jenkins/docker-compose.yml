@@ -1,0 +1,27 @@
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jenkins-server
+    ports:
+      - "8080:8080"    # Expose Jenkins UI on port 8080
+      - "50000:50000"  # Expose port for Jenkins agents
+    volumes:
+      - jenkins_home:/var/jenkins_home   # Persistent Jenkins data
+      - /var/run/docker.sock.raw:/var/run/docker.sock # Mount Docker socket for Docker builds
+      - ../k8s:/var/jenkins_home/k8s # Mount Kubernetes configuration files (optional)
+      - ./init.groovy.d:/var/jenkins_home/init.groovy.d # Mount Jenkins init scripts (optional)
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false" # Skip setup wizard (optional)
+    user: root # Run as root to allow installing dependencies
+    networks:
+      - common-network
+
+volumes:
+  jenkins_home:
+
+networks:
+  common-network:
+    driver: bridge
