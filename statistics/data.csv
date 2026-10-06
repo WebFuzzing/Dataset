@@ -63,4 +63,5 @@ TRUE,kafka-rest,REST,Java,JDK 17,Maven,475,81418,Kafka,Confluent,50,FALSE,https:
 TRUE,management-cassandra,REST,Java,JDK 11,Maven,225,35096,Cassandra,Apache,63,FALSE,https://github.com/k8ssandra/management-api-for-apache-cassandra
 TRUE,petclinic-rest,REST,Java,JDK 17,Maven,109,8675,H2,Apache,43,FALSE,https://github.com/spring-petclinic/spring-petclinic-rest
 TRUE,traccar,REST,Java,JDK 21,Gradle,1478,141962,H2,Apache,117,TRUE,https://github.com/traccar/traccar
+TRUE,flight-search-api,REST,Java,JDK 21,Maven,194,14440,MongoDB,MIT,40,TRUE,https://github.com/Rapter1990/flightsearchapi
 

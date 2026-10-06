@@ -193,6 +193,7 @@ SUTS = [
     Sut("erc20-rest-service", JDK_8),
     Sut("familie-ba-sak",JDK_17),
     Sut("features-service",  JDK_8),
+    Sut("flight-search-api", JDK_21),
     Sut("gdpr-kv", JDK_21),
     Sut("traccar", JDK_21),
     Sut("genome-nexus",  JDK_8),
