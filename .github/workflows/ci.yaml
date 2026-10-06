@@ -7,6 +7,7 @@ on:
     tags-ignore:
       - '**'
     paths:
+      - '.github/workflows/ci.yaml'
       - 'scripts/dist-docker.py'
       - 'jdk_8_maven/**'
       - 'jdk_11_maven/**'

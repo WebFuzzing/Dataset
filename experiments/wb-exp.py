@@ -292,6 +292,11 @@ JAVA_HOME_21 = os.environ.get("JAVA_HOME_21", "")
 if JAVA_HOME_21 == "":
         raise Exception("You must specify a JAVA_HOME_21 env variable specifying where JDK 21 is installed")
 
+JAVA_HOME_25 = os.environ.get("JAVA_HOME_25", "")
+if JAVA_HOME_25 == "":
+        raise Exception("You must specify a JAVA_HOME_25 env variable specifying where JDK 25 is installed")
+
+
 JACOCO_AGENT = "not-defined"
 JACOCO_CLI = "not-defined"
 
@@ -514,6 +519,8 @@ def getJavaExeByJDK(platform):
         path = JAVA_HOME_17 +"/bin/java"
     elif platform == JDK_21:
         path = JAVA_HOME_21 +"/bin/java"
+    elif platform == JDK_25:
+            path = JAVA_HOME_25 +"/bin/java"
     else:
         raise Exception("ERROR: unhandled JVM version: " + platform)
 
