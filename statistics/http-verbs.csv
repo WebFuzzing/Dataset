@@ -24,6 +24,7 @@ management-cassandra,20,1,38,4,0,0,0,0,0,0
 market,7,3,2,1,0,0,0,0,0,0
 microcks,47,9,20,6,2,2,2,0,0,0
 movies-xml,3,1,1,1,0,0,1,0,0,0
+notebook-manager,2,0,1,1,0,0,1,0,0,0
 ocvn,96,0,96,0,0,0,0,0,0,0
 ohsome-api,67,0,67,0,0,0,0,0,0,0
 pay-publicapi,9,0,7,0,0,0,0,0,0,0

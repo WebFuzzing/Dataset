@@ -420,6 +420,9 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_8_maven/cs/rest/original/spring-ecommerce/target
 /jdk_8_maven/em/embedded/rest/spring-ecommerce/target
 /jdk_8_maven/em/external/rest/spring-ecommerce/target
+/jdk_8_maven/cs/rest/original/notebook-manager/target/
+/jdk_8_maven/em/embedded/rest/notebook-manager/target/
+/jdk_8_maven/em/external/rest/notebook-manager/target/
 
 /jdk_21_maven/cs/rest-gui/microcks/target
 /jdk_21_maven/cs/rest-gui/microcks/commons/model/target
