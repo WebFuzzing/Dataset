@@ -10,43 +10,46 @@ on:
 jobs:
 
 
-  publish-docker-jacoco:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout WFD
-        uses: actions/checkout@v6
-      - name: Build All With Docker
-        run: python scripts/dist-docker.py
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: webfuzzing/wfd-jacoco
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-      - name: Build and push Docker
-        uses: docker/build-push-action@v5
-        with:
-          file: jacoco.dockerfile
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+#  publish-docker-jacoco:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout WFD
+#        uses: actions/checkout@v6
+#      - name: Build All With Docker
+#        run: python scripts/dist-docker.py
+#      - name: Docker meta
+#        id: meta
+#        uses: docker/metadata-action@v5
+#        with:
+#          images: webfuzzing/wfd-jacoco
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v4
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v4
+#      - name: Build and push Docker
+#        uses: docker/build-push-action@v5
+#        with:
+#          file: jacoco.dockerfile
+#          context: .
+#          push: true
+#          platforms: linux/amd64,linux/arm64
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
 
   publish-docker-wfd:
     # jacoco.dockerfile requires building WFD, whereas wfd.dockerfile only needs static files.
     # As such, we don't build it if former fails
-    needs: publish-docker-jacoco
+#    needs: publish-docker-jacoco
     runs-on: ubuntu-latest
     steps:
+      # Only check-out, do not build
+      - name: Checkout WFD
+        uses: actions/checkout@v6
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
