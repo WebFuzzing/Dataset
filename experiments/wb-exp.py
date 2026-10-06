@@ -803,6 +803,10 @@ def is_float(input):
     return True
 
 
+def get_parameters(names, value):
+    return [ParameterSetting(s, value) for s in names]
+
+
 ############################################################################
 ### Custom
 ### Following will need to be changed based on what kind of experiments
