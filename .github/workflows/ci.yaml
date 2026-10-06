@@ -6,6 +6,19 @@ on:
       - 'master'  # issue with dependency with EvoMaster releases
     tags-ignore:
       - '**'
+    paths:
+      - 'scripts/dist-docker.py'
+      - 'jdk_8_maven/**'
+      - 'jdk_11_maven/**'
+      - 'jdk_17_maven/**'
+      - 'jdk_21_maven/**'
+      - 'jdk_25_maven/**'
+      - 'jdk_8_gradle/**'
+      - 'jdk_11_gradle/**'
+      - 'jdk_17_gradle/**'
+      - 'jdk_21_gradle/**'
+      - 'jdk_25_gradle/**'
+
 
 jobs:
 
