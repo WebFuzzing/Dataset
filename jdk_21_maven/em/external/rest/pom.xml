@@ -21,6 +21,7 @@
         <module>lovemining</module>
         <module>movies-xml</module>
         <module>testing-system</module>
+        <module>flight-search-api</module>
     </modules>
 
 </project>

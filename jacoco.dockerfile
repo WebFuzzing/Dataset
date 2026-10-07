@@ -22,6 +22,7 @@ COPY jdk_11_maven/cs/rest/cwa-verification-server/target/classes  ${CLASS_FILES}
 COPY jdk_8_gradle/cs/rest/erc20-rest-service/build/classes  ${CLASS_FILES}/jdk_8_gradle/cs/rest/erc20-rest-service/build/classes
 COPY jdk_17_maven/cs/rest/familie-ba-sak/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/familie-ba-sak/target/classes
 COPY jdk_8_maven/cs/rest/original/features-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/features-service/target/classes
+COPY jdk_21_maven/cs/rest/flight-search-api/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/flight-search-api/target/classes
 COPY jdk_21_gradle/cs/rest/gdpr-kv/build/classes  ${CLASS_FILES}/jdk_21_gradle/cs/rest/gdpr-kv/build/classes
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes
