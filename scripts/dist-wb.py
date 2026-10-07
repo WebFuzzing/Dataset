@@ -322,6 +322,8 @@ def build_jdk_21_maven():
     copy(folder + "/em/external/rest/movies-xml/target/movies-xml-evomaster-runner.jar", DIST)
     copy(folder + "/cs/rest/testing-system/target/testing-system-sut.jar", DIST)
     copy(folder + "/em/external/rest/testing-system/target/testing-system-evomaster-runner.jar", DIST)
+    copy(folder + "/cs/rest/flight-search-api/target/flight-search-api-sut.jar", DIST)
+    copy(folder + "/em/external/rest/flight-search-api/target/flight-search-api-evomaster-runner.jar", DIST)
 
     copy(folder + "/cs/rest-gui/webgoat/target/webgoat-sut.jar", DIST)
     copy(folder + "/em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar", DIST)
