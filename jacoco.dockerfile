@@ -93,6 +93,7 @@ COPY jdk_17_maven/cs/rest/ohsome-api/target/classes  ${CLASS_FILES}/jdk_17_maven
 COPY jdk_11_maven/cs/rest/pay-publicapi/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/pay-publicapi/target/classes
 COPY jdk_21_maven/cs/rest/person-controller/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/person-controller/target/classes
 COPY jdk_17_maven/cs/rest/petclinic-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/petclinic-rest/target/classes
+COPY jdk_21_maven/cs/rest/pn-paper-tracker/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/pn-paper-tracker/target/classes
 COPY jdk_8_maven/cs/rest/original/proxyprint/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/proxyprint/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes

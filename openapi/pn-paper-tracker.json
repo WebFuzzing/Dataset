@@ -1,0 +1,1122 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Pn-paper-tracker",
+    "termsOfService": "https://termofservice.it",
+    "x-api-id": "api-paper-tracker-private",
+    "x-summary": "OpenAPI servizio Paper tracker",
+    "description": "## Abstract\n  Questo servizio ha il compito di:\n    - Ricevere gli aggiornamenti di spedizione provenienti dal sistema pn-external-channels (consolidatore);\n    - Validare gli eventi ricevuti;\n    - Validare i documenti allegati tramite un servizio OCR/AI;\n    - Tracciare ogni singolo tentativo di spedizione verso un destinatario;\n    - Inoltrare gli eventi validati al workflow analogico.",
+    "contact": {
+      "email": "pn@pagopa.it"
+    },
+    "license": {
+      "name": "PN software license",
+      "url": "https://www.pn.pagopa.it/LICENSE"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "HealthCheck",
+      "description": "Invocazioni per sapere lo stato del microservizio"
+    },
+    {
+      "name": "PaperTrackerTracking"
+    },
+    {
+      "name": "PaperTrackerAttempt"
+    },
+    {
+      "name": "PaperTrackerError"
+    },
+    {
+      "name": "PaperTrackerOutput"
+    },
+    {
+      "name": "NotificationRework"
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "summary": "healthCheck path",
+        "description": "health check path per verificare lo stato del micro servizio",
+        "tags": [
+          "HealthCheck"
+        ],
+        "operationId": "status",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/init": {
+      "post": {
+        "summary": "Inserimento tracker",
+        "description": "Permette l'inizializzazione di un'entità di tracking.",
+        "tags": [
+          "PaperTrackerTracking"
+        ],
+        "operationId": "initTracking",
+        "parameters": [
+          {
+            "name": "X-Origin-Client-Id",
+            "in": "header",
+            "description": "Identificativo del client che ha fatto la richiesta di spedizione analogica",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "default": "pn-delivery-push"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackingCreationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created - Tracking created"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/trackings": {
+      "post": {
+        "summary": "Recupero eventi",
+        "description": "Permette il recupero delle entità di tracking da una lista di trackingId.",
+        "tags": [
+          "PaperTrackerTracking"
+        ],
+        "operationId": "retrieveTrackings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "returns related Tracking entity for each trackingId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/errors": {
+      "post": {
+        "summary": "Recupero errori",
+        "description": "Permette il recupero degli errori presenti nella tabella PnPaperTrackingsErrors.",
+        "tags": [
+          "PaperTrackerError"
+        ],
+        "operationId": "retrieveTrackingErrors",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "returns TrackingErrorsResponse entity for each trackingId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingErrorsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/outputs": {
+      "post": {
+        "summary": "Recupero output prodotto",
+        "description": "Permette il recupero degli oggetti in output nella tabella PnPaperTrackerDryRunOutputs.",
+        "tags": [
+          "PaperTrackerOutput"
+        ],
+        "operationId": "retrieveTrackingOutputs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "returns PnPaperTrackerDryRunOutputs entities for each trackingId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperTrackerOutputsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/attempts/{attemptId}": {
+      "get": {
+        "summary": "Oggetto tracking dato l'attemptId",
+        "description": "Recupera il tracking della spedizione dato l'attemptId.",
+        "tags": [
+          "PaperTrackerTracking"
+        ],
+        "operationId": "retrieveTrackingsByAttemptId",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/attemptId"
+          },
+          {
+            "name": "pcRetry",
+            "in": "query",
+            "required": false,
+            "description": "Identificativo della richiesta",
+            "schema": {
+              "type": "string",
+              "maxLength": 102
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns Tracking entities using the attemptId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/notification-rework/sequence": {
+      "get": {
+        "summary": "Recupera le sequence e il finalStatus di una richiesta di rework",
+        "description": "Permette la verifica della possibilità di rework di una notifica",
+        "tags": [
+          "NotificationRework"
+        ],
+        "operationId": "retrieveSequenceAndFinalStatus",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/queryStatusCode"
+          },
+          {
+            "$ref": "#/components/parameters/deliveryFailureCause"
+          },
+          {
+            "$ref": "#/components/parameters/queryProductType"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SequenceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid status code",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/paper-tracker-private/v1/notification-rework/{trackingId}/init": {
+      "put": {
+        "summary": "Avvio processo di invalidazione timeline",
+        "description": "Aggiorna lo stato dell'entità di tracking per accettare gli eventi di recapito correttivi",
+        "tags": [
+          "NotificationRework"
+        ],
+        "operationId": "initNotificationRework",
+        "parameters": [
+          {
+            "name": "reworkId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/trackingId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Aggiornamento effettuato"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "attemptId": {
+        "description": "Timeline id dell'elemento PREPARE_ANALOG_DOMICILE",
+        "name": "attemptId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^[ -~]*$",
+          "maxLength": 1024
+        },
+        "example": "PREPARE_ANALOG_DOMICILE.IUN_LKXM-QMZH-KELD-202507-H-1.RECINDEX_0.ATTEMPT_0"
+      },
+      "trackingId": {
+        "name": "trackingId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "queryStatusCode": {
+        "in": "query",
+        "name": "statusCode",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "queryProductType": {
+        "in": "query",
+        "name": "productType",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "deliveryFailureCause": {
+        "in": "query",
+        "name": "deliveryFailureCause",
+        "required": false,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "TrackingsRequest": {
+        "type": "object",
+        "properties": {
+          "trackingIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "trackingIds"
+        ]
+      },
+      "TrackingsResponse": {
+        "type": "object",
+        "required": [
+          "trackings"
+        ],
+        "properties": {
+          "trackings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tracking"
+            }
+          }
+        }
+      },
+      "Tracking": {
+        "type": "object",
+        "required": [
+          "trackingId",
+          "events",
+          "productType",
+          "unifiedDeliveryDriver",
+          "state",
+          "businessState"
+        ],
+        "properties": {
+          "trackingId": {
+            "type": "string"
+          },
+          "attemptId": {
+            "type": "string"
+          },
+          "pcRetry": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaperEvent"
+            }
+          },
+          "validationFlow": {
+            "$ref": "#/components/schemas/ValidationFlow"
+          },
+          "validationConfig": {
+            "$ref": "#/components/schemas/ValidationConfig"
+          },
+          "productType": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "paperStatus": {
+            "$ref": "#/components/schemas/PaperStatus"
+          },
+          "nextRequestIdPcretry": {
+            "type": "string"
+          },
+          "unifiedDeliveryDriver": {
+            "type": "string"
+          },
+          "notificationReworkId": {
+            "type": "string"
+          },
+          "notificationReworkTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "AWAITING_REFINEMENT",
+              "AWAITING_REWORK_EVENTS",
+              "AWAITING_OCR",
+              "DONE",
+              "KO"
+            ]
+          },
+          "businessState": {
+            "type": "string",
+            "enum": [
+              "AWAITING_FINAL_STATUS_CODE",
+              "AWAITING_OCR",
+              "AWAITING_REFINEMENT_OCR",
+              "AWAITING_REWORK_EVENTS",
+              "DONE",
+              "KO"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processingMode": {
+            "type": "string",
+            "enum": [
+              "DRY",
+              "RUN"
+            ]
+          }
+        }
+      },
+      "PaperEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "requestTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusCode": {
+            "type": "string"
+          },
+          "statusTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusDescription": {
+            "type": "string"
+          },
+          "iun": {
+            "type": "string"
+          },
+          "productType": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "deliveryFailureCause": {
+            "type": "string"
+          },
+          "anonymizedDiscoveredAddressId": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          },
+          "registeredLetterCode": {
+            "type": "string"
+          },
+          "notificationReworkId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dryRun": {
+            "type": "boolean"
+          },
+          "printer": {
+            "type": "string"
+          },
+          "du": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductType": {
+        "type": "string"
+      },
+      "Attachment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "originType": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationFlow": {
+        "type": "object",
+        "properties": {
+          "sequencesValidationTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ocrRequests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OcrRequest"
+            }
+          },
+          "finalEventDematValidationTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refinementDematValidationTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "finalEventBuilderTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recag012StatusTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OcrRequest": {
+        "type": "object",
+        "properties": {
+          "documentType": {
+            "type": "string"
+          },
+          "finalEventId": {
+            "type": "string"
+          },
+          "attachmentEventId": {
+            "type": "string"
+          },
+          "requestTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "responseTimestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "responseStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationConfig": {
+        "type": "object",
+        "properties": {
+          "requiredAttachmentsRefinementStock890": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sendOcrAttachmentsRefinementStock890": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sendOcrAttachmentsFinalValidationStock890": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sendOcrAttachmentsFinalValidation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "strictFinalValidationStock890": {
+            "type": "boolean"
+          },
+          "strictDeliveryFailureCause": {
+            "type": "boolean"
+          },
+          "ocrEnabled": {
+            "type": "string",
+            "enum": [
+              "RUN",
+              "DRY",
+              "DISABLED"
+            ]
+          },
+          "ocrFilterTemporal": {
+            "type": "string"
+          },
+          "ocrFilterUnifiedDeliveryDriver": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ocrFileTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PaperStatus": {
+        "type": "object",
+        "properties": {
+          "registeredLetterCode": {
+            "type": "string",
+            "description": "Codice spedizione cartacea"
+          },
+          "deliveryFailureCause": {
+            "type": "string",
+            "description": "Causa del fallimento della consegna"
+          },
+          "anonymizedDiscoveredAddress": {
+            "type": "string",
+            "description": "Indirizzo scoperto durante la spedizione"
+          },
+          "finalStatusCode": {
+            "type": "string",
+            "description": "Codice di stato finale della spedizione",
+            "example": "RECRN005C"
+          },
+          "validatedSequenceTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp validato delle triplette (data di rendicontazione documento)"
+          },
+          "validatedEvents": {
+            "type": "array",
+            "description": "Lista di eventi validati",
+            "items": {
+              "type": "string"
+            }
+          },
+          "finalDematFound": {
+            "type": "boolean",
+            "description": "Presenza evento demat finale"
+          },
+          "paperDeliveryTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp di affido al consolidatore recuperato dallo statusCode P000"
+          }
+        }
+      },
+      "TrackingErrorsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "trackingId",
+                "errors"
+              ],
+              "properties": {
+                "trackingId": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrackingError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "TrackingError": {
+        "type": "object",
+        "properties": {
+          "trackingId": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "errorCategory": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object",
+            "properties": {
+              "cause": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "additionalDetails": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "flowThrow": {
+            "type": "string",
+            "enum": [
+              "INIT_TRACKING",
+              "NOT_RETRYABLE_EVENT_HANDLER",
+              "DUPLICATED_EVENT_VALIDATION",
+              "CHECK_TRACKING_PRODUCT",
+              "SEQUENCE_VALIDATION",
+              "DEMAT_VALIDATION",
+              "FINAL_EVENT_BUILDING",
+              "CHECK_TRACKING_STATE",
+              "RETRY_PHASE"
+            ]
+          },
+          "eventThrow": {
+            "type": "string"
+          },
+          "eventIdThrow": {
+            "type": "string"
+          },
+          "productType": {
+            "$ref": "#/components/schemas/ProductType"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "ERROR",
+              "WARNING"
+            ]
+          }
+        }
+      },
+      "PaperTrackerOutputsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "trackingId": {
+                  "type": "string"
+                },
+                "outputs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaperTrackerOutput"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PaperTrackerOutput": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "string"
+          },
+          "registeredLetterCode": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "string"
+          },
+          "statusDetail": {
+            "type": "string"
+          },
+          "statusDescription": {
+            "type": "string"
+          },
+          "statusDateTime": {
+            "type": "string"
+          },
+          "deliveryFailureCause": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment"
+            }
+          },
+          "anonymizedDiscoveredAddressId": {
+            "type": "string"
+          },
+          "clientRequestTimestamp": {
+            "type": "string"
+          }
+        }
+      },
+      "TrackingCreationRequest": {
+        "type": "object",
+        "properties": {
+          "productType": {
+            "type": "string",
+            "description": "Tipo prodotto",
+            "example": "AR"
+          },
+          "unifiedDeliveryDriver": {
+            "type": "string",
+            "description": "unifiedDeliveryDriver pn-paper-tenders"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Identificativo tentativo di spedizione",
+            "example": "PREPARE_ANALOG_DOMICILE.IUN_LKHJ-HKGV-HQUP-202402-Q-1.RECINDEX_0.ATTEMPT_0"
+          },
+          "pcRetry": {
+            "type": "string",
+            "description": "Identificativo retry di spedizione",
+            "example": "PCRETRY_1"
+          }
+        },
+        "required": [
+          "productType",
+          "unifiedDeliveryDriver",
+          "attemptId",
+          "pcRetry"
+        ]
+      },
+      "SequenceResponse": {
+        "type": "object",
+        "properties": {
+          "finalStatusCode": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "KO"
+            ]
+          },
+          "sequence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SequenceItem"
+            }
+          }
+        }
+      },
+      "SequenceItem": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "string"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Problem": {
+        "properties": {
+          "type": {
+            "description": "URI reference of type definition",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
+            "type": "integer",
+            "format": "int32",
+            "example": 503,
+            "maximum": 600,
+            "minimum": 100,
+            "exclusiveMaximum": true
+          },
+          "title": {
+            "description": "A short, summary of the problem type. Written in english and readable",
+            "example": "Service Unavailable",
+            "maxLength": 64,
+            "pattern": "^[ -~]{0,64}$",
+            "type": "string"
+          },
+          "detail": {
+            "description": "A human readable explanation of the problem.",
+            "example": "Request took too long to complete.",
+            "maxLength": 4096,
+            "pattern": "^.{0,4096}$",
+            "type": "string"
+          },
+          "traceId": {
+            "description": "Internal support identifier associated to error",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "date and time referred to UTC",
+            "example": "2022-07-27T12:22:33.444Z",
+            "type": "string",
+            "format": "date-time"
+          },
+          "errors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/ProblemError"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "errors"
+        ]
+      },
+      "ProblemError": {
+        "properties": {
+          "code": {
+            "description": "Internal code of the error, in human-readable format",
+            "example": "PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...",
+            "type": "string"
+          },
+          "element": {
+            "description": "Parameter or request body field name for validation error",
+            "example": "body.order.item[2].quantity",
+            "type": "string"
+          },
+          "detail": {
+            "description": "A human readable explanation specific to this occurrence of the problem.",
+            "example": "Parameter not valid",
+            "maxLength": 1024,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      }
+    }
+  }
+}

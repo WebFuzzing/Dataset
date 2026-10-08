@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (53)
+### REST: Java/Kotlin (54)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -150,6 +150,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Payments Public API** (MIT), [jdk_11_maven/cs/rest/pay-publicapi](jdk_11_maven/cs/rest/pay-publicapi), from [https://github.com/alphagov/pay-publicapi](https://github.com/alphagov/pay-publicapi)
 
 * **Person Controller** (Apache), [jdk_21_maven/cs/rest/person-controller](jdk_21_maven/cs/rest/person-controller), from [https://github.com/mongodb-developer/java-spring-boot-mongodb-starter](https://github.com/mongodb-developer/java-spring-boot-mongodb-starter)
+
+* **PN Paper Tracker** (EUPL), [jdk_21_maven/cs/rest/pn-paper-tracker](jdk_21_maven/cs/rest/pn-paper-tracker), from [https://github.com/pagopa/pn-paper-tracker](https://github.com/pagopa/pn-paper-tracker)
 
 * **Project Tracking System** (not-known license), [jdk_11_maven/cs/rest/tracking-system](jdk_11_maven/cs/rest/tracking-system), from [https://github.com/SelimHorri/project-tracking-system-backend-app](https://github.com/SelimHorri/project-tracking-system-backend-app)
 
