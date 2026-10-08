@@ -1,0 +1,423 @@
+components:
+  schemas:
+
+    ##########################################################################
+    ###                    RICHIESTA DI POSTALIZZAZIONE                    ###
+    ##########################################################################
+
+    ### - RICHIESTA
+    ##################
+
+    PaperEngageRequest:
+      required:
+        - requestId
+        - requestSenderId
+        - requestPAId
+        - clientRequestTimeStamp
+        - eventType
+        - productType
+        - attachments
+        - printType
+        - receiverName
+        - receiverAddress
+        - receiverCity
+        - senderName
+        - senderAddress
+        - senderCity
+        - senderPr
+      type: object
+      properties:
+        iun:
+          type: string
+          example: 'ABCD-HILM-YKWX-202202-1'
+          description: >-
+            Identificativo Unico della Notifica. Può essere usato per migliorare il servizio 
+            di archiviazione degli originali cartacei. Permettendo alle 
+            Pubbliche Amministrazioni di ricercare anche per Identificativo Univoco Notifica.
+        requestId:
+          type: string
+          example: 'ABCD-HILM-YKWX-202202-1_rec0_try1'
+          description: >-
+            Identificativo della richiesta.
+        requestPaId:
+          type: string
+          example: '00414580183'
+          description: >-
+            Identificativo della PA che ha richiesto il recapito. Utile per autorizzare il
+            recupero, da parte delle pubbliche amministrazioni, degli originali cartacei
+        clientRequestTimeStamp:
+          type: string
+          format: date-time
+          description: >-
+            Timestamp della richiesta in UTC
+        productType:
+          description: >-
+            Tipo prodotto di cui viene chiesto il recapito: <br/>
+            - __AR__: Raccomandata Andata e Ritorno, <br/>
+            - __890__: Recapito a norma della legge 890/1982, <br/>
+            - __RI__: Raccomandata Internazionale, <br/>
+            - __RS__: Raccomandata Semplice (per Avviso di mancato Recapito). <br/>
+            - ... ulteriori prodotti
+          type: string
+          example: 'AR'
+        attachments:
+          type: array
+          items:
+            type: object
+            required:
+              - uri
+              - order
+              - documentType
+              - sha256
+            properties:
+              uri:
+                type: string
+                description: URI indicante
+                example: safestorage://PN_EXTERNAL_LEGALFACT_....
+                minLength: 5
+                maxLength: 2000
+              order:
+                type: number
+                description: Ordine di stampa, intero positivo, continuo, inizia da 0
+                example: 0
+              documentType:
+                type: string
+                minLength: 3
+                maxLength: 4
+                description: >-
+                  Tipo di documento: <br/>
+                  - __AAR__: Avviso di avvenuta ricezione, tipicamente associato a campo _order_ valorizzato a 0
+                  - __ATTO__: Documento inviato dalla pubblica amministrazione.
+                example: AAR
+              sha256:
+                type: string
+                description: >-
+                  sha256, codificato in base 64, del contenuto del file riferenziato dal campo uri
+                minLength: 40
+                maxLength: 50
+        printType:
+          type: string
+          description: >-
+            Indica il tipo di stampa richiesto al Consolidatore <br />
+            - __BN_FRONTE__: bianco e nero solo fronte <br/>
+            - __BN_FRONTE_RETRO__: bianco e nero fronte e retro <br/>
+            - ... ulteriori modalità previste dal contratto
+          example: 'BN_FRONTE_RETRO'
+        receiverName:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Cognome e nome o ragione sociale del destinatario
+          example: 'Mario Rossi'
+        receiverNameRow2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Seconda riga sulla busta.
+          example: 'c/o famiglia Bianchi'
+        receiverAddress:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Indirizzo del destinatario.
+          example: 'via senza nome 610106'
+        receiverAddressRow2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Specifica dell’indirizzo di residenza del destinatario (seconda riga indirizzo sulla busta).
+          example: 'scala Z interno 400'
+        receiverCap:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Cap del destinatario; in caso di invio estero diventa facoltativo.
+          example: '40050'
+        receiverCity:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Comune del destinatario.
+          example: Argelato
+        receiverCity2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Frazione del destinatario. Potrebbe essere utile se il chiamante non fornisce il cap.
+          example: 'fraz. malacappa'
+        receiverPr:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Provincia del destinatario; in caso di invio estero diventa facoltativo.
+          example: 'BO'
+        receiverCountry:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            In caso di destinatario estero, diventa obbligatoria l’indicazione della nazione di destinazione, 
+            in standard UPU o altro standard condiviso.
+        receiverFiscalCode:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Potrebbe servire ai recapitisti in caso di offerte migliorative per i destinatari (servizi a valore aggiunto basati su cf).
+        senderName:
+          type: string
+          description: >-
+            Ragione sociale del mittente (PagoPA).
+        senderAddress:
+          type: string
+          description: >-
+            Indirizzo del mittente.
+        senderCity:
+          type: string
+          description: >-
+            Città del mittente
+        senderPr:
+          type: string
+          description: >-
+            Provincia del mittente.
+        senderDigitalAddress:
+          type: string
+          description: >-
+            Indirizzo PEC del mittente.
+        arName:
+          type: string
+          description: >-
+            Nominativo di riferimento per l’Avviso di Ritorno.
+        arAddress:
+          type: string
+          description: >-
+            Indirizzo per AR.
+        arCap:
+          type: string
+          description: >-
+            CAP AR.
+        arCity:
+          type: string
+          description: >-
+            Città per AR.
+        vas:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Servizi a valore aggiunto
+        applyRasterization:
+          type: boolean
+          example: true
+          description: >-
+            Flag che indica se bisogna attivare la rasterizzazione per i documenti oppure no.
+
+    ##########################################################################
+    ###      NOTIFICHE DI AVANZAMENTO DEL PROCESSO DI POSTALIZZAZIONE      ###
+    ##########################################################################
+
+    ### - EVENTO SINGOLO
+    #####################
+
+    PaperProgressStatusEvent:
+      required:
+        - requestId
+        - statusCode
+        - statusDescription
+        - statusDateTime
+        - productType
+        - clientRequestTimeStamp
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: >-
+            Identificativo della richiesta.
+          example: 'ABCD-HILM-YKWX-202202-1_rec0_try1'
+        registeredLetterCode:
+          type: string
+          description: >-
+            Il codice di tracciatura obbligatorio per i prodotti di corrispondenza tracciata.
+          example: '123456789abc'
+        productType:
+          description: >-
+            Tipo prodotto di cui viene chiesto il recapito:  <br/>
+            - __AR__: Raccomandata Andata e Ritorno,  <br/>
+            - __890__: Recapito a norma della legge 890/1982,  <br/>
+            - __RI__: Raccomandata Internazionale,  <br/>
+            - __RS__: Raccomandata Semplice (per Avviso di mancato Recapito). <br/>
+            - ... ulteriori prodotti concordati con il consolidatore <br/>
+          type: string
+        iun:
+          type: string
+          description: >-
+            Identificativo Unico della Notifica. Proviene dalla richiesta originaria di PN.
+          example: 'ABCD-HILM-YKWX-202202-1'
+        statusCode:
+          type: string
+          description: >-
+            _Codifica sintetica dello stato dell'esito._  <br/>
+            - __001__ Stampato  <br/>
+            - __002__ Disponibile al recapitista  <br/>
+            - __003__ Preso in carico dal recapitista  <br/>
+            - __004__ Consegnata  <br/>
+            - __005__ Mancata consegna  <br/>
+            - __006__ Furto/Smarrimanto/deterioramento  <br/>
+            - __007__ Consegnato Ufficio Postale  <br/>
+            - __008__ Mancata consegna Ufficio Postale  <br/>
+            - __009__ Compiuta giacenza  <br/>
+            - ... Stati aggiuntivi concordati con il consolidatore
+        statusDescription:
+          type: string
+          example: 'Stampato'
+          description: >-
+            Descrizione dello stato del delivery cartaceo che viene notificato.
+        statusDateTime:
+          type: string
+          format: date-time
+          description: >-
+            Data stato con timezone
+        deliveryFailureCause:
+          description: >-
+            _Motivazione di mancata consegna_ obbligtorie negli stati di mancata consegna  <br/>
+            - __01__ destinatario irreperibile <br/>
+            - __02__ destinatario deceduto <br/>
+            - __03__ destinatario sconosciuto <br/>
+            - __04__ destinatario trasferito <br/>
+            - __05__ invio rifiutato <br/>
+            - __06__ indirizzo inesatto <br/>
+            - __07__ indirizzo inesistente <br/>
+            - __08__ indirizzo insufficiente <br/>
+            - ... Motivazioni aggiuntive concordate con il consolidatore
+          type: string
+        attachments:
+          description: >-
+            elenco dei documenti prodotti che attestano quanto accaduto durante il processo 
+            di postalizzazione
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentDetails'
+        discoveredAddress:
+          $ref: '#/components/schemas/DiscoveredAddress'
+        clientRequestTimeStamp:
+          type: string
+          format: date-time
+          description: >-
+            Timestamp della richiesta in UTC
+        isDuplicate:
+          type: boolean
+          nullable: true
+          description: >-
+            Indica se l'evento risulta duplicato rispetto agli eventi già presenti sulla richiesta.
+            Valorizzato sempre da pn-ec per gli eventi analogici.
+        printer:
+          type: string
+          description: >-
+            Identificativo dello stampatore.
+          example: '123456789abc'
+        du:
+          type: string
+          description: >-
+            Distinta Unica, raggruppamento di spedizioni in un unico lotto.
+          example: '123456789abc'
+    
+
+    AttachmentDetails:
+      title: dettagli allegato a un evento del processo postale
+      type: object
+      required:
+        - id
+        - documentType
+        - uri
+        - sha256
+        - date
+      properties:
+        id:
+          type: string
+          description: >-
+            Identificativo di riga.
+        documentType:
+          type: string
+          description: >-
+            La descrizione della tipologia di oggetto.
+        uri:
+          type: string
+          description: >-
+            Le coordinate del documento correlato allo stato.
+        sha256:
+          type: string
+          description: >-
+            sha256, codificato in base 64, del contenuto del file riferenziato dal campo uri
+        date:
+          type: string
+          format: date-time
+          description: >-
+            Data di produzione del documento.
+        sourceType:
+          type: string
+          description: >-
+            Indica se il documento è stato prodotto tramite scansione cartacea (`SCANNED`) oppure generato digitalmente (`DIGITAL`). 
+            - __SCANNED__ <br/>
+            - __DIGITAL__ <br/>
+            In caso di assenza del campo, la piattaforma considererà DIGITAL gli allegati con MIME/Type application/zip.
+        originType:
+          type: string
+          description: >-
+            Specifica l'origine del documento
+            - __ORIGINAL__ <br/>
+            - __DUPLICATED__ <br/>
+            - altri valori da specificare in fase di approfondimento tecnico
+            In caso di assenza del campo la piattaforma considererà come originale (`ORIGINAL`) il documento
+
+    DiscoveredAddress:
+      description: >-
+        Indirizzo del destinatario desunto dalle indagini del personale postale.
+      required:
+        - name
+        - address
+        - city
+      properties:
+        name:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Cognome e nome o ragione sociale del destinatario
+        nameRow2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Seconda riga sulla busta.
+        address:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Indirizzo del destinatario.
+        addressRow2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Specifica dell’indirizzo di residenza del destinatario (seconda riga indirizzo sulla busta).
+        cap:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Cap del destinatario; in caso di invio estero diventa facoltativo.
+        city:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Comune del destinatario.
+        city2:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Frazione del destinatario. Potrebbe essere utile se il chiamante non fornisce il cap.
+        pr:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            Provincia del destinatario; in caso di invio estero diventa facoltativo.
+        country:
+          x-field-extra-annotation: "@lombok.ToString.Exclude"
+          type: string
+          description: >-
+            In caso di destinatario estero, diventa obbligatoria l’indicazione della nazione di destinazione, 
+            in standard UPU o altro standard condiviso.
