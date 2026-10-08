@@ -72,6 +72,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!--          MODIFIED-->
+                    <finalName>notebook-manager</finalName>
+                    <classifier>sut</classifier>
+                    <!--          MODIFIED-->
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

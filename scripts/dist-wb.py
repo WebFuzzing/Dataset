@@ -195,6 +195,9 @@ def build_jdk_8_maven():
     copy(folder + "/cs/rest/original/spring-ecommerce/target/spring-ecommerce-sut.jar", DIST)
     copy(folder + "/em/external/rest/spring-ecommerce/target/spring-ecommerce-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/original/notebook-manager/target/notebook-manager-sut.jar", DIST)
+    copy(folder + "/em/external/rest/notebook-manager/target/notebook-manager-evomaster-runner.jar", DIST)
+
     # graphql
 
     copy(folder + "/cs/graphql/petclinic-graphql/target/petclinic-graphql-sut.jar", DIST)

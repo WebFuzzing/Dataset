@@ -39,6 +39,7 @@ services:
         cp cs/rest/original/spring-actuator-demo/target/spring-actuator-demo-sut.jar /dist/
         cp cs/rest/original/swagger-petstore/target/swagger-petstore-sut.jar /dist/
         cp cs/rest/original/spring-ecommerce/target/spring-ecommerce-sut.jar /dist/
+        cp cs/rest/original/notebook-manager/target/notebook-manager-sut.jar /dist/
         cp cs/graphql/petclinic-graphql/target/petclinic-graphql-sut.jar /dist/
         cp cs/graphql/graphql-ncs/target/graphql-ncs-sut.jar /dist/
         cp cs/graphql/graphql-scs/target/graphql-scs-sut.jar /dist/
@@ -67,6 +68,7 @@ services:
           cp em/external/rest/spring-actuator-demo/target/spring-actuator-demo-evomaster-runner.jar /dist/
           cp em/external/rest/swagger-petstore/target/swagger-petstore-evomaster-runner.jar /dist/
           cp em/external/rest/spring-ecommerce/target/spring-ecommerce-evomaster-runner.jar /dist/
+          cp em/external/rest/notebook-manager/target/notebook-manager-evomaster-runner.jar /dist/
           cp em/external/graphql/petclinic-graphql/target/petclinic-graphql-evomaster-runner.jar /dist/
           cp em/external/graphql/graphql-ncs/target/graphql-ncs-evomaster-runner.jar /dist/
           cp em/external/graphql/graphql-scs/target/graphql-scs-evomaster-runner.jar /dist/
