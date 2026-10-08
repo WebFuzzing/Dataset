@@ -1,0 +1,6 @@
+{
+  "Parameters" : {
+    "PaperTrackingsGlueTableName": "pn_paper_trackings",
+    "PaperTrackingsErrorsGlueTableName": "pn_paper_trackings_errors"
+  }
+}

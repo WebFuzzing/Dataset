@@ -1,0 +1,38 @@
+info:
+  version: v1.0
+components:
+
+  parameters:
+
+    ############################################################################################
+    ###                     PARAMETRI DI AUTENTICAZIONE E AUTORIZZAZIONE                     ###
+    ############################################################################################
+    cxTypeAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTypeAuthFleet'
+    cxIdAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxIdAuthFleet'
+    cxGroupsAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxGroups'
+    uidAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/uidAuthFleet'
+    cxTaxIdAuthFleet:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-auth-fleet/a1f457ddc112983ec79be0be93256476dd11102c/docs/openapi/authenticationParameters-v1.yaml#/components/parameters/cxTaxIdAuthFleet'
+
+  schemas:
+    ############################################################################################
+    ###                     PARAMETRI NOTIFICA                                               ###
+    ############################################################################################
+    IUN:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/1750230e82ea6e03516e9f4bfae09c1737c1d5e7/docs/openapi/schemas-pn-notification.yaml#/components/schemas/IUN"
+    NotificationFeePolicy:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/1750230e82ea6e03516e9f4bfae09c1737c1d5e7/docs/openapi/schemas-pn-notification.yaml#/components/schemas/NotificationFeePolicy"
+    PaTaxId:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/1750230e82ea6e03516e9f4bfae09c1737c1d5e7/docs/openapi/schemas-pn-notification.yaml#/components/schemas/paTaxId"
+    NoticeCode:
+      $ref: "https://raw.githubusercontent.com/pagopa/pn-delivery/1750230e82ea6e03516e9f4bfae09c1737c1d5e7/docs/openapi/schemas-pn-notification.yaml#/components/schemas/noticeCode"
+    ############################################################################################
+    ###                          STRUTTURE DATI DI PN-ERROR                                  ###
+    ############################################################################################
+    Problem:
+      $ref: 'https://raw.githubusercontent.com/pagopa/pn-commons/61cdf0712f133c8c69e056abfad6ce5223242ba0/docs/openapi/pn-errors.yaml#/components/schemas/Problem'
+    

@@ -1,0 +1,76 @@
+{
+  "name": "NOT_RETRYABLE_EVENT_890",
+  "productType": "890",
+  "initialTracking": {
+    "productType": "890",
+    "pcRetry": "PCRETRY_0",
+    "attemptId": "PREP890E_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+    "unifiedDeliveryDriver": "POSTE"
+  },
+  "events": [
+    {
+      "messageId": "1f4a7c2d-8b3e-4d1a-9c22-1a6e9b3d5f10",
+      "analogMail": {
+        "requestId": "{{REQUEST_ID}}",
+        "iun": "{{RANDOM_IUN}}",
+        "productType": "890",
+        "registeredLetterCode": "1234567891011",
+        "statusCode": "CON998",
+        "statusDescription": "CON998 description",
+        "attachments": [],
+        "clientRequestTimeStamp": "2024-01-01T10:00:00Z",
+        "statusDateTime": "2024-01-01T10:00:00Z"
+      }
+    }
+  ],
+  "expected": {
+    "errors": [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "errorCategory": "NOT_RETRYABLE_EVENT_ERROR",
+        "flowThrow": "NOT_RETRYABLE_EVENT_HANDLER",
+        "type": "WARNING",
+        "productType": "890",
+        "eventThrow": "CON998",
+        "eventIdThrow": "1f4a7c2d-8b3e-4d1a-9c22-1a6e9b3d5f10",
+        "details": {
+          "message": "Scartato NODOC"
+        }
+      }
+    ],
+    "outputs": [
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON998", "statusDescription": "890 - CON998 - CON998 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:00Z", "attachments": [] }
+  ],
+
+    "trackings": [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "attemptId": "PREP890E_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "pcRetry": "PCRETRY_0",
+        "unifiedDeliveryDriver": "POSTE",
+        "processingMode": "DRY",
+        "productType": "890",
+        "state": "AWAITING_REFINEMENT",
+        "businessState": "AWAITING_FINAL_STATUS_CODE",
+        "events": [
+          {"id": "1f4a7c2d-8b3e-4d1a-9c22-1a6e9b3d5f10", "statusCode": "CON998", "statusDescription": "CON998 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:00Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []}
+     ],
+
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsFinalValidationStock890": [],
+          "sendOcrAttachmentsFinalValidation": ["Plico", "AR", "23L"],
+          "strictFinalValidationStock890": false,
+          "ocrEnabled": "DISABLED"
+        },
+        "validationFlow": {
+          "ocrRequests": [
+
+          ]
+        }
+      }
+    ],
+    "sentToOcr": 0
+  }
+}

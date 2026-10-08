@@ -1,0 +1,197 @@
+{
+  "name": "OK_RETRY_890",
+  "productType": "890",
+  "initialTracking": {
+    "productType": "890",
+    "pcRetry": "PCRETRY_0",
+    "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+    "unifiedDeliveryDriver": "POSTE"
+  },
+  "events": [
+
+    {
+      "messageId": "7a73de91-3c11-49e7-80eb-5c19e0354bf6",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": null, "statusCode": "P000", "statusDescription": null, "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:28:00Z", "statusDateTime": "2025-11-28T08:28:00Z"}
+    },
+
+    {
+      "messageId": "d1c0a47a-e503-4694-8627-1b3f877c7e3e",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "CON080", "statusDescription": "Mock status", "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:28:05.424544300Z", "statusDateTime": "2025-11-28T08:28:05Z"}
+    },
+
+    {
+      "messageId": "c72b3c6b-1971-4fe7-8f84-30b6ecb7e30b",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "RECAG004", "statusDescription": "Mock status", "deliveryFailureCause": "F02", "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:28:20.542094Z", "statusDateTime": "2025-11-28T08:28:20Z"
+      }
+    },
+
+    {
+      "messageId": "7216492f-ecd5-41f8-83da-38648d646a59",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "KWMX-KQZM-AUNK-202511-G-1", "productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "CON020", "statusDescription": "Mock status", "attachments": [{"date": "2025-11-28T08:28:21.077652828Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": "TS+04ZWNiqMmXb4nhddcWYXKLoqSZiAjoAS9FAeIsSk=", "uri": "safestorage://PN_PRINTED-6a2e2d8dd97c4c59b79e9dd56c609ffd.pdf"}], "clientRequestTimeStamp": "2025-11-28T08:28:15.571747177Z", "statusDateTime": "2025-11-28T08:28:10Z"}
+    },
+
+    {
+      "messageId": "e5421093-8258-4edb-9a56-60d83cbd86cd",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": null, "statusCode": "P000", "statusDescription": null, "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:28:51Z", "statusDateTime": "2025-11-28T08:28:51Z"}
+    },
+
+    {
+      "messageId": "9f34ff8f-1727-4062-bec0-1b3d1818bce5",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "CON080", "statusDescription": "Mock status", "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:28:56.064632Z", "statusDateTime": "2025-11-28T08:28:56Z"}
+    },
+
+    {
+      "messageId": "83baa2de-0c7d-440a-9226-705cff1c1e51",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "RECAG001A", "statusDescription": "Mock status", "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:29:10.195108700Z", "statusDateTime": "2025-11-28T08:29:10Z"}
+    },
+
+    {
+      "messageId": "97ac3374-225b-4460-90e6-cc4bcd275501",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "CON020", "statusDescription": "Mock status", "attachments": [{"date": "2025-11-28T08:29:09.178707876Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": "8/GCE6DC5gSEEvIEx7u3I5WMIJ349MfI79oAhqkmhfA=", "uri": "safestorage://PN_PRINTED-8d9e333346bf4be5b476ac75d83968ad.pdf"}], "clientRequestTimeStamp": "2025-11-28T08:29:05.254714346Z", "statusDateTime": "2025-11-28T08:29:01Z"}
+    },
+
+    {
+      "messageId": "f93f029f-053d-4333-ab7e-d5702f3ec7c7",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "RECAG001B", "statusDescription": "Mock status", "attachments": [{"date": "2025-11-28T08:29:10.195083900Z", "documentType": "23L", "id": "0", "sha256": "UaMdYj7cAVO6EZTC9ddUBD7pbkG6zdEZ0LaL/3cmphU=", "uri": "safestorage://PN_EXTERNAL_LEGAL_FACTS-7ab548c1eefb491f8906ad561b9c185e.pdf"}], "clientRequestTimeStamp": "2025-11-28T08:29:15.614621Z", "statusDateTime": "2025-11-28T08:29:10Z"}
+    },
+
+    {
+      "messageId": "be44bcac-cf28-4ad2-8f25-49fa69031b82",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "RECAG001C", "statusDescription": "Mock status", "attachments": [], "clientRequestTimeStamp": "2025-11-28T08:29:21.405720200Z", "statusDateTime": "2025-11-28T08:29:10Z"}
+    }
+  ],
+
+  "expected": {
+    "errors": [],
+    "outputs": [
+      {"trackingId": "{{REQUEST_ID}}", "clientRequestTimestamp": "2025-11-28T08:28:05.424544300Z", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:28:05Z", "statusDescription": "890 - CON080 - Mock status", "statusDetail": "CON080"},
+      {"trackingId": "{{REQUEST_ID}}", "clientRequestTimestamp": "2025-11-28T08:28:20.542094Z", "deliveryFailureCause": "F02", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:28:20Z", "statusDescription": "890 - RECAG004 - Mock status", "statusDetail": "RECAG004"},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "attachments": [{"date": "2025-11-28T08:28:21.077652828Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": null, "uri": "safestorage://PN_PRINTED-6a2e2d8dd97c4c59b79e9dd56c609ffd.pdf"}], "clientRequestTimestamp": "2025-11-28T08:28:15.571747177Z", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:28:10Z", "statusDescription": "890 - CON020 - Mock status", "statusDetail": "CON020"},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "clientRequestTimestamp": "2025-11-28T08:28:56.064632Z", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:28:56Z", "statusDescription": "890 - CON080 - Mock status", "statusDetail": "CON080"}, {"trackingId": "{{REQUEST_ID_RETRY}}", "clientRequestTimestamp": "2025-11-28T08:29:10.195108700Z", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:29:10Z", "statusDescription": "890 - RECAG001A - Mock status", "statusDetail": "RECAG001A"},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "attachments": [{"date": "2025-11-28T08:29:09.178707876Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": null, "uri": "safestorage://PN_PRINTED-8d9e333346bf4be5b476ac75d83968ad.pdf"}], "clientRequestTimestamp": "2025-11-28T08:29:05.254714346Z", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:29:01Z", "statusDescription": "890 - CON020 - Mock status", "statusDetail": "CON020"},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "attachments": [{"date": "2025-11-28T08:29:10.195083900Z", "documentType": "23L", "id": "0", "sha256": null, "uri": "safestorage://PN_EXTERNAL_LEGAL_FACTS-7ab548c1eefb491f8906ad561b9c185e.pdf"}], "clientRequestTimestamp": "2025-11-28T08:29:15.614621Z", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "PROGRESS", "statusDateTime": "2025-11-28T08:29:10Z", "statusDescription": "890 - RECAG001B - Mock status", "statusDetail": "RECAG001B"},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "clientRequestTimestamp": "2025-11-28T08:29:21.405720200Z", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "statusCode": "OK", "statusDateTime": "2025-11-28T08:29:10Z", "statusDescription": "890 - RECAG001C - Mock status", "statusDetail": "RECAG001C"}
+    ],
+    "trackings": [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "businessState": "DONE",
+        "pcRetry": "PCRETRY_0",
+        "productType": "890",
+        "state": "DONE",
+        "processingMode": "DRY",
+        "unifiedDeliveryDriver": "POSTE",
+        "events": [
+          {"attachments": [],  "id": "7a73de91-3c11-49e7-80eb-5c19e0354bf6", "productType": "890", "statusCode": "P000", "statusTimestamp": "2025-11-28T08:28:00Z", "requestTimestamp": "2025-11-28T08:28:00Z"},
+          {"attachments": [],  "id": "d1c0a47a-e503-4694-8627-1b3f877c7e3e",  "productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "requestTimestamp": "2025-11-28T08:28:05.424544300Z", "statusCode": "CON080", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:28:05Z"},
+          {"attachments": [],  "deliveryFailureCause": "F02", "id": "c72b3c6b-1971-4fe7-8f84-30b6ecb7e30b","productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "requestTimestamp": "2025-11-28T08:28:20.542094Z", "statusCode": "RECAG004", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:28:20Z"}
+        ],
+        "nextRequestIdPcretry": "{{REQUEST_ID_RETRY}}",
+        "paperStatus": {
+        },
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": [
+            "23L"
+          ],
+          "sendOcrAttachmentsRefinementStock890": [
+            "23L"
+          ],
+          "sendOcrAttachmentsFinalValidation": [
+            "Plico",
+            "AR",
+            "23L"
+          ],
+          "sendOcrAttachmentsFinalValidationStock890": [
+          ]
+        },
+        "validationFlow": {
+          "ocrRequests": [
+          ]
+        }
+      },
+      {
+        "trackingId": "{{REQUEST_ID_RETRY}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "businessState": "DONE",
+        "pcRetry": "PCRETRY_1",
+        "productType": "890",
+        "state": "DONE",
+        "processingMode": "DRY",
+        "unifiedDeliveryDriver": "POSTE",
+        "events": [
+          {"attachments": [{"date": "2025-11-28T08:28:21.077652828Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": "TS+04ZWNiqMmXb4nhddcWYXKLoqSZiAjoAS9FAeIsSk=", "uri": "safestorage://PN_PRINTED-6a2e2d8dd97c4c59b79e9dd56c609ffd.pdf"}], "createdAt": "2025-11-28T08:28:25.183642513Z", "id": "7216492f-ecd5-41f8-83da-38648d646a59", "iun": "KWMX-KQZM-AUNK-202511-G-1", "productType": "890", "registeredLetterCode": "0cb551d382dd46edacf1b946e3e0223a", "requestTimestamp": "2025-11-28T08:28:15.571747177Z", "statusCode": "CON020", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:28:10Z"},
+          {"attachments": [], "id": "e5421093-8258-4edb-9a56-60d83cbd86cd", "productType": "890", "statusCode": "P000", "statusTimestamp": "2025-11-28T08:28:51Z", "requestTimestamp": "2025-11-28T08:28:51Z"},
+          {"attachments": [], "id": "9f34ff8f-1727-4062-bec0-1b3d1818bce5", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "requestTimestamp": "2025-11-28T08:28:56.064632Z", "statusCode": "CON080", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:28:56Z"},
+          {"attachments": [],  "id": "83baa2de-0c7d-440a-9226-705cff1c1e51", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "requestTimestamp": "2025-11-28T08:29:10.195108700Z", "statusCode": "RECAG001A", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:29:10Z"},
+          {"attachments": [{"date": "2025-11-28T08:29:09.178707876Z", "documentType": "Copia Conforme AAR", "id": "0", "sha256": "8/GCE6DC5gSEEvIEx7u3I5WMIJ349MfI79oAhqkmhfA=", "uri": "safestorage://PN_PRINTED-8d9e333346bf4be5b476ac75d83968ad.pdf"}], "id": "97ac3374-225b-4460-90e6-cc4bcd275501", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "requestTimestamp": "2025-11-28T08:29:05.254714346Z", "statusCode": "CON020", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:29:01Z"},
+          {"attachments": [{"date": "2025-11-28T08:29:10.195083900Z", "documentType": "23L", "id": "0", "sha256": "UaMdYj7cAVO6EZTC9ddUBD7pbkG6zdEZ0LaL/3cmphU=", "uri": "safestorage://PN_EXTERNAL_LEGAL_FACTS-7ab548c1eefb491f8906ad561b9c185e.pdf"}], "id": "f93f029f-053d-4333-ab7e-d5702f3ec7c7", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "requestTimestamp": "2025-11-28T08:29:15.614621Z", "statusCode": "RECAG001B", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:29:10Z"},
+          {"attachments": [],"id": "be44bcac-cf28-4ad2-8f25-49fa69031b82", "productType": "890", "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7", "requestTimestamp": "2025-11-28T08:29:21.405720200Z", "statusCode": "RECAG001C", "statusDescription": "Mock status", "statusTimestamp": "2025-11-28T08:29:10Z"}
+        ],
+        "paperStatus": {
+          "finalDematFound": true,
+          "finalStatusCode": "RECAG001C",
+          "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7",
+          "validatedEvents": [
+            "be44bcac-cf28-4ad2-8f25-49fa69031b82",
+            "f93f029f-053d-4333-ab7e-d5702f3ec7c7",
+            "83baa2de-0c7d-440a-9226-705cff1c1e51"
+          ]
+        },
+        "validationConfig": {
+          "sendOcrAttachmentsRefinementStock890": [
+            "23L"
+          ],
+          "requiredAttachmentsRefinementStock890": [
+            "23L"
+          ],
+          "sendOcrAttachmentsFinalValidation": [
+            "Plico",
+            "AR",
+            "23L"
+          ],
+          "sendOcrAttachmentsFinalValidationStock890": [
+          ]
+        },
+        "validationFlow": {
+          "ocrRequests": [
+            { "responseStatus":"OK",
+              "attachmentEventId": "f93f029f-053d-4333-ab7e-d5702f3ec7c7",
+              "documentType": "23L",
+              "finalEventId": "be44bcac-cf28-4ad2-8f25-49fa69031b82"
+            }
+          ]
+        }
+      }
+    ],
+    "ocrResultPayload": [{
+      "commandId": "{{REQUEST_ID_RETRY}}#be44bcac-cf28-4ad2-8f25-49fa69031b82#23L",
+      "version": "v1",
+      "commandType": "postal",
+      "data": {
+        "validationStatus": "OK",
+        "description": "OK",
+        "predictedRefinementType": null,
+        "validationType": "ai"
+      }
+    }],
+    "ocrDataPayload": [{
+      "commandId": "{{REQUEST_ID_RETRY}}#be44bcac-cf28-4ad2-8f25-49fa69031b82#23L",
+      "commandType": "postal",
+      "data": {
+        "documentType": "23L",
+        "productType": "890",
+        "unifiedDeliveryDriver": "Poste",
+        "details": {
+          "deliveryDetailCode": "RECAG001C",
+          "notificationDate": "2025-11-28T08:29:10",
+          "registeredLetterCode": "cb59ee05f21145818afc7d03582f84c7",
+          "deliveryFailureCause": null,
+          "attachment": "Uri",
+          "deliveryAttemptDate": null
+        }
+      }
+    }],
+    "sentToOcr": 1
+  }
+}
