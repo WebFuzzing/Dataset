@@ -8,6 +8,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import org.evomaster.client.java.controller.redis.ReflectionBasedRedisClient;
 import org.testcontainers.containers.GenericContainer;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -89,6 +90,12 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private StatefulRedisConnection<String, String> redisConnection;
 
+    /**
+     * Separate from {@link #redisConnection}: this is the connection EvoMaster itself uses to compute
+     * Redis heuristics and to insert data satisfying failed Redis commands.
+     */
+    private ReflectionBasedRedisClient redisHeuristicsClient;
+
     public ExternalEvoMasterController() {
         this(DEFAULT_CONTROLLER_PORT, "../target/redis-sample-sut.jar", DEFAULT_SUT_PORT, 120, "java");
     }
@@ -157,6 +164,8 @@ public class ExternalEvoMasterController extends ExternalSutController {
         redisClient = RedisClient.create("redis://:" + REDIS_PASSWORD + "@"
                 + redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
         redisConnection = redisClient.connect();
+        redisHeuristicsClient = new ReflectionBasedRedisClient(
+                redis.getHost(), redis.getMappedPort(REDIS_PORT), 0, REDIS_PASSWORD);
     }
 
     @Override
@@ -176,12 +185,22 @@ public class ExternalEvoMasterController extends ExternalSutController {
             redisClient = null;
         }
 
+        if (redisHeuristicsClient != null) {
+            redisHeuristicsClient.close();
+            redisHeuristicsClient = null;
+        }
+
         redis.stop();
     }
 
     @Override
     public String getPackagePrefixesToCover() {
         return "id.my.hendisantika.springbootredissample.";
+    }
+
+    @Override
+    public ReflectionBasedRedisClient getRedisConnection() {
+        return redisHeuristicsClient;
     }
 
     @Override
