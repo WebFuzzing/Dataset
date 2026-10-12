@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Data quality template, creates a nested stack for Glue Table and Crawler
+
+Parameters:
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: The S3 bucket from which to fetch the templates used by this stack.
+  
+  GlueServiceRoleArn:
+    Type: String
+    Description: Service role for the Glue Crawler.
+  
+  LogsBucketName:
+    Type: String
+    Description: Logs bucket name
+  
+  GlueDatabaseName:
+    Type: String
+    Description: Name of the Glue Database
+  
+  PaperTrackingsTableName:
+    Type: String
+    Description: DynamoDB table name for paper trackings
+
+  PaperTrackingsGlueTableName:
+    Type: String
+    Description: Glue table name for paper trackings
+    AllowedPattern: ^[a-z_]+$
+    ConstraintDescription: Glue table name must contain only lowercase letters and underscores.
+    Default: pn_paper_trackings
+
+  PaperTrackingsErrorsTableName:
+    Type: String
+    Description: DynamoDB table name for paper trackings errors
+
+  PaperTrackingsErrorsGlueTableName:
+    Type: String
+    Description: Glue table name for paper trackings errors
+    AllowedPattern: ^[a-z_]+$
+    ConstraintDescription: Glue table name must contain only lowercase letters and underscores.
+    Default: pn_paper_trackings_errors
+
+Resources:
+  PaperTrackingsDataQualityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/cdc-glue.yaml
+      Parameters:
+        DynamoTableName: !Ref PaperTrackingsTableName
+        GlueTableName: !Ref PaperTrackingsGlueTableName
+        GlueServiceRoleArn: !Ref GlueServiceRoleArn
+        LogsBucketName: !Ref LogsBucketName
+        GlueDatabaseName: !Ref GlueDatabaseName
+        DynamoDBKeysStructure: |
+          struct<
+            trackingId:struct<S:string>
+          >
+        DynamoDBNewImageStructure: |
+          struct<
+            trackingId:struct<S:string>,
+            attemptId:struct<S:string>,
+            pcRetry:struct<S:string>,
+            productType:struct<S:string>,
+            unifiedDeliveryDriver:struct<S:string>,
+            events:struct<L:array<struct<M:struct<
+              id:struct<S:string>,
+              iun:struct<S:string>,
+              requestTimestamp:struct<S:string>,
+              statusCode:struct<S:string>,
+              statusDescription:struct<S:string>,
+              statusTimestamp:struct<S:string>,
+              productType:struct<S:string>,
+              deliveryFailureCause:struct<S:string>,
+              anonymizedDiscoveredAddressId:struct<S:string>,
+              attachments:struct<L:array<struct<M:struct<
+                id:struct<S:string>,
+                documentType:struct<S:string>,
+                uri:struct<S:string>,
+                date:struct<S:string>,
+                sha256:struct<S:string>
+              >>>>,
+              registeredLetterCode:struct<S:string>,
+              dryRun:struct<BOOL:boolean>,
+              createdAt:struct<S:string>,
+              notificationReworkId:struct<S:string>
+            >>>>,
+            paperStatus:struct<M:struct<
+              registeredLetterCode:struct<S:string>,
+              deliveryFailureCause:struct<S:string>,
+              anonymizedDiscoveredAddress:struct<S:string>,
+              finalStatusCode:struct<S:string>,
+              validatedSequenceTimestamp:struct<S:string>,
+              validatedEvents:struct<L:array<struct<S:string>>>,
+              finalDematFound:struct<BOOL:boolean>,
+              paperDeliveryTimestamp:struct<S:string>,
+              actualPaperDeliveryTimestamp:struct<S:string>,
+              predictedRefinementType:struct<S:string>
+            >>,
+            validationFlow:struct<M:struct<
+              sequencesValidationTimestamp:struct<S:string>,
+              finalEventDematValidationTimestamp:struct<S:string>,
+              refinementDematValidationTimestamp:struct<S:string>,
+              finalEventBuilderTimestamp:struct<S:string>,
+              recag012StatusTimestamp:struct<S:string>,
+              ocrRequests:struct<L:array<struct<M:struct<
+                documentType:struct<S:string>,
+                finalEventId:struct<S:string>,
+                attachmentEventId:struct<S:string>,
+                responseTimestamp:struct<S:string>,
+                requestTimestamp:struct<S:string>,
+                uri:struct<S:string>
+              >>>>
+            >>,
+            validationConfig:struct<M:struct<
+              ocrEnabled:struct<S:string>,
+              requiredAttachmentsRefinementStock890:struct<L:array<struct<S:string>>>,
+              sendOcrAttachmentsRefinementStock890:struct<L:array<struct<S:string>>>,
+              sendOcrAttachmentsFinalValidationStock890:struct<L:array<struct<S:string>>>,
+              sendOcrAttachmentsFinalValidation:struct<L:array<struct<S:string>>>,
+              strictFinalValidationStock890:struct<BOOL:boolean>,
+              ocrFilterTemporal:struct<S:string>,
+              ocrFilterUnifiedDeliveryDriver:struct<L:array<struct<S:string>>>,
+              ocrFileTypes:struct<L:array<struct<S:string>>>
+            >>,
+            nextRequestIdPcretry:struct<S:string>,
+            state:struct<S:string>,
+            businessState:struct<S:string>,
+            pendingFinalEventId:struct<S:string>,
+            createdAt:struct<S:string>,
+            updatedAt:struct<S:string>,
+            ttl:struct<N:string>,
+            notificationReworkRequestTimestamp:struct<S:string>,
+            notificationReworkId:struct<S:string>,
+            processingMode:struct<S:string>
+          >
+
+  PaperTrackingsErrorsDataQualityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/cdc-glue.yaml
+      Parameters:
+        DynamoTableName: !Ref PaperTrackingsErrorsTableName
+        GlueTableName: !Ref PaperTrackingsErrorsGlueTableName
+        GlueServiceRoleArn: !Ref GlueServiceRoleArn
+        LogsBucketName: !Ref LogsBucketName
+        GlueDatabaseName: !Ref GlueDatabaseName
+        DynamoDBKeysStructure: |
+          struct<
+            trackingId:struct<S:string>,
+            created:struct<S:string>
+          >
+        DynamoDBNewImageStructure: |
+          struct<
+            trackingId:struct<S:string>,
+            created:struct<S:string>,
+            category:struct<S:string>,
+            details:struct<M:struct<
+              cause:struct<S:string>,
+              message:struct<S:string>,
+              additionalDetails:struct<S:string>
+            >>,
+            flowThrow:struct<S:string>,
+            eventThrow:struct<S:string>,
+            eventIdThrow:struct<S:string>,
+            productType:struct<S:string>,
+            type:struct<S:string>,
+            ttl:struct<N:string>,
+            unifiedDeliveryDriver:struct<S:string>,
+            registeredLetterCode:struct<S:string>
+          >

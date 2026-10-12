@@ -1,0 +1,251 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Some storage with input and output
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Nome dell'ambiente destinazione
+
+  # Unused but required by CD pipeline
+  MicroserviceNumber:
+    Type: Number
+    Description: An unique number that identify the microservice inside the ECS cluster.
+
+  # Unused but required by CD pipeline
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: URL da cui caricare i frammenti di template di infrastruttura
+  
+  Version:
+    Type: String
+    Description: 'keep track of used projects commitIds'
+  
+  CdcKinesisSourceStreamArn:
+    Type: String
+    Description: 'Where to send CDC'
+
+  LogsKinesisSourceStreamArn:
+    Type: String
+    Description: 'Where to send Logs'
+
+  LogRetention:
+    Type: Number
+    Default: 14
+
+  AlarmSNSTopicName:
+    Type: String
+
+Resources:
+  PnPaperTrackerLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/log-group.yaml"
+      Parameters:
+        LogGroupName: !Sub '${ProjectName}-paper-tracker'
+        LogGroupRetention: !Ref LogRetention
+        LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
+
+  NotificationReworkEventsValidationLambdaLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
+      Parameters:
+        LogGroupName: !Sub ${ProjectName}-NotificationReworkEventsValidationLambda
+        LogGroupRetention: !Ref LogRetention
+        LogGroupPrefix: /aws/lambda
+
+  PaperTrackingsErrorsTable:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub '${ProjectName}-PaperTrackingsErrors'
+      AttributeDefinitions:
+        - AttributeName: "trackingId"
+          AttributeType: "S"
+        - AttributeName: "created"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "trackingId"
+          KeyType: "HASH"
+        - AttributeName: "created"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      KinesisStreamSpecification:
+        StreamArn: !Ref CdcKinesisSourceStreamArn
+
+  PaperTrackerDryRunOutputsTable:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub '${ProjectName}-PaperTrackerDryRunOutputs'
+      AttributeDefinitions:
+        - AttributeName: "trackingId"
+          AttributeType: "S"
+        - AttributeName: "created"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "trackingId"
+          KeyType: "HASH"
+        - AttributeName: "created"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  PaperTrackingsTable:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub '${ProjectName}-PaperTrackings'
+      AttributeDefinitions:
+        - AttributeName: "trackingId"
+          AttributeType: "S"
+        - AttributeName: "attemptId"
+          AttributeType: "S"
+        - AttributeName: "pcRetry"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "trackingId"
+          KeyType: "HASH"
+      GlobalSecondaryIndexes:
+        - IndexName: "attemptId-pcRetry-index"
+          KeySchema:
+            - AttributeName: "attemptId"
+              KeyType: "HASH"
+            - AttributeName: "pcRetry"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+      TimeToLiveSpecification:
+        AttributeName: "ttl"
+        Enabled: true
+      BillingMode: "PAY_PER_REQUEST"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      KinesisStreamSpecification:
+        StreamArn: !Ref CdcKinesisSourceStreamArn
+
+  NotificationReworkEventsErrorTable:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TableName: !Sub '${ProjectName}-NotificationReworkEventsError'
+      AttributeDefinitions:
+        - AttributeName: "iun"
+          AttributeType: "S"
+        - AttributeName: "reworkId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "iun"
+          KeyType: "HASH"
+        - AttributeName: "reworkId"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+
+  PnOcrOutputsQueue:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/sqs-queue.yaml"
+      Parameters:
+        QueueName: !Sub '${ProjectName}-paper_tracker_ocr_outputs'
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        VisibilityTimeout: 60
+        DelaySeconds: 1
+
+  ExternalChannelToPaperTrackerQueue:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/sqs-queue.yaml"
+      Parameters:
+        QueueName: !Sub '${ProjectName}-external_channel_to_paper_tracker'
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        VisibilityTimeout: 60
+        DelaySeconds: 1
+
+  ExternalChannelToReworkEventValidationQueue:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/sqs-queue.yaml"
+      Parameters:
+        QueueName: !Sub '${ProjectName}-external_channel_to_rework_event_validation'
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        VisibilityTimeout: 1800
+        DelaySeconds: 1
+
+Outputs:
+  EcsLogGroup:
+    Value: !GetAtt PnPaperTrackerLogGroup.Outputs.LogGroupName
+
+  # Lambda functions
+  NotificationReworkEventsValidationLambdaName:
+    Value: !Sub ${ProjectName}-NotificationReworkEventsValidationLambda
+    
+  PaperTrackingsErrorsTableName:
+    Description: Name of dynamodb table containing trackings errors
+    Value: !Ref PaperTrackingsErrorsTable
+  PaperTrackingsErrorsTableArn:
+    Description: ARN of dynamodb table containing trackings errors
+    Value: !Sub '${PaperTrackingsErrorsTable.Arn}'
+
+  PaperTrackerDryRunOutputsTableName:
+    Description: Name of dynamodb table containing trackings outputs
+    Value: !Ref PaperTrackerDryRunOutputsTable
+  PaperTrackerDryRunOutputsTableArn:
+    Description: ARN of dynamodb table containing trackings outputs
+    Value: !Sub '${PaperTrackerDryRunOutputsTable.Arn}'
+
+  PaperTrackingsTableName:
+    Description: Name of dynamodb table containing trackings
+    Value: !Ref PaperTrackingsTable
+  PaperTrackingsTableArn:
+    Description: ARN of dynamodb table containing trackings
+    Value: !Sub '${PaperTrackingsTable.Arn}'
+
+  NotificationReworkEventsErrorTableName:
+    Description: Name of dynamodb table containing rework events errors
+    Value: !Ref NotificationReworkEventsErrorTable
+
+  NotificationReworkEventsErrorTableArn:
+    Description: ARN of dynamodb table containing rework events errors
+    Value: !Sub '${NotificationReworkEventsErrorTable.Arn}'
+
+  PnOcrOutputsQueueName:
+    Value: !GetAtt PnOcrOutputsQueue.Outputs.QueueName
+  PnOcrOutputsQueueARN:
+    Value: !GetAtt PnOcrOutputsQueue.Outputs.QueueARN
+  PnOcrOutputsQueueURL:
+    Value: !GetAtt PnOcrOutputsQueue.Outputs.QueueURL
+
+  ExternalChannelToPaperTrackerQueueName:
+    Value: !GetAtt ExternalChannelToPaperTrackerQueue.Outputs.QueueName
+  ExternalChannelToPaperTrackerQueueARN:
+    Value: !GetAtt ExternalChannelToPaperTrackerQueue.Outputs.QueueARN
+
+  ExternalChannelToReworkEventValidationQueueName:
+    Value: !GetAtt ExternalChannelToReworkEventValidationQueue.Outputs.QueueName
+  ExternalChannelToReworkEventValidationQueueARN:
+    Value:  !GetAtt ExternalChannelToReworkEventValidationQueue.Outputs.QueueARN
+  ExternalChannelToReworkEventValidationQueueURL:
+    Value:  !GetAtt ExternalChannelToReworkEventValidationQueue.Outputs.QueueURL

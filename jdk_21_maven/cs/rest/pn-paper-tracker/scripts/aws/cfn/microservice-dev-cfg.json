@@ -1,0 +1,23 @@
+{
+  "Parameters" : {
+    "MinTasksNumber": "2",
+    "MaxTasksNumber": "10",
+    "AutoscalingThreshold": "1200",
+    "ConsumedQueueMessagePerMinute": "3300",
+    "PnCronAnalyzer": "-",
+    "WireTapLogActivation": "false",
+    "MountEfs": "false",
+    "SafeStorageCxId": "pn-cons-000",
+    "PnOcrInputsQueueARN": "arn:aws:sqs:eu-south-1:830192246553:pn-mock_ocr_inputs",
+    "PnOcrInputsQueueURL": "https://sqs.eu-south-1.amazonaws.com/830192246553/pn-mock_ocr_inputs",
+    "PnOcrInputsQueueRegion": "eu-south-1",
+    "OcrAwsRoleARN": "arn:aws:iam::830192246553:role/pn-external-channels-TaskRole",
+    "OcrAwsAccountId": "830192246553",
+    "PaperTrackerExternalChannelUser": "pn-cons-000",
+    "DataVaultBaseUrl": "http://alb.confidential.pn.internal:8080",
+    "ExternalChannelsToPaperChannelDryrunQueueName": "pn-external_channel_to_paper_channel_dry_run",
+    "NotificationReworkInvalidStatusCode": "RECRN006,RECRN013,RECRI005,CON996,RECAG013,RECAG004",
+    "DisableAllConsumers": "false",
+    "MetricFormatType": "EMF"
+  }
+}

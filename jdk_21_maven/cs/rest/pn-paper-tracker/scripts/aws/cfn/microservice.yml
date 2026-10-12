@@ -1,0 +1,998 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'Microservice deploy for pn-paper-tracker'
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create experimental environments without crash official development environment'
+
+  AlarmSNSTopicArn:
+    Type: String
+    Description: ARN of alarm topic
+
+  WebApiDnsName:
+    Type: String
+    Description: 'The DNS name used for WEB rest API.'
+  
+  CorsAllowedDomains:
+    Type: String
+    Description: 'Comma separated list of domains allowed to make cross origin request'
+
+  ContainerImageUri:
+    Type: String
+    Description: 'Exact container image URI with full repository and image digest'
+
+  MicroserviceNumber:
+    Type: Number
+    Description: 'Disambiguation useful for load balancer rules'
+
+  MicroserviceBucketName:
+    Type: String
+    Default: ''
+    Description: 'Name of the bucket where the microservice files are copied during deploy'
+
+  MicroserviceBucketBaseKey:
+    Type: String
+    Default: ''
+    Description: 'Base key of the microservice in the s3 bucket'
+
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: 'The S3 bucket from which to fetch the templates used by this stack.'
+
+  ECSClusterName:
+    Type: String
+    Description: 'The name of the ECS cluster where the microservice is going to be deployed'
+
+  SubnetsIds:
+    Type: String
+    Description: 'Subnets id list'
+
+  VpcEgressSubnetsIds:
+    Type: String
+    Description: 'Egress subnets'
+
+  VpcId:
+    Type: String
+    Description: 'VpcId where the microservice is going to be deployed'
+
+  AlbSecurityGroup:
+    Type: String
+    Description: "Application load balancer security group"
+  
+  EcsDefaultSecurityGroup:
+    Type: String
+    Description: 'Default security group required by infrastructure'
+
+  ApplicationLoadBalancerListenerArn:
+    Type: String
+    Description: 'Load balancer listener where HTTP endpoints are going to be registered'
+
+  ApplicationLoadBalancerDomain:
+    Type: String
+    Description: 'Base URL of the load balancer where the service is going to be reachable'
+
+  NetworkLoadBalancerLink:
+    Type: String
+    Description: 'network load balancer link for API-GW'
+  
+  LogsKinesisSourceStreamArn:
+    Type: String
+    Description: 'Kinesis stream that receives logs'
+
+  Version:
+    Type: String
+    Description: 'keep track of used projects commitIds'
+
+  EcsLogGroup:
+    Type: String
+    Description: 'ECS log group name'
+
+  WireTapLogActivation:
+    Type: String
+    Default: false
+    Description: Activation of wire logs
+    AllowedValues:
+      - true
+      - false
+
+  MountEfs:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+
+  FargateEFSFileSystemID:
+    Type: String
+    Description: "EFS Filesystem"
+
+  # Instance parameters
+  # 256 (.25 vCPU) - Available memory values: 0.5GB, 1GB, 2GB
+  # 512 (.5 vCPU) - Available memory values: 1GB, 2GB, 3GB, 4GB
+  # 1024 (1 vCPU) - Available memory values: 2GB, 3GB, 4GB, 5GB, 6GB, 7GB, 8GB
+  # 2048 (2 vCPU) - Available memory values: Between 4GB and 16GB in 1GB increments
+  # 4096 (4 vCPU) - Available memory values: Between 8GB and 30GB in 1GB increments
+  CpuValue:
+    Type: Number
+    Default: 1024
+    Description: Fargate virtual CPU quantity 1024 equals one vCPU
+
+  # 0.5GB, 1GB, 2GB - Available cpu values: 256 (.25 vCPU)
+  # 1GB, 2GB, 3GB, 4GB - Available cpu values: 512 (.5 vCPU)
+  # 2GB, 3GB, 4GB, 5GB, 6GB, 7GB, 8GB - Available cpu values: 1024 (1 vCPU)
+  # Between 4GB and 16GB in 1GB increments - Available cpu values: 2048 (2 vCPU)
+  # Between 8GB and 30GB in 1GB increments - Available cpu values: 4096 (4 vCPU)
+  MemoryAmount:
+    Type: String
+    Default: 2GB
+    Description: memory amount reserved to the task pod.
+    AllowedValues: [ 2GB, 4GB, 6GB, 8GB ]
+
+  JavaToolOptions:
+    Type: String
+    Default: '-XX:MaxDirectMemorySize=256m'
+    Description: JavaToolOptions
+
+  MinTasksNumber:
+    Default: 1
+    Type: Number
+    Description: minimum autoscaling number of tasks
+
+  MaxTasksNumber:
+    Default: 1
+    Type: Number
+    Description: maximum autoscaling number of tasks
+
+  PnCronAnalyzer:
+    Type: String
+    Default: '-'
+    Description: Cron for which you send the metric to CloudWatch
+
+  LogAlarmStrategy:
+    Type: String
+    Default: 'FATAL'
+
+  # Autoscaling parameters
+  AutoscalingCheckPeriod:
+    Default: 60
+    Type: Number
+    Description: minimum autoscaling number of tasks\
+
+  AutoscalingDataPointN:
+    Default: 1
+    Type: Number
+    Description: activate when N datapoint on M
+
+  AutoscalingDataPointM:
+    Default: 1
+    Type: Number
+    Description: activate when N datapoint on M
+
+  AutoscalingThreshold:
+    Default: 70
+    Type: String
+
+  ConsumedQueueMessagePerMinute:
+    Type: Number
+    Default: 0
+    Description: Weight to assign to queue number of visible messages metric
+
+  HealthCheckTimeout:
+    Description: health check timeout seconds
+    Type: Number
+    Default: 5
+
+  HealthCheckInterval:
+    Description: Seconds between two health check
+    Type: Number
+    Default: 60
+
+  HealthyThresholdCount:
+    Description: |
+      The number of consecutive health checks successes required before considering 
+      an unhealthy target healthy. 
+    Type: Number
+    Default: 5
+  
+  UnhealthyThresholdCount:
+    Description: |
+      The number of consecutive health check failures required before considering a target unhealthy. 
+    Type: Number
+    Default: 2
+
+  ApplicationLoadBalancerMetricsDimensionName:
+    Type: String
+    Default: ''
+    Description: Application load balancer dimension name
+
+  PnOcrOutputsQueueName:
+    Type: String
+    Description: 'Name of the SQS queue where OCR outputs are sent'
+
+  PnOcrOutputsQueueARN:
+    Type: String
+    Description: 'ARN of the SQS queue where OCR outputs are sent'
+
+  ExternalChannelToPaperTrackerQueueName:
+    Type: String
+    Description: 'Name of the SQS queue where external channel messages are sent'
+
+  ExternalChannelToPaperTrackerQueueARN:
+    Type: String
+    Description: 'ARN of the SQS queue where external channel messages are sent'
+
+  ExternalChannels2PaperChannelQueueName:
+    Type: String
+    Description: 'Pull external-channel messages from this Queue'
+
+  ExternalChannels2PaperChannelQueueARN:
+    Type: String
+    Description: 'Pull external-channel messages from this Queue'
+
+  ExternalChannels2PaperChannelQueueURL:
+    Type: String
+    Description: 'Pull external-channel messages from this Queue'
+
+  ExternalChannelsToPaperChannelDryrunQueueName:
+    Type: String
+    Description: 'Write paper-channel messages to this Queue'
+
+  PaperTrackingsErrorsTableName:
+    Type: String
+    Description: 'DynamoDB table name for PaperTrackingsErrors'
+
+  PaperTrackingsErrorsTableArn:
+    Type: String
+    Description: 'DynamoDB table ARN for PaperTrackingsErrors'
+
+  PaperTrackingsTableName:
+    Type: String
+    Description: 'DynamoDB table name for PaperTrackings'
+
+  PaperTrackingsTableArn:
+    Type: String
+    Description: 'DynamoDB table ARN for PaperTrackings'
+
+  PaperTrackerDryRunOutputsTableName:
+    Type: String
+    Description: 'DynamoDB table name for PaperTrackerDryRunOutputs'
+
+  PaperTrackerDryRunOutputsTableArn:
+    Type: String
+    Description: 'DynamoDB table ARN for PaperTrackerDryRunOutputs'
+
+  NotificationReworkEventsErrorTableName:
+    Type: String
+    Description: 'DynamoDB table name for NotificationReworkEventsError'
+
+  NotificationReworkEventsErrorTableArn:
+    Type:  String
+    Description: 'DynamoDB table ARN for NotificationReworkEventsError'
+
+  ExternalChannelsOutputsQueueName:
+    Type: String
+    Description: 'Name of the SQS queue where external channel outputs are sent'
+
+  ExternalChannelsOutputsQueueARN:
+    Type: String
+    Description: 'ARN of the SQS queue where external channel outputs are sent'
+
+  SandboxSafeStorageBaseUrl:
+    Type: String
+    Description: 'URL to the SafeStorage microservice'
+
+  SafeStorageCxId:
+    Type: String
+    Description: 'CxId for the SafeStorage microservice'
+
+  PnOcrInputsQueueARN:
+    Type: String
+    Description: 'ARN of the SQS queue where OCR inputs are sent'
+
+  PnOcrInputsQueueURL:
+    Type: String
+    Description: 'URL of the SQS queue where OCR inputs are sent'
+
+  PnOcrInputsQueueRegion:
+    Type: String
+    Description: 'Region of the SQS queue where OCR inputs are sent'
+
+  PnOcrOutputsQueueURL:
+    Type: String
+    Description: 'URL of the SQS queue where OCR outputs are sent'
+
+  OcrAwsRoleARN:
+    Type: String
+    Description: 'ARN of the IAM role in the OCR AWS account that can send messages to the PnOcrOutputsQueue'
+
+  OcrAwsAccountId:
+    Type: String
+    Description: 'AWS account ID of the OCR service'
+
+  PaperTrackerExternalChannelUser:
+    Type: String
+    Description: 'The clientId used by ExternalChannel to send events to PaperTracker'
+
+  DataVaultBaseUrl:
+    Type: String
+    Description: 'DataVault BaseUrl'
+
+  ExternalChannelToReworkEventValidationQueueName:
+    Type: String
+    Description: 'Name of the SQS queue where external channel rework validation events are sent'
+
+  ExternalChannelToReworkEventValidationQueueARN:
+    Type: String
+    Description: 'ARN of the SQS queue where external channel rework validation events are sent'
+
+  ExternalChannelToReworkEventValidationQueueURL:
+    Type: String
+    Description: 'URL of the SQS queue where external channel rework validation events are sent'
+
+  NotificationReworkEventsValidationLambdaName:
+    Type: String
+    Description: 'Name of the NotificationReworkEventsValidation Lambda.'
+
+  NotificationReworkEventsValidationLambdaBatchSize:
+    Type: Number
+    Description: "Batch size of the NotificationReworkEventsValidation Lambda."
+    Default: 10
+
+  ApplicativeEnvFileChecksum:
+    Type: String
+    Default: ''
+    Description: 'Applicative environment variable file checksum'
+
+  NotificationReworkInvalidStatusCode:
+    Type: String
+    Description: 'Comma separated list of invalid status codes for notification rework events'
+
+  DisableAllConsumers:
+    Type: String
+    AllowedValues: [ "true", "false" ]
+    Default: "false"
+
+  MetricFormatType:
+    Type: String
+    Description: 'Metric format type'
+    Default: 'EMF'
+
+  890ErrorThreshold:
+    Type: Number
+    Description: 'Threshold for 890 errors to trigger the alarm'
+    Default: 300
+
+  890EvaluationPeriods:
+    Type: Number
+    Description: 'Number of evaluation periods for 890 errors alarm'
+    Default: 12
+
+  890DatapointsToAlarm:
+    Type: Number
+    Description: 'Number of datapoints to alarm for 890 errors alarm'
+    Default: 1
+
+  890TreatMissingData:
+    Type: String
+    Description: 'TreatMissingData for 890 errors alarm'
+    Default: 'ignore'
+
+  ARTreatMissingData:
+    Type: String
+    Description: 'TreatMissingData for AR errors alarm'
+    Default: 'ignore'
+
+  RSTreatMissingData:
+    Type: String
+    Description: 'TreatMissingData for RS errors alarm'
+    Default: 'ignore'
+
+  RIRTreatMissingData:
+    Type: String
+    Description: 'TreatMissingData for RIR errors alarm'
+    Default: 'ignore'
+
+  RISTreatMissingData:
+    Type: String
+    Description: 'TreatMissingData for RIS errors alarm'
+    Default: 'ignore'
+
+  890WhereClause:
+    Type: String
+    Description: 'Where clause to filter 890 errors in the custom metric query'
+    Default: "errorCategory != 'OCR_VALIDATION'"
+
+  ARErrorThreshold:
+    Type: Number
+    Description: 'Threshold for AR errors to trigger the alarm'
+    Default: 300
+
+  AREvaluationPeriods:
+    Type: Number
+    Description: 'Number of evaluation periods for AR errors alarm'
+    Default: 12
+
+  ARDatapointsToAlarm:
+    Type: Number
+    Description: 'Number of datapoints to alarm for AR errors alarm'
+    Default: 1
+
+  ARWhereClause:
+    Type: String
+    Description: 'Where clause to filter AR errors in the custom metric query'
+    Default: "errorCategory != 'OCR_VALIDATION'"
+  
+  RSErrorThreshold:
+    Type: Number
+    Description: 'Threshold for RS errors to trigger the alarm'
+    Default: 300
+
+  RSEvaluationPeriods:
+    Type: Number
+    Description: 'Number of evaluation periods for RS errors alarm'
+    Default: 12
+  
+  RSDatapointsToAlarm:
+    Type: Number
+    Description: 'Number of datapoints to alarm for RS errors alarm'
+    Default: 1
+  
+  RSWhereClause:
+    Type: String
+    Description: 'Where clause to filter RS errors in the custom metric query'
+    Default: "errorCategory != 'OCR_VALIDATION'"
+
+  RIRErrorThreshold:
+    Type: Number
+    Description: 'Threshold for RIR errors to trigger the alarm'
+    Default: 300
+  
+  RIREvaluationPeriods:
+    Type: Number
+    Description: 'Number of evaluation periods for RIR errors alarm'
+    Default: 12
+  
+  RIRDatapointsToAlarm:
+    Type: Number
+    Description: 'Number of datapoints to alarm for RIR errors alarm'
+    Default: 1
+
+  RIRWhereClause:
+    Type: String
+    Description: 'Where clause to filter RIR errors in the custom metric query'
+    Default: "errorCategory != 'OCR_VALIDATION'"
+
+  RISErrorThreshold:
+    Type: Number
+    Description: 'Threshold for RIS errors to trigger the alarm'
+    Default: 300
+
+  RISEvaluationPeriods:
+    Type: Number
+    Description: 'Number of evaluation periods for RIS errors alarm'
+    Default: 12
+
+  RISDatapointsToAlarm:
+    Type: Number
+    Description: 'Number of datapoints to alarm for RIS errors alarm'
+    Default: 1
+
+  RISWhereClause:
+    Type: String
+    Description: 'Where clause to filter RIS errors in the custom metric query'
+    Default: "errorCategory != 'OCR_VALIDATION'"
+
+  CpuArchitecture:
+    Type: String
+    Default: 'ARM'
+    Description: CPU architecture for the Fargate tasks
+
+Resources:
+
+  PaperTrackerMicroservice:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/ecs-service.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub '${ProjectName}-paper-tracker'
+        CpuValue: !Ref CpuValue
+        MemoryAmount: !Ref MemoryAmount
+        MinTasksNumber: !Ref MinTasksNumber
+        MaxTasksNumber: !Ref MaxTasksNumber
+        HealthCheckPath: /actuator/health
+        HealthCheckTimeout: !Ref HealthCheckTimeout
+        HealthCheckInterval: !Ref HealthCheckInterval
+        HealthyThresholdCount: !Ref HealthyThresholdCount
+        UnhealthyThresholdCount: !Ref UnhealthyThresholdCount
+        AutoscalingStrategy: CUSTOM
+        AutoscalingThreshold: !Ref AutoscalingThreshold
+        AutoscalingCheckPeriod: !Ref AutoscalingCheckPeriod
+        EfsFilesystem: !Ref FargateEFSFileSystemID
+        MountEfs: !Ref MountEfs
+        WireTapLogActivation: !Ref WireTapLogActivation
+        AutoscalingDataPointN: !Ref AutoscalingDataPointN
+        AutoscalingDataPointM: !Ref AutoscalingDataPointM
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        JavaToolOptions: !Ref JavaToolOptions
+        ContainerImageURI: !Sub '${ContainerImageUri}'
+        ContainerEnvEntry1: !Sub 'AWS_REGIONCODE=${AWS::Region}'
+        ContainerEnvEntry2: !Sub 'PN_CRON_ANALYZER=${PnCronAnalyzer}'
+        ContainerEnvEntry3: !Sub 'WIRE_TAP_LOG=${WireTapLogActivation}'
+        ContainerEnvEntry4: !Sub 'PN_PAPERTRACKER_DAO_PAPERTRACKERDRYRUNOUTPUTSTABLE=${PaperTrackerDryRunOutputsTableName}'
+        ContainerEnvEntry5: !Sub 'PN_PAPERTRACKER_DAO_PAPERTRACKINGSERRORSTABLE=${PaperTrackingsErrorsTableName}'
+        ContainerEnvEntry6: !Sub 'PN_PAPERTRACKER_DAO_PAPERTRACKINGSTABLE=${PaperTrackingsTableName}'
+        ContainerEnvEntry7: !Sub 'PN_PAPERTRACKER_PAPERCHANNELBASEURL=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry9: !Sub 'PN_PAPERTRACKER_TOPICS_EXTERNALCHANNELTOPAPERTRACKERQUEUE=${ExternalChannelToPaperTrackerQueueName}'
+        ContainerEnvEntry10: !Sub 'PN_PAPERTRACKER_TOPICS_QUEUEOCRINPUTSURL=${PnOcrInputsQueueURL}'
+        ContainerEnvEntry11: !Sub 'PN_PAPERTRACKER_TOPICS_QUEUEOCRINPUTSREGION=${PnOcrInputsQueueRegion}'
+        ContainerEnvEntry12: !Sub 'PN_PAPERTRACKER_TOPICS_EXTERNALCHANNELOUTPUTSQUEUE=${ExternalChannelsOutputsQueueName}'
+        ContainerEnvEntry16: !Sub 'PN_PAPERTRACKER_SAFESTORAGEBASEURL=${SandboxSafeStorageBaseUrl}'
+        ContainerEnvEntry17: !Sub 'PN_PAPERTRACKER_SAFESTORAGECXID=${SafeStorageCxId}'
+        ContainerEnvEntry18: !Sub 'PN_PAPERTRACKER_TOPICS_PNOCROUTPUTSQUEUE=${PnOcrOutputsQueueName}'
+        ContainerEnvEntry19: !Sub 'PN_PAPERTRACKER_DATAVAULTBASEURL=${DataVaultBaseUrl}'
+        ContainerEnvEntry20: !Sub 'PN_PAPERTRACKER_DISABLEALLCONSUMERS=${DisableAllConsumers}'
+        ContainerEnvEntry21: !Sub 'PN_PAPERTRACKER_TOPICS_EXTERNALCHANNELTOPAPERCHANNELQUEUE=${ExternalChannels2PaperChannelQueueName}'
+        ContainerEnvEntry22: !Sub 'PN_PAPERTRACKER_TOPICS_EXTERNALCHANNELTOPAPERCHANNELDRYRUNQUEUE=${ExternalChannelsToPaperChannelDryrunQueueName}'
+        ContainerEnvEntry23: !Sub 'METRIC_FORMAT_TYPE=${MetricFormatType}'
+        ContainerEnvEntry24: !Sub 'PN_PAPERTRACKER_EVENTBUS_NAME=arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/${ProjectName}-CoreEventBus'
+        ApplicativeEnvFileChecksum: !Ref ApplicativeEnvFileChecksum
+        MappedPaths: '/paper-tracker/*,/paper-tracker-private/*'
+        ECSClusterName: !Ref ECSClusterName
+        Subnets: !Ref VpcEgressSubnetsIds
+        VpcId: !Ref VpcId
+        AlbSecurityGroup: !Ref AlbSecurityGroup
+        EcsDefaultSecurityGroup: !Ref EcsDefaultSecurityGroup
+        LoadBalancerListenerArn: !Ref ApplicationLoadBalancerListenerArn
+        LoadbalancerRulePriority: !Ref MicroserviceNumber
+        TaskRoleManagedPolicyArn: !Ref PaperTrackerMicroserviceTaskPolicy
+        EcsLogGroup: !Ref EcsLogGroup
+        LogAlarmStrategyV1: !Ref LogAlarmStrategy
+        CpuArchitecture: !Ref CpuArchitecture
+
+  PnOcrOutputsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref PnOcrOutputsQueueURL
+      PolicyDocument:
+        Statement:
+          - Sid: AllowCrossAccountSend
+            Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${OcrAwsAccountId}:root"
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - !Ref PnOcrOutputsQueueARN
+            Condition:
+              StringEquals:
+                aws:PrincipalArn: !Ref OcrAwsRoleARN
+
+  PaperTrackerMicroserviceCloudWatchDashboard:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/microservice-cloudwatch-dashboard.yaml"
+      Parameters:
+        DashboardName: !Sub "${ProjectName}-paper-tracker"
+        AlarmArns: !Join
+          - ','
+          - - !GetAtt PaperTrackerMicroservice.Outputs.FatalLogsMetricAlarmArn
+        DynamoDBTableNames: !Join
+          - ','
+          - - !Ref PaperTrackingsTableName
+            - !Ref PaperTrackingsErrorsTableName
+            - !Ref PaperTrackerDryRunOutputsTableName
+        QueueArns: !Join
+          - ','
+          - - !Ref ExternalChannelToPaperTrackerQueueARN
+            - !Ref PnOcrOutputsQueueARN
+        LogGroupsNames: !Join
+          - ','
+          - - !Sub '/aws/ecs/${ProjectName}-paper-tracker'
+
+  PaperTrackerMicroserviceTaskPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:Query
+              - dynamodb:BatchGetItem
+            Resource:
+              - !Sub "${PaperTrackingsTableArn}"
+              - !Sub "${PaperTrackerDryRunOutputsTableArn}"
+              - !Sub "${PaperTrackingsErrorsTableArn}"
+              - !Sub "${PaperTrackingsTableArn}/*"
+              - !Sub "${PaperTrackerDryRunOutputsTableArn}/*"
+              - !Sub "${PaperTrackingsErrorsTableArn}/*"
+          - Effect: Allow
+            Action:
+              - sqs:ChangeMessageVisibility
+              - sqs:ChangeMessageVisibilityBatch
+              - sqs:DeleteMessage
+              - sqs:DeleteMessageBatch
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+              - sqs:ReceiveMessage
+              - sqs:SendMessage
+              - sqs:SendMessageBatch
+            Resource:
+              - !Ref ExternalChannelToPaperTrackerQueueARN
+              - !Ref PnOcrOutputsQueueARN
+              - !Ref PnOcrInputsQueueARN
+              - !Ref ExternalChannelsOutputsQueueARN
+              - !Ref ExternalChannels2PaperChannelQueueARN
+              - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${ExternalChannelsToPaperChannelDryrunQueueName}'
+          - Effect: Allow
+            Action:
+              - events:PutEvents
+            Resource:
+              - !Sub arn:aws:events:${AWS::Region}:${AWS::AccountId}:event-bus/${ProjectName}-CoreEventBus
+
+  ##########################################################################
+  ###              NotificationReworkEventsValidationLambda              ###
+  ##########################################################################
+  NotificationReworkEventsValidationLambdaSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${NotificationReworkEventsValidationLambdaName}-sec-group'
+      VpcId: !Ref VpcId
+
+  # Lambda function
+  NotificationReworkEventsValidationLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref NotificationReworkEventsValidationLambdaName
+      Runtime: nodejs22.x
+      Handler: "index.handler"
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/notificationReworkEventsValidation.zip"
+      Role: !GetAtt NotificationReworkEventsValidationLambdaRole.Arn
+      Environment:
+        Variables:
+          REGION: !Sub ${AWS::Region}
+          NOTIFICATION_REWORK_TABLE: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${ProjectName}-NotificationReworks
+          NOTIFICATION_REWORK_EVENTS_ERROR_TABLE: !Ref NotificationReworkEventsErrorTableName
+          INVALID_STATUS_CODE: !Ref NotificationReworkInvalidStatusCode
+          EXTERNAL_TO_PAPER_QUEUE_URL: !Ref ExternalChannels2PaperChannelQueueURL
+      TracingConfig:
+        Mode: Active
+      Layers:
+        - !Sub "arn:aws:lambda:${AWS::Region}:339249233099:layer:LambdaInsightsExtension:13"
+      Timeout: 10
+
+  # Lambda function role
+  NotificationReworkEventsValidationLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-NotificationReworkEventsValidationLambdaRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  # Lambda function IAM policy
+  NotificationReworkEventsValidationLambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-NotificationReworkEventsValidationLambdaPolicy
+      Roles:
+        - !Ref NotificationReworkEventsValidationLambdaRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - "dynamodb:updateItem"
+              - "dynamodb:putItem"
+              - "dynamodb:getItem"
+              - "dynamodb:query"
+            Resource:
+              - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/pn-NotificationReworks
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/pn-NotificationReworks/*"
+              - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/pn-NotificationReworkEventsError
+              - !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/pn-NotificationReworkEventsError/*"
+          - Effect: Allow
+            Action:
+              - sqs:ChangeMessageVisibility
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+              - sqs:SendMessage
+            Resource: !Ref ExternalChannels2PaperChannelQueueARN
+          - Effect: Allow
+            Action:
+              - sqs:ReceiveMessage
+              - sqs:ChangeMessageVisibility
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+            Resource: !Ref ExternalChannelToReworkEventValidationQueueARN
+
+  # CDC to  NotificationReworkEventsValidationLambda
+  NotificationReworkEventsValidationLambdaSource:
+    Type: AWS::Lambda::EventSourceMapping
+    DependsOn: NotificationReworkEventsValidationLambdaPolicy
+    Properties:
+      BatchSize: !Sub ${NotificationReworkEventsValidationLambdaBatchSize}
+      EventSourceArn: !Ref ExternalChannelToReworkEventValidationQueueARN
+      FunctionName: !Ref NotificationReworkEventsValidationLambda
+      MaximumBatchingWindowInSeconds: 60
+      Enabled: true
+
+  NotificationReworkEventsValidationLambdaAlarms:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/lambda-alarms.yaml"
+      Parameters:
+        FunctionName: !Ref  NotificationReworkEventsValidationLambda
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+
+  #### Alarm for custom metric Autoscaling
+  AlarmCustomAutoscaling:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-autoscaling-custom"
+      AlarmDescription: "Trigger scaling based on custom metric"
+      DatapointsToAlarm: !Ref AutoscalingDataPointN
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      Metrics:
+        - Id: m1
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: QueueName
+                  Value: !Ref "ExternalChannelToPaperTrackerQueueName"
+              Namespace: "AWS/SQS"
+              MetricName: "ApproximateNumberOfMessagesVisible"
+            Period: !Ref AutoscalingCheckPeriod
+            Stat: Average
+          ReturnData: False
+        - Id: m2
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: QueueName
+                  Value: !Ref "PnOcrOutputsQueueName"
+              Namespace: "AWS/SQS"
+              MetricName: "ApproximateNumberOfMessagesVisible"
+            Period: !Ref AutoscalingCheckPeriod
+            Stat: Average
+          ReturnData: False
+        - Id: m3
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: TargetGroup
+                  Value: !GetAtt PaperTrackerMicroservice.Outputs.TargetGroupName
+              Namespace: "AWS/ApplicationELB"
+              MetricName: "RequestCountPerTarget"
+            Period: !Ref AutoscalingCheckPeriod
+            Stat: Sum
+          ReturnData: False
+        - Id: m4
+          MetricStat:
+            Metric:
+              Dimensions:
+                - Name: TargetGroup
+                  Value: !GetAtt PaperTrackerMicroservice.Outputs.TargetGroupName
+                - Name: LoadBalancer
+                  Value: !Ref ApplicationLoadBalancerMetricsDimensionName
+              Namespace: "AWS/ApplicationELB"
+              MetricName: "HealthyHostCount"
+            Period: !Ref AutoscalingCheckPeriod
+            Stat: Average
+          ReturnData: False
+        - Id: code
+          Expression: !Sub "IF(m4==0, 101, (100*(m1+m2)) / (${ConsumedQueueMessagePerMinute} * m4) )"
+          Label: !Sub "${ProjectName}-paper-tracker-queue-custom-metric"
+          ReturnData: False
+        - Id: http
+          Expression: !Sub "(100 * m3) / ${AutoscalingThreshold}"
+          Label: !Sub "${ProjectName}-paper-tracker-http-custom-metric"
+          ReturnData: False
+        - Id: e1
+          Expression: "IF( code<http, http, code )"
+          Label: !Sub "${ProjectName}-paper-tracker-autoscale-custom-metric"
+      EvaluationPeriods: !Ref AutoscalingDataPointM
+      Threshold: 60
+      AlarmActions:
+        - !GetAtt PaperTrackerMicroservice.Outputs.ScaleUpPolicy
+      OKActions:
+        - !GetAtt PaperTrackerMicroservice.Outputs.ScaleDownPolicy
+
+  # Send ExternalChannel Response to reworkValidation queue
+  # pn-external-channel
+  PnCoreEventBusToPaperChannelQueue:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Route ExternalChannel Events to pn-paper-channel
+      RoleArn: !GetAtt "EventBusEnqueueRole.Arn"
+      EventBusName: !Sub '${ProjectName}-CoreEventBus'
+      EventPattern:
+        detail-type: [ "ExternalChannelReworkOutcomeEvent" ]
+      Targets:
+        - Arn: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:PnCoreEventBusMatchedEventLogger
+          Id: !Sub ${ProjectName}-Logger-ExtCh2PaperChannel
+          InputTransformer:
+            InputPathsMap:
+              "timestamp": "$.time"
+            InputTemplate: |
+              {
+                  "timestamp": <timestamp>,
+                  "ruleArn": <aws.events.rule-arn>,
+                  "ruleName": <aws.events.rule-name>,
+                  "ingestionTime": <aws.events.event.ingestion-time>,
+                  "originalEvent": <aws.events.event.json>
+              }
+        - Id: !Sub '${ProjectName}-CoreEventBus-ExtCh2PaperChannel'
+          Arn: !Ref ExternalChannelToReworkEventValidationQueueARN
+          InputPath: $.detail
+          DeadLetterConfig:
+            Arn: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:pn-CoreEventBus-DLQ
+
+  EventBusEnqueueRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+        Version: "2012-10-17"
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-paper-tracker-eventBusRuleQueuePolicy
+          PolicyDocument:
+            Statement:
+              - Sid: putEvents
+                Action:
+                  - sqs:ChangeMessageVisibility
+                  - sqs:ChangeMessageVisibilityBatch
+                  - sqs:GetQueueAttributes
+                  - sqs:GetQueueUrl
+                  - sqs:SendMessage
+                  - sqs:SendMessageBatch
+                Effect: Allow
+                Resource:
+                  - !Ref ExternalChannelToReworkEventValidationQueueARN
+
+  ExternalChannelToReworkPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ExternalChannelToReworkEventValidationQueueURL
+      PolicyDocument:
+        Statement:
+          - Sid: "SendEventsToDLQ"
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "events.amazonaws.com"
+            Action:
+              - "SQS:SendMessage"
+            Resource:
+              - !Ref ExternalChannelToReworkEventValidationQueueARN
+
+  PaperTracker890ErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-890Errors-Alarm"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: !Ref 890ErrorThreshold
+      OKActions:
+        - !Ref AlarmSNSTopicArn
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      EvaluationPeriods: !Ref 890EvaluationPeriods
+      DatapointsToAlarm: !Ref 890DatapointsToAlarm
+      TreatMissingData: !Ref 890TreatMissingData
+      Metrics:
+        - Id: q1
+          Expression: !Sub |
+            SELECT SUM(ERROR_COUNT)
+            FROM SCHEMA("paper-tracker-errors", errorCategory, productType)
+            WHERE ${890WhereClause} AND productType = '890'
+          ReturnData: true
+          Period: 600
+
+  PaperTrackerRISErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-RISErrors-Alarm"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: !Ref RISErrorThreshold
+      OKActions:
+        - !Ref AlarmSNSTopicArn
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      EvaluationPeriods: !Ref RISEvaluationPeriods
+      DatapointsToAlarm: !Ref RISDatapointsToAlarm
+      TreatMissingData: !Ref RISTreatMissingData
+      Metrics:
+        - Id: q1
+          Expression: !Sub |
+            SELECT SUM(ERROR_COUNT)
+            FROM SCHEMA("paper-tracker-errors", errorCategory, productType)
+            WHERE ${RISWhereClause} AND productType = 'RIS'
+          ReturnData: true
+          Period: 600
+
+  PaperTrackerARErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-ARErrors-Alarm"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: !Ref ARErrorThreshold
+      OKActions:
+        - !Ref AlarmSNSTopicArn
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      EvaluationPeriods: !Ref AREvaluationPeriods
+      DatapointsToAlarm: !Ref ARDatapointsToAlarm
+      TreatMissingData: !Ref ARTreatMissingData
+      Metrics:
+        - Id: q1
+          Expression: !Sub |
+            SELECT SUM(ERROR_COUNT)
+            FROM SCHEMA("paper-tracker-errors", errorCategory, productType)
+            WHERE ${ARWhereClause} AND productType = 'AR'
+          ReturnData: true
+          Period: 600
+
+  PaperTrackerRSErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-RSErrors-Alarm"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: !Ref RSErrorThreshold
+      OKActions:
+        - !Ref AlarmSNSTopicArn
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      EvaluationPeriods: !Ref RSEvaluationPeriods
+      DatapointsToAlarm: !Ref RSDatapointsToAlarm
+      TreatMissingData: !Ref RSTreatMissingData
+      Metrics:
+        - Id: q1
+          Expression: !Sub |
+            SELECT SUM(ERROR_COUNT)
+            FROM SCHEMA("paper-tracker-errors", errorCategory, productType)
+            WHERE ${RSWhereClause} AND productType = 'RS'
+          ReturnData: true
+          Period: 600
+
+  PaperTrackerRIRErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub "${ProjectName}-paper-tracker-RIRErrors-Alarm"
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: !Ref RIRErrorThreshold
+      OKActions:
+        - !Ref AlarmSNSTopicArn
+      AlarmActions:
+        - !Ref AlarmSNSTopicArn
+      EvaluationPeriods: !Ref RIREvaluationPeriods
+      DatapointsToAlarm: !Ref RIRDatapointsToAlarm
+      TreatMissingData: !Ref RIRTreatMissingData
+      Metrics:
+        - Id: q1
+          Expression: !Sub |
+            SELECT SUM(ERROR_COUNT)
+            FROM SCHEMA("paper-tracker-errors", errorCategory, productType)
+            WHERE ${RIRWhereClause} AND productType = 'RIR'
+          ReturnData: true
+          Period: 600
