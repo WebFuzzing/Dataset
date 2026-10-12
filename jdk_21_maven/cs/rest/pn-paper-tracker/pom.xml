@@ -5,7 +5,10 @@
 		<groupId>it.pagopa.pn</groupId>
 		<artifactId>pn-parent</artifactId>
 		<version>2.3.1-SPRINGBOOT3</version>
-		<relativePath />
+		<!--          MODIFIED-->
+		<!-- repository URLs are not interpolated while resolving the parent -->
+		<relativePath>../../../local-repo/it/pagopa/pn/pn-parent/2.3.1-SPRINGBOOT3/pn-parent-2.3.1-SPRINGBOOT3.pom</relativePath>
+		<!--          MODIFIED-->
 	</parent>
 	<artifactId>pn-paper-tracker</artifactId>
 	<version>1.8.0-SNAPSHOT</version>
@@ -17,6 +20,21 @@
 		<url>${git.url}</url>
 	  <tag>HEAD</tag>
   </scm>
+
+	<!--          MODIFIED-->
+	<!-- pagopa artifacts (pn-parent, pn-commons, pn-model) are not on Maven Central, built from their tags -->
+	<repositories>
+		<repository>
+			<id>local-repo</id>
+			<url>file://${project.basedir}/../../../local-repo</url>
+		</repository>
+	</repositories>
+
+	<properties>
+		<!-- the Docker build sees no .git directory -->
+		<maven.gitcommitid.skip>true</maven.gitcommitid.skip>
+	</properties>
+	<!--          MODIFIED-->
 
 	<dependencies>
 
@@ -185,6 +203,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!--          MODIFIED-->
+				<!-- WFD expects a single self-contained "pn-paper-tracker-sut.jar". The classifier keeps
+				     the plain jar as the main artifact, which the embedded driver depends on. -->
+				<configuration>
+					<finalName>pn-paper-tracker</finalName>
+					<classifier>sut</classifier>
+				</configuration>
+				<!--          MODIFIED-->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -412,7 +438,10 @@
 						<configuration>
 							<specFiles>
 								<specFile>
-									<filePath>docs/asyncapi/external-datalake-v1.yaml</filePath>
+									<!--          MODIFIED-->
+									<!-- the plugin resolves relative paths against the working directory, not the module -->
+									<filePath>${project.basedir}/docs/asyncapi/external-datalake-v1.yaml</filePath>
+									<!--          MODIFIED-->
 									<consumer>
 										<ids>OCR_Command</ids>
 										<classNamePostfix>CustomConsumer</classNamePostfix>
@@ -422,7 +451,9 @@
 									</consumer>
 								</specFile>
 								<specFile>
-									<filePath>docs/asyncapi/internal-datalake-v1.yaml</filePath>
+									<!--          MODIFIED-->
+									<filePath>${project.basedir}/docs/asyncapi/internal-datalake-v1.yaml</filePath>
+									<!--          MODIFIED-->
 									<supplier>
 										<ids>OCR_Result</ids>
 										<apiPackage>com.sngular.apigenerator.asyncapi.business_model.model.event.producer</apiPackage>

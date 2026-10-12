@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>evomaster-benchmark-jdk21-em-external-rest-pn-paper-tracker</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.evomaster</groupId>
+        <artifactId>evomaster-benchmark-jdk21-em-external-rest</artifactId>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.5.13</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.18.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>dynamodb</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>netty-nio-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>apache-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- JDK based, so no httpclient/commons-codec copies on the SUT classpath -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>url-connection-client</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <!-- The SUT does not serve its schema (its YAML refs remote files, so the bundled copy is used),
+             and its settings live in a local config file -->
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../../../../../openapi</directory>
+                <includes>
+                    <include>pn-paper-tracker.json</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../cs/rest/pn-paper-tracker/config</directory>
+                <!-- not at the root: the runner jar is on the SUT classpath -->
+                <targetPath>pn-paper-tracker</targetPath>
+                <includes>
+                    <include>application.properties</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>pn-paper-tracker-evomaster-runner</finalName>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>em.external.it.pagopa.pn.papertracker.ExternalEvoMasterController
+                                        </Main-Class>
+                                        <Premain-Class>org.evomaster.client.java.instrumentation.InstrumentingAgent
+                                        </Premain-Class>
+                                        <Agent-Class>org.evomaster.client.java.instrumentation.InstrumentingAgent
+                                        </Agent-Class>
+                                        <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                                        <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>shaded.emb.org.slf4j</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.fasterxml.jackson.annotation</pattern>
+                                    <shadedPattern>shaded.emb.com.fasterxml.jackson.annotation</shadedPattern>
+                                </relocation>
+                                <!-- an unrelocated SDK hides the SUT's netty async client from the SDK's ServiceLoader;
+                                     cost: EvoMaster's DynamoDB replacements no longer match the SUT's client -->
+                                <relocation>
+                                    <pattern>software.amazon</pattern>
+                                    <shadedPattern>shaded.emb.software.amazon</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

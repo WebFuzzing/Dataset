@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>evomaster-benchmark-jdk21-em-embedded-rest-pn-paper-tracker</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.evomaster</groupId>
+        <artifactId>evomaster-benchmark-jdk21-em-embedded-rest</artifactId>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+    <!-- the SUT's pom has pagopa parents that are not on Maven Central -->
+    <repositories>
+        <repository>
+            <id>local-repo</id>
+            <url>file://${project.basedir}/../../../../local-repo</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.5.13</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The SUT as a library -->
+        <dependency>
+            <groupId>it.pagopa.pn</groupId>
+            <artifactId>pn-paper-tracker</artifactId>
+            <version>1.8.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- The SUT does not serve its schema (its YAML refs remote files, so the bundled copy is used),
+             and its settings live in a local config file -->
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../../../../../openapi</directory>
+                <includes>
+                    <include>pn-paper-tracker.json</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../cs/rest/pn-paper-tracker/config</directory>
+                <!-- not at the root: it would hide the SUT's own application.properties -->
+                <targetPath>pn-paper-tracker</targetPath>
+                <includes>
+                    <include>application.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+</project>
