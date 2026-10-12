@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: producer-api
+  cloud:
+    schema-registry-client:
+      endpoint: http://${SCHEMA_REGISTRY_HOST:localhost}:${SCHEMA_REGISTRY_PORT:8081}
+    schema:
+      avro:
+        schema-locations:
+          - classpath:avro/news-event.avsc
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:29092}
+          auto-add-partitions: true
+          enable-observation: true
+      output-bindings: news-out-0
+      bindings:
+        news-out-0:
+          destination: com.ivanfranchin.newspipeline.producer.news
+          content-type: application/*+avro
+          producer:
+            partition-key-expression: headers['partitionKey']
+            partition-count: 2
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure.include: beans, env, health, metrics, mappings
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      zipkin:
+        endpoint: http://${ZIPKIN_HOST:localhost}:${ZIPKIN_PORT:9411}/api/v2/spans
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka
+  instance:
+    preferIpAddress: true
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    groups-order: DESC
+    disable-swagger-default-url: true
