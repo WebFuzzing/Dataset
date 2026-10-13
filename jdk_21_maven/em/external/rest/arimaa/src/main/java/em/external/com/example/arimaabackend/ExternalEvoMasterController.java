@@ -29,8 +29,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ExternalEvoMasterController extends ExternalSutController {
 
@@ -151,6 +153,10 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private List<Map<String, Object>> neo4jHasUserSnapshot;
 
+    // Every non-User node right after migration. EvoMaster can insert nodes of any label straight into
+    // the graph, so the reset deletes whatever non-User node is not in here (Users are rebuilt anyway).
+    private Set<String> neo4jSeedNodeIds;
+
     public ExternalEvoMasterController() {
         this(DEFAULT_CONTROLLER_PORT, "../target/arimaa-sut.jar", DEFAULT_SUT_PORT, 120, "java");
     }
@@ -233,6 +239,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
         captureMongoSnapshot();
         captureNeo4jUserSnapshot();
+        captureNeo4jSeedNodes();
     }
 
     private void captureMongoSnapshot() {
@@ -252,6 +259,13 @@ public class ExternalEvoMasterController extends ExternalSutController {
             neo4jHasUserSnapshot = session.run(
                             "MATCH (p:Player)-[:HAS_USER]->(u:User) RETURN p.id AS playerId, u.id AS userId")
                     .list(r -> Map.of("playerId", r.get("playerId").asObject(), "userId", r.get("userId").asObject()));
+        }
+    }
+
+    private void captureNeo4jSeedNodes() {
+        try (Session session = neo4jDriver.session()) {
+            neo4jSeedNodeIds = new HashSet<>(session.run("MATCH (n) WHERE NOT n:User RETURN elementId(n) AS id")
+                    .list(r -> r.get("id").asString()));
         }
     }
 
@@ -324,6 +338,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     @Override
     public void resetStateOfSUT() {
         resetMongo();
+        deleteInsertedNeo4jNodes();
         resetNeo4jUsers();
     }
 
@@ -338,6 +353,20 @@ public class ExternalEvoMasterController extends ExternalSutController {
                     copies.add(new Document(d));
                 }
                 collection.insertMany(copies);
+            }
+        }
+    }
+
+    private void deleteInsertedNeo4jNodes() {
+        try (Session session = neo4jDriver.session()) {
+            List<String> inserted = session.run("MATCH (n) WHERE NOT n:User RETURN elementId(n) AS id")
+                    .list(r -> r.get("id").asString())
+                    .stream()
+                    .filter(id -> !neo4jSeedNodeIds.contains(id))
+                    .toList();
+            if (!inserted.isEmpty()) {
+                session.run("UNWIND $ids AS id MATCH (n) WHERE elementId(n) = id DETACH DELETE n",
+                        Map.of("ids", inserted)).consume();
             }
         }
     }
