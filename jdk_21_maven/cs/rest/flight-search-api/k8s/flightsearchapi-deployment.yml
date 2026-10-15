@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flightsearchapi
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flightsearchapi
+  template:
+    metadata:
+      labels:
+        app: flightsearchapi
+    spec:
+      containers:
+        - name: flightsearchapi
+          image: noyandocker/flightsearchapi:latest
+          ports:
+            - containerPort: 1133
+          envFrom:
+            - configMapRef:
+                name: flightsearchapi-config
+          volumeMounts:
+            - name: flightsearchapi-data
+              mountPath: /data/logs
+      volumes:
+        - name: flightsearchapi-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flightsearchapi-service
+  namespace: default
+spec:
+  selector:
+    app: flightsearchapi
+  ports:
+    - protocol: TCP
+      port: 1133
+      targetPort: 1133
+  type: NodePort

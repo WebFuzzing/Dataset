@@ -17,6 +17,7 @@
         <module>pay-publicapi</module>
         <module>tracking-system</module>
         <module>http-patch-spring</module>
+        <module>management-cassandra</module>
     </modules>
 
 

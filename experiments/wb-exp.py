@@ -193,21 +193,28 @@ SUTS = [
     Sut("erc20-rest-service", JDK_8),
     Sut("familie-ba-sak",JDK_17),
     Sut("features-service",  JDK_8),
+    Sut("flight-search-api", JDK_21),
+    Sut("gdpr-kv", JDK_21),
+    Sut("traccar", JDK_21),
     Sut("genome-nexus",  JDK_8),
     Sut("gestaohospital",  JDK_8),
     Sut("http-patch-spring", JDK_11),
     Sut("jasper",  JDK_25),
     Sut("joinus", JDK_21),
+    Sut("kafka-rest", JDK_17),
     Sut("komga", JDK_17),
     Sut("languagetool",  JDK_8),
     Sut("lovemining", JDK_21),
+    Sut("management-cassandra", JDK_11),
     Sut("market",  JDK_11),
     Sut("microcks", JDK_21),
     Sut("movies-xml", JDK_21),
+    Sut("notebook-manager", JDK_8),
     Sut("ocvn",  JDK_8),
     Sut("ohsome-api", JDK_17),
     Sut("pay-publicapi",JDK_11),
     Sut("person-controller",JDK_21),
+    Sut("petclinic-rest", JDK_17),
     Sut("proxyprint",  JDK_8),
     Sut("quartz-manager", JDK_11),
     Sut("redis-sample", JDK_21),
@@ -286,6 +293,11 @@ if JAVA_HOME_17 == "":
 JAVA_HOME_21 = os.environ.get("JAVA_HOME_21", "")
 if JAVA_HOME_21 == "":
         raise Exception("You must specify a JAVA_HOME_21 env variable specifying where JDK 21 is installed")
+
+JAVA_HOME_25 = os.environ.get("JAVA_HOME_25", "")
+if JAVA_HOME_25 == "":
+        raise Exception("You must specify a JAVA_HOME_25 env variable specifying where JDK 25 is installed")
+
 
 JACOCO_AGENT = "not-defined"
 JACOCO_CLI = "not-defined"
@@ -509,6 +521,8 @@ def getJavaExeByJDK(platform):
         path = JAVA_HOME_17 +"/bin/java"
     elif platform == JDK_21:
         path = JAVA_HOME_21 +"/bin/java"
+    elif platform == JDK_25:
+            path = JAVA_HOME_25 +"/bin/java"
     else:
         raise Exception("ERROR: unhandled JVM version: " + platform)
 
@@ -789,6 +803,10 @@ def is_float(input):
     except ValueError:
         return False
     return True
+
+
+def get_parameters(names, value):
+    return [ParameterSetting(s, value) for s in names]
 
 
 ############################################################################

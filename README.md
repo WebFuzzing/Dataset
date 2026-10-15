@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (47)
+### REST: Java/Kotlin (54)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -109,6 +109,10 @@ Auth configuration files can found in the [auth](auth) folder.
 
 * **Features-Service** (Apache), [jdk_8_maven/cs/rest/original/features-service](jdk_8_maven/cs/rest/original/features-service), from [https://github.com/JavierMF/features-service](https://github.com/JavierMF/features-service)
 
+* **Flight Search API** (MIT), [jdk_21_maven/cs/rest/flight-search-api](jdk_21_maven/cs/rest/flight-search-api), from [https://github.com/Rapter1990/flightsearchapi](https://github.com/Rapter1990/flightsearchapi)
+
+* **GDPR-KV** (not-known license), [jdk_21_gradle/cs/rest/gdpr-kv](jdk_21_gradle/cs/rest/gdpr-kv), from [https://github.com/jessicant/GDPR-KV](https://github.com/jessicant/GDPR-KV)
+
 * **Genome Nexus** (MIT), [jdk_8_maven/cs/rest-gui/genome-nexus](jdk_8_maven/cs/rest-gui/genome-nexus), from [https://github.com/genome-nexus/genome-nexus](https://github.com/genome-nexus/genome-nexus)
 
 * **Gestao Hospital** (not-known license), [jdk_8_maven/cs/rest-gui/gestaohospital](jdk_8_maven/cs/rest-gui/gestaohospital), from [https://github.com/ValchanOficial/GestaoHospital](https://github.com/ValchanOficial/GestaoHospital)
@@ -117,6 +121,8 @@ Auth configuration files can found in the [auth](auth) folder.
 
 * **Jasper** (MIT), [jdk_25_maven/cs/rest/jasper](jdk_25_maven/cs/rest/jasper), from [https://github.com/cjmalloy/jasper](https://github.com/cjmalloy/jasper)
 
+* **Kafka REST Proxy** (Confluent Community License), [jdk_17_maven/cs/rest/kafka-rest](jdk_17_maven/cs/rest/kafka-rest), from [https://github.com/confluentinc/kafka-rest](https://github.com/confluentinc/kafka-rest)
+
 * **JoinUs** (not-known license), [jdk_21_maven/cs/rest/joinus](jdk_21_maven/cs/rest/joinus), from [https://github.com/KLAJDI16/joinUs](https://github.com/KLAJDI16/joinUs)
 
 * **Komga** (MIT), [jdk_17_gradle/cs/rest/komga](jdk_17_gradle/cs/rest/komga), from [https://github.com/gotson/komga](https://github.com/gotson/komga)
@@ -124,6 +130,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Languagetool** (LGPL), [jdk_8_maven/cs/rest/original/languagetool](jdk_8_maven/cs/rest/original/languagetool), from [https://github.com/languagetool-org/languagetool](https://github.com/languagetool-org/languagetool)
 
 * **LoveMining** (not-known license), [jdk_21_maven/cs/rest/lovemining](jdk_21_maven/cs/rest/lovemining), from [https://github.com/Andryd22/LoveMining](https://github.com/Andryd22/LoveMining)
+
+* **Management API for Apache Cassandra** (Apache), [jdk_11_maven/cs/rest/management-cassandra](jdk_11_maven/cs/rest/management-cassandra), from [https://github.com/k8ssandra/management-api-for-apache-cassandra](https://github.com/k8ssandra/management-api-for-apache-cassandra)
 
 * **Market** (MIT), [jdk_11_maven/cs/rest-gui/market](jdk_11_maven/cs/rest-gui/market), from [https://github.com/aleksey-lukyanets/market](https://github.com/aleksey-lukyanets/market)
 
@@ -134,6 +142,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **NCS**, [jdk_8_maven/cs/rest/artificial/ncs](jdk_8_maven/cs/rest/artificial/ncs), (not-known license, artificial numerical examples coming from different sources)
 
 * **News** (LGPL), [jdk_8_maven/cs/rest/artificial/news](jdk_8_maven/cs/rest/artificial/news), from [https://github.com/arcuri82/testing_security_development_enterprise_systems](https://github.com/arcuri82/testing_security_development_enterprise_systems)
+
+* **NoteBook Manager** (not-known license), [jdk_8_maven/cs/rest/original/notebook-manager](jdk_8_maven/cs/rest/original/notebook-manager), from [https://github.com/birddevelper/NoteBookManager](https://github.com/birddevelper/NoteBookManager)
 
 * **OCVN** (MIT), [jdk_8_maven/cs/rest-gui/ocvn](jdk_8_maven/cs/rest-gui/ocvn), from [https://github.com/devgateway/ocvn](https://github.com/devgateway/ocvn)
 
@@ -169,11 +179,15 @@ Auth configuration files can found in the [auth](auth) folder.
 
 * **Spring ECommerce** (not-known license), [jdk_8_maven/cs/rest/original/spring-ecommerce](jdk_8_maven/cs/rest/original/spring-ecommerce), from [https://github.com/SaiUpadhyayula/SpringAngularEcommerce](https://github.com/SaiUpadhyayula/SpringAngularEcommerce)
 
+* **Spring PetClinic REST** (Apache), [jdk_17_maven/cs/rest/petclinic-rest](jdk_17_maven/cs/rest/petclinic-rest), from [https://github.com/spring-petclinic/spring-petclinic-rest](https://github.com/spring-petclinic/spring-petclinic-rest)
+
 * **Swagger Petstore** (Apache), [jdk_8_maven/cs/rest/original/swagger-petstore](jdk_8_maven/cs/rest/original/swagger-petstore), from [https://github.com/swagger-api/swagger-petstore](https://github.com/swagger-api/swagger-petstore)
 
 * **Testing System** (MIT), [jdk_21_maven/cs/rest/testing-system](jdk_21_maven/cs/rest/testing-system), from [https://github.com/mirodilkamilov/testing-system](https://github.com/mirodilkamilov/testing-system)
 
 * **Tiltaksgjennomføring** (MIT), [jdk_17_maven/cs/rest/tiltaksgjennomforing](jdk_17_maven/cs/rest/tiltaksgjennomforing), from [https://github.com/navikt/tiltaksgjennomforing-api](https://github.com/navikt/tiltaksgjennomforing-api)
+
+* **Traccar** (Apache), [jdk_21_gradle/cs/rest/traccar](jdk_21_gradle/cs/rest/traccar), from [https://github.com/traccar/traccar](https://github.com/traccar/traccar)
 
 * **User Management** (MIT), [jdk_8_maven/cs/rest/original/user-management](jdk_8_maven/cs/rest/original/user-management), from [https://github.com/andreagiassi/microservice-rbac-user-management](https://github.com/andreagiassi/microservice-rbac-user-management)
 

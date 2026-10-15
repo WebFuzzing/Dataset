@@ -58,7 +58,7 @@ def checkDocker():
         # So must make sure to clean up any un-used ones.
         # Had issues where previous experiments did not clean up properly, and all new failed for
         # lack of available networks
-        print("Going to prune all unused networks ('docker network prune -f').", flush=True)
+        print("Going to prune all unused networks ('docker network prune -f').", result.stderr, file=sys.stderr, flush=True)
         result = subprocess.run(
             ['docker', 'network', 'prune', '-f'],
             stdout=subprocess.PIPE,

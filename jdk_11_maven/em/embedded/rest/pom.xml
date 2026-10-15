@@ -19,6 +19,7 @@
         <module>tracking-system</module>
         <module>http-patch-spring</module>
         <module>quartz-manager</module>
+        <module>management-cassandra</module>
     </modules>
 
 </project>

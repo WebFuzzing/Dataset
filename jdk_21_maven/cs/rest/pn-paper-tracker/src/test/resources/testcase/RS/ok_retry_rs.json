@@ -1,0 +1,113 @@
+{
+  "name": "OK_RETRY_RS",
+  "productType": "RS",
+  "initialTracking": {
+    "productType": "RS",
+    "pcRetry": "PCRETRY_0",
+    "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+    "unifiedDeliveryDriver": "POSTE"
+  },
+  "events": [
+    {
+      "messageId": "7c3f2a1e-5b6d-4f98-9a3c-2d1e4f6b8c01",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RS", "registeredLetterCode": "1234567891011", "statusCode": "CON080", "statusDescription": "desc", "deliveryFailureCause": null, "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:00Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "91b4e7d2-3a6f-4c8e-9d2a-5f7b1c3e6a02",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RS", "registeredLetterCode": "1234567891011", "statusCode": "CON020", "statusDescription": "desc", "deliveryFailureCause": null, "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id", "uri": "uri.pdf", "date": "2024-01-01T10:00:01Z"}], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:01Z"}
+    },
+    {
+      "messageId": "c2d7a4e1-6f3b-4a9d-8c2e-7b1f5d3a9e03",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RS", "registeredLetterCode": "1234567891011", "statusCode": "RECRS006", "statusDescription": "desc", "deliveryFailureCause": "F03", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:02Z", "statusDateTime": "2024-01-01T10:00:02Z"}
+    },
+    {
+      "messageId": "7c3f2a1e-5b6d-4f98-9a3c-2d1e4f6b8c02",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "RS", "registeredLetterCode": "1234567891011", "statusCode": "CON080", "statusDescription": "desc", "deliveryFailureCause": null, "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:00Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "e7a8b9c0-d1f2-4345-f012-6d7e8f9a0b11",
+      "analogMail": {"requestId": "{{REQUEST_ID_RETRY}}", "iun": "{{RANDOM_IUN}}", "productType": "RS", "registeredLetterCode": "1234567891011", "statusCode": "RECRS001C", "statusDescription": "desc", "deliveryFailureCause": null, "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:01:06Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    }
+  ],
+  "expected": {
+    "errors": [
+    ],
+    "outputs": [
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON080", "statusDescription": "RS - CON080 - desc", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:00Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON020", "statusDescription": "RS - CON020 - desc", "statusDateTime": "2024-01-01T10:00:01Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id", "uri": "uri.pdf", "date": "2024-01-01T10:00:01Z"}]},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECRS006", "statusDescription": "RS - RECRS006 - desc", "statusDateTime": "2024-01-01T10:00:02Z", "clientRequestTimestamp": "2024-01-01T10:00:02Z", "deliveryFailureCause": "F03", "attachments": []},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON080", "statusDescription": "RS - CON080 - desc", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:00Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID_RETRY}}", "registeredLetterCode": "1234567891011", "statusCode": "OK", "statusDetail": "RECRS001C", "statusDescription": "RS - RECRS001C - desc", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:01:06Z", "attachments": []}
+    ],
+
+    "trackings": [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "pcRetry": "PCRETRY_0",
+        "unifiedDeliveryDriver": "POSTE",
+        "processingMode": "DRY",
+        "productType": "RS",
+        "state": "DONE",
+        "businessState": "DONE",
+        "nextRequestIdPcretry": "{{REQUEST_ID_RETRY}}",
+
+        "events": [
+          {"id":"7c3f2a1e-5b6d-4f98-9a3c-2d1e4f6b8c01","statusCode": "CON080", "statusDescription": "desc", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:00Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "RS", "attachments": []},
+          {"id":"91b4e7d2-3a6f-4c8e-9d2a-5f7b1c3e6a02","statusCode": "CON020", "statusDescription": "desc", "statusTimestamp": "2024-01-01T10:00:01Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "RS", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id", "uri": "uri.pdf", "date": "2024-01-01T10:00:01Z"}]},
+          {"id":"c2d7a4e1-6f3b-4a9d-8c2e-7b1f5d3a9e03","statusCode": "RECRS006", "statusDescription": "desc", "statusTimestamp": "2024-01-01T10:00:02Z", "requestTimestamp": "2024-01-01T10:00:02Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": "F03", "iun": "{{RANDOM_IUN}}", "productType": "RS", "attachments": []
+          }
+        ],
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsFinalValidationStock890": [],
+          "sendOcrAttachmentsFinalValidation": ["Plico", "AR", "23L"],
+          "strictFinalValidationStock890": false,
+          "ocrEnabled": "DISABLED"
+        },
+
+        "validationFlow": {
+          "ocrRequests": []
+        }
+      },
+
+      {
+        "trackingId": "{{REQUEST_ID_RETRY}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "pcRetry": "PCRETRY_1",
+        "unifiedDeliveryDriver": "POSTE",
+        "processingMode": "DRY",
+        "productType": "RS",
+        "state": "DONE",
+        "businessState": "DONE",
+
+        "events": [
+          {"id":"7c3f2a1e-5b6d-4f98-9a3c-2d1e4f6b8c02", "statusCode": "CON080", "statusDescription": "desc", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:00Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "RS", "attachments": []},
+          {"id":"e7a8b9c0-d1f2-4345-f012-6d7e8f9a0b11", "statusCode": "RECRS001C", "statusDescription": "desc", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:01:06Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "RS", "attachments": []}
+        ],
+
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsFinalValidationStock890": [],
+          "sendOcrAttachmentsFinalValidation": ["Plico", "AR", "23L"],
+          "strictFinalValidationStock890": false,
+          "ocrEnabled": "DISABLED"
+        },
+
+        "validationFlow": {
+          "ocrRequests": []
+        },
+        "paperStatus": {
+          "registeredLetterCode": "1234567891011",
+          "finalStatusCode": "RECRS001C",
+          "validatedEvents": [
+            "e7a8b9c0-d1f2-4345-f012-6d7e8f9a0b11"
+          ]
+        }
+      }
+    ]
+  ,
+  "sentToOcr": 0 }}
+}

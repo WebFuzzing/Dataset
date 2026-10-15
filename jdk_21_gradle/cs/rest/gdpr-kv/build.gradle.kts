@@ -53,3 +53,12 @@ tasks.named("check") {
 springBoot {
     buildInfo()
 }
+
+// MODIFIED: WFD expects a single self-contained jar named gdpr-kv-sut.jar
+tasks.bootJar {
+    archiveVersion.set("")
+    archiveClassifier.set("sut")
+}
+tasks.jar {
+    archiveClassifier.set("plain")
+}

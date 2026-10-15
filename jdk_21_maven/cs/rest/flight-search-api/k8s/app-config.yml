@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flightsearchapi-config
+  namespace: default
+data:
+  server.port: "1133"
+  spring.data.mongodb.host: "mongodb"
+  spring.data.mongodb.port: "27017"
+  spring.data.mongodb.database: "flightdatabase"

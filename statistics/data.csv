@@ -55,7 +55,14 @@ TRUE,lovemining,REST,Java,JDK 21,Maven,25,1793,MongoDB;Neo4j,UNDEFINED,18,TRUE,h
 TRUE,digitalbanking,REST,Java,JDK 17,Maven,27,2835,Redis;Cassandra,UNDEFINED,55,FALSE,https://github.com/jphaugla/Redisearch-Digital-Banking-redisTemplate
 TRUE,komga,REST,Kotlin,JDK 17,Gradle,543,62303,SQLite,MIT,174,TRUE,https://github.com/gotson/komga
 TRUE,testing-system,REST,Java,JDK 21,Maven,72,3692,PostgreSQL;Redis,MIT,11,TRUE,https://github.com/mirodilkamilov/testing-system
+TRUE,gdpr-kv,REST,Java,JDK 21,Gradle,62,6399,DynamoDB,UNDEFINED,7,FALSE,https://github.com/jessicant/GDPR-KV
 FALSE,ind0,REST,Java,JDK 8,Gradle,103,17039,PostgreSQL,Proprietary,20,FALSE,UNDEFINED
 FALSE,ind1,REST,Java;Kotlin,JDK 11,Gradle,163,15240,PostgreSQL,Proprietary,53,FALSE,UNDEFINED
 TRUE,movies-xml,REST,Java,JDK 21,Maven,22,2502,H2,LGPL,7,FALSE,https://github.com/suarezrominajulieta/movies-xml
+TRUE,kafka-rest,REST,Java,JDK 17,Maven,475,81418,Kafka,Confluent,50,FALSE,https://github.com/confluentinc/kafka-rest
+TRUE,management-cassandra,REST,Java,JDK 11,Maven,225,35096,Cassandra,Apache,63,FALSE,https://github.com/k8ssandra/management-api-for-apache-cassandra
+TRUE,petclinic-rest,REST,Java,JDK 17,Maven,109,8675,H2,Apache,43,FALSE,https://github.com/spring-petclinic/spring-petclinic-rest
+TRUE,traccar,REST,Java,JDK 21,Gradle,1478,141962,H2,Apache,117,TRUE,https://github.com/traccar/traccar
+TRUE,flight-search-api,REST,Java,JDK 21,Maven,194,14440,MongoDB,MIT,40,TRUE,https://github.com/Rapter1990/flightsearchapi
+TRUE,notebook-manager,REST,Java,JDK 8,Maven,10,826,MySQL,UNDEFINED,5,FALSE,https://github.com/birddevelper/NoteBookManager
 

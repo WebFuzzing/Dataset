@@ -1,0 +1,119 @@
+ARG DSE_VERSION=6.9.24
+ARG UBI_MAJOR=9
+ARG UBI_BASETAG=latest
+ARG DSE_BASE_IMAGE=icr.io/ds-mission-control-private/dse-mgmtapi:${DSE_VERSION}-jdk11
+
+FROM ${DSE_BASE_IMAGE} AS dse-server-base
+
+#############################################################
+
+# Using UBI8 with Python 2 support, eventually we may switch to Python 3
+FROM registry.access.redhat.com/ubi${UBI_MAJOR}/ubi-minimal:${UBI_BASETAG} AS dse
+ARG DSE_VERSION
+ENV DSE_VERSION=${DSE_VERSION}
+
+LABEL maintainer="DataStax, Inc <info@datastax.com>"
+LABEL name="dse-server"
+LABEL vendor="DataStax, Inc"
+LABEL release="${DSE_VERSION}"
+LABEL summary="The best distribution of Apache Cassandra™ with integrated Search, Analytics, and Graph capabilities"
+LABEL description="Built on the best distribution of Apache Cassandra™, DataStax Enterprise is the always-on database designed to allow you to effortlessly build and scale your apps, integrating graph, search, analytics, administration, developer tooling, and monitoring into a single unified platform. We power your apps' real-time moments so you can create instant insights and powerful customer experiences."
+
+ENV DSE_HOME=/opt/dse
+ENV PATH=$DSE_HOME/bin:$DSE_HOME/resources/cassandra/tools/bin:$PATH
+ENV HOME=$DSE_HOME
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+# Copy the Adoptium repo file for latest OpenJDK updates
+COPY dse/files/adoptium.repo /etc/yum.repos.d/adoptium.repo
+
+# Install runtime dependencies and updates
+RUN rm -rf /var/cache/yum && \
+    microdnf install --nodocs -y temurin-11-jdk python39 zlib libaio which findutils hostname iproute shadow-utils procps util-linux glibc-langpack-en wget tar && microdnf clean all
+
+WORKDIR $HOME
+
+# Copy user accounts information
+COPY --from=dse-server-base /etc/passwd /etc/passwd
+COPY --from=dse-server-base /etc/shadow /etc/shadow
+COPY --from=dse-server-base /etc/group /etc/group
+COPY --from=dse-server-base /etc/gshadow /etc/gshadow
+
+# Copy trimmed installation
+COPY --chown=dse:root --from=dse-server-base ${DSE_HOME} ${DSE_HOME}
+COPY --chown=dse:root --from=dse-server-base /base-checks.sh /base-checks.sh
+
+# Copy license in to appropriate directory
+COPY --from=dse-server-base /LICENSE /licenses/
+
+# Replace bin/cassandra with modified that doesn't hang in k8s
+COPY --chown=dse:root dse/files/cassandra ${DSE_HOME}/resources/cassandra/bin/cassandra
+COPY --chown=dse:root dse/files/entrypoint.sh /entrypoint.sh
+COPY --chown=dse:root dse/files/overwritable-conf-files /overwritable-conf-files
+# Update permissions and build directories
+RUN chmod 0555 /entrypoint.sh /overwritable-conf-files /licenses /base-checks.sh && \
+    (for dir in /var/lib/cassandra \
+                /var/lib/dsefs \
+                /var/lib/datastax-agent \
+                /var/log/cassandra \
+                /config \
+                /licenses ; do \
+        mkdir -p $dir && chown -R dse:root $dir && chmod 775 $dir ; \
+    done )
+
+# Use OSS Management API
+ENV CASSANDRA_CONF=${DSE_HOME}/resources/cassandra/conf
+ENV MAAC_PATH=/opt/management-api
+ENV MGMT_AGENT_JAR="${MAAC_PATH}/datastax-mgmtapi-agent.jar"
+COPY --chown=dse:root --from=dse-server-base $MAAC_PATH $MAAC_PATH
+# Add CDC Agent
+ENV CDC_AGENT_PATH=/opt/cdc_agent
+COPY --chown=dse:root --from=dse-server-base $CDC_AGENT_PATH $CDC_AGENT_PATH
+
+# Adjust directories for ldconfig usage
+RUN chmod g+w /etc /etc/ld.so.cache  && \
+    # still need to change the mode of the COPY directories, though this does not duplicate layers
+    chmod g+w ${MAAC_PATH} ${DSE_HOME} ${CDC_AGENT_PATH}
+
+# Add management-api
+RUN if ! grep -qxF "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" < ${CASSANDRA_CONF}/cassandra-env.sh ; then \
+      echo "" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+      echo "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" >> ${CASSANDRA_CONF}/cassandra-env.sh ; \
+  fi
+# Add MCAC check to cassandra-env.sh
+RUN if ! grep -qxf "JVM_OPTS=\"\$JVM_OPTS -Dinsights.default_mode=disabled\"" < ${CASSANDRA_CONF}/cassandra-env.sh ; then \
+    echo "" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "if [ ! -z \"\$MGMT_API_DISABLE_MCAC\" ]; then" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "  JVM_OPTS=\"\$JVM_OPTS -Dinsights.default_mode=disabled\"" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+    echo "fi" >> ${CASSANDRA_CONF}/cassandra-env.sh ; \
+  fi
+# Set user to run as
+USER dse:root
+
+# Expose DSE folders
+VOLUME ["/var/lib/cassandra", "/var/lib/dsefs", "/var/log/cassandra"]
+
+# CASSANDRA PORTS (INTRA-NODE, TLS INTRA-NODE, JMX, CQL, THRIFT, DSEFS INTRA-NODE, INTRA-NODE MESSAGING SERVICE)
+EXPOSE 7000 7001 7199 8609 9042 9160
+
+# DSE SEARCH (SOLR)
+EXPOSE 8983 8984
+
+# DSE ANALYTICS (SPARK)
+EXPOSE 4040 7077 7080 7081 8090 9999 18080
+
+# DSE GRAPH
+EXPOSE 8182
+
+# DSEFS
+EXPOSE 5598 5599
+
+# TODO determine uses this port
+EXPOSE 10000
+
+# DSE METRICS REPORTER PORT
+EXPOSE 9103 9000
+
+# Run DSE in foreground by default
+ENTRYPOINT [ "/entrypoint.sh", "dse", "cassandra", "-f", "-R" ]

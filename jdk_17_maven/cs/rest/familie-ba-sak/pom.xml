@@ -274,10 +274,10 @@
             <groupId>no.nav.familie.felles</groupId>
             <artifactId>valutakurs-klient</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.familie.felles</groupId>
-            <artifactId>unleash</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>no.nav.familie.felles</groupId>-->
+<!--            <artifactId>unleash</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>no.nav.familie.kontrakter</groupId>
             <artifactId>felles</artifactId>

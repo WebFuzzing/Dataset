@@ -41,6 +41,11 @@
             <artifactId>testcontainers</artifactId>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,0 +1,143 @@
+{
+  "name": "OK_GIACENZA_LTE10_890",
+  "productType": "890",
+  "initialTracking": {
+    "productType": "890",
+    "pcRetry": "PCRETRY_0",
+    "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+    "unifiedDeliveryDriver": "POSTE"
+  },
+  "events": [
+    {
+      "messageId": "1f4a7c2d-8b3e-4d1a-9c22-1a6e9b3d5f10",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "CON080", "statusDescription": "CON080 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:00Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d21",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "CON020", "statusDescription": "CON020 description", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z"}], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d22",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG010", "statusDescription": "RECAG010 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d23",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG011A", "statusDescription": "RECAG011A description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG012", "statusDescription": "RECAG012 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "4c8f1a6d-5b3e-4f2a-8d55-4d9e3b7c6a43",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG005A", "statusDescription": "RECAG005A description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:03Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "6e1b3d8a-9c4f-4e7a-8d77-6f2c4b9a1d65",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG005B", "statusDescription": "RECAG005B description", "attachments": [{"documentType": "ARCAD", "sha256": "sha256", "id": "id-RECAG005B-ARCAD", "uri": "https://example.com/RECAG005B-ARCAD.pdf", "date": "2024-01-01T10:00:04Z"},{"documentType": "23L", "sha256": "sha256", "id": "id-RECAG005B-23L", "uri": "https://example.com/RECAG005B-23L.pdf", "date": "2024-01-01T10:00:04Z"}], "clientRequestTimeStamp": "2024-01-01T10:00:04Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "7f2c4e9b-1d6a-4a8f-9c88-7a3d5e1b2c76",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "890", "registeredLetterCode": "1234567891011", "statusCode": "RECAG005C", "statusDescription": "RECAG005C description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:05Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    }
+  ],
+  "expected": {
+    "errors": [],
+    "outputs": [
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON080", "statusDescription": "890 - CON080 - CON080 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:00Z", "attachments": [] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON020", "statusDescription": "890 - CON020 - CON020 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [ { "documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z" } ] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG010", "statusDescription": "890 - RECAG010 - RECAG010 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG011A", "statusDescription": "890 - RECAG011A - RECAG011A description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [ ] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG012A", "statusDescription": "RECAG012A", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG005A", "statusDescription": "890 - RECAG005A - RECAG005A description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:03Z", "attachments": [] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG005B", "statusDescription": "890 - RECAG005B - RECAG005B description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:04Z", "attachments": [ { "documentType": "ARCAD", "sha256": "sha256", "id": "id-RECAG005B-ARCAD", "uri": "https://example.com/RECAG005B-ARCAD.pdf", "date": "2024-01-01T10:00:04Z" } ] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG005B", "statusDescription": "890 - RECAG005B - RECAG005B description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:04Z", "attachments": [ { "documentType": "23L", "sha256": "sha256", "id": "id-RECAG005B-23L", "uri": "https://example.com/RECAG005B-23L.pdf", "date": "2024-01-01T10:00:04Z" } ] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "OK", "statusDetail": "RECAG012", "statusDescription": "890 - RECAG012 - RECAG012 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [] },
+      { "trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECAG005C", "statusDescription": "890 - RECAG005C - RECAG005C description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:05Z", "attachments": [] }
+    ],
+
+    "trackings": [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "pcRetry": "PCRETRY_0",
+        "unifiedDeliveryDriver": "POSTE",
+        "processingMode": "DRY",
+        "productType": "890",
+        "state": "DONE",
+        "businessState": "DONE",
+
+        "events": [
+          {"id": "1f4a7c2d-8b3e-4d1a-9c22-1a6e9b3d5f10", "statusCode": "CON080", "statusDescription": "CON080 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:00Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []},
+          {"id": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d21", "statusCode": "CON020", "statusDescription": "CON020 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z"}]},
+          {"id": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d22", "statusCode": "RECAG010", "statusDescription": "RECAG010 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []},
+          {"id": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d23", "statusCode": "RECAG011A", "statusDescription": "RECAG011A description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []},
+          {"id": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24", "statusCode": "RECAG012", "statusDescription": "RECAG012 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []},
+          {"id": "4c8f1a6d-5b3e-4f2a-8d55-4d9e3b7c6a43", "statusCode": "RECAG005A", "statusDescription": "RECAG005A description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:03Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []},
+          {"id": "6e1b3d8a-9c4f-4e7a-8d77-6f2c4b9a1d65", "statusCode": "RECAG005B", "statusDescription": "RECAG005B description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:04Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": [{"documentType": "ARCAD", "sha256": "sha256", "id": "id-RECAG005B-ARCAD", "uri": "https://example.com/RECAG005B-ARCAD.pdf", "date": "2024-01-01T10:00:04Z"},{"documentType": "23L", "sha256": "sha256", "id": "id-RECAG005B-23L", "uri": "https://example.com/RECAG005B-23L.pdf", "date": "2024-01-01T10:00:04Z"}]},
+          {"id": "7f2c4e9b-1d6a-4a8f-9c88-7a3d5e1b2c76", "statusCode": "RECAG005C", "statusDescription": "RECAG005C description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:05Z", "registeredLetterCode": "1234567891011", "iun": "{{RANDOM_IUN}}", "productType": "890", "attachments": []}
+        ],
+
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsFinalValidationStock890": [],
+          "sendOcrAttachmentsFinalValidation": ["Plico", "AR", "23L"],
+          "strictFinalValidationStock890": false,
+          "ocrEnabled": "DISABLED"
+        },
+        "validationFlow": {
+          "ocrRequests": [
+            { "responseStatus":"OK",
+              "finalEventId": "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24",
+              "documentType": "23L",
+              "attachmentEventId": "6e1b3d8a-9c4f-4e7a-8d77-6f2c4b9a1d65"
+            }
+          ]
+        },
+        "paperStatus": {
+          "registeredLetterCode": "1234567891011",
+          "finalStatusCode": "RECAG005C",
+          "validatedEvents": [
+            "6e1b3d8a-9c4f-4e7a-8d77-6f2c4b9a1d65",
+            "7f2c4e9b-1d6a-4a8f-9c88-7a3d5e1b2c76",
+            "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24",
+            "4c8f1a6d-5b3e-4f2a-8d55-4d9e3b7c6a43",
+            "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d23",
+            "2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d22"
+          ],
+          "finalDematFound": true
+        }
+      }
+    ],
+    "ocrResultPayload": [{
+      "commandId": "{{REQUEST_ID}}#2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24#23L",
+      "version": "v1",
+      "commandType": "postal",
+      "data": {
+        "validationStatus": "OK",
+        "description": "OK",
+        "predictedRefinementType": null,
+        "validationType": "ai"
+      }
+    }],
+    "ocrDataPayload": [{
+      "commandId": "{{REQUEST_ID}}#2a6d8f3c-7b4e-4a9d-8f33-2b7c1e6a4d24#23L",
+      "commandType": "postal",
+      "data": {
+        "documentType": "23L",
+        "productType": "890",
+        "unifiedDeliveryDriver": "Poste",
+        "details": {
+          "deliveryDetailCode": "RECAG012",
+          "notificationDate": "2024-01-01T10:00:00Z",
+          "registeredLetterCode": "1234567891011",
+          "deliveryFailureCause": null,
+          "attachment": "Uri",
+          "deliveryAttemptDate": null
+        }
+      }
+    }],
+    "sentToOcr": 1
+  }
+}

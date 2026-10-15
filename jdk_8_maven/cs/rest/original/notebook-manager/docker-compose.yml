@@ -1,0 +1,36 @@
+version: '2.1'
+
+services:
+    #service 1: mysql database image creation
+    db:
+      image: mysql:5.6.17
+      container_name: mysql-db  
+      environment:
+        - MYSQL_ROOT_PASSWORD=spring
+      ports:
+        - "3306:3306"
+      restart: always
+      healthcheck:
+          test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+          timeout: 20s
+          retries: 10
+
+    
+    # service 2: notebook Manager app image creation
+    notebookservice:
+      image: notebook-service
+      container_name: notebook-service-app     # name of container created from image
+      build:
+        context: .                          # path to docker file
+        dockerfile: Dockerfile              # docker file name
+      ports:
+        - "8090:8080"                       # notebook service port
+      restart: always
+
+      depends_on:                           #define dependencies of this app
+         db :                              #dependency name (which is defined with this name 'db' in this file earlier)
+           condition: service_healthy
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/notebook_manager?createDatabaseIfNotExist=true&useSSL=false
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: spring

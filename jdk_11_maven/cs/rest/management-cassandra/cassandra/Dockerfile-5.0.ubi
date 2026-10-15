@@ -1,0 +1,171 @@
+ARG UBI_MAJOR=9
+ARG UBI_BASETAG=latest
+ARG CASSANDRA_VERSION=5.0.9
+FROM cassandra:${CASSANDRA_VERSION} AS cassandra-base
+
+FROM registry.access.redhat.com/ubi${UBI_MAJOR}/ubi-minimal:${UBI_BASETAG} AS builder
+
+ARG CASSANDRA_VERSION
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+ENV CASSANDRA_HOME=/opt/cassandra
+
+# Update base layer
+RUN microdnf install -y --nodocs shadow-utils \
+    && groupadd -r cassandra --gid=999 \
+    && useradd -m -d "$CASSANDRA_HOME" -r -g cassandra -G root --uid=999 cassandra \
+# Install packages needed during install process
+    && microdnf install -y tar gzip unzip
+
+WORKDIR /
+
+###
+# Download CDC Agent jarfile
+###
+ARG CDC_AGENT_VERSION=2.3.2
+ARG CDC_AGENT_EDITION=agent-c4
+ENV CDC_AGENT_PATH=/opt/cdc_agent
+ADD "https://github.com/datastax/cdc-apache-cassandra/releases/download/v${CDC_AGENT_VERSION}/${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar" ./
+RUN mkdir -m 775 ${CDC_AGENT_PATH} && \
+  mv ${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar ${CDC_AGENT_PATH}/ && \
+  cd ${CDC_AGENT_PATH}/ && \
+  ln -s ${CDC_AGENT_EDITION}-${CDC_AGENT_VERSION}-all.jar cdc-agent.jar && \
+  chmod -R g+w ${CDC_AGENT_PATH}
+
+###
+# Copy Cassandra
+###
+COPY --from=cassandra-base /etc/cassandra /etc/cassandra
+COPY --from=cassandra-base ${CASSANDRA_HOME} ${CASSANDRA_HOME}
+
+#############################################################
+# Get netty-codec-http which is excluded from cassandra-all
+FROM --platform=$BUILDPLATFORM maven:3-eclipse-temurin-11 AS netty-extra
+
+ARG CASSANDRA_VERSION
+
+WORKDIR /
+
+# Copy netty-all*.jar from the Cassandra lib directory from tha base Cassandra layer
+# This will let us know what version of Netty libs comes with Cassandra
+COPY --from=cassandra-base /opt/cassandra/lib/netty-all*.jar /
+
+# Use bash explicitly to allow process substitution
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN set -x \
+    # Determine the Netty version from the netty-all library we copied over
+    && NETTY_VERSION=$(basename /netty-all-*.jar | sed -E 's/netty-all-(.*)\.jar/\1/') \
+    # Fetch netty-codec-http into a local repo
+    && mvn -q dependency:get \
+        -DgroupId=io.netty \
+        -DartifactId=netty-codec-http \
+        -Dversion=$NETTY_VERSION \
+        -Dtransitive=false \
+        -Dmaven.repo.local=/netty/netty-codec-http/ \
+    # make the directory where we want to copy netty-codec-http jarfile
+    && mkdir -p /opt/cassandra/lib \
+    # Copy netty-codec-http
+    && cp "/netty/netty-codec-http/io/netty/netty-codec-http/$NETTY_VERSION/netty-codec-http-$NETTY_VERSION.jar" /opt/cassandra/lib/
+
+#############################################################
+# Copy Management API
+FROM --platform=$BUILDPLATFORM alpine:latest AS mgmtapi-setup
+
+WORKDIR /build
+ENV MAAC_PATH=/opt/management-api
+
+COPY management-api-agent-5.0.x/target/datastax-mgmtapi-agent*.jar ./
+COPY management-api-server/target/datastax-mgmtapi-server*.jar ./
+RUN mkdir -m 775 ${MAAC_PATH} && \
+    find /build -type f -name "datastax-mgmtapi*.jar" -exec mv -t $MAAC_PATH -i '{}' + && \
+    rm -rf $MAAC_PATH/datastax-mgmtapi*test* && \
+    cd ${MAAC_PATH} && \
+    ln -s datastax-mgmtapi-agent*.jar datastax-mgmtapi-agent.jar && \
+    ln -s datastax-mgmtapi-server*.jar datastax-mgmtapi-server.jar && \
+    chmod -R g+w ${MAAC_PATH}
+
+############################################################
+
+FROM registry.access.redhat.com/ubi${UBI_MAJOR}/ubi-minimal:${UBI_BASETAG} AS cassandra
+ARG TARGETARCH
+ARG CASSANDRA_VERSION
+ENV CASSANDRA_VERSION=${CASSANDRA_VERSION}
+
+LABEL maintainer="DataStax, Inc <info@datastax.com>"
+LABEL name="Apache Cassandra"
+LABEL vendor="DataStax, Inc"
+LABEL release="${CASSANDRA_VERSION}"
+LABEL summary="Apache Cassandra is an open source distributed database management system designed to handle large amounts of data across many commodity servers, providing high availability with no single point of failure. Cassandra offers robust support for clusters spanning multiple datacenters, with asynchronous masterless replication allowing low latency operations for all clients."
+LABEL description="Apache Cassandra is an open source distributed database management system designed to handle large amounts of data across many commodity servers, providing high availability with no single point of failure. Cassandra offers robust support for clusters spanning multiple datacenters, with asynchronous masterless replication allowing low latency operations for all clients."
+
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
+
+ENV CASSANDRA_PATH=/opt/cassandra
+ENV MAAC_PATH=/opt/management-api
+ENV CDC_AGENT_PATH=/opt/cdc_agent
+ENV MGMT_AGENT_JAR="${MAAC_PATH}/datastax-mgmtapi-agent.jar"
+
+ENV PATH=${CASSANDRA_PATH}/bin:${PATH}
+ENV CASSANDRA_HOME=${CASSANDRA_PATH}
+ENV CASSANDRA_CONF=${CASSANDRA_PATH}/conf
+ENV CASSANDRA_LOG_DIR=/var/log/cassandra
+ENV CASSANDRA_DATA_DIR=/var/lib/cassandra
+
+ENV CASSANDRA_FILES_PATH=/opt/cassandra_files
+
+# Update base layer
+RUN microdnf install -y --nodocs shadow-utils \
+    && groupadd -r cassandra --gid=999 \
+    && useradd -m -d "$CASSANDRA_HOME" -r -g cassandra -G root --uid=999 cassandra \
+    && rm -rf /var/cache/yum \
+# Install packages needed during install process
+    && microdnf install -y --nodocs java-17-openjdk-headless tzdata-java python3.11 zlib findutils which hostname iproute procps util-linux glibc-langpack-en wget tar \
+    && microdnf clean all
+
+# Copy trimmed installation
+COPY --from=builder --chown=cassandra:root /etc/cassandra /etc/cassandra
+COPY --from=builder --chown=cassandra:root ${CASSANDRA_PATH} ${CASSANDRA_PATH}
+COPY --from=builder --chown=cassandra:root ${CASSANDRA_PATH}/LICENSE.txt /licenses/
+COPY --from=builder --chown=cassandra:root ${CDC_AGENT_PATH} ${CDC_AGENT_PATH}
+COPY --from=mgmtapi-setup --chown=cassandra:root ${MAAC_PATH} ${MAAC_PATH}
+COPY --from=netty-extra --chown=cassandra:root ${CASSANDRA_PATH}/lib ${CASSANDRA_PATH}/lib
+
+# Create directories
+RUN (for dir in ${CASSANDRA_DATA_DIR} \
+                ${CASSANDRA_LOG_DIR} ; do \
+        mkdir -p $dir && chown -R cassandra:root $dir && chmod 775 $dir ; \
+    done ) && \
+    # change mode of directories
+    chmod a+rwX ${MAAC_PATH} ${CASSANDRA_PATH} ${CDC_AGENT_PATH} /etc/cassandra
+
+RUN if ! grep -qxF "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" < ${CASSANDRA_CONF}/cassandra-env.sh ; then \
+      echo "" >> ${CASSANDRA_CONF}/cassandra-env.sh && \
+      echo "JVM_OPTS=\"\$JVM_OPTS -javaagent:${MGMT_AGENT_JAR}\"" >> ${CASSANDRA_CONF}/cassandra-env.sh ; \
+  fi
+
+# backwards compat with upstream ENTRYPOINT
+COPY cassandra/scripts/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+  ln -sf /usr/local/bin/docker-entrypoint.sh /docker-entrypoint.sh && \
+# fix for the missing mtab in the containerd
+  ln -sf /proc/mounts /etc/mtab
+
+ENV TINI_VERSION=v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TARGETARCH} /tini
+RUN chmod +x /tini
+
+# Set user to run as
+USER cassandra
+
+# Expose CASSANDRA folders
+VOLUME ["/var/lib/cassandra", "/var/log/cassandra"]
+
+# MANAGEMENT API, MCAC METRICS, NON-MCAC METRICS
+EXPOSE 8080 9103 9000
+
+# CASSANDRA PORTS (INTRA-NODE, TLS INTRA-NODE, JMX, CQL, THRIFT, DSEFS INTRA-NODE, INTRA-NODE MESSAGING SERVICE)
+EXPOSE 7000 7001 7199 8609 9042 9160
+
+ENTRYPOINT ["/tini", "-g", "--", "/docker-entrypoint.sh"]
+CMD ["mgmtapi"]

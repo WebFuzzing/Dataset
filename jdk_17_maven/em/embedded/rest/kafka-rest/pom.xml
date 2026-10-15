@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>evomaster-benchmark-jdk17-em-embedded-rest-kafka-rest</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.evomaster</groupId>
+        <artifactId>evomaster-benchmark-jdk17-em-embedded-rest</artifactId>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-rest</artifactId>
+            <version>8.3.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <!-- The SUT does not serve its schema, it only ships this file -->
+        <resources>
+            <resource>
+                <directory>${project.basedir}/../../../../cs/rest/kafka-rest/api/v3</directory>
+                <includes>
+                    <include>openapi.yaml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>

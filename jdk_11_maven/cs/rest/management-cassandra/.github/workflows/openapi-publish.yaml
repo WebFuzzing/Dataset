@@ -1,0 +1,86 @@
+name: Publish OpenAPI Client
+on:
+  workflow_dispatch:
+jobs:
+  publish-openapi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v6
+      - name: Set up JDK 11
+        uses: actions/setup-java@v5
+        with:
+          java-version: 11
+          distribution: 'zulu'
+      - name: Cache Maven packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Compute commit SHA
+        run: |
+          echo "COMMITSHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Update release versions
+        run: |
+          mvn versions:set -DnewVersion="0.1.0-${{ env.COMMITSHA }}"
+          mvn versions:update-child-modules -Pdse,hcd
+      - name: Setup Maven settings.xml
+        run: |
+          cat <<EOF > ~/.m2/settings.xml
+          <settings>
+            <servers>
+              <server>
+                <id>artifactory-releases</id>
+                <username>${{ secrets.ARTIFACTORY_USERNAME }}</username>
+                <password>${{ secrets.ARTIFACTORY_PASSWORD }}</password>
+              </server>
+              <server>
+                <id>artifactory</id>
+                <username>${{ secrets.ARTIFACTORY_USERNAME }}</username>
+                <password>${{ secrets.ARTIFACTORY_PASSWORD }}</password>
+              </server>
+              <server>
+                <id>cloudsmith</id>
+                <username>${{ secrets.CLOUDSMITH_USERNAME }}</username>
+                <password>${{ secrets.CLOUDSMITH_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+# Commenting Datastax Artifactory out for now
+#      - name: Compile and deploy Artifacts (Datastax Artifactory)
+#        if: ${{ inputs.repository == 'datastax' || inputs.repository == 'both' }}
+#        run: |
+#          REPO="artifactory-releases::default::https://repo.datastax.com/artifactory/datastax-public-releases-local"
+#          mvn -B deploy \
+#          -P dse,hcd \
+#          -DskipTests \
+#          -DaltDeploymentRepository="${REPO}" \
+#          -DaltSnapshotDeploymentRepository="${REPO}"
+      - name: Compile and deploy Artifacts (Cloudsmith.io Artifactory)
+        run: |
+          REPO="cloudsmith::default::https://maven.cloudsmith.io/thelastpickle/reaper-mvn/"
+          mvn -B deploy \
+          -P dse,hcd \
+          -DskipTests \
+          -DaltDeploymentRepository="${REPO}" \
+          -DaltSnapshotDeploymentRepository="${REPO}"
+# Commenting Datastax Artifactory out for now
+#      - name: Compile and deploy OpenAPI client (Datastax Artifactory)
+#        if: ${{ inputs.repository == 'datastax' || inputs.repository == 'both' }}
+#        run: |
+#          REPO="artifactory-releases::default::https://repo.datastax.com/artifactory/datastax-public-releases-local"
+#          mvn -B deploy \
+#          -f management-api-server/target/generated-sources/openapi/java-client/pom.xml \
+#          -DskipTests \
+#          -DaltDeploymentRepository="${REPO}" \
+#          -DaltSnapshotDeploymentRepository="${REPO}"
+      - name: Compile and deploy OpenAPI client (Cloudsmith.io Artifactory)
+        run: |
+          REPO="cloudsmith::default::https://maven.cloudsmith.io/thelastpickle/reaper-mvn/"
+          mvn -B deploy \
+          -f management-api-server/target/generated-sources/openapi/java-client/pom.xml \
+          -DskipTests \
+          -DaltDeploymentRepository="${REPO}" \
+          -DaltSnapshotDeploymentRepository="${REPO}"

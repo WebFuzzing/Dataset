@@ -3,6 +3,7 @@ package em.embedded.com.example.joinUs;
 import com.example.joinUs.JoinUsApplication;
 import org.evomaster.client.java.controller.EmbeddedSutController;
 import org.evomaster.client.java.controller.InstrumentedSutStarter;
+import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
@@ -195,6 +196,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     @Override
     public Object getMongoConnection() {
         return mongoClient;
+    }
+
+    /** Lets EvoMaster read the graph for its Neo4j heuristics and insert test data into it. */
+    @Override
+    public ReflectionBasedNeo4jClient getNeo4jConnection() {
+        return neo4jDriver == null ? null : new ReflectionBasedNeo4jClient(neo4jDriver);
     }
 
     @Override

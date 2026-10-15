@@ -3,11 +3,15 @@ package em.external.adoptme;
 
 import org.evomaster.client.java.controller.ExternalSutController;
 import org.evomaster.client.java.controller.InstrumentedSutStarter;
+import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -111,6 +115,9 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private String jarLocation;
 
+    /** Driver over the same database the SUT uses, for EvoMaster to read the graph and insert test data. */
+    private Driver neo4jDriver;
+
     public ExternalEvoMasterController() {
         this(DEFAULT_CONTROLLER_PORT, "../target/adoptme-sut.jar", DEFAULT_SUT_PORT, 120, "java");
     }
@@ -174,6 +181,9 @@ public class ExternalEvoMasterController extends ExternalSutController {
     @Override
     public void preStart() {
         neo4j.start();
+        neo4jDriver = GraphDatabase.driver(
+                "bolt://" + neo4j.getHost() + ":" + neo4j.getMappedPort(NEO4J_BOLT_PORT),
+                AuthTokens.basic(NEO4J_USER, NEO4J_PASSWORD));
     }
 
     @Override
@@ -187,7 +197,17 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     @Override
     public void postStop() {
+        if (neo4jDriver != null) {
+            neo4jDriver.close();
+            neo4jDriver = null;
+        }
         neo4j.stop();
+    }
+
+    /** Lets EvoMaster read the graph for its Neo4j heuristics and insert test data into it. */
+    @Override
+    public ReflectionBasedNeo4jClient getNeo4jConnection() {
+        return neo4jDriver == null ? null : new ReflectionBasedNeo4jClient(neo4jDriver);
     }
 
     @Override

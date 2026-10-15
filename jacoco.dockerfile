@@ -22,6 +22,8 @@ COPY jdk_11_maven/cs/rest/cwa-verification-server/target/classes  ${CLASS_FILES}
 COPY jdk_8_gradle/cs/rest/erc20-rest-service/build/classes  ${CLASS_FILES}/jdk_8_gradle/cs/rest/erc20-rest-service/build/classes
 COPY jdk_17_maven/cs/rest/familie-ba-sak/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/familie-ba-sak/target/classes
 COPY jdk_8_maven/cs/rest/original/features-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/features-service/target/classes
+COPY jdk_21_maven/cs/rest/flight-search-api/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/flight-search-api/target/classes
+COPY jdk_21_gradle/cs/rest/gdpr-kv/build/classes  ${CLASS_FILES}/jdk_21_gradle/cs/rest/gdpr-kv/build/classes
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/component/target/classes
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/model/target/classes
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/persistence/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/persistence/target/classes
@@ -30,6 +32,7 @@ COPY jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes  ${CLASS_FILES}/jdk
 COPY jdk_8_maven/cs/rest-gui/gestaohospital/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/gestaohospital/target/classes
 COPY jdk_11_maven/cs/rest/http-patch-spring/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/http-patch-spring/target/classes
 COPY jdk_21_maven/cs/rest/joinus/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/joinus/target/classes
+COPY jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes
 COPY jdk_17_gradle/cs/rest/komga/komga/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/komga/komga/build/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-core/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-gui-commons/target/classes
@@ -70,6 +73,8 @@ COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/uk/
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-language-modules/zh/target/classes
 COPY jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/languagetool/languagetool-server/target/classes
 COPY jdk_21_maven/cs/rest/lovemining/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/lovemining/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-common/target/classes
+COPY jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/management-cassandra/management-api-server/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-core/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-core/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-rest/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-rest/target/classes
 COPY jdk_11_maven/cs/rest-gui/market/market-web/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/market/market-web/target/classes
@@ -81,12 +86,14 @@ COPY jdk_21_maven/cs/rest-gui/microcks/distro/uber-async-minion/target/classes  
 COPY jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/minions/async/target/classes
 COPY jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/microcks/webapp/target/classes
 COPY jdk_21_maven/cs/rest/movies-xml/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/movies-xml/target/classes
+COPY jdk_8_maven/cs/rest/original/notebook-manager/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/notebook-manager/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/persistence-mongodb/target/classes
 COPY jdk_8_maven/cs/rest-gui/ocvn/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/ocvn/web/target/classes
 COPY jdk_17_maven/cs/rest/ohsome-api/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/ohsome-api/target/classes
 COPY jdk_11_maven/cs/rest/pay-publicapi/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/pay-publicapi/target/classes
 COPY jdk_21_maven/cs/rest/person-controller/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/person-controller/target/classes
+COPY jdk_17_maven/cs/rest/petclinic-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/petclinic-rest/target/classes
 COPY jdk_8_maven/cs/rest/original/proxyprint/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/proxyprint/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-common/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-api/target/classes
@@ -111,6 +118,7 @@ COPY jdk_17_maven/cs/rest/spring-rest-example/target/classes  ${CLASS_FILES}/jdk
 COPY jdk_8_maven/cs/rest/original/swagger-petstore/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/swagger-petstore/target/classes
 COPY jdk_21_maven/cs/rest/testing-system/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/testing-system/target/classes
 COPY jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/tiltaksgjennomforing/target/classes
+COPY jdk_21_gradle/cs/rest/traccar/build/classes  ${CLASS_FILES}/jdk_21_gradle/cs/rest/traccar/build/classes
 COPY jdk_11_maven/cs/rest/tracking-system/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/tracking-system/target/classes
 COPY jdk_8_maven/cs/rest/original/user-management/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/user-management/target/classes
 COPY jdk_21_maven/cs/rest-gui/webgoat/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest-gui/webgoat/target/classes

@@ -19,21 +19,27 @@
 |REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
 |REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
 |REST|__features-service__|2275|39|18|Java|JDK 8|Maven|H2||
+|REST|__flight-search-api__|14440|194|40|Java|JDK 21|Maven|MongoDB|&check;|
+|REST|__gdpr-kv__|6399|62|7|Java|JDK 21|Gradle|DynamoDB||
 |REST|__genome-nexus__|30004|405|23|Java|JDK 8|Maven|MongoDB||
 |REST|__gestaohospital__|3506|33|20|Java|JDK 8|Maven|MongoDB||
 |REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||
 |REST|__jasper__|46791|337|61|Java|JDK 25|Maven|PostgreSQL|&check;|
 |REST|__joinus__|7906|101|37|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__kafka-rest__|81418|475|50|Java|JDK 17|Maven|Kafka||
 |REST|__komga__|62303|543|174|Kotlin|JDK 17|Gradle|SQLite|&check;|
 |REST|__languagetool__|174781|1385|2|Java|JDK 8|Maven|||
 |REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__management-cassandra__|35096|225|63|Java|JDK 11|Maven|Cassandra||
 |REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
 |REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|
 |REST|__movies-xml__|2502|22|7|Java|JDK 21|Maven|H2||
+|REST|__notebook-manager__|826|10|5|Java|JDK 8|Maven|MySQL||
 |REST|__ocvn__|45521|526|258|Java|JDK 8|Maven|H2, MongoDB|&check;|
 |REST|__ohsome-api__|14166|87|134|Java|JDK 17|Maven|OSHDB||
 |REST|__pay-publicapi__|34576|377|10|Java|JDK 11|Maven|Redis|&check;|
 |REST|__person-controller__|1112|16|12|Java|JDK 21|Maven|MongoDB||
+|REST|__petclinic-rest__|8675|109|43|Java|JDK 17|Maven|H2||
 |REST|__proxyprint__|8338|73|74|Java|JDK 8|Maven|H2|&check;|
 |REST|__quartz-manager__|5068|129|11|Java|JDK 11|Maven||&check;|
 |REST|__redis-sample__|1006|18|4|Java|JDK 21|Maven|Redis||
@@ -51,6 +57,7 @@
 |REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||
 |REST|__testing-system__|3692|72|11|Java|JDK 21|Maven|PostgreSQL, Redis|&check;|
 |REST|__tiltaksgjennomforing__|27316|472|79|Java|JDK 17|Maven|PostgreSQL|&check;|
+|REST|__traccar__|141962|1478|117|Java|JDK 21|Gradle|H2|&check;|
 |REST|__tracking-system__|5947|87|67|Java|JDK 11|Maven|H2|&check;|
 |REST|__user-management__|4274|69|21|Java|JDK 8|Maven|MySQL||
 |REST|__webgoat__|27638|355|204|Java|JDK 21|Maven|H2|&check;|

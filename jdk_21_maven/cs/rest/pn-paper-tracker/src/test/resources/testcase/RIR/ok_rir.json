@@ -1,0 +1,100 @@
+{
+  "name": "OK_RIR",
+  "productType": "RIR",
+  "initialTracking": {
+    "productType": "RIR",
+    "pcRetry": "PCRETRY_0",
+    "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+    "unifiedDeliveryDriver": "POSTE"
+  },
+  "events": [
+    {
+      "messageId": "3f7c9b2e-4e1b-4c6b-9f22-5a2c5d1e8a11",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "CON080", "statusDescription": "CON080 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:00Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "7a2d1c44-9b4d-4c3a-88e5-2e5c8f4d1b22",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "CON020", "statusDescription": "CON020 description", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z"}], "clientRequestTimeStamp": "2024-01-01T10:00:01Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "c91e8d12-3f7a-4e55-bb3e-6f7b2c9d3e33",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "RECRI001", "statusDescription": "RECRI001 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:02Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "5e8f7a90-6d21-4c3e-9a8b-1f4c7d2e4444",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "RECRI002", "statusDescription": "RECRI002 description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:03Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "d2a4b6c8-1e2f-4a3b-9c5d-7e8f9a0b5555",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "RECRI003A", "statusDescription": "RECRI003A description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:04Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "8f3e2d1c-7b6a-4d5c-9e0f-1a2b3c4d6666",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "RECRI003B", "statusDescription": "RECRI003B description", "attachments": [{"documentType": "AR", "sha256": "sha256", "id": "id-RECRI003B-AR", "uri": "https://example.com/RECRI003B-AR.pdf", "date": "2024-01-01T10:00:05Z"}], "clientRequestTimeStamp": "2024-01-01T10:00:05Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    },
+    {
+      "messageId": "4c1d2e3f-8a9b-4c7d-b2e1-3f4a5b6c7777",
+      "analogMail": {"requestId": "{{REQUEST_ID}}", "iun": "{{RANDOM_IUN}}", "productType": "RIR", "registeredLetterCode": "1234567891011", "statusCode": "RECRI003C", "statusDescription": "RECRI003C description", "attachments": [], "clientRequestTimeStamp": "2024-01-01T10:00:06Z", "statusDateTime": "2024-01-01T10:00:00Z"}
+    }
+  ],
+  "expected": {
+    "errors": [
+    ],
+    "outputs": [
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON080", "statusDescription": "RIR - CON080 - CON080 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:00Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "CON020", "statusDescription": "RIR - CON020 - CON020 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:01Z", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z"}]},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECRI001", "statusDescription": "RIR - RECRI001 - RECRI001 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:02Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECRI002", "statusDescription": "RIR - RECRI002 - RECRI002 description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:03Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECRI003A", "statusDescription": "RIR - RECRI003A - RECRI003A description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:04Z", "attachments": []},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "PROGRESS", "statusDetail": "RECRI003B", "statusDescription": "RIR - RECRI003B - RECRI003B description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:05Z", "attachments": [{"documentType": "AR", "sha256": "sha256", "id": "id-RECRI003B-AR", "uri": "https://example.com/RECRI003B-AR.pdf", "date": "2024-01-01T10:00:05Z"}]},
+      {"trackingId": "{{REQUEST_ID}}", "registeredLetterCode": "1234567891011", "statusCode": "OK", "statusDetail": "RECRI003C", "statusDescription": "RIR - RECRI003C - RECRI003C description", "statusDateTime": "2024-01-01T10:00:00Z", "clientRequestTimestamp": "2024-01-01T10:00:06Z", "attachments": []}
+    ],
+    "trackings":  [
+      {
+        "trackingId": "{{REQUEST_ID}}",
+        "attemptId": "PREPARE_ANALOG_DOMICILE.IUN_{{RANDOM_IUN}}.ATTEMPT_0",
+        "pcRetry": "PCRETRY_0",
+        "unifiedDeliveryDriver": "POSTE",
+        "processingMode": "DRY",
+        "productType": "RIR",
+        "state": "DONE",
+        "businessState": "DONE",
+        "nextRequestIdPcretry": null,
+        "events": [
+          {"id":"3f7c9b2e-4e1b-4c6b-9f22-5a2c5d1e8a11", "statusCode": "CON080", "statusDescription": "CON080 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:00Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": []},
+          {"id":"7a2d1c44-9b4d-4c3a-88e5-2e5c8f4d1b22", "statusCode": "CON020", "statusDescription": "CON020 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:01Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": [{"documentType": "7Z", "sha256": "sha256", "id": "id-CON020-7Z", "uri": "https://example.com/CON020-7Z.pdf", "date": "2024-01-01T10:00:01Z"}]},
+          {"id":"c91e8d12-3f7a-4e55-bb3e-6f7b2c9d3e33", "statusCode": "RECRI001", "statusDescription": "RECRI001 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:02Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": []},
+          {"id":"5e8f7a90-6d21-4c3e-9a8b-1f4c7d2e4444", "statusCode": "RECRI002", "statusDescription": "RECRI002 description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:03Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": []},
+          {"id":"d2a4b6c8-1e2f-4a3b-9c5d-7e8f9a0b5555", "statusCode": "RECRI003A", "statusDescription": "RECRI003A description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:04Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": []},
+          {"id":"8f3e2d1c-7b6a-4d5c-9e0f-1a2b3c4d6666", "statusCode": "RECRI003B", "statusDescription": "RECRI003B description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:05Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": [{"documentType": "AR", "sha256": "sha256", "id": "id-RECRI003B-AR", "uri": "https://example.com/RECRI003B-AR.pdf", "date": "2024-01-01T10:00:05Z"}]},
+          {"id":"4c1d2e3f-8a9b-4c7d-b2e1-3f4a5b6c7777", "statusCode": "RECRI003C", "statusDescription": "RECRI003C description", "statusTimestamp": "2024-01-01T10:00:00Z", "requestTimestamp": "2024-01-01T10:00:06Z", "registeredLetterCode": "1234567891011", "deliveryFailureCause": null, "iun": "{{RANDOM_IUN}}", "productType": "RIR", "attachments": []}
+        ],
+
+        "validationConfig": {
+          "requiredAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsRefinementStock890": ["23L"],
+          "sendOcrAttachmentsFinalValidationStock890": [],
+          "sendOcrAttachmentsFinalValidation": ["Plico", "AR", "23L"],
+          "strictFinalValidationStock890": false,
+          "ocrEnabled": "DISABLED"
+        },
+
+        "validationFlow": {
+          "ocrRequests": []
+        },
+        "paperStatus": {
+          "registeredLetterCode": "1234567891011",
+          "finalStatusCode": "RECRI003C",
+          "validatedEvents": [
+            "d2a4b6c8-1e2f-4a3b-9c5d-7e8f9a0b5555",
+            "8f3e2d1c-7b6a-4d5c-9e0f-1a2b3c4d6666",
+            "4c1d2e3f-8a9b-4c7d-b2e1-3f4a5b6c7777",
+            "5e8f7a90-6d21-4c3e-9a8b-1f4c7d2e4444",
+            "c91e8d12-3f7a-4e55-bb3e-6f7b2c9d3e33"
+          ],
+          "finalDematFound": true
+        }
+      }
+    ]
+  }
+}

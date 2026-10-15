@@ -354,6 +354,9 @@ scripts/dockerize/dockerfiles
 /jdk_21_maven/cs/rest/testing-system/target/
 /jdk_21_maven/em/external/rest/testing-system/target/
 /jdk_21_maven/em/embedded/rest/testing-system/target/
+/jdk_21_maven/cs/rest/flight-search-api/target/
+/jdk_21_maven/em/external/rest/flight-search-api/target/
+/jdk_21_maven/em/embedded/rest/flight-search-api/target/
 /jdk_11_maven/em/embedded/rest/tracking-system/target/
 /jdk_11_maven/em/external/rest/tracking-system/target/
 /jdk_17_maven/em/embedded/rest/tiltaksgjennomforing/target/
@@ -378,6 +381,13 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_17_maven/cs/rest/digitalbanking/target/
 /jdk_17_maven/em/embedded/rest/digitalbanking/target/
 /jdk_17_maven/em/external/rest/digitalbanking/target/
+/jdk_17_maven/cs/rest/kafka-rest/target/
+/jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/
+/jdk_17_maven/em/embedded/rest/kafka-rest/target/
+/jdk_17_maven/em/external/rest/kafka-rest/target/
+/jdk_17_maven/cs/rest/petclinic-rest/target/
+/jdk_17_maven/em/embedded/rest/petclinic-rest/target/
+/jdk_17_maven/em/external/rest/petclinic-rest/target/
 /jdk_17_maven/em/embedded/rest/spring-rest-example/target/
 /jdk_17_maven/em/external/rest/spring-rest-example/target/
 
@@ -407,10 +417,15 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 /jdk_11_maven/cs/rest-gui/quartz-manager/target
 /jdk_11_maven/em/embedded/rest/quartz-manager/target
 /jdk_11_maven/em/external/rest/quartz-manager/target
+/jdk_11_maven/em/embedded/rest/management-cassandra/target
+/jdk_11_maven/em/external/rest/management-cassandra/target
 
 /jdk_8_maven/cs/rest/original/spring-ecommerce/target
 /jdk_8_maven/em/embedded/rest/spring-ecommerce/target
 /jdk_8_maven/em/external/rest/spring-ecommerce/target
+/jdk_8_maven/cs/rest/original/notebook-manager/target/
+/jdk_8_maven/em/embedded/rest/notebook-manager/target/
+/jdk_8_maven/em/external/rest/notebook-manager/target/
 
 /jdk_21_maven/cs/rest-gui/microcks/target
 /jdk_21_maven/cs/rest-gui/microcks/commons/model/target
@@ -426,4 +441,14 @@ jdk_8_maven/em/external/rest/spring-batch-rest/target
 
 /jdk_21_maven/em/embedded/rest-gui/microcks/target
 /jdk_21_maven/em/external/rest-gui/microcks/target
+
+/jdk_21_gradle/.gradle/
+/jdk_21_gradle/build/
+/jdk_21_gradle/cs/rest/gdpr-kv/build/
+/jdk_21_gradle/em/embedded/rest/gdpr-kv/build/
+/jdk_21_gradle/em/external/rest/gdpr-kv/build/
+/jdk_21_gradle/cs/rest/traccar/build/
+/jdk_21_gradle/cs/rest/traccar/target/
+/jdk_21_gradle/em/embedded/rest/traccar/build/
+/jdk_21_gradle/em/external/rest/traccar/build/
 /statistics/http-verbs.tex

@@ -1,0 +1,88 @@
+asyncapi: '3.0.0'
+info:
+  title: OCR Data Exchange
+  version: '1.0.0'
+  description: An event schema for data request to OCR/AI Service
+
+servers:
+  pn_sqs:
+    host: 'sqs.us-east-1.amazonaws.com'
+    protocol: 'sqs'
+    description: PN SQS
+
+channels:
+  pn_sqs:
+    address: arn:aws:sqs:us-east-1:123456789012:ocr
+    description: SQS queue
+    servers:
+      - $ref: '#/servers/pn_sqs'
+    messages:
+      ocr_result:
+        $ref: '#/components/messages/ocr_result'
+
+operations:
+  OCR_Result:
+    action: receive
+    channel:
+      $ref: '#/channels/pn_sqs'
+    summary: >-
+      Send OCR result from the queue
+    messages:
+      - $ref: '#/channels/pn_sqs/messages/ocr_result'
+
+components:
+  messages:
+    ocr_result:
+      name: ocr_result
+      title: OCR result
+      summary: >-
+        Retrieve information about OCR data result
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/ocrDataResultPayload'
+
+  schemas:
+    ocrDataResultPayload:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Version of the schema
+          example: "1.0.0"
+        commandId:
+          type: string
+          description: Command unique ID
+          example: "1234567890"
+        commandType:
+          type: string
+          description: OCR command
+          enum:
+            - postal
+          example: "postal"
+        data:
+          type: object
+          properties:
+            validationType:
+              type: string
+              description: Validation type
+              enum:
+                - operator
+                - ai
+              example: "ai"
+            validationStatus:
+              type: string
+              description: Validation status
+              enum:
+                - OK
+                - KO
+                - PENDING
+              example: "OK"
+            description:
+              type: string
+              description: Description of the validation status
+              example: "The document has been validated"
+            predictedRefinementType:
+                type: string
+                enum:
+                  - PRE10
+                  - POST10

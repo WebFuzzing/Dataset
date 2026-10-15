@@ -195,6 +195,9 @@ def build_jdk_8_maven():
     copy(folder + "/cs/rest/original/spring-ecommerce/target/spring-ecommerce-sut.jar", DIST)
     copy(folder + "/em/external/rest/spring-ecommerce/target/spring-ecommerce-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/original/notebook-manager/target/notebook-manager-sut.jar", DIST)
+    copy(folder + "/em/external/rest/notebook-manager/target/notebook-manager-evomaster-runner.jar", DIST)
+
     # graphql
 
     copy(folder + "/cs/graphql/petclinic-graphql/target/petclinic-graphql-sut.jar", DIST)
@@ -255,6 +258,9 @@ def build_jdk_11_maven():
     copy(folder + "/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/quartz-manager-sut.jar", DIST)
     copy(folder + "/em/external/rest/quartz-manager/target/quartz-manager-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/management-cassandra/management-api-server/target/management-cassandra-sut.jar", DIST)
+    copy(folder + "/em/external/rest/management-cassandra/target/management-cassandra-evomaster-runner.jar", DIST)
+
     ind1 = os.environ.get('SUT_LOCATION_IND1', '')
     if ind1 == '':
         print("\nWARN: SUT_LOCATION_IND1 env variable is not defined")
@@ -289,6 +295,12 @@ def build_jdk_17_maven():
     copy(folder + "/cs/rest/digitalbanking/target/digitalbanking-sut.jar", DIST)
     copy(folder + "/em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar", DIST)
 
+    copy(folder + "/cs/rest/kafka-rest/kafka-rest/target/kafka-rest-sut.jar", DIST)
+    copy(folder + "/em/external/rest/kafka-rest/target/kafka-rest-evomaster-runner.jar", DIST)
+
+    copy(folder + "/cs/rest/petclinic-rest/target/petclinic-rest-sut.jar", DIST)
+    copy(folder + "/em/external/rest/petclinic-rest/target/petclinic-rest-evomaster-runner.jar", DIST)
+
 ####################
 def build_jdk_21_maven():
     folder = "jdk_21_maven"
@@ -313,6 +325,8 @@ def build_jdk_21_maven():
     copy(folder + "/em/external/rest/movies-xml/target/movies-xml-evomaster-runner.jar", DIST)
     copy(folder + "/cs/rest/testing-system/target/testing-system-sut.jar", DIST)
     copy(folder + "/em/external/rest/testing-system/target/testing-system-evomaster-runner.jar", DIST)
+    copy(folder + "/cs/rest/flight-search-api/target/flight-search-api-sut.jar", DIST)
+    copy(folder + "/em/external/rest/flight-search-api/target/flight-search-api-evomaster-runner.jar", DIST)
 
     copy(folder + "/cs/rest-gui/webgoat/target/webgoat-sut.jar", DIST)
     copy(folder + "/em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar", DIST)
@@ -389,6 +403,19 @@ def build_jdk_17_gradle():
 
     copy(folder + "/cs/rest/komga/komga/build/libs/komga-sut.jar", DIST)
     copy(folder + "/em/external/rest/komga/build/libs/komga-evomaster-runner.jar", DIST)
+
+####################
+def build_jdk_21_gradle():
+
+    java_home = JAVA_HOME_21
+    folder = "jdk_21_gradle"
+    call_gradle(java_home,folder)
+
+    # Copy JAR files
+    copy(folder + "/cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar", DIST)
+    copy(folder + "/em/external/rest/gdpr-kv/build/libs/gdpr-kv-evomaster-runner.jar", DIST)
+    copy(folder + "/cs/rest/traccar/build/libs/traccar-sut.jar", DIST)
+    copy(folder + "/em/external/rest/traccar/build/libs/traccar-evomaster-runner.jar", DIST)
 
 
 # Building JavaScript projects
@@ -491,6 +518,7 @@ build_jdk_25_maven()
 build_jdk_8_gradle()
 build_jdk_11_gradle()
 build_jdk_17_gradle()
+build_jdk_21_gradle()
 
 ## Those are disabled for now... might support back in the future
 # build_js_npm()
