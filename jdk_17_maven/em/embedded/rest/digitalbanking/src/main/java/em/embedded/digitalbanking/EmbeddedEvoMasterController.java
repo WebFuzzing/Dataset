@@ -8,6 +8,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import org.evomaster.client.java.controller.redis.ReflectionBasedRedisClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.GenericContainer;
@@ -95,6 +96,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private UnifiedJedis redisClient;
 
+    /**
+     * Separate from {@link #redisClient}: this is the connection EvoMaster itself uses to compute
+     * Redis heuristics and to insert data satisfying failed FT.SEARCH/FT.AGGREGATE commands.
+     */
+    private ReflectionBasedRedisClient redisHeuristicsClient;
+
     public EmbeddedEvoMasterController() {
         this(0);
     }
@@ -113,6 +120,8 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         initCassandraSchema();
         redisClient = new JedisPooled("redis://:" + REDIS_PASSWORD + "@"
                 + redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+        redisHeuristicsClient = new ReflectionBasedRedisClient(
+                redis.getHost(), redis.getMappedPort(REDIS_PORT), 0, REDIS_PASSWORD);
 
         ctx = SpringApplication.run(DemoApplication.class, new String[]{
                 "--server.port=0",
@@ -167,6 +176,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             redisClient = null;
         }
 
+        if (redisHeuristicsClient != null) {
+            redisHeuristicsClient.close();
+            redisHeuristicsClient = null;
+        }
+
         cassandra.stop();
         kafka.stop();
         redis.stop();
@@ -175,6 +189,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     @Override
     public String getPackagePrefixesToCover() {
         return "com.jphaugla.";
+    }
+
+    @Override
+    public ReflectionBasedRedisClient getRedisConnection() {
+        return redisHeuristicsClient;
     }
 
     /*
