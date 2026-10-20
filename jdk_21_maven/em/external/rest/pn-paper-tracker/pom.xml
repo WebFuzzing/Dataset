@@ -64,7 +64,7 @@
 
     <build>
         <!-- The SUT does not serve its schema, and its YAML links to a schema on GitHub. This single JSON file
-             is the same schema with that part copied in, so EvoMaster does not need internet access. -->
+             is the same schema with that part copied in, so fuzzers do not need internet access. -->
         <resources>
             <resource>
                 <directory>${project.basedir}/../../../../../openapi</directory>
