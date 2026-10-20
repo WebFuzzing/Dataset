@@ -49,21 +49,13 @@
     </dependencies>
 
     <build>
-        <!-- The SUT does not serve its schema (its YAML refs remote files, so the bundled copy is used),
-             and its settings live in a local config file -->
+        <!-- The SUT does not serve its schema, and its YAML links to a schema on GitHub. This single JSON file
+             is the same schema with that part copied in, so EvoMaster does not need internet access. -->
         <resources>
             <resource>
                 <directory>${project.basedir}/../../../../../openapi</directory>
                 <includes>
                     <include>pn-paper-tracker.json</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>${project.basedir}/../../../../cs/rest/pn-paper-tracker/config</directory>
-                <!-- not at the root: it would hide the SUT's own application.properties -->
-                <targetPath>pn-paper-tracker</targetPath>
-                <includes>
-                    <include>application.properties</include>
                 </includes>
             </resource>
         </resources>

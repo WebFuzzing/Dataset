@@ -199,6 +199,21 @@
 	</dependencies>
 
 	<build>
+		<!--          MODIFIED-->
+		<!-- the bundled application.properties is a PROD stub; ship config/ as classpath:/config/, read by default -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>config</directory>
+				<targetPath>config</targetPath>
+				<includes>
+					<include>application.properties</include>
+				</includes>
+			</resource>
+		</resources>
+		<!--          MODIFIED-->
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

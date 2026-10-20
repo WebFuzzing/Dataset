@@ -30,9 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,8 +107,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private DynamoDbClient dynamo;
 
-    private Path configFile;
-
     public ExternalEvoMasterController() {
         this(40100, "../target/pn-paper-tracker-sut.jar", 12345, 120, "java");
     }
@@ -133,8 +128,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
     public String[] getInputParameters() {
         return new String[]{
                 "--server.port=" + sutPort,
-                // the SUT's own local config (config/application.properties), overridden below
-                "--spring.config.additional-location=file:" + configFile.toAbsolutePath(),
                 "--logging.config=classpath:logback-base.xml",
                 "--logging.level.io.awspring.cloud=INFO",
                 "--logging.level.software.amazon.awssdk=INFO",
@@ -180,8 +173,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     @Override
     public void preStart() {
-        configFile = extractConfig();
-
         localstack.start();
         awsEndpoint = "http://" + localstack.getHost() + ":" + localstack.getMappedPort(LOCALSTACK_PORT);
         dynamo = DynamoDbClient.builder()
@@ -252,18 +243,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private static String readResource(String name) {
         try (InputStream in = ExternalEvoMasterController.class.getResourceAsStream(name)) {
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // WB experiments only ship the jars, so the config file travels inside the runner
-    private static Path extractConfig() {
-        try (InputStream in = ExternalEvoMasterController.class.getResourceAsStream("/pn-paper-tracker/application.properties")) {
-            Path file = Files.createTempFile("pn-paper-tracker", ".properties");
-            file.toFile().deleteOnExit();
-            Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
-            return file;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

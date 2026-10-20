@@ -115,8 +115,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
         ctx = SpringApplication.run(PaperTrackerApplication.class, new String[]{
                 "--server.port=0",
-                // the SUT's own local config (config/application.properties), overridden below
-                "--spring.config.additional-location=classpath:/pn-paper-tracker/application.properties",
                 "--logging.config=classpath:logback-base.xml",
                 "--logging.level.io.awspring.cloud=INFO",
                 "--logging.level.software.amazon.awssdk=INFO",

@@ -6,8 +6,6 @@ COPY ./dist/jacocoagent.jar .
 
 
 
-COPY ./dockerfiles/additional_files/pn-paper-tracker/application.properties .
-
 COPY ./dockerfiles/additional_files/pn-paper-tracker/init-localstack.sh .
 
 
