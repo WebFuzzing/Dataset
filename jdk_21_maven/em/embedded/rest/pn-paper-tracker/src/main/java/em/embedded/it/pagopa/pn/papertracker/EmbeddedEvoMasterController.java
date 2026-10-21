@@ -32,7 +32,8 @@ import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,6 +69,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     private static final String TRACKINGS_TABLE = "pn-PaperTrackings";
     private static final String ERRORS_TABLE = "pn-PaperTrackingsErrors";
     private static final String OUTPUTS_TABLE = "pn-PaperTrackerDryRunOutputs";
+
+    private static final String SCHEMA_FILE = "pn-paper-tracker.yaml";
+    private static final String SCHEMA_REFS_FILE = "pn-paper-tracker-remote-refs.yaml";
+
+    private static String schemaLocation;
 
     public static void main(String[] args) {
 
@@ -171,7 +177,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     @Override
     public ProblemInfo getProblemInfo() {
-        return new RestProblem(null, null, readResource("/pn-paper-tracker.json"));
+        return new RestProblem(schemaLocation(), null);
     }
 
     @Override
@@ -194,12 +200,24 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         return dynamo;
     }
 
-    private static String readResource(String name) {
-        try (InputStream in = EmbeddedEvoMasterController.class.getResourceAsStream(name)) {
-            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    // the schema refs a second file, so both go to one folder on disk for the fuzzer to resolve the ref
+    private static synchronized String schemaLocation() {
+        if (schemaLocation == null) {
+            try {
+                Path dir = Files.createTempDirectory("pn-paper-tracker-openapi");
+                dir.toFile().deleteOnExit();
+                for (String name : List.of(SCHEMA_FILE, SCHEMA_REFS_FILE)) {
+                    try (InputStream in = EmbeddedEvoMasterController.class.getResourceAsStream("/" + name)) {
+                        Files.copy(in, dir.resolve(name));
+                    }
+                    dir.resolve(name).toFile().deleteOnExit();
+                }
+                schemaLocation = dir.resolve(SCHEMA_FILE).toUri().toString();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return schemaLocation;
     }
 
     private void awaitDynamoDb() {
@@ -272,6 +290,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         }
     }
 
+    // TODO replace with a reusable DynamoDB cleanup utility from client-java once it exists
     private void clearTable(String table, String... keys) {
         Map<String, AttributeValue> startKey = null;
         do {

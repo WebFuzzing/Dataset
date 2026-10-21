@@ -49,13 +49,14 @@
     </dependencies>
 
     <build>
-        <!-- The SUT does not serve its schema, and its YAML links to a schema on GitHub. This single JSON file
-             is the same schema with that part copied in, so fuzzers do not need internet access. -->
+        <!-- The SUT does not serve its schema. Its YAML refs a file that links to GitHub, so the used part of
+             that file is copied next to it, and fuzzers do not need internet access. -->
         <resources>
             <resource>
                 <directory>${project.basedir}/../../../../../openapi</directory>
                 <includes>
-                    <include>pn-paper-tracker.json</include>
+                    <include>pn-paper-tracker.yaml</include>
+                    <include>pn-paper-tracker-remote-refs.yaml</include>
                 </includes>
             </resource>
         </resources>
