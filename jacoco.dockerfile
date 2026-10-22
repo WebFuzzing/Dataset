@@ -18,7 +18,9 @@ COPY jdk_21_maven/cs/rest/arimaa/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/
 COPY jdk_17_gradle/cs/rest/bibliothek/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/bibliothek/build/classes
 COPY jdk_8_maven/cs/rest/original/blogapi/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/blogapi/target/classes
 COPY jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes
+COPY jdk_25_maven/cs/rest/commafeed/commafeed-server/target/classes ${CLASS_FILES}/jdk_25_maven/cs/rest/commafeed/commafeed-server/target/classes
 COPY jdk_11_maven/cs/rest/cwa-verification-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/cwa-verification-server/target/classes
+COPY jdk_17_maven/cs/rest/digitalbanking/target/classes ${CLASS_FILES}/jdk_17_maven/cs/rest/digitalbanking/target/classes}jdk_17_maven/cs/rest/digitalbanking/target/classes
 COPY jdk_8_gradle/cs/rest/erc20-rest-service/build/classes  ${CLASS_FILES}/jdk_8_gradle/cs/rest/erc20-rest-service/build/classes
 COPY jdk_17_maven/cs/rest/familie-ba-sak/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/familie-ba-sak/target/classes
 COPY jdk_8_maven/cs/rest/original/features-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/features-service/target/classes
@@ -31,6 +33,7 @@ COPY jdk_8_maven/cs/rest-gui/genome-nexus/service/target/classes  ${CLASS_FILES}
 COPY jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/genome-nexus/web/target/classes
 COPY jdk_8_maven/cs/rest-gui/gestaohospital/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest-gui/gestaohospital/target/classes
 COPY jdk_11_maven/cs/rest/http-patch-spring/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/http-patch-spring/target/classes
+COPY jdk_25_maven/cs/rest/jasper/target/classes ${CLASS_FILES}/jdk_25_maven/cs/rest/jasper/target/classes
 COPY jdk_21_maven/cs/rest/joinus/target/classes  ${CLASS_FILES}/jdk_21_maven/cs/rest/joinus/target/classes
 COPY jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/kafka-rest/kafka-rest/target/classes
 COPY jdk_17_gradle/cs/rest/komga/komga/build/classes  ${CLASS_FILES}/jdk_17_gradle/cs/rest/komga/komga/build/classes
@@ -101,6 +104,7 @@ COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manage
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-persistence/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-persistence/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-security/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-starter-security/target/classes
 COPY jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/classes
+COPY jdk_21_maven/cs/rest/redis-sample/target/classes ${CLASS_FILES}/jdk_21_maven/cs/rest/redis-sample/target/classes
 COPY jdk_11_gradle/cs/rest/reservations-api/build/classes  ${CLASS_FILES}/jdk_11_gradle/cs/rest/reservations-api/build/classes
 COPY jdk_8_maven/cs/rest/artificial/ncs/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/artificial/ncs/target/classes
 COPY jdk_8_maven/cs/rest/artificial/news/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/artificial/news/target/classes
