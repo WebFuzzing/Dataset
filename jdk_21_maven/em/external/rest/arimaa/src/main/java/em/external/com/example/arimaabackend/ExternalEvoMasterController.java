@@ -16,7 +16,6 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Session;
 import org.neo4j.driver.AuthTokens;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -147,10 +146,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private Map<String, List<Document>> mongoSnapshot;
 
-    private List<Map<String, Object>> neo4jUserSnapshot;
-
-    private List<Map<String, Object>> neo4jHasUserSnapshot;
-
     public ExternalEvoMasterController() {
         this(DEFAULT_CONTROLLER_PORT, "../target/arimaa-sut.jar", DEFAULT_SUT_PORT, 120, "java");
     }
@@ -232,7 +227,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
         mongoClient = MongoClients.create(mongodbUri());
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
         captureMongoSnapshot();
-        captureNeo4jUserSnapshot();
     }
 
     private void captureMongoSnapshot() {
@@ -242,16 +236,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
             List<Document> docs = new ArrayList<>();
             db.getCollection(name).find().into(docs);
             mongoSnapshot.put(name, docs);
-        }
-    }
-
-    private void captureNeo4jUserSnapshot() {
-        try (Session session = neo4jDriver.session()) {
-            neo4jUserSnapshot = session.run("MATCH (u:User) RETURN properties(u) AS props")
-                    .list(r -> r.get("props").asMap());
-            neo4jHasUserSnapshot = session.run(
-                            "MATCH (p:Player)-[:HAS_USER]->(u:User) RETURN p.id AS playerId, u.id AS userId")
-                    .list(r -> Map.of("playerId", r.get("playerId").asObject(), "userId", r.get("userId").asObject()));
         }
     }
 
@@ -323,8 +307,14 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     @Override
     public void resetStateOfSUT() {
+        // the Neo4j graph is put back as it was after migration by employSmartNeo4jClean()
         resetMongo();
-        resetNeo4jUsers();
+    }
+
+    /** Puts the graph back as the migration left it before each test, including its users. */
+    @Override
+    public boolean employSmartNeo4jClean() {
+        return true;
     }
 
     private void resetMongo() {
@@ -338,24 +328,6 @@ public class ExternalEvoMasterController extends ExternalSutController {
                     copies.add(new Document(d));
                 }
                 collection.insertMany(copies);
-            }
-        }
-    }
-
-    private void resetNeo4jUsers() {
-        try (Session session = neo4jDriver.session()) {
-            session.run("MATCH (u:User) DETACH DELETE u").consume();
-            if (!neo4jUserSnapshot.isEmpty()) {
-                session.run("UNWIND $rows AS row CREATE (u:User) SET u = row",
-                        Map.of("rows", neo4jUserSnapshot)).consume();
-            }
-            if (!neo4jHasUserSnapshot.isEmpty()) {
-                session.run("""
-                                UNWIND $rows AS row
-                                MATCH (p:Player {id: row.playerId}), (u:User {id: row.userId})
-                                MERGE (p)-[:HAS_USER]->(u)
-                                """,
-                        Map.of("rows", neo4jHasUserSnapshot)).consume();
             }
         }
     }
