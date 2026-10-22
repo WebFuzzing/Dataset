@@ -35,6 +35,10 @@ services:
           condition: service_healthy
   db:
     image: postgres:17.2
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     tmpfs:
       - '/var/lib/postgresql/data'
     environment:
@@ -51,6 +55,10 @@ services:
       retries: 3
   redis:
     image: redis:7.4
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     healthcheck:
       test: redis-cli ping
       interval: 30s

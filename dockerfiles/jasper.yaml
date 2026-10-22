@@ -30,6 +30,10 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   db:
     image: postgres:18
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     tmpfs:
       - '/var/lib/postgresql'
     environment:

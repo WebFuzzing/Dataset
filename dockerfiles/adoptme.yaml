@@ -33,6 +33,10 @@ services:
           condition: service_healthy
   db:
     image: neo4j:5.26
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     tmpfs:
       - '/data'
     environment:

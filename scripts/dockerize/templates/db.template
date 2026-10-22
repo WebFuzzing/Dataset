@@ -1,5 +1,9 @@
   {{name}}:
     image: {{DATABASE_IMAGE_NAME}}
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     {% if TMP_FS -%}
     tmpfs:
       - '{{TMP_FS}}'

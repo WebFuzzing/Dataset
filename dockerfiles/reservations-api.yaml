@@ -30,6 +30,10 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   db:
     image: mongo:4.4
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     tmpfs:
       - '/data/db'
     volumes:

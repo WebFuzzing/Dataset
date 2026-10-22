@@ -33,6 +33,10 @@ services:
           condition: service_healthy
   cassandra:
     image: k8ssandra/cass-management-api:4.1.12-v0.1.126
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       HEAP_NEWSIZE: 128M
       MAX_HEAP_SIZE: 512M

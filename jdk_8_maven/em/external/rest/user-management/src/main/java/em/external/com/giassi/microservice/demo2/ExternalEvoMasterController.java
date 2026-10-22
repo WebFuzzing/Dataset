@@ -8,6 +8,7 @@ import org.evomaster.client.java.controller.api.dto.database.schema.DatabaseType
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 import java.sql.Connection;
@@ -67,7 +68,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private String initSQLScript;
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mysql = new GenericContainer("mysql:8.0" )
+            .withCreateContainerCmdModifier(modifier)
             .withEnv(new HashMap<String, String>(){{
                 put("MYSQL_ROOT_PASSWORD", "root");
                 put("MYSQL_DATABASE", "users");

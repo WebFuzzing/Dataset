@@ -14,6 +14,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.kafka.KafkaContainer;
 
 import java.io.IOException;
@@ -37,7 +38,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private static final String KAFKA_VERSION = "4.3.1";
 
-    private static final KafkaContainer kafka = new KafkaContainer("apache/kafka:" + KAFKA_VERSION);
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
+    private static final KafkaContainer kafka = new KafkaContainer("apache/kafka:" + KAFKA_VERSION)
+            .withCreateContainerCmdModifier(modifier);
 
 
     public static void main(String[] args) {

@@ -35,6 +35,10 @@ services:
           condition: service_healthy
   db:
     image: redis/redis-stack-server:7.4.0-v1
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       REDIS_ARGS: --requirepass jasonrocks
     healthcheck:
@@ -44,6 +48,10 @@ services:
       retries: 3
   cassandra:
     image: cassandra:4.1
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       CASSANDRA_CLUSTER_NAME: test
       CASSANDRA_DC: datacenter1
@@ -57,6 +65,10 @@ services:
       retries: 3
   kafka:
     image: apache/kafka:3.8.1
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller

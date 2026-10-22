@@ -20,6 +20,7 @@ import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -112,10 +113,15 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         );
     }
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(MONGODB_PORT);
 
     private static final GenericContainer neo4j = new GenericContainer(NEO4J_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USERNAME + "/" + NEO4J_PASSWORD)
             .withExposedPorts(NEO4J_BOLT_PORT)
             .waitingFor(Wait.forLogMessage(".*Started.*", 1))

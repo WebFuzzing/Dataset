@@ -7,6 +7,7 @@ import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -81,7 +82,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private static final String AWS_REGION = "us-east-1";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer localstack = new GenericContainer(LOCALSTACK_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("SERVICES", "dynamodb,sqs")
             .withExposedPorts(LOCALSTACK_PORT)
             .withStartupTimeout(Duration.ofMinutes(3));

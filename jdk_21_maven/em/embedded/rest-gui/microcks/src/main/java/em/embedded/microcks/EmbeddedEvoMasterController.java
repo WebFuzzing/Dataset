@@ -13,6 +13,7 @@ import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -63,7 +64,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String MONGODB_DATABASE_NAME = "test";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodbContainer = new GenericContainer("mongo:" + MONGODB_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withTmpFs(Collections.singletonMap("/data/db", "rw"))
             .withExposedPorts(MONGODB_PORT);
 

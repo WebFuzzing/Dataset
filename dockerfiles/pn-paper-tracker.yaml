@@ -33,6 +33,10 @@ services:
           condition: service_healthy
   db:
     image: localstack/localstack:4.4
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       SERVICES: dynamodb,sqs
     volumes:

@@ -30,3 +30,7 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   db:
     image: redis:7.2.3
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536

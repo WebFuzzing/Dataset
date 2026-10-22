@@ -10,6 +10,7 @@ import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
@@ -37,7 +38,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String CACHE_KEY_PATTERN = "id.my.hendisantika.springbootredissample.*Cache::*";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer redis = new GenericContainer("redis:" + REDIS_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withCommand("redis-server", "--requirepass", REDIS_PASSWORD)
             .withExposedPorts(REDIS_PORT);
 

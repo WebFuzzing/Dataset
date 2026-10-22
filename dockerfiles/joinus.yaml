@@ -35,6 +35,10 @@ services:
           condition: service_healthy
   db:
     image: mongo:7
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - ./additional_files/joinus/joinus-mongo-seed.js:/docker-entrypoint-initdb.d/joinus-mongo-seed.js
     healthcheck:
@@ -44,6 +48,10 @@ services:
       retries: 3
   neo4j:
     image: neo4j:5.26
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       NEO4J_AUTH: neo4j/wfdNeo4jPass123
     volumes:

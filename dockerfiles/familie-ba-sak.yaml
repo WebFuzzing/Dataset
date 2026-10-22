@@ -30,6 +30,10 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   db:
     image: postgres:13.13
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     tmpfs:
       - '/var/lib/postgresql/data'
     environment:
@@ -38,6 +42,10 @@ services:
       POSTGRES_DB: familiebasak
   mock-oauth2-server:
     image: ghcr.io/navikt/mock-oauth2-server:2.0.1
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       LOG_LEVEL: verbose
       SERVER_PORT: ${AUTH_PORT:-8081}
