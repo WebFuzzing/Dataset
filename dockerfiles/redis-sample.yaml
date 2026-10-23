@@ -30,4 +30,9 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   db:
     image: redis:7.4-alpine
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     command: redis-server --requirepass 53cret

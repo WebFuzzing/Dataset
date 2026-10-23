@@ -14,6 +14,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -63,7 +64,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     private static final String RESTORE_SEEDED_ADOPTERS =
             "MATCH (b:SeedBackup) MERGE (a:Adopter {id: b.id}) SET a = properties(b)";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer neo4j = new GenericContainer("neo4j:" + NEO4J_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USER + "/" + NEO4J_PASSWORD)
             .withEnv("NEO4J_server_memory_heap_max__size", "512M")
             .withEnv("NEO4J_server_memory_pagecache_size", "256M")

@@ -9,6 +9,7 @@ import org.evomaster.client.java.controller.api.dto.database.schema.DatabaseType
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
@@ -60,7 +61,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
                     + "('wfd_user1@wfd.invalid', '$2a$10$.jEmFkrXZaBcMtaxdbw2jeXj0yQUguhZrycEHEm45tlX.kcb2gPpe', 2, 'Wfd', 'User1', 'MALE', 'ACTIVE', '2025-01-20 10:02:00'), "
                     + "('wfd_user2@wfd.invalid', '$2a$10$RlXMPGo2HheEsX5oWkrCYOJMlBXlbBAfyqaBq0Wa63qcmafJPoVE6', 2, 'Wfd', 'User2', 'FEMALE', 'ACTIVE', '2025-01-20 10:03:00');";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer postgres = new GenericContainer(POSTGRES_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("POSTGRES_DB", POSTGRES_DB)
             .withEnv("POSTGRES_USER", POSTGRES_USER)
             .withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
@@ -71,6 +76,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
             .waitingFor(Wait.forLogMessage(".*database system is ready to accept connections.*", 2));
 
     private static final GenericContainer redis = new GenericContainer(REDIS_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(REDIS_PORT);
 
     public static void main(String[] args) {

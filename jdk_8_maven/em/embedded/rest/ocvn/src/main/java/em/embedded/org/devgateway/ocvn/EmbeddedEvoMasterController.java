@@ -17,6 +17,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 import java.sql.Connection;
@@ -51,7 +52,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     private MongoClient mongoClient;
 
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodb = new GenericContainer("mongo:3.2")
+            .withCreateContainerCmdModifier(modifier)
             .withTmpFs(Collections.singletonMap("/data/db", "rw"))
             .withExposedPorts(27017);
 

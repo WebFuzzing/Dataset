@@ -14,6 +14,7 @@ import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.controller.api.dto.auth.AuthenticationDto;
 import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.h2.tools.Server;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 
@@ -72,7 +73,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private MongoClient mongoClient;
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodb = new GenericContainer("mongo:3.2")
+            .withCreateContainerCmdModifier(modifier)
             .withTmpFs(Collections.singletonMap("/data/db", "rw"))
             .withExposedPorts(27017);
 

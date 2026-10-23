@@ -5,6 +5,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.model.Ulimit;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import org.evomaster.client.java.controller.AuthUtils;
@@ -93,6 +94,9 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private MongoClient mongoClient;
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private final GenericContainer<?> mongodb;
     private final GenericContainer<?> keycloakContainer;
     private final GenericContainer<?> postmanContainer;
@@ -121,6 +125,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
                                         new ExposedPort(MONGODB_PORT)
                                 ))
                 ))
+                .withCreateContainerCmdModifier(modifier)
                 .withExposedPorts(MONGODB_PORT);
 
         this.keycloakContainer = new GenericContainer<>(

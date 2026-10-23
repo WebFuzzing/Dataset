@@ -35,6 +35,11 @@ services:
           condition: service_healthy
   db:
     image: mongo:7
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - ./additional_files/lovemining/lovemining-mongo-seed.js:/docker-entrypoint-initdb.d/lovemining-mongo-seed.js
     healthcheck:
@@ -44,6 +49,11 @@ services:
       retries: 3
   neo4j:
     image: neo4j:5.26
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       NEO4J_AUTH: neo4j/wfdNeo4jPass123
     volumes:

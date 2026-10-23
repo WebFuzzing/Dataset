@@ -16,6 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.samples.petclinic.PetClinicApplication;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 import java.io.InputStream;
@@ -50,7 +51,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private String initSQLScript;
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer postgres = new GenericContainer("postgres:9")
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(5432)
             .withEnv("POSTGRES_HOST_AUTH_METHOD","trust")
             .withEnv("POSTGRES_DB", "petclinic")
