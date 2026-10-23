@@ -30,6 +30,7 @@ services:
       - "${JACOCO_PORT:-6300}:6300"
   mongodb:
     image: mongo:7.0
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536
@@ -41,6 +42,7 @@ services:
       ALLOW_EMPTY_PASSWORD: yes
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.0
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536
@@ -62,6 +64,7 @@ services:
     command: ['start-dev', '--hostname=http://localhost:${AUTH_PORT:-8081}', '--import-realm', '--health-enabled=true']
   postman:
     image: quay.io/microcks/microcks-postman-runtime:0.6.0
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536

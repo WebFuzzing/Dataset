@@ -37,6 +37,7 @@ services:
           condition: service_healthy
   db:
     image: mysql:9.5.0
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536
@@ -53,6 +54,7 @@ services:
       retries: 3
   mongodb:
     image: mongo:7
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536
@@ -66,6 +68,7 @@ services:
       retries: 3
   neo4j:
     image: neo4j:5.26
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536

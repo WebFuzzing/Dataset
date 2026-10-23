@@ -33,6 +33,7 @@ services:
           condition: service_healthy
   kafka:
     image: apache/kafka:4.3.1
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
     ulimits:
       nofile:
         soft: 65536
