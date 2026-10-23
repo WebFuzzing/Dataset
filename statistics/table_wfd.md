@@ -37,7 +37,7 @@
 |REST|__notebook-manager__|826|10|          5 |Java|JDK 8|Maven|MySQL||
 |REST|__ocvn__|45521|526|        258 |Java|JDK 8|Maven|H2, MongoDB|&check;|
 |REST|__ohsome-api__|14166|87|        134 |Java|JDK 17|Maven|OSHDB||
-|REST|__pay-publicapi__|34576|377|         10 |Java|JDK 11|Maven|Redis|&check;|
+|REST|__pay-publicapi__|34576|377|         16 |Java|JDK 11|Maven|Redis|&check;|
 |REST|__person-controller__|1112|16|         12 |Java|JDK 21|Maven|MongoDB||
 |REST|__petclinic-rest__|8675|109|         43 |Java|JDK 17|Maven|H2||
 |REST|__pn-paper-tracker__|24197|254|          8 |Java|JDK 21|Maven|DynamoDB||
