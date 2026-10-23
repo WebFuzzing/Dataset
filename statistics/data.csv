@@ -6,7 +6,7 @@ TRUE,blogapi,REST,Java,JDK 8,Maven,89,4787,MySQL,AGPL,52,TRUE,https://github.com
 TRUE,user-management,REST,Java,JDK 8,Maven,69,4274,MySQL,MIT,21,FALSE,https://github.com/andreagiassi/microservice-rbac-user-management
 TRUE,youtube-mock,REST,Java,JDK 8,Maven,29,3229,,UNDEFINED,1,FALSE,https://github.com/opensourcingapis/YouTubeMock
 TRUE,familie-ba-sak,REST,Kotlin,JDK 17,Maven,1089,143556,PostgreSQL,MIT,183,TRUE,https://github.com/navikt/familie-ba-sak
-TRUE,pay-publicapi,REST,Java,JDK 11,Maven,377,34576,Redis,MIT,10,TRUE,https://github.com/alphagov/pay-publicapi
+TRUE,pay-publicapi,REST,Java,JDK 11,Maven,377,34576,Redis,MIT,16,TRUE,https://github.com/alphagov/pay-publicapi
 TRUE,session-service,REST,Java,JDK 8,Maven,15,1471,MongoDB,UNDEFINED,8,FALSE,https://github.com/cBioPortal/session-service
 TRUE,bibliothek,REST,Java,JDK 17,Gradle,33,2176,MongoDB,MIT,8,FALSE,https://github.com/PaperMC/bibliothek
 TRUE,reservations-api,REST,Java,JDK 11,Gradle,39,1853,MongoDB,UNDEFINED,7,TRUE,https://github.com/cyrilgavala/reservations-api
