@@ -19,7 +19,7 @@ TRUE,http-patch-spring,REST,Java,JDK 11,Maven,30,1450,,MIT,6,FALSE,https://githu
 TRUE,languagetool,REST,Java,JDK 8,Maven,1385,174781,,LGPL,2,FALSE,https://github.com/languagetool-org/languagetool
 TRUE,ocvn,REST,Java,JDK 8,Maven,526,45521,H2;MongoDB,MIT,258,TRUE,https://github.com/devgateway/ocvn
 TRUE,ohsome-api,REST,Java,JDK 17,Maven,87,14166,OSHDB,AGPL-3.0,134,FALSE,https://github.com/GIScience/ohsome-api
-TRUE,proxyprint,REST,Java,JDK 8,Maven,73,8338,H2,Apache,74,TRUE,https://github.com/ProxyPrint/proxyprint-kitchen
+TRUE,proxyprint,REST,Java,JDK 8,Maven,73,8338,H2,Apache,115,TRUE,https://github.com/ProxyPrint/proxyprint-kitchen
 TRUE,quartz-manager,REST,Java,JDK 11,Maven,129,5068,,Apache,11,TRUE,https://github.com/fabioformosa/quartz-manager
 TRUE,rest-ncs,REST,Java,JDK 8,Maven,9,605,,UNDEFINED,6,FALSE,UNDEFINED
 TRUE,rest-news,REST,Kotlin,JDK 8,Maven,11,857,H2,LGPL,7,FALSE,https://github.com/arcuri82/testing_security_development_enterprise_systems
@@ -28,7 +28,7 @@ TRUE,restcountries,REST,Java,JDK 8,Maven,24,1977,,MPL,22,FALSE,https://github.co
 TRUE,scout-api,REST,Java,JDK 8,Maven,93,9736,H2,MIT,49,TRUE,https://github.com/mikaelsvensson/scout-api
 TRUE,spring-actuator-demo,REST,Java,JDK 8,Maven,5,117,,UNDEFINED,2,TRUE,https://github.com/callicoder/spring-boot-actuator-demo
 TRUE,spring-batch-rest,REST,Java,JDK 8,Maven,65,3668,,Apache,5,FALSE,https://github.com/chrisgleissner/spring-batch-rest
-TRUE,spring-ecommerce,REST,Java,JDK 8,Maven,58,2223,MongoDB;Redis;Elasticsearch,UNDEFINED,26,TRUE,https://github.com/SaiUpadhyayula/SpringAngularEcommerce
+TRUE,spring-ecommerce,REST,Java,JDK 8,Maven,58,2223,MongoDB;Redis;Elasticsearch,UNDEFINED,27,TRUE,https://github.com/SaiUpadhyayula/SpringAngularEcommerce
 TRUE,spring-rest-example,REST,Java,JDK 17,Maven,32,1426,MySQL,MIT,9,FALSE,https://github.com/phantasmicmeans/spring-boot-restful-api-example
 TRUE,swagger-petstore,REST,Java,JDK 8,Maven,23,1631,,Apache,19,FALSE,https://github.com/swagger-api/swagger-petstore
 TRUE,genome-nexus,REST,Java,JDK 8,Maven,405,30004,MongoDB,MIT,23,FALSE,https://github.com/genome-nexus/genome-nexus
