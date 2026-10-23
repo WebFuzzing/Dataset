@@ -80,7 +80,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     @Override
     public ProblemInfo getProblemInfo() {
         return new RestProblem(
-                "http://localhost:" + application.getJettyPort() + "/assets/swagger.json",
+                "http://localhost:" + application.getJettyPort() + "/assets/publicapi_spec.json",
                 null
         );
     }

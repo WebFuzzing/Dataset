@@ -201,7 +201,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     @Override
     public ProblemInfo getProblemInfo() {
         return new RestProblem(
-                getBaseURL() + "/assets/swagger.json",
+                getBaseURL() + "/assets/publicapi_spec.json",
                 null
         );
     }
