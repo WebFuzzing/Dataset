@@ -1,67 +1,67 @@
-|Type|Name|#LOCs|#SourceFiles|#Endpoints|Language(s)|Runtime|Build Tool|Database(s)|Authentication|
-|----|----|----:|-----------:|---------:|-----------|-------|----------|-----------|:------------:|
-|GraphQL|__graphql-ncs__|548|8|6|Kotlin|JDK 8|Maven|||
-|GraphQL|__graphql-scs__|577|13|11|Kotlin|JDK 8|Maven|||
-|GraphQL|__patio-api__|18048|178|20|Java|JDK 11|Gradle|PostgreSQL|&check;|
-|GraphQL|__petclinic-graphql__|5212|89|15|Java|JDK 8|Maven|PostgreSQL||
-|GraphQL|__timbuctoo__|107729|1113|18|Java|JDK 11|Maven|Neo4j|&check;|
-|gRPC|__grpc-ncs__|638|9|6|Java|JDK 8|Maven|||
-|gRPC|__grpc-scs__|894|14|11|Java|JDK 8|Maven|||
-|gRPC|__signal-registration__|13652|177|5|Java|JDK 17|Maven|||
-|REST|__adoptme__|6158|41|14|Java|JDK 21|Maven|Neo4j||
-|REST|__arimaa__|9460|141|38|Java|JDK 21|Maven|MySQL, MongoDB, Neo4j|&check;|
-|REST|__bibliothek__|2176|33|8|Java|JDK 17|Gradle|MongoDB||
-|REST|__blogapi__|4787|89|52|Java|JDK 8|Maven|MySQL|&check;|
-|REST|__catwatch__|9636|106|14|Java|JDK 8|Maven|H2||
-|REST|__commafeed__|21287|201|44|Java|JDK 25|Maven|H2|&check;|
-|REST|__cwa-verification__|3955|47|5|Java|JDK 11|Maven|H2||
-|REST|__digitalbanking__|2835|27|55|Java|JDK 17|Maven|Redis, Cassandra||
-|REST|__erc20-rest-service__|1378|7|13|Java|JDK 8|Gradle|||
-|REST|__familie-ba-sak__|143556|1089|183|Kotlin|JDK 17|Maven|PostgreSQL|&check;|
-|REST|__features-service__|2275|39|18|Java|JDK 8|Maven|H2||
-|REST|__flight-search-api__|14440|194|40|Java|JDK 21|Maven|MongoDB|&check;|
-|REST|__gdpr-kv__|6399|62|7|Java|JDK 21|Gradle|DynamoDB||
-|REST|__genome-nexus__|30004|405|23|Java|JDK 8|Maven|MongoDB||
-|REST|__gestaohospital__|3506|33|20|Java|JDK 8|Maven|MongoDB||
-|REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||
-|REST|__jasper__|46791|337|61|Java|JDK 25|Maven|PostgreSQL|&check;|
-|REST|__joinus__|7906|101|37|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
-|REST|__kafka-rest__|81418|475|50|Java|JDK 17|Maven|Kafka||
-|REST|__komga__|62303|543|174|Kotlin|JDK 17|Gradle|SQLite|&check;|
-|REST|__languagetool__|174781|1385|2|Java|JDK 8|Maven|||
-|REST|__lovemining__|1793|25|18|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
-|REST|__management-cassandra__|35096|225|63|Java|JDK 11|Maven|Cassandra||
-|REST|__market__|9861|124|13|Java|JDK 11|Maven|H2|&check;|
-|REST|__microcks__|66186|471|88|Java|JDK 21|Maven|MongoDB|&check;|
-|REST|__movies-xml__|2502|22|7|Java|JDK 21|Maven|H2||
-|REST|__notebook-manager__|826|10|5|Java|JDK 8|Maven|MySQL||
-|REST|__ocvn__|45521|526|258|Java|JDK 8|Maven|H2, MongoDB|&check;|
-|REST|__ohsome-api__|14166|87|134|Java|JDK 17|Maven|OSHDB||
-|REST|__pay-publicapi__|34576|377|10|Java|JDK 11|Maven|Redis|&check;|
-|REST|__person-controller__|1112|16|12|Java|JDK 21|Maven|MongoDB||
-|REST|__petclinic-rest__|8675|109|43|Java|JDK 17|Maven|H2||
-|REST|__pn-paper-tracker__|24197|254|8|Java|JDK 21|Maven|DynamoDB||
-|REST|__proxyprint__|8338|73|74|Java|JDK 8|Maven|H2|&check;|
-|REST|__quartz-manager__|5068|129|11|Java|JDK 11|Maven||&check;|
-|REST|__redis-sample__|1006|18|4|Java|JDK 21|Maven|Redis||
-|REST|__reservations-api__|1853|39|7|Java|JDK 11|Gradle|MongoDB|&check;|
-|REST|__rest-ncs__|605|9|6|Java|JDK 8|Maven|||
-|REST|__rest-news__|857|11|7|Kotlin|JDK 8|Maven|H2||
-|REST|__rest-scs__|862|13|11|Java|JDK 8|Maven|||
-|REST|__restcountries__|1977|24|22|Java|JDK 8|Maven|||
-|REST|__scout-api__|9736|93|49|Java|JDK 8|Maven|H2|&check;|
-|REST|__session-service__|1471|15|8|Java|JDK 8|Maven|MongoDB||
-|REST|__spring-actuator-demo__|117|5|2|Java|JDK 8|Maven||&check;|
-|REST|__spring-batch-rest__|3668|65|5|Java|JDK 8|Maven|||
-|REST|__spring-ecommerce__|2223|58|26|Java|JDK 8|Maven|MongoDB, Redis, Elasticsearch|&check;|
-|REST|__spring-rest-example__|1426|32|9|Java|JDK 17|Maven|MySQL||
-|REST|__swagger-petstore__|1631|23|19|Java|JDK 8|Maven|||
-|REST|__testing-system__|3692|72|11|Java|JDK 21|Maven|PostgreSQL, Redis|&check;|
-|REST|__tiltaksgjennomforing__|27316|472|79|Java|JDK 17|Maven|PostgreSQL|&check;|
-|REST|__traccar__|141962|1478|117|Java|JDK 21|Gradle|H2|&check;|
-|REST|__tracking-system__|5947|87|67|Java|JDK 11|Maven|H2|&check;|
-|REST|__user-management__|4274|69|21|Java|JDK 8|Maven|MySQL||
-|REST|__webgoat__|27638|355|204|Java|JDK 21|Maven|H2|&check;|
-|REST|__youtube-mock__|3229|29|1|Java|JDK 8|Maven|||
-|Thrift|__thrift-ncs__|585|9|6|Java|JDK 8|Maven|||
-|Thrift|__thrift-scs__|772|14|11|Java|JDK 8|Maven|||
+|Type|Name|#LOCs|#SourceFiles| #Endpoints |Language(s)|Runtime|Build Tool|Database(s)|Authentication|
+|----|----|----:|-----------:|-----------:|-----------|-------|----------|-----------|:------------:|
+|GraphQL|__graphql-ncs__|548|8|          6 |Kotlin|JDK 8|Maven|||
+|GraphQL|__graphql-scs__|577|13|         11 |Kotlin|JDK 8|Maven|||
+|GraphQL|__patio-api__|18048|178|         20 |Java|JDK 11|Gradle|PostgreSQL|&check;|
+|GraphQL|__petclinic-graphql__|5212|89|         15 |Java|JDK 8|Maven|PostgreSQL||
+|GraphQL|__timbuctoo__|107729|1113|         18 |Java|JDK 11|Maven|Neo4j|&check;|
+|gRPC|__grpc-ncs__|638|9|          6 |Java|JDK 8|Maven|||
+|gRPC|__grpc-scs__|894|14|         11 |Java|JDK 8|Maven|||
+|gRPC|__signal-registration__|13652|177|          5 |Java|JDK 17|Maven|||
+|REST|__adoptme__|6158|41|         14 |Java|JDK 21|Maven|Neo4j||
+|REST|__arimaa__|9460|141|         38 |Java|JDK 21|Maven|MySQL, MongoDB, Neo4j|&check;|
+|REST|__bibliothek__|2176|33|          8 |Java|JDK 17|Gradle|MongoDB||
+|REST|__blogapi__|4787|89|         52 |Java|JDK 8|Maven|MySQL|&check;|
+|REST|__catwatch__|9636|106|         23 |Java|JDK 8|Maven|H2||
+|REST|__commafeed__|21287|201|         44 |Java|JDK 25|Maven|H2|&check;|
+|REST|__cwa-verification__|3955|47|          5 |Java|JDK 11|Maven|H2||
+|REST|__digitalbanking__|2835|27|         55 |Java|JDK 17|Maven|Redis, Cassandra||
+|REST|__erc20-rest-service__|1378|7|         13 |Java|JDK 8|Gradle|||
+|REST|__familie-ba-sak__|143556|1089|        183 |Kotlin|JDK 17|Maven|PostgreSQL|&check;|
+|REST|__features-service__|2275|39|         18 |Java|JDK 8|Maven|H2||
+|REST|__flight-search-api__|14440|194|         40 |Java|JDK 21|Maven|MongoDB|&check;|
+|REST|__gdpr-kv__|6399|62|          7 |Java|JDK 21|Gradle|DynamoDB||
+|REST|__genome-nexus__|30004|405|         23 |Java|JDK 8|Maven|MongoDB||
+|REST|__gestaohospital__|3506|33|         20 |Java|JDK 8|Maven|MongoDB||
+|REST|__http-patch-spring__|1450|30|          6 |Java|JDK 11|Maven|||
+|REST|__jasper__|46791|337|         61 |Java|JDK 25|Maven|PostgreSQL|&check;|
+|REST|__joinus__|7906|101|         37 |Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__kafka-rest__|81418|475|         50 |Java|JDK 17|Maven|Kafka||
+|REST|__komga__|62303|543|        174 |Kotlin|JDK 17|Gradle|SQLite|&check;|
+|REST|__languagetool__|174781|1385|          2 |Java|JDK 8|Maven|||
+|REST|__lovemining__|1793|25|         18 |Java|JDK 21|Maven|MongoDB, Neo4j|&check;|
+|REST|__management-cassandra__|35096|225|         63 |Java|JDK 11|Maven|Cassandra||
+|REST|__market__|9861|124|         13 |Java|JDK 11|Maven|H2|&check;|
+|REST|__microcks__|66186|471|         88 |Java|JDK 21|Maven|MongoDB|&check;|
+|REST|__movies-xml__|2502|22|          7 |Java|JDK 21|Maven|H2||
+|REST|__notebook-manager__|826|10|          5 |Java|JDK 8|Maven|MySQL||
+|REST|__ocvn__|45521|526|        258 |Java|JDK 8|Maven|H2, MongoDB|&check;|
+|REST|__ohsome-api__|14166|87|        134 |Java|JDK 17|Maven|OSHDB||
+|REST|__pay-publicapi__|34576|377|         10 |Java|JDK 11|Maven|Redis|&check;|
+|REST|__person-controller__|1112|16|         12 |Java|JDK 21|Maven|MongoDB||
+|REST|__petclinic-rest__|8675|109|         43 |Java|JDK 17|Maven|H2||
+|REST|__pn-paper-tracker__|24197|254|          8 |Java|JDK 21|Maven|DynamoDB||
+|REST|__proxyprint__|8338|73|         74 |Java|JDK 8|Maven|H2|&check;|
+|REST|__quartz-manager__|5068|129|         11 |Java|JDK 11|Maven||&check;|
+|REST|__redis-sample__|1006|18|          4 |Java|JDK 21|Maven|Redis||
+|REST|__reservations-api__|1853|39|          7 |Java|JDK 11|Gradle|MongoDB|&check;|
+|REST|__rest-ncs__|605|9|          6 |Java|JDK 8|Maven|||
+|REST|__rest-news__|857|11|          7 |Kotlin|JDK 8|Maven|H2||
+|REST|__rest-scs__|862|13|         11 |Java|JDK 8|Maven|||
+|REST|__restcountries__|1977|24|         22 |Java|JDK 8|Maven|||
+|REST|__scout-api__|9736|93|         49 |Java|JDK 8|Maven|H2|&check;|
+|REST|__session-service__|1471|15|          8 |Java|JDK 8|Maven|MongoDB||
+|REST|__spring-actuator-demo__|117|5|          2 |Java|JDK 8|Maven||&check;|
+|REST|__spring-batch-rest__|3668|65|          5 |Java|JDK 8|Maven|||
+|REST|__spring-ecommerce__|2223|58|         26 |Java|JDK 8|Maven|MongoDB, Redis, Elasticsearch|&check;|
+|REST|__spring-rest-example__|1426|32|          9 |Java|JDK 17|Maven|MySQL||
+|REST|__swagger-petstore__|1631|23|         19 |Java|JDK 8|Maven|||
+|REST|__testing-system__|3692|72|         11 |Java|JDK 21|Maven|PostgreSQL, Redis|&check;|
+|REST|__tiltaksgjennomforing__|27316|472|         79 |Java|JDK 17|Maven|PostgreSQL|&check;|
+|REST|__traccar__|141962|1478|        117 |Java|JDK 21|Gradle|H2|&check;|
+|REST|__tracking-system__|5947|87|         67 |Java|JDK 11|Maven|H2|&check;|
+|REST|__user-management__|4274|69|         21 |Java|JDK 8|Maven|MySQL||
+|REST|__webgoat__|27638|355|        204 |Java|JDK 21|Maven|H2|&check;|
+|REST|__youtube-mock__|3229|29|          1 |Java|JDK 8|Maven|||
+|Thrift|__thrift-ncs__|585|9|          6 |Java|JDK 8|Maven|||
+|Thrift|__thrift-scs__|772|14|         11 |Java|JDK 8|Maven|||

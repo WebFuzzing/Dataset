@@ -10,7 +10,7 @@ TRUE,pay-publicapi,REST,Java,JDK 11,Maven,377,34576,Redis,MIT,10,TRUE,https://gi
 TRUE,session-service,REST,Java,JDK 8,Maven,15,1471,MongoDB,UNDEFINED,8,FALSE,https://github.com/cBioPortal/session-service
 TRUE,bibliothek,REST,Java,JDK 17,Gradle,33,2176,MongoDB,MIT,8,FALSE,https://github.com/PaperMC/bibliothek
 TRUE,reservations-api,REST,Java,JDK 11,Gradle,39,1853,MongoDB,UNDEFINED,7,TRUE,https://github.com/cyrilgavala/reservations-api
-TRUE,catwatch,REST,Java,JDK 8,Maven,106,9636,H2,Apache,14,FALSE,https://github.com/zalando-incubator/catwatch
+TRUE,catwatch,REST,Java,JDK 8,Maven,106,9636,H2,Apache,23,FALSE,https://github.com/zalando-incubator/catwatch
 TRUE,cwa-verification,REST,Java,JDK 11,Maven,47,3955,H2,Apache,5,FALSE,https://github.com/corona-warn-app/cwa-verification-server
 TRUE,erc20-rest-service,REST,Java,JDK 8,Gradle,7,1378,,UNDEFINED,13,FALSE,https://github.com/web3labs/erc20-rest-service
 TRUE,features-service,REST,Java,JDK 8,Maven,39,2275,H2,Apache,18,FALSE,https://github.com/JavierMF/features-service
