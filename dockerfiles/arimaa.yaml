@@ -37,6 +37,11 @@ services:
           condition: service_healthy
   db:
     image: mysql:9.5.0
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       MYSQL_DATABASE: arimaadockermysqldb
       MYSQL_ROOT_PASSWORD: wfdRootPass123!
@@ -49,6 +54,11 @@ services:
       retries: 3
   mongodb:
     image: mongo:7
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     volumes:
       - ./additional_files/arimaa/arimaa-mongo-seed.js:/docker-entrypoint-initdb.d/arimaa-mongo-seed.js
     healthcheck:
@@ -58,6 +68,11 @@ services:
       retries: 3
   neo4j:
     image: neo4j:5.26
+    # needed due to low defaults on Linux, leading DBs to crash when running out of open file descriptors
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
       NEO4J_AUTH: neo4j/wfdNeo4jPass123
     volumes:

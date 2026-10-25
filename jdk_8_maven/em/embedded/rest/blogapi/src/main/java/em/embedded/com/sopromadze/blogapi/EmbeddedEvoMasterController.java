@@ -14,6 +14,7 @@ import org.evomaster.client.java.sql.DbSpecification;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -40,7 +41,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         starter.start();
     }
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mysql = new GenericContainer("mysql:8.0" )
+            .withCreateContainerCmdModifier(modifier)
             .withEnv(new HashMap<String, String>(){{
                 put("MYSQL_ROOT_PASSWORD", "root");
                 put("MYSQL_DATABASE", "blogapi");

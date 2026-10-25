@@ -17,6 +17,7 @@ import org.bson.Document;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.AuthTokens;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
@@ -73,7 +74,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
                     + "('wfd_admin1', 'wfd_admin1@example.com', '$2a$10$3mawxiylgOPZOvvJO24bxeuUcQyQf.n53SzzAX9fBNiT7bfzZn4WO', 'ADMIN', NOW(), NOW()), "
                     + "('wfd_admin2', 'wfd_admin2@example.com', '$2a$10$8h.Zwu6RHMf0VZsEIZ2rcewbF4CU/nLpzoSSPjE1M1D.nof/9ZQVy', 'ADMIN', NOW(), NOW());";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mysql = new GenericContainer(MYSQL_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("MYSQL_DATABASE", MYSQL_DATABASE)
             .withEnv("MYSQL_ROOT_PASSWORD", MYSQL_ROOT_PASSWORD)
             .withCopyFileToContainer(MountableFile.forClasspathResource("arimaa-mysql/"), "/docker-entrypoint-initdb.d")
@@ -83,9 +88,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
             .withStartupTimeout(Duration.ofMinutes(3));
 
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(MONGODB_PORT);
 
     private static final GenericContainer neo4j = new GenericContainer(NEO4J_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USERNAME + "/" + NEO4J_PASSWORD)
             .withExposedPorts(NEO4J_BOLT_PORT)
             .waitingFor(Wait.forLogMessage(".*Started.*", 1))

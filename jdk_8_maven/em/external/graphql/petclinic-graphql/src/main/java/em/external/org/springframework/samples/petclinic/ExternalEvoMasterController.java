@@ -11,6 +11,7 @@ import org.evomaster.client.java.sql.SqlScriptRunnerCached;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.GraphQlProblem;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 import java.io.InputStream;
@@ -71,7 +72,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private String initSQLScript;
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer postgres = new GenericContainer("postgres:9")
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(5432)
             .withEnv("POSTGRES_DB", "petclinic")
             .withEnv("POSTGRES_HOST_AUTH_METHOD","trust")

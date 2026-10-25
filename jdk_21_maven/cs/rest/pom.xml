@@ -22,6 +22,7 @@
         <module>movies-xml</module>
         <module>testing-system</module>
         <module>flight-search-api</module>
+        <module>pn-paper-tracker</module>
     </modules>
 
 
