@@ -1,0 +1,267 @@
+[
+  {
+    "id":"sub1",
+    "plan": "plan1",
+    "application": "app1",
+    "applicationName": "app1 name",
+    "api": "api1",
+    "referenceId": "api1",
+    "referenceType": "API",
+    "environmentId" : "DEFAULT",
+    "request": "request",
+    "reason": "reason",
+    "status": "PENDING",
+    "consumerStatus": "STARTED",
+    "processedBy": "user1",
+    "subscribedBy": "user2",
+    "clientId": "my-client-id",
+    "clientCertificate": "my-client-certificate",
+    "startingAt": 1439022010883,
+    "endingAt": 1449022010883,
+    "createdAt": 1459022010883,
+    "updatedAt": 1469022010883,
+    "processedAt": 1479022010883,
+    "pausedAt": 1479022010883,
+    "consumerPausedAt": 1479022010883,
+    "generalConditionsContentPageId": "ref",
+    "generalConditionsContentRevision": 2,
+    "generalConditionsAccepted": true,
+    "daysToExpirationOnLastNotification": 30,
+    "configuration": "{}",
+    "type": "STANDARD",
+    "metadata": {
+      "key" : "value"
+    }
+  },
+  {
+    "id":"sub2",
+    "plan": "plan3",
+    "application": "app2",
+    "applicationName": "app2 name",
+    "environmentId" : "DEFAULT",
+    "status": "PENDING",
+    "createdAt": 1639022010883,
+    "clientId": "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
+  },
+  {
+    "id":"sub3",
+    "plan": "plan3",
+    "application": "app1",
+    "applicationName": "app1 name",
+    "environmentId" : "DEFAULT",
+    "status": "PENDING",
+    "createdAt": 1739022010883,
+    "updatedAt": 1739022010883
+  },
+  {
+    "id":"sub4",
+    "plan": "plan2",
+    "application": "app1",
+    "applicationName": "app1 name",
+    "environmentId" : "other-env",
+    "status": "PENDING",
+    "createdAt": 1539022010883
+  },
+  {
+    "id":"sub5",
+    "plan": "plan5",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "other-env-2",
+    "status": "ACCEPTED",
+    "createdAt": 1539023010884
+  },
+  {
+    "id":"sub6",
+    "plan": "plan3",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "ToBeDeleted",
+    "status": "ACCEPTED",
+    "createdAt": 1449022010850
+  },
+  {
+    "id":"sub7",
+    "plan": "plan3",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "ToBeDeleted",
+    "status": "ACCEPTED",
+    "createdAt": 1449022010860
+  },
+  {
+    "id":"sub8",
+    "plan": "plan3",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "ToBeDeleted",
+    "status": "ACCEPTED",
+    "createdAt": 1449022010870
+  },
+  {
+    "id": "sub-legacy-push",
+    "plan": "plan3",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "api": "api1",
+    "environmentId": "other-env-2",
+    "status": "ACCEPTED",
+    "type": "PUSH",
+    "createdAt": 1669022010883
+  },
+  {
+    "id":"sub-api-product-1",
+    "plan": "plan4",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "other-env-2",
+    "status": "ACCEPTED",
+    "createdAt": 1300000000000,
+    "updatedAt": 1900000000000,
+    "endingAt": 1400000000000,
+    "referenceId": "c45b8e66-4d2a-47ad-9b8e-664d2a97ad88",
+    "referenceType": "API_PRODUCT"
+  },
+  {
+    "id":"sub-api-product-2",
+    "plan": "plan4",
+    "application": "app4",
+    "applicationName": "app4 name",
+    "environmentId" : "other-env-2",
+    "status": "PENDING",
+    "createdAt": 1300000000002,
+    "updatedAt": 1900000000001,
+    "endingAt": 1400000000001,
+    "referenceId": "c45b8e66-4d2a-47ad-9b8e-664d2a97ad88",
+    "referenceType": "API_PRODUCT"
+  },
+  {
+    "id":"sub-sa-1",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-1",
+    "status": "ACCEPTED",
+    "createdAt": 1000,
+    "updatedAt": 1000
+  },
+  {
+    "id":"sub-sa-2a",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-2",
+    "status": "ACCEPTED",
+    "createdAt": 2000,
+    "updatedAt": 2000,
+    "metadata": {
+      "k1": "v1",
+      "k2": "v2",
+      "k3": "v3"
+    }
+  },
+  {
+    "id":"sub-sa-2b",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-2",
+    "status": "ACCEPTED",
+    "createdAt": 2001,
+    "updatedAt": 2001,
+    "metadata": {
+      "kA": "vA",
+      "kB": "vB"
+    }
+  },
+  {
+    "id":"sub-sa-3-a",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-3",
+    "status": "ACCEPTED",
+    "createdAt": 3000,
+    "updatedAt": 3000
+  },
+  {
+    "id":"sub-sa-3-b",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-3",
+    "status": "ACCEPTED",
+    "createdAt": 3000,
+    "updatedAt": 3000
+  },
+  {
+    "id":"sub-sa-3-c",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-3",
+    "status": "ACCEPTED",
+    "createdAt": 3000,
+    "updatedAt": 3000
+  },
+  {
+    "id":"sub-sa-3-d",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-3",
+    "status": "ACCEPTED",
+    "createdAt": 3000,
+    "updatedAt": 3000
+  },
+  {
+    "id":"sub-sa-3-e",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-3",
+    "status": "ACCEPTED",
+    "createdAt": 3000,
+    "updatedAt": 3000
+  },
+  {
+    "id":"sub-sa-4-a",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-4",
+    "status": "ACCEPTED",
+    "createdAt": 4000,
+    "updatedAt": 4000
+  },
+  {
+    "id":"sub-sa-4-b",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-4",
+    "status": "ACCEPTED",
+    "createdAt": 4001,
+    "updatedAt": 4001
+  },
+  {
+    "id":"sub-sa-4-c",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-4",
+    "status": "ACCEPTED",
+    "createdAt": 4002,
+    "updatedAt": 4002
+  },
+  {
+    "id":"sub-sa-4-d",
+    "plan": "plan-sa",
+    "application": "app-sa",
+    "applicationName": "app-sa name",
+    "environmentId": "env-sa-4",
+    "status": "ACCEPTED",
+    "createdAt": 4003,
+    "updatedAt": 4003
+  }
+]

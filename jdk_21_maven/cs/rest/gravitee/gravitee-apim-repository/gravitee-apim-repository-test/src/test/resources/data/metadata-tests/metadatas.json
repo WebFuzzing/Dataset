@@ -1,0 +1,37 @@
+[
+   {
+      "key":"boolean",
+      "referenceId":"DEFAULT",
+      "referenceType":"ENVIRONMENT",
+      "name":"Boolean",
+      "format":"BOOLEAN"
+   },
+   {
+      "key":"string",
+      "referenceId":"apiId",
+      "referenceType":"API",
+      "name":"String",
+      "format":"STRING"
+   },
+   {
+      "key":"mail",
+      "referenceId":"applicationId",
+      "referenceType":"APPLICATION",
+      "name":"Mail",
+      "format":"MAIL"
+   },
+  {
+    "key": "string2",
+    "referenceId": "api-delete",
+    "referenceType": "API",
+    "name": "String",
+    "format": "STRING"
+  },
+  {
+    "key": "string3",
+    "referenceId": "api-delete",
+    "referenceType": "API",
+    "name": "String",
+    "format": "STRING"
+  }
+]

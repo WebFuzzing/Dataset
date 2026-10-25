@@ -1,0 +1,1207 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.rest.resource;
+
+import static io.gravitee.rest.api.model.permissions.RolePermission.ENVIRONMENT_GROUP;
+import static io.gravitee.rest.api.model.permissions.RolePermissionAction.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+
+import io.gravitee.common.http.HttpStatusCode;
+import io.gravitee.rest.api.management.rest.model.GroupMembership;
+import io.gravitee.rest.api.model.*;
+import io.gravitee.rest.api.model.api.ApiEntity;
+import io.gravitee.rest.api.model.permissions.RoleScope;
+import io.gravitee.rest.api.model.permissions.SystemRole;
+import io.gravitee.rest.api.service.MembershipService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author Nicolas GERAUD (nicolas.geraud at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+public class GroupMembersResourceTest extends AbstractResourceTest {
+
+    private static final String GROUP_ID = "group-id";
+    private static final String USERNAME = "user";
+    private static final String DEFAULT_API_ROLE = "DEFAULT_API_ROLE";
+    private static final String DEFAULT_APPLICATION_ROLE = "DEFAULT_APPLICATION_ROLE";
+    private static final String DEFAULT_API_PRODUCT_ROLE = "DEFAULT_API_PRODUCT_ROLE";
+
+    @Override
+    protected String contextPath() {
+        return "configuration/groups/" + GROUP_ID + "/members/";
+    }
+
+    //ADD
+
+    private void initADDmock() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity defaultApiRole = mock(RoleEntity.class);
+        when(defaultApiRole.getName()).thenReturn(DEFAULT_API_ROLE);
+        RoleEntity defaultApplicationRole = mock(RoleEntity.class);
+        when(defaultApplicationRole.getName()).thenReturn(DEFAULT_APPLICATION_ROLE);
+        when(roleService.findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API)).thenReturn(
+            Collections.singletonList(defaultApiRole)
+        );
+        when(roleService.findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION)).thenReturn(
+            Collections.singletonList(defaultApplicationRole)
+        );
+
+        RoleEntity customApiRole = new RoleEntity();
+        customApiRole.setId("API_CUSTOM_API");
+        customApiRole.setName("CUSTOM_API");
+        customApiRole.setScope(RoleScope.API);
+        when(roleService.findByScopeAndName(RoleScope.API, "CUSTOM_API", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApiRole)
+        );
+
+        RoleEntity customApplicationRole = new RoleEntity();
+        customApplicationRole.setId("APP_CUSTOM_APP");
+        customApplicationRole.setName("CUSTOM_APP");
+        customApplicationRole.setScope(RoleScope.APPLICATION);
+        when(roleService.findByScopeAndName(RoleScope.APPLICATION, "CUSTOM_APP", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApplicationRole)
+        );
+
+        RoleEntity defaultApiProductRole = new RoleEntity();
+        defaultApiProductRole.setName(DEFAULT_API_PRODUCT_ROLE);
+        when(roleService.findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API_PRODUCT)).thenReturn(
+            Collections.singletonList(defaultApiProductRole)
+        );
+
+        RoleEntity customApiProductRole = new RoleEntity();
+        customApiProductRole.setId("API_PRODUCT_CUSTOM_USER");
+        customApiProductRole.setName("USER");
+        customApiProductRole.setScope(RoleScope.API_PRODUCT);
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApiProductRole)
+        );
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+    }
+
+    @Test
+    public void shouldAddMemberWithCustomApplicationRoleAndCustomApiRole() {
+        initADDmock();
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.APPLICATION);
+        appRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(List.of(apiRole, appRole));
+
+        final Response response = envTarget().request().post(Entity.json(Set.of(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, "CUSTOM_API")
+        );
+
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.APPLICATION, "CUSTOM_APP")
+        );
+    }
+
+    @Test
+    public void shouldAddMemberWithCustomApiProductRole() {
+        initADDmock();
+        MemberRoleEntity apiProductRole = new MemberRoleEntity();
+        apiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        apiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(List.of(apiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Set.of(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API_PRODUCT);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, "USER")
+        );
+    }
+
+    @Test
+    public void shouldAddMemberWithDefaultGroupRole() {
+        initADDmock();
+
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setRoles(Map.of(RoleScope.API, "DEFAULT_GROUP_API_ROLE", RoleScope.APPLICATION, "DEFAULT_GROUP_APPLICATION_ROLE"));
+        groupEntity.setSystemInvitation(true);
+        groupEntity.setLockApiRole(true);
+        groupEntity.setLockApplicationRole(true);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(groupEntity);
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(false);
+
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.APPLICATION);
+        appRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Arrays.asList(apiRole, appRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, "DEFAULT_GROUP_API_ROLE")
+        );
+
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.APPLICATION, "DEFAULT_GROUP_APPLICATION_ROLE")
+        );
+    }
+
+    @Test
+    public void shouldAddMemberWithDefaultOrganizationRole() {
+        initADDmock();
+
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setSystemInvitation(true);
+        groupEntity.setLockApiRole(true);
+        groupEntity.setLockApplicationRole(true);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(groupEntity);
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(false);
+
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.APPLICATION);
+        appRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Arrays.asList(apiRole, appRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, DEFAULT_API_ROLE)
+        );
+
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.APPLICATION, DEFAULT_APPLICATION_ROLE)
+        );
+    }
+
+    //UPDATE
+    private void initUPDATEmock() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity customApiRole = new RoleEntity();
+        customApiRole.setId("API_CUSTOM_API");
+        customApiRole.setName("CUSTOM_API");
+        customApiRole.setScope(RoleScope.API);
+        when(roleService.findByScopeAndName(RoleScope.API, "CUSTOM_API", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApiRole)
+        );
+
+        RoleEntity customApplicationRole = new RoleEntity();
+        customApplicationRole.setId("APP_CUSTOM_APP");
+        customApplicationRole.setName("CUSTOM_APP");
+        customApplicationRole.setScope(RoleScope.APPLICATION);
+        when(roleService.findByScopeAndName(RoleScope.APPLICATION, "CUSTOM_APP", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApplicationRole)
+        );
+
+        RoleEntity customIntegrationRole = new RoleEntity();
+        customIntegrationRole.setId("APP_CUSTOM_INTEGRATION");
+        customIntegrationRole.setName("CUSTOM_APP");
+        customIntegrationRole.setScope(RoleScope.INTEGRATION);
+        when(roleService.findByScopeAndName(RoleScope.INTEGRATION, "CUSTOM_APP", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customIntegrationRole)
+        );
+
+        RoleEntity customApiProductRole = new RoleEntity();
+        customApiProductRole.setId("API_PRODUCT_CUSTOM_USER");
+        customApiProductRole.setName("USER");
+        customApiProductRole.setScope(RoleScope.API_PRODUCT);
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(customApiProductRole)
+        );
+    }
+
+    @Test
+    public void shouldUpdateNothing() {
+        initUPDATEmock();
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, never()).addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any());
+    }
+
+    @Test
+    public void shouldUpdateApiRole() {
+        initUPDATEmock();
+
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(apiRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.INTEGRATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any());
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, "CUSTOM_API")
+        );
+    }
+
+    @Test
+    public void shouldUpdateApplicationRole() {
+        initUPDATEmock();
+
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.APPLICATION);
+        appRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(appRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.INTEGRATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any());
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.APPLICATION, "CUSTOM_APP")
+        );
+    }
+
+    @Test
+    public void shouldUpdateIntegrationRole() {
+        initUPDATEmock();
+
+        MemberRoleEntity integrationRole = new MemberRoleEntity();
+        integrationRole.setRoleScope(RoleScope.INTEGRATION);
+        integrationRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(integrationRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.INTEGRATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any());
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.INTEGRATION, "CUSTOM_APP")
+        );
+    }
+
+    @Test
+    public void shouldUpdateApiProductRole() {
+        initUPDATEmock();
+
+        MemberRoleEntity apiProductRole = new MemberRoleEntity();
+        apiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        apiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(apiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any());
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, "USER")
+        );
+    }
+
+    @Test
+    public void shouldAddMemberWithLockedApiProductRoleUsingGroupDefaultRole() {
+        initADDmock();
+
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setRoles(Map.of(RoleScope.API_PRODUCT, "USER"));
+        groupEntity.setSystemInvitation(true);
+        groupEntity.setLockApiProductRole(true);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(groupEntity);
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(false);
+
+        MemberRoleEntity apiProductRole = new MemberRoleEntity();
+        apiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        apiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(List.of(apiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Set.of(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        // When lockApiProductRole=true and no manage permission, group's default role is used
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API_PRODUCT);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, "USER")
+        );
+    }
+
+    @Test
+    public void shouldUpdateApiAndApplicationAndIntegrationRole() {
+        initUPDATEmock();
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.APPLICATION);
+        appRole.setRoleName("CUSTOM_APP");
+        MemberRoleEntity integrationRole = new MemberRoleEntity();
+        integrationRole.setRoleScope(io.gravitee.rest.api.model.permissions.RoleScope.INTEGRATION);
+        integrationRole.setRoleName("CUSTOM_APP");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Arrays.asList(apiRole, appRole, integrationRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API);
+        verify(roleService, never()).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.APPLICATION);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, "CUSTOM_API")
+        );
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.APPLICATION, "CUSTOM_APP")
+        );
+
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.INTEGRATION, "CUSTOM_APP")
+        );
+    }
+
+    @Test
+    public void shouldAddMemberWithLockedApiProductRoleFallingBackToOrgDefault() {
+        initADDmock();
+
+        // Group has lockApiProductRole=true but NO API_PRODUCT in its roles map → falls back to org default
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setRoles(Map.of(RoleScope.API, "USER")); // no API_PRODUCT entry
+        groupEntity.setSystemInvitation(true);
+        groupEntity.setLockApiProductRole(true);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(groupEntity);
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(false);
+
+        MemberRoleEntity apiProductRole = new MemberRoleEntity();
+        apiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        apiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(List.of(apiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Set.of(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        // Lock active with no group default → org default role is used
+        verify(roleService).findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.API_PRODUCT);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, DEFAULT_API_PRODUCT_ROLE)
+        );
+    }
+
+    @Test
+    public void shouldRemovePreviousApiProductRoleWhenNotIncludedInUpdate() {
+        initUPDATEmock();
+
+        RoleEntity previousApiProductRole = new RoleEntity();
+        previousApiProductRole.setId("API_PRODUCT_USER_ROLE_ID");
+        previousApiProductRole.setName("USER");
+        previousApiProductRole.setScope(RoleScope.API_PRODUCT);
+
+        // Member already has an API_PRODUCT role
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            Set.of(previousApiProductRole)
+        );
+
+        // Update is submitted with only an API role — no API_PRODUCT role
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(RoleScope.API);
+        apiRole.setRoleName("CUSTOM_API");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(apiRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        // Previous API_PRODUCT role should be deleted since it is not in the update
+        verify(membershipService).removeRole(
+            MembershipReferenceType.GROUP,
+            GROUP_ID,
+            MembershipMemberType.USER,
+            USERNAME,
+            "API_PRODUCT_USER_ROLE_ID"
+        );
+    }
+
+    // PRIMARY_OWNER validation tests
+    @Test
+    public void shouldThrowExceptionWhenChangingFromPrimaryOwnerToOtherRoleIfGroupOwnsApis() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API);
+
+        RoleEntity otherRole = new RoleEntity();
+        otherRole.setId("API_USER");
+        otherRole.setName("USER");
+        otherRole.setScope(RoleScope.API);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(otherRole)
+        );
+
+        RoleEntity previousApiRole = new RoleEntity();
+        previousApiRole.setId("API_PRIMARY_OWNER");
+        previousApiRole.setName(SystemRole.PRIMARY_OWNER.name());
+        previousApiRole.setScope(RoleScope.API);
+
+        Set<RoleEntity> existingRoles = Set.of(previousApiRole);
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            existingRoles
+        );
+
+        ApiEntity api1 = new ApiEntity();
+        api1.setId("api-1");
+        api1.setName("Test API 1");
+        ApiEntity api2 = new ApiEntity();
+        api2.setId("api-2");
+        api2.setName("Test API 2");
+        when(groupService.getApis(GraviteeContext.getExecutionContext().getEnvironmentId(), GROUP_ID)).thenReturn(List.of(api1, api2));
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiRole = new MemberRoleEntity();
+        newApiRole.setRoleScope(RoleScope.API);
+        newApiRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        Assertions.assertEquals(HttpStatusCode.BAD_REQUEST_400, response.getStatus());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenChangingFromApiProductPrimaryOwnerToOtherRoleIfGroupOwnsApiProducts() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRODUCT_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API_PRODUCT);
+
+        RoleEntity otherRole = new RoleEntity();
+        otherRole.setId("API_PRODUCT_USER");
+        otherRole.setName("USER");
+        otherRole.setScope(RoleScope.API_PRODUCT);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API_PRODUCT, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(otherRole)
+        );
+
+        RoleEntity previousApiProductRole = new RoleEntity();
+        previousApiProductRole.setId("API_PRODUCT_PRIMARY_OWNER");
+        previousApiProductRole.setName(SystemRole.PRIMARY_OWNER.name());
+        previousApiProductRole.setScope(RoleScope.API_PRODUCT);
+
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            Set.of(previousApiProductRole)
+        );
+
+        ApiProductEntity product1 = new ApiProductEntity();
+        product1.setId("ap-1");
+        product1.setName("Product 1");
+        ApiProductEntity product2 = new ApiProductEntity();
+        product2.setId("ap-2");
+        product2.setName("Product 2");
+        when(groupService.getApiProducts(GraviteeContext.getExecutionContext().getEnvironmentId(), GROUP_ID)).thenReturn(
+            List.of(product1, product2)
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiProductRole = new MemberRoleEntity();
+        newApiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        newApiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        Assertions.assertEquals(HttpStatusCode.BAD_REQUEST_400, response.getStatus());
+    }
+
+    @Test
+    public void shouldAllowChangingFromPrimaryOwnerToOtherRoleIfGroupDoesNotOwnApis() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API);
+
+        RoleEntity otherRole = new RoleEntity();
+        otherRole.setId("API_USER");
+        otherRole.setName("USER");
+        otherRole.setScope(RoleScope.API);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(otherRole)
+        );
+
+        RoleEntity previousApiRole = new RoleEntity();
+        previousApiRole.setId("API_PRIMARY_OWNER");
+        previousApiRole.setName(SystemRole.PRIMARY_OWNER.name());
+        previousApiRole.setScope(RoleScope.API);
+
+        Set<RoleEntity> existingRoles = Set.of(previousApiRole);
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            existingRoles
+        );
+
+        when(groupService.getApis(GraviteeContext.getExecutionContext().getEnvironmentId(), GROUP_ID)).thenReturn(Collections.emptyList());
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiRole = new MemberRoleEntity();
+        newApiRole.setRoleScope(RoleScope.API);
+        newApiRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(groupService).getApis(GraviteeContext.getExecutionContext().getEnvironmentId(), GROUP_ID);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, "USER")
+        );
+    }
+
+    @Test
+    public void shouldAllowChangingToPrimaryOwnerFromOtherRole() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API);
+
+        RoleEntity otherRole = new RoleEntity();
+        otherRole.setId("API_USER");
+        otherRole.setName("USER");
+        otherRole.setScope(RoleScope.API);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(otherRole)
+        );
+
+        RoleEntity previousApiRole = new RoleEntity();
+        previousApiRole.setId("API_USER");
+        previousApiRole.setName("USER");
+        previousApiRole.setScope(RoleScope.API);
+
+        Set<RoleEntity> existingRoles = Set.of(previousApiRole);
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            existingRoles
+        );
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiRole = new MemberRoleEntity();
+        newApiRole.setRoleScope(RoleScope.API);
+        newApiRole.setRoleName(SystemRole.PRIMARY_OWNER.name());
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+
+        verify(groupService, never()).getApis(anyString(), eq(GROUP_ID));
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API, SystemRole.PRIMARY_OWNER.name())
+        );
+    }
+
+    @Test
+    public void shouldAllowChangingToApiProductPrimaryOwnerFromOtherRole() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRODUCT_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API_PRODUCT);
+
+        RoleEntity otherRole = new RoleEntity();
+        otherRole.setId("API_PRODUCT_USER");
+        otherRole.setName("USER");
+        otherRole.setScope(RoleScope.API_PRODUCT);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API_PRODUCT, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(otherRole)
+        );
+
+        RoleEntity previousApiProductRole = new RoleEntity();
+        previousApiProductRole.setId("API_PRODUCT_USER");
+        previousApiProductRole.setName("USER");
+        previousApiProductRole.setScope(RoleScope.API_PRODUCT);
+
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            Set.of(previousApiProductRole)
+        );
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiProductRole = new MemberRoleEntity();
+        newApiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        newApiProductRole.setRoleName(SystemRole.PRIMARY_OWNER.name());
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(groupService).updateApiProductPrimaryOwner(GROUP_ID, USERNAME);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, SystemRole.PRIMARY_OWNER.name())
+        );
+    }
+
+    @Test
+    public void shouldClearApiProductPrimaryOwnerWhenDemotingFromPrimaryOwner() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity primaryOwnerRole = new RoleEntity();
+        primaryOwnerRole.setId("API_PRODUCT_PRIMARY_OWNER");
+        primaryOwnerRole.setName(SystemRole.PRIMARY_OWNER.name());
+        primaryOwnerRole.setScope(RoleScope.API_PRODUCT);
+
+        RoleEntity userRole = new RoleEntity();
+        userRole.setId("API_PRODUCT_USER");
+        userRole.setName("USER");
+        userRole.setScope(RoleScope.API_PRODUCT);
+
+        when(
+            roleService.findByScopeAndName(RoleScope.API_PRODUCT, SystemRole.PRIMARY_OWNER.name(), GraviteeContext.getCurrentOrganization())
+        ).thenReturn(Optional.of(primaryOwnerRole));
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(userRole)
+        );
+
+        RoleEntity previousApiProductRole = new RoleEntity();
+        previousApiProductRole.setId("API_PRODUCT_PRIMARY_OWNER");
+        previousApiProductRole.setName(SystemRole.PRIMARY_OWNER.name());
+        previousApiProductRole.setScope(RoleScope.API_PRODUCT);
+
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            Set.of(previousApiProductRole)
+        );
+
+        when(groupService.getApiProducts(GraviteeContext.getExecutionContext().getEnvironmentId(), GROUP_ID)).thenReturn(
+            Collections.emptyList()
+        );
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiProductRole = new MemberRoleEntity();
+        newApiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        newApiProductRole.setRoleName("USER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(groupService).updateApiProductPrimaryOwner(GROUP_ID, null);
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, "USER")
+        );
+    }
+
+    @Test
+    public void shouldNotModifyApiProductPrimaryOwnerWhenUpdatingNonPrimaryRoles() {
+        reset(roleService, groupService, membershipService);
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(mock(GroupEntity.class));
+
+        RoleEntity userRole = new RoleEntity();
+        userRole.setId("API_PRODUCT_USER");
+        userRole.setName("USER");
+        userRole.setScope(RoleScope.API_PRODUCT);
+
+        RoleEntity ownerRole = new RoleEntity();
+        ownerRole.setId("API_PRODUCT_OWNER");
+        ownerRole.setName("OWNER");
+        ownerRole.setScope(RoleScope.API_PRODUCT);
+
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(userRole)
+        );
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "OWNER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(ownerRole)
+        );
+
+        RoleEntity previousApiProductRole = new RoleEntity();
+        previousApiProductRole.setId("API_PRODUCT_USER");
+        previousApiProductRole.setName("USER");
+        previousApiProductRole.setScope(RoleScope.API_PRODUCT);
+
+        when(membershipService.getRoles(MembershipReferenceType.GROUP, GROUP_ID, MembershipMemberType.USER, USERNAME)).thenReturn(
+            Set.of(previousApiProductRole)
+        );
+
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(USERNAME);
+        when(membershipService.addRoleToMemberOnReference(eq(GraviteeContext.getExecutionContext()), any(), any(), any())).thenReturn(
+            memberEntity
+        );
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                eq("DEFAULT"),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(true);
+
+        MemberRoleEntity newApiProductRole = new MemberRoleEntity();
+        newApiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        newApiProductRole.setRoleName("OWNER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(Collections.singletonList(newApiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        Assertions.assertEquals(HttpStatusCode.OK_200, response.getStatus());
+        verify(groupService, never()).updateApiProductPrimaryOwner(anyString(), any());
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            GraviteeContext.getExecutionContext(),
+            new MembershipService.MembershipReference(MembershipReferenceType.GROUP, GROUP_ID),
+            new MembershipService.MembershipMember(USERNAME, null, MembershipMemberType.USER),
+            new MembershipService.MembershipRole(RoleScope.API_PRODUCT, "OWNER")
+        );
+    }
+
+    @Test
+    public void shouldGetDefaultRoleEntityNameWhenHasPermissionIsFalseWhenAddingGroupMember() {
+        shouldGetRoleEntityNameWhenAddingGroupMember(false);
+    }
+
+    @Test
+    public void shouldGetRoleEntityNameWhenHasPermissionIsTrueWhenAddingGroupMember() {
+        shouldGetRoleEntityNameWhenAddingGroupMember(true);
+    }
+
+    private void shouldGetRoleEntityNameWhenAddingGroupMember(boolean hasPermission) {
+        initUPDATEmock();
+
+        when(
+            permissionService.hasPermission(
+                eq(GraviteeContext.getExecutionContext()),
+                eq(ENVIRONMENT_GROUP),
+                anyString(),
+                eq(CREATE),
+                eq(UPDATE),
+                eq(DELETE)
+            )
+        ).thenReturn(hasPermission);
+
+        RoleEntity appOwnerRoleEntity = new RoleEntity();
+        appOwnerRoleEntity.setId("APP_OWNER");
+        appOwnerRoleEntity.setName("OWNER");
+        appOwnerRoleEntity.setScope(RoleScope.APPLICATION);
+        when(roleService.findByScopeAndName(RoleScope.APPLICATION, "OWNER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(appOwnerRoleEntity)
+        );
+
+        RoleEntity apiOwnerRoleEntity = new RoleEntity();
+        apiOwnerRoleEntity.setId("API_OWNER");
+        apiOwnerRoleEntity.setName("OWNER");
+        apiOwnerRoleEntity.setScope(RoleScope.API);
+        when(roleService.findByScopeAndName(RoleScope.API, "OWNER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(apiOwnerRoleEntity)
+        );
+
+        RoleEntity integrationUserRoleEntity = new RoleEntity();
+        integrationUserRoleEntity.setId("INT_USER");
+        integrationUserRoleEntity.setName("USER");
+        integrationUserRoleEntity.setScope(RoleScope.INTEGRATION);
+        when(roleService.findByScopeAndName(RoleScope.INTEGRATION, "USER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(integrationUserRoleEntity)
+        );
+
+        RoleEntity apiProductOwnerRoleEntity = new RoleEntity();
+        apiProductOwnerRoleEntity.setId("API_PRODUCT_OWNER");
+        apiProductOwnerRoleEntity.setName("OWNER");
+        apiProductOwnerRoleEntity.setScope(RoleScope.API_PRODUCT);
+        when(roleService.findByScopeAndName(RoleScope.API_PRODUCT, "OWNER", GraviteeContext.getCurrentOrganization())).thenReturn(
+            Optional.of(apiProductOwnerRoleEntity)
+        );
+
+        GroupEntity groupEntity = new GroupEntity();
+        groupEntity.setLockApiRole(true);
+        groupEntity.setLockApplicationRole(true);
+        groupEntity.setLockApiProductRole(true);
+        groupEntity.setSystemInvitation(true);
+        groupEntity.setRoles(Map.of(RoleScope.API, "OWNER", RoleScope.APPLICATION, "OWNER", RoleScope.API_PRODUCT, "OWNER"));
+        when(groupService.findById(GraviteeContext.getExecutionContext(), GROUP_ID)).thenReturn(groupEntity);
+
+        RoleEntity defaultIntegrationRole = new RoleEntity();
+        defaultIntegrationRole.setName("USER");
+        when(roleService.findDefaultRoleByScopes(GraviteeContext.getCurrentOrganization(), RoleScope.INTEGRATION)).thenReturn(
+            Collections.singletonList(defaultIntegrationRole)
+        );
+
+        MemberRoleEntity appRole = new MemberRoleEntity();
+        appRole.setRoleScope(RoleScope.APPLICATION);
+        appRole.setRoleName("OWNER");
+
+        MemberRoleEntity apiRole = new MemberRoleEntity();
+        apiRole.setRoleScope(RoleScope.API);
+        apiRole.setRoleName("OWNER");
+
+        MemberRoleEntity integrationRole = new MemberRoleEntity();
+        integrationRole.setRoleScope(RoleScope.INTEGRATION);
+        integrationRole.setRoleName("USER");
+
+        MemberRoleEntity apiProductRole = new MemberRoleEntity();
+        apiProductRole.setRoleScope(RoleScope.API_PRODUCT);
+        apiProductRole.setRoleName("OWNER");
+
+        GroupMembership groupMembership = new GroupMembership();
+        groupMembership.setId(USERNAME);
+        groupMembership.setRoles(List.of(appRole, apiRole, integrationRole, apiProductRole));
+
+        final Response response = envTarget().request().post(Entity.json(Collections.singleton(groupMembership)));
+
+        assertEquals(HttpStatusCode.OK_200, response.getStatus());
+
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            eq(GraviteeContext.getExecutionContext()),
+            any(),
+            any(),
+            argThat(role -> role.getScope() == RoleScope.APPLICATION && role.getName().equals("OWNER"))
+        );
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            eq(GraviteeContext.getExecutionContext()),
+            any(),
+            any(),
+            argThat(role -> role.getScope() == RoleScope.API && role.getName().equals("OWNER"))
+        );
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            eq(GraviteeContext.getExecutionContext()),
+            any(),
+            any(),
+            argThat(role -> role.getScope() == RoleScope.INTEGRATION && role.getName().equals("USER"))
+        );
+        verify(membershipService, times(1)).addRoleToMemberOnReference(
+            eq(GraviteeContext.getExecutionContext()),
+            any(),
+            any(),
+            argThat(role -> role.getScope() == RoleScope.API_PRODUCT && role.getName().equals("OWNER"))
+        );
+    }
+}

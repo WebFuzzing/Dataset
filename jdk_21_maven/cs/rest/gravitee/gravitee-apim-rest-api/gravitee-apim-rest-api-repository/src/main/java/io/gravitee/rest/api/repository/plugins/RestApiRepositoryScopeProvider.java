@@ -1,0 +1,41 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.repository.plugins;
+
+import io.gravitee.platform.repository.api.RepositoryScopeProvider;
+import io.gravitee.platform.repository.api.Scope;
+
+/**
+ * @author GraviteeSource Team
+ */
+public class RestApiRepositoryScopeProvider implements RepositoryScopeProvider {
+
+    @Override
+    public Scope[] getHandledScopes() {
+        return new Scope[] { Scope.MANAGEMENT, Scope.ANALYTICS };
+    }
+
+    /**
+     * OTEL_TRACES / OTEL_LOGS are opt-in: the rest-api can query traces and span-event logs (e.g. via the gamma
+     * APIM tracing resource) but startup must not fail when no provider is wired. Declaring them as optional
+     * means the platform loads the matching {@code RepositoryProvider} when {@code otel-traces.type} /
+     * {@code otel-logs.type} is set and silently skips otherwise.
+     */
+    @Override
+    public Scope[] getOptionalHandledScopes() {
+        return new Scope[] { Scope.OTEL_TRACES, Scope.OTEL_LOGS };
+    }
+}

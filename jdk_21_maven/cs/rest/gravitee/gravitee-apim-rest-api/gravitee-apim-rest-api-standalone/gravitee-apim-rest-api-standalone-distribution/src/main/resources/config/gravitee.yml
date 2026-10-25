@@ -1,0 +1,938 @@
+############################################################################################################
+################################ Gravitee.IO Management API - Configuration ################################
+############################################################################################################
+
+############################################################################################################
+# This file is the general configuration of Gravitee.IO Management API:
+# - Properties (and respective default values) in comment are provided for information.
+# - You can reference other property by using ${property.name} syntax
+# - gravitee.home property is automatically set-up by launcher and refers to the installation path. Do not override it !
+#
+# Please have a look to https://documentation.gravitee.io/ for more options and fine-grained granularity
+############################################################################################################
+
+# Console settings
+#console:
+## Pendo Analysis Tool
+# To make our SaaS offering easier to use, we now have the ability to track activity in Pendo. This is disabled by
+# default, but if you'd like to help us in this journey, don't hesitate to reach us to get our key ;)
+#  analytics:
+#    pendo:
+#      enabled: false
+#      apiKey: 'myKey'
+
+## Console dashboards
+#  dashboards:
+#    path: ${gravitee.home}/dashboards
+
+# HTTP Server
+#jetty:
+#  IP/hostname to bind to. Default is 0.0.0.0
+#  host: 0.0.0.0
+#  port: 8083
+#  idleTimeout: 30000
+#  acceptors: -1
+#  selectors: -1
+#  pool:
+#    minThreads: 10
+#    maxThreads: 200
+#    idleTimeout: 60000
+#    queueSize: 6000
+#  jmx: false
+#  statistics: false
+#  accesslog:
+#    enabled: true
+#    path: ${gravitee.home}/logs/gravitee_accesslog_yyyy_mm_dd.log
+#  secured: false
+#  ssl:
+#    keystore:
+#      type: jks # Supports jks, pkcs12
+#      path: ${gravitee.home}/security/keystore.jks
+#      password: secret
+#    truststore:
+#      type: jks # Supports jks, pkcs12
+#      path: ${gravitee.home}/security/truststore.jks
+#      password: secret
+
+# Configure CORS configuration cache
+#cors:
+#  cache:
+#    max-size: 1000
+#    ttl: 60000
+
+http:
+  api:
+    # Configure the listening path for the API. Default to /
+#    entrypoint: /
+    # Configure Management API and Portal API.
+    management:
+      enabled: true
+#      entrypoint: ${http.api.entrypoint}management
+#      cors:
+# Allows to configure the header Access-Control-Allow-Origin (default value: *)
+# '*' is a valid value but is considered as a security risk as it will be opened to cross origin requests from anywhere.
+#        allow-origin: '*'
+# Allows to define how long the result of the preflight request should be cached for (default value; 1728000 [20 days])
+#        max-age: 1728000
+# Which methods to allow (default value: OPTIONS, GET, POST, PUT, DELETE)
+#        allow-methods: 'OPTIONS, GET, POST, PUT, DELETE'
+# Which headers to allow (default values: Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token)
+#        allow-headers: 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token'
+#  Allows to configure the header Access-Control-Expose-Headers
+#        exposed-headers: 'ETag;X-Xsrf-Token'
+#    portal:
+#      enabled: true
+#      entrypoint: ${http.api.entrypoint}portal
+#      cors:
+# Allows to configure the header Access-Control-Allow-Origin (default value: *)
+# '*' is a valid value but is considered as a security risk as it will be opened to cross origin requests from anywhere.
+#        allow-origin: '*'
+# Allows to define how long the result of the preflight request should be cached for (default value; 1728000 [20 days])
+#        max-age: 1728000
+# Which methods to allow (default value: OPTIONS, GET, POST, PUT, DELETE)
+#        allow-methods: 'OPTIONS, GET, POST, PUT, DELETE'
+# Which headers to allow (default values: Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token)
+#        allow-headers: 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token'
+#  Allows to configure the header Access-Control-Expose-Headers
+#        exposed-headers: 'ETag;X-Xsrf-Token'
+#    gamma:
+#      enabled: true
+#      entrypoint: ${http.api.entrypoint}gamma
+#      cors:
+# Allows to configure the header Access-Control-Allow-Origin (default value: *)
+# '*' is a valid value but is considered as a security risk as it will be opened to cross origin requests from anywhere.
+#        allow-origin: '*'
+# Allows to define how long the result of the preflight request should be cached for (default value; 1728000 [20 days])
+#        max-age: 1728000
+# Which methods to allow (default value: OPTIONS, GET, POST, PUT, DELETE)
+#        allow-methods: 'OPTIONS, GET, POST, PUT, DELETE'
+# Which headers to allow (default values: Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token)
+#        allow-headers: 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, If-Match, X-Xsrf-Token'
+#  Allows to configure the header Access-Control-Expose-Headers
+#        exposed-headers: 'ETag;X-Xsrf-Token'
+
+
+  secureHeaders:
+    csrf:
+      # Allows to enable or disable the CSRF protection. Enabled by default.
+      enabled: true
+    hsts:
+      enabled: true
+      include-sub-domains: true
+      max-age: 31536000
+
+    # Adds the X-Frame-Options header. Possible values: DENY, SAMEORIGIN. Enabled by default on SAMEORIGIN.
+    xframe:
+      enabled: true
+      action: SAMEORIGIN
+
+    # Adds the X-Content-Type-Options: nosniff header. Enabled by default.
+    xContentTypeOptions:
+      enabled: true
+
+    # Adds the Content-Security-Policy header.
+    # Example: "default-src 'self'; frame-ancestors 'none';"
+    csp:
+      policy: "frame-ancestors 'self';"
+
+    # Adds the Referrer-Policy header.
+    # Example: "no-referrer", "strict-origin-when-cross-origin", ...
+    referrerPolicy:
+      policy: "strict-origin-when-cross-origin"
+
+    # Adds the Permissions-Policy header.
+    # Example: "geolocation=(), microphone=(), camera=()"
+    permissionsPolicy:
+      policy: "geolocation=(), microphone=(), camera=()"
+
+# Plugins repository
+#plugins:
+#  path:
+#    - ${gravitee.home}/plugins
+#    - ${gravitee.home}/my-custom-plugins
+# note that for a given plugin a more recent zip file will take precedence regardless its manifest version
+
+# Management repository is used to store global configuration such as APIs, applications, apikeys, ...
+# This is the default configuration using MongoDB (single server)
+# For more information about MongoDB configuration, please have a look to:
+# - http://mongodb.github.io/mongo-java-driver/4.1/apidocs/mongodb-driver-core/com/mongodb/MongoClientSettings.Builder.html
+repositories:
+  management:
+    type: mongodb                  # repository type
+    mongodb:                       # mongodb repository
+#      prefix:                      # collections prefix
+      dbname: ${ds.mongodb.dbname} # mongodb name (default gravitee)
+      host: ${ds.mongodb.host}     # mongodb host (default localhost)
+      port: ${ds.mongodb.port}     # mongodb port (default 27017)
+
+## Client settings
+#      description:                 # mongodb description (default gravitee.io)
+#      username:                    # mongodb username (default null)
+#      password:                    # mongodb password (default null)
+#      authSource:                  # mongodb authentication source (when at least a user or a password is defined, default gravitee)
+#      retryWrites:                 # mongodb retriable writes (default true)
+#      readPreference:              # possible values are 'nearest', 'primary', 'primaryPreferred', 'secondary', 'secondaryPreferred'
+#      readPreferenceTags:          # list of read preference tags (https://docs.mongodb.com/manual/core/read-preference-tags/#std-label-replica-set-read-preference-tag-sets)
+### Write concern
+#      writeConcern:               # possible values are 1,2,3... (the number of node) or 'majority' (default is 1)
+#      wtimeout:                   # (default is 0)
+#      journal:                    # (default is true)
+
+## Socket settings
+#      connectTimeout:              # mongodb connection timeout (default 1000)
+#      socketTimeout:               # mongodb socket timeout (default 1000)
+
+## Cluster settings
+#      serverSelectionTimeout:      # mongodb server selection timeout (default 1000)
+#      localThreshold:              # mongodb local threshold (default 15)
+
+## Connection pool settings
+#      maxWaitTime:                 # mongodb max wait time (default 120000)
+#      maxConnectionLifeTime:       # mongodb max connection life time (default 0)
+#      maxConnectionIdleTime:       # mongodb max connection idle time (default 0)
+#      connectionsPerHost:          # mongodb max connections per host (default 100)
+#      minConnectionsPerHost:       # mongodb min connections per host (default 0)
+
+## Server settings
+#      heartbeatFrequency:          # mongodb heartbeat frequency (default 10000)
+#      minHeartbeatFrequency:       # mongodb min heartbeat frequency (default 500)
+
+## SSL settings
+#      sslEnabled:                  # mongodb ssl mode (default false)
+#      sslInvalidHostNameAllowed:   # mongodb ssl allow invalid host name (default false)
+#      tlsProtocol:                 # protocol to use when connecting to the mongodb instance (when sslEnabled is true, default TLS)
+#      keystore:
+#        path:                      # Path to the keystore (when sslEnabled is true, default null)
+#        type:                      # Type of the keystore, supports jks, pem, pkcs12 (when sslEnabled is true, default null)
+#        password:                  # KeyStore password (when sslEnabled is true, default null)
+#        keyPassword:               # Password for recovering keys in the KeyStore (when sslEnabled is true, default null)
+#      truststore:
+#        path:                      # Path to the truststore (when sslEnabled is true, default null)
+#        type:                      # Type of the truststore, supports jks, pem, pkcs12 (when sslEnabled is true, default null)
+#        password:                  # Truststore password (when sslEnabled is true, default null)
+# Management repository: single MongoDB using URI
+# For more information about MongoDB configuration using URI, please have a look to:
+# - http://mongodb.github.io/mongo-java-driver/4.1/apidocs/mongodb-driver-core/com/mongodb/ConnectionString.html
+#management:
+#  type: mongodb
+#  mongodb:
+#    uri: mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
+
+# Management repository: clustered MongoDB
+#management:
+#  type: mongodb
+#  mongodb:
+#    servers:
+#      - host: mongo1
+#        port: 27017
+#      - host: mongo2
+#        port: 27017
+#    dbname: ${ds.mongodb.dbname}
+#    connectTimeout: 500
+#    socketTimeout: 250
+
+# Analytics repository is used to store all reporting, metrics, health-checks stored by gateway instances
+# This is the default configuration using Elasticsearch. If you want to disable it completely, you can set
+# the type as "none"
+  analytics:
+    type: elasticsearch # or none
+    elasticsearch:
+      endpoints:
+        - http://${ds.elastic.host}:${ds.elastic.port}
+#      index: gravitee
+#      index_per_type: true
+#      index_mode: daily    # "daily" indexes, suffixed with date. Or "ilm" managed indexes, without date
+#      cross_cluster:
+#        mapping:
+#          tenant_id: cluster_name
+#      security:
+#        username: user
+#        password: secret
+#      http:
+#        timeout: 10000 # in milliseconds
+#        proxy:
+#          type: HTTP #HTTP, SOCK4, SOCK5
+#          http:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+#          https:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+
+# OTel traces repository — feeds the gamma APIM tracing resource. Defaults to "none" so a dev install
+# bootstraps without OTel infra; the NoOpTracingRepository returns empty results so any consumer code
+# stays bean-resolvable. Set type to "elasticsearch" and fill in the block below to wire the real
+# ES-backed TracingRepository. When enabled, the ES cluster declared below
+# must be the one the OTel collector / Elastic Cloud OTLP endpoint writes traces to.
+  otel-traces:
+    type: none # or "elasticsearch" to enable the block below
+#    elasticsearch:
+#      # Index/data-stream template — must follow the OTel data-stream shape:
+#      #     <type>-<dataset>.otel-<namespace>
+#      # `<type>` is fixed by the signal (`traces` here), and the literal `.otel-` segment is part of
+#      # the OTel naming convention — neither is configurable. Only the dataset and namespace halves
+#      # are yours to shape; the template needs both halves around the `.otel-` separator or the
+#      # reader can't match what the OTel exporter writes.
+#      # {orgId} / {envId} placeholders are substituted (lowercased) from the caller's QueryContext
+#      # at query time, then sanitised position-aware to mirror the OTel collector's two disallowed-
+#      # runes sets:
+#      #   - Placeholders left of `.otel-` (dataset slot)   strip `-\/*?"<>| ,#:` to `_`
+#      #   - Placeholders right of `.otel-` (namespace slot) strip `\/*?"<>| ,#:` to `_` (hyphen kept)
+#      # So an org id like `my-org-1` becomes `my_org_1` in dataset position and stays `my-org-1` in
+#      # namespace position — matching what the exporter writes on either side.
+#      index: traces-apim.otel-{orgId}
+#      endpoints:
+#        - http://${ds.elastic.host}:${ds.elastic.port}
+#      security:
+#        username: user
+#        password: secret
+#      ssl:
+#        keystore:
+#          type: jks # jks, pkcs12 or pem
+#          path: ${gravitee.home}/security/keystore.jks
+#          password: secret
+#          # PEM only:
+#          # certs: [/path/to/cert1.pem, /path/to/cert2.pem]
+#          # keys:  [/path/to/key1.pem,  /path/to/key2.pem]
+#      http:
+#        timeout: 10000 # in milliseconds
+#        proxy:
+#          type: HTTP #HTTP, SOCK4, SOCK5
+#          http:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+#          https:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+
+# OTel logs repository — backs the gamma APIM tracing resource alongside `otel-traces`. Reads two distinct
+# document shapes from the same OTel logs data stream: span events (written by the OTel collector when it
+# processes traces) and gateway-captured payload logs (written by gravitee-reporter-otel). Defaults to
+# "none" so a dev install bootstraps without OTel infra; the NoOpOtelLogRepository returns empty results
+# so any consumer code stays bean-resolvable. Set type to "elasticsearch" and fill in the block below to
+# wire the real ES-backed OtelLogRepository. Same per-scope independence pattern as `analytics` /
+# `otel-traces` — no fallback across scopes.
+  otel-logs:
+    type: none # or "elasticsearch" to enable the block below
+#    elasticsearch:
+#      # Index/data-stream template — must follow the OTel data-stream shape:
+#      #     <type>-<dataset>.otel-<namespace>
+#      # `<type>` is fixed by the signal (`logs` here), and the literal `.otel-` segment is part of
+#      # the OTel naming convention — neither is configurable. Only the dataset and namespace halves
+#      # are yours to shape; the template needs both halves around the `.otel-` separator or the
+#      # reader can't match what the OTel exporter (and gravitee-reporter-otel) writes.
+#      # {orgId} / {envId} placeholders are substituted (lowercased) from the caller's QueryContext
+#      # at query time, then sanitised position-aware to mirror the OTel collector's two disallowed-
+#      # runes sets:
+#      #   - Placeholders left of `.otel-` (dataset slot)   strip `-\/*?"<>| ,#:` to `_`
+#      #   - Placeholders right of `.otel-` (namespace slot) strip `\/*?"<>| ,#:` to `_` (hyphen kept)
+#      # So an org id like `my-org-1` becomes `my_org_1` in dataset position and stays `my-org-1` in
+#      # namespace position — matching what the writers produce on either side.
+#      index: logs-apim.otel-{orgId}
+#      endpoints:
+#        - http://${ds.elastic.host}:${ds.elastic.port}
+#      security:
+#        username: user
+#        password: secret
+#      ssl:
+#        keystore:
+#          type: jks # jks, pkcs12 or pem
+#          path: ${gravitee.home}/security/keystore.jks
+#          password: secret
+#          # PEM only:
+#          # certs: [/path/to/cert1.pem, /path/to/cert2.pem]
+#          # keys:  [/path/to/key1.pem,  /path/to/key2.pem]
+#      http:
+#        timeout: 10000 # in milliseconds
+#        proxy:
+#          type: HTTP #HTTP, SOCK4, SOCK5
+#          http:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+#          https:
+#            host: localhost
+#            port: 3128
+#            username: user
+#            password: secret
+
+services:
+  core:
+    http:
+      enabled: true
+      port: 18083
+      host: localhost
+      authentication:
+        # authentication type to be used for the core services
+        # - none : to disable authentication
+        # - basic : to use basic authentication
+        # default is "basic"
+        type: basic
+        users:
+          admin: adminadmin
+  bridge:
+    http:
+      enabled: false
+  #      port: 18092
+  #      host: localhost
+  #      tcpKeepAlive: true
+  #      maxHeaderSize: 8192
+  #      maxChunkSize: 8192
+  #      alpn: false
+  #      authentication:
+  #        type: none # Supports: Basic, JWT
+  #        # type = JWT
+  #        jwt:
+  #          signature:
+  #            algorithm: RS256
+  #            path: ${gravitee.home}/security/bridge/public_key.pem
+  #            value: # raw pem file as a strign block
+  #          verifyClaims: true
+  #        # type = Basic
+  #        users:
+  #          admin: secret
+  #          superadmin: password
+  #      secured: true
+  #      ssl:
+  #        clientAuth: None # Supports: Request, Required
+  #        keystore:
+  #          type: jks # Supports: PKCS12, PEM
+  #          path: ${gravitee.home}/security/keystore.jks
+  #          password: secret
+  #          defaultAlias:
+  #          secret: secret://kubernetes/my-tls
+  #          watch: true
+  #          # for type= PEM
+  #          certificates:
+  #            - cert: ${gravitee.home}/security/cert1.pem
+  #              key: ${gravitee.home}/security/key1.pem
+  #            - cert: ${gravitee.home}/security/cert2.pem
+  #              key: ${gravitee.home}/security/key2.pem
+  #        truststore:
+  #          type: jks # Supports: PKCS12, PEM
+  #          path: ${gravitee.home}/security/truststore.jks
+  #          password: secret
+  #           secret: secret://kubernetes/my-tls
+
+  # metrics service
+  metrics:
+    enabled: false
+    prometheus:
+      enabled: true
+      concurrencyLimit: 3
+
+  # v3 upgrader service. Can be disabled after first launch.
+  v3-upgrader:
+    enabled: true
+  # AutoFetch service. (since 3.2)
+  # Use to fetch periodically documentation pages.
+  auto_fetch:
+    enabled: true
+    cron: "0 */5 * * * *"
+
+  # Subscription service
+  subscription:
+    enabled: true
+    #  Pre-expiration notification, number of days before the expiration an email should be send to subscriber and primary owner
+    pre-expiration-notification-schedule: 90,45,30
+
+
+
+node:
+  logging:
+    # Configure how MDC values will be formatted and filtered
+    mdc:
+      format: "{key}: {value}"
+      separator: " "
+      nullValue: "-"
+      include:
+        - nodeId
+        - envId
+        - apiId
+        - appId
+
+    # Configure the patterns for the most common appenders
+    # Nothing prevents the user from modifying logback.xml
+    pattern:
+      overrideLogbackXml: false # when enabled, use the following patterns instead of those from logback.xml
+      # Use a custom keyword to use MDC formatting and filtering: %mdcList. This list is built from the previous 'mdc.include' list
+      console: "%d{HH:mm:ss.SSS} [%thread] [%mdcList] %-5level %logger{36} - %msg%n" # Override default STDOUT appender pattern
+      file: "%d{HH:mm:ss.SSS} [%thread] [%mdcList] %-5level %logger{36} - %msg%n%n" # Override default FILE appender pattern
+
+## Logging settings
+#logging:
+#  messageSampling:
+#    probabilistic:
+#      default: 0.01
+#      limit: 0.5
+#    count:
+#      default: 100
+#      limit: 10
+#    temporal:
+#      default: PT1S
+#      limit: PT1S
+#    windowed_count:
+#      default: 1/PT10S
+#      limit: 1/PT1S
+
+# Authentication and identity sources
+# Users can have following roles (authorities):
+#  USER: Can access portal and be a member of an API
+#  API_PUBLISHER: Can create and manage APIs
+#  API_CONSUMER: Can create and manage Applications
+#  ADMIN: Can manage global system
+security:
+  # When using an authentication providers, use trustAll mode for TLS connections
+  # trustAll: false
+  providers:  # authentication providers
+    - type: memory
+      # allow search results to display the user email. Be careful, It may be contrary to the user privacy.
+#      allow-email-in-search-results: true
+      # password encoding/hashing algorithm. One of:
+      # - bcrypt : passwords are hashed with bcrypt (supports only $2a$ algorithm)
+      # - none : passwords are not hashed/encrypted
+      # default value is bcrypt
+      password-encoding-algo: bcrypt
+      users:
+        - user:
+          username: user
+          #firstname:
+          #lastname:
+          # Passwords are encoded using BCrypt
+          # Password value: password
+          password: $2a$10$9kjw/SH9gucCId3Lnt6EmuFreUAcXSZgpvAYuW2ISv7hSOhHRH1AO
+          roles: ORGANIZATION:USER,ENVIRONMENT:USER
+          # Useful to receive notifications
+          #email:
+        - user:
+          username: admin
+          #firstname:
+          #lastname:
+          # Password value: admin
+          password: $2a$10$Ihk05VSds5rUSgMdsMVi9OKMIx2yUvMz7y9VP3rJmQeizZLrhLMyq
+          roles: ORGANIZATION:ADMIN,ENVIRONMENT:ADMIN
+          #email:
+        - user:
+          username: api1
+          #firstname:
+          #lastname:
+          # Password value: api1
+          password: $2a$10$iXdXO4wAYdhx2LOwijsp7.PsoAZQ05zEdHxbriIYCbtyo.y32LTji
+          # You can declare multiple roles using comma separator
+          roles: ORGANIZATION:USER,ENVIRONMENT:API_PUBLISHER
+          #email:
+        - user:
+          username: application1
+          #firstname:
+          #lastname:
+          # Password value: application1
+          password: $2a$10$2gtKPYRB9zaVaPcn5RBx/.3T.7SeZoDGs9GKqbo9G64fKyXFR1He.
+          roles: ORGANIZATION:USER,ENVIRONMENT:USER
+          #email:
+    # Enable authentication using internal repository
+    - type: gravitee
+      # allow search results to display the user email. Be careful, It may be contrary to the user privacy.
+#      allow-email-in-search-results: true
+    # Enable authentication using an LDAP/Active Directory
+#    - type: ldap
+      # This is default LDAP configuration for ApacheDS
+#      context:
+#        username: "uid=admin,ou=system"
+#        password: "secret"
+#        url: "ldap://localhost:10389/c=io,o=gravitee"
+#        base: "c=io,o=gravitee" # the context source base
+#        referral: "ignore"
+#      authentication:
+#        user:
+          # Search base for user authentication. Defaults to "". Only used with user filter.
+          # It should be relative to the Base DN. If the whole DN is o=user accounts,c=io,o=gravitee then the base should be like this:
+#          base: "o=user accounts"
+          # The LDAP filter used to search for user during authentication. For example "(uid={0})". The substituted parameter is the user's login name.
+#          filter: "mail={0}"
+          # Specifies the attribute name which contains the user photo (URL or binary)
+#          photo-attribute: "jpegPhoto"
+#        group:
+          # Search base for groups searches. Defaults to "". Only used with group filter.
+          # It should be relative to the Base DN. If the whole DN is o=authorization groups,c=io,o=gravitee then the base should be like this:
+#          base: "o=authorization groups"
+#          filter: "member={0}"
+#          role:
+#            attribute: "cn"
+#            mapper: {
+#              GRAVITEE-CONSUMERS: API_CONSUMER,
+#              GRAVITEE-PUBLISHERS: API_PUBLISHER,
+#              GRAVITEE-ADMINS: ADMIN,
+#              GRAVITEE-USERS: USER
+#            }
+#      lookup:
+         # allow search results to display the user email. Be careful, It may be contrary to the user privacy.
+#         allow-email-in-search-results: true
+#        user:
+          # Search base for user searches. Defaults to "". Only used with user filter.
+          # It should be relative to the Base DN. If the whole DN is o=user accounts,c=io,o=gravitee then the base should be like this:
+#          base: "o=user accounts"
+          # The LDAP filter used to search for user during authentication. For example "(uid={0})". The substituted parameter is the user's login name.
+#          filter: "(&(objectClass=Person)(|(cn=*{0}*)(uid={0})))"
+
+# Define absolute path for the a default API icon (png format)
+# If not define, an API without icon with display a random image
+#configuration:
+#  default-api-icon:
+
+# SMTP configuration used to send mails
+email:
+  enabled: false
+  host: smtp.my.domain
+  subject: "[Gravitee.io] %s"
+  port: 587
+  from: noreply@my.domain
+#  username: user@my.domain
+#  password: password
+#  properties:
+#    auth: true
+#    starttls.enable: true
+#    ssl.trust: smtp.gmail.com
+
+# Mail templates
+#templates:
+#  path: ${gravitee.home}/templates
+
+#portal:
+#  themes:
+#    path: ${gravitee.home}/themes
+  # Allows domains to be used while generating some emails from the portal. ie. registration, forget password
+  # Empty whitelist means all urls are allowed.
+#  whitelist:
+#    - https://portal.domain.com
+#    - https://private-portal.domain.com
+
+# Referenced properties
+ds:
+  mongodb:
+    dbname: gravitee
+    host: localhost
+    port: 27017
+  elastic:
+    host: localhost
+    port: 9200
+
+jwt:
+  secret: myJWT4Gr4v1t33_S3cr3t
+  # Allows to define the end of validity of the token in seconds (default 604800 = a week)
+  #expire-after: 604800
+  # Allows to define the end of validity of the token in seconds for email registration (default 86400 = a day)
+  #email-registration-expire-after: 86400
+  # Allows to define issuer (default gravitee-management-auth)
+  #issuer: gravitee-management-auth
+  # Allows to define cookie context path (default /)
+  #cookie-path: /
+  # Allows to define cookie domain (default "")
+  #cookie-domain: .gravitee.io
+  # Allows to define if cookie secure only (default false)
+  #cookie-secure: true
+
+swagger:
+  # Default scheme used when creating an API from a Swagger descriptor if there is no scheme specified.
+  scheme: https
+
+# User management configuration
+user:
+  login:
+    # Create a default application when user connects to the portal for the very first time (default true)
+    #defaultApplication: true
+
+  # Password complexity validation policy
+  # Applications should enforce password complexity rules to discourage easy to guess passwords.
+  # Passwords should require a minimum level of complexity that makes sense for the application and its user population.
+  password:
+    policy:
+      # description field is used to display a message to the user enter a password that does not match the policy. Leave it blank to disable the message.
+      description: Password must be at least 12 characters long, contain at least one digit, one upper case letter, one lower case letter, one special character, and no more than 2 consecutive equal characters.
+      pattern: ^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!~<>.,;:_=?/*+\-#\"'&§`£€%°()|\[\]$^@])(?!.*(.)\1{2,}).{12,128}$
+              # Example : ^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!~<>.,;:_=?/*+\-#\"'&§`£€%°()|\[\]$^@])(?!.*(.)\1{2,}).{12,128}$
+              # ^                                            # start-of-string
+              #(?=.*[0-9])                                   # a digit must occur at least once
+              #(?=.*[A-Z])                                   # an upper case letter must occur at least once
+              #(?=.*[a-z])                                   # a lower case letter must occur at least once
+              #(?=.*[!~<>.,;:_=?/*+\-#\"'&§`£€%°()|\[\]$^@]) # a special character must occur at least once
+              #((?!.*(.)\1{2,})                              # no more than 2 consecutive equal characters
+              #.{12,128}                                     # anything, between 12 and 128 characters
+              #$                                             # end-of-string
+  creation:
+    token:
+      #expire-after: 86400
+  reference:
+      # Secret key used to generate reference of a user which is unique (default: s3cR3t4grAv1t33.1Ous3D4R3f3r3nc3)
+      # Must contains 32 chars (256 bits)
+      #secret:
+  anonymize-on-delete:
+    #enabled: false
+
+# Enable / disable documentation sanitize. Enabled by default.
+documentation:
+  markdown:
+    sanitize: true
+  swagger:
+    validate-safe-content: true # Validate safe content in Swagger descriptor. Default is true.
+  audit:
+    max-content-size: -1 # Max size of content in bytes to be stored in audit logs when importing an API. Default is -1 meaning their is no limit.
+
+#imports:
+  # Enable / disable import from private hosts. Enabled by default. (See https://en.wikipedia.org/wiki/Private_network)
+#  allow-from-private: true
+  # Empty whitelist means all urls are allowed. Note: allow-from-private is ignored when whitelist is defined.
+#  whitelist:
+#      - https://whitelist.domain1.com
+#      - https://restricted.domain2.com/whitelisted/path
+
+search:
+  data: ${gravitee.home}/data
+
+# global configuration of the http client
+#httpClient:
+#  timeout: 10000 # in milliseconds
+#  proxy:
+#    exclude-hosts: # list of hosts to exclude from proxy (wildcard hosts are supported)
+#      - '*.internal.com'
+#      - internal.mycompany.com
+#    type: HTTP #HTTP, SOCK4, SOCK5
+#    http:
+#      host: localhost
+#      port: 3128
+#      username: user
+#      password: secret
+#    https:
+#      host: localhost
+#      port: 3128
+#      username: user
+#      password: secret
+
+notifiers:
+  email:
+    enabled: true
+    host: ${email.host}
+    subject: ${email.subject}
+    port: ${email.port}
+#    username: ${email.username}
+#    password: ${email.password}
+#    starttls.enabled: false
+##   Authentication method restrictions for the notifier
+##   possible values are: XOAUTH2,NTLM,DIGEST-MD5,CRAM-SHA256,CRAM-SHA1,CRAM-MD5,LOGIN,PLAIN
+##   when not set, all authMethods are selected
+#    authMethods: LOGIN,PLAIN
+#    ssl:
+#      trustAll: false
+#      keyStore:
+#      keyStorePassword:
+#  webhook:
+#    enabled: true
+    # Empty whitelist means all urls are allowed.
+#    whitelist:
+#      - https://whitelist.domain1.com
+#      - https://restricted.domain2.com/whitelisted/path
+
+# Allows to enable or disable recaptcha (see https://developers.google.com/recaptcha/docs/v3). Currently, it only affect the user registration route.
+#reCaptcha:
+#  enabled: false
+#  siteKey:
+#  secretKey:
+#  minScore: 0.5
+#  serviceUrl: https://www.google.com/recaptcha/api/siteverify
+
+#el:
+  # Allows to define which methods or classes are accessible to the Expression Language engine (/!\ caution, changing default whitelist may expose you to security issues).
+  # A complete list of default whitelist methods can be found here (https://raw.githubusercontent.com/gravitee-io/gravitee-expression-language/master/src/main/resources/whitelist).
+#  whitelist:
+    # Allows to define if the specified list of method or classes should be append to the default one or should replace it.
+    # We recommend you to always choose 'append' unless you absolutely kwnow what you are doing.
+#    mode: append
+    # Define the list of classes or methods to append (or set) to made accessible to the Expression Language.
+    # start with 'method' to allow a specific method (complete signature).
+    # start with 'class' to allow a complete class. All methods of the class will then be accessible.
+#    list:
+      # Ex: allow access to DateTimeFormatter.ofLocalizedDate(FormatStyle) method
+      # - method java.time.format.DateTimeFormatter ofLocalizedDate java.time.format.FormatStyle
+      # Ex: allow access to all methods of DateTimeFormatter class
+      # - class java.time.format.DateTimeFormatter
+
+#groovy:
+  # Allows to define which methods, fields, constructors, annotations or classes are accessible to the Groovy Script (/!\ caution, changing default whitelist may expose you to security issues).
+  # A complete list of default whitelist methods can be found here (https://raw.githubusercontent.com/gravitee-io/gravitee-policy-groovy/master/src/main/resources/groovy-whitelist).
+#  whitelist:
+    # Allows to define if the specified list of methods, fields, constructors or classes should be append to the default one or should replace it.
+    # We recommend you to always choose 'append' unless you absolutely know what you are doing.
+#    mode: append
+    # Define the list of classes, methods, constructors, fields or annotations to append (or set) to made accessible to the Groovy Script.
+    # start with 'method' to allow a specific method (complete signature).
+    # start with 'class' to allow a complete class. All methods, constructors and fields of the class will then be accessible.
+    # start with 'new' to allow a specific constructor (complete signature).
+    # start with 'field' to allow access to a specific field of a class.
+    # start with 'annotation' to allow use of a specific annotation.
+#    list:
+      # Ex: allow access to DateTimeFormatter.ofLocalizedDate(FormatStyle) method
+      # - method java.time.format.DateTimeFormatter ofLocalizedDate java.time.format.FormatStyle
+      # Ex: allow access to all methods, constructors and fields of DateTimeFormatter class
+      # - class java.time.format.DateTimeFormatter
+      # Ex: allow usage of field Integer.MAX_VALUE
+      # - field java.lang.Integer MAX_VALUE
+      # Ex: allow usage of @Override annotation
+      # - annotation java.lang.Override
+
+# Allows to enable or disable the 'Subscribe to newsletter' feature when user completes his profile on first log in. Default is enabled.
+#newsletter:
+#  enabled: true
+
+# Specify the visibility duration of a gateway in Unknown State (in seconds)
+# Default : 604800 seconds (7 days)
+#gateway:
+#  unknown-expire-after: 604800
+
+# Cockpit
+#cockpit:
+#  enabled: false
+#  connector:
+#    ws:
+#      endpoints:
+#        ## Specify the URL to cockpit instance. Default is the Gravitee SAAS instance
+#        - https://cockpit.gravitee.io
+## Specify the auth path used to authenticate from cockpit. {token} placeholder can be used and will be replaced by cockpit token.
+#  auth:
+#    path: /auth/cockpit?token={token}
+
+#installation:
+#  type: standalone # Could be either standalone, multi-tenant; Default is standalone.
+#  # Specify the URL of Management API of this instance, mandatory if you want to connect it to Cockpit
+#  api:
+#    # Specify the URLs of Management API, mandatory if you want to connect it to Cockpit with a standalone installation
+#    url: http://localhost:8083
+#
+#    # Specify the Management API management url of your installation, fallback on installation_api_url if not defined
+#    console:
+#      url: ${installation.api.url}
+#    # Specify the Management API portal url of your installation, fallback on installation_api_url if not defined
+#    portal:
+#      url: ${installation.api.url}
+#    # Specify the Management API portal url of your installation, fallback on installation_api_url if not defined
+#    gamma:
+#      url: ${installation.api.url}
+#
+#    proxyPath:
+#      management: ${http.api.management.entrypoint}
+#      portal: ${http.api.portal.entrypoint}
+#      gamma: ${http.api.gamma.entrypoint}
+#  standalone:
+#    console:
+#      url: http://localhost:3000
+#      # If you have multi console instances targeting different organizations, you can configure the section as bellow instead:
+#      urls:
+#         - orgId: DEFAULT
+#           url: http://localhost:3000
+#         - orgId: example
+#           url: http:/localhost:3001
+#    # Specify the URL of Portal UI of this instance
+#    portal:
+#      url: http://localhost:4100
+#      # If you have multi portal instances targeting different environments, you can configure the section as bellow instead:
+#      urls:
+#         - envId: DEFAULT
+#           url: http://localhost:4100
+#         - envId: example
+#           url: http:/localhost:4101
+#    gamma-console:
+#      url: http://localhost:4200
+#      # If you have multi console instances targeting different organizations, you can configure the section as bellow instead:
+#      urls:
+#         - orgId: DEFAULT
+#           url: http://localhost:4200
+#         - orgId: example
+#           url: http:/localhost:4201
+#  multi-tenant:
+#    # Specify the access points of your installation, mandatory if you want to connect it to Cockpit with a multi-tenant installation
+#    # You can use template variable such as {account}, {organization} or {environment}
+#    accessPoints:
+#      organization:
+#        console:
+#          host: '{organization}.{account}.example.com'
+#          secured: true
+#        console-api:
+#          host: '{organization}.{account}.example.com'
+#          secured: true
+#        gamma-console:
+#          host: '{organization}.{account}.gamma.example.com'
+#          secured: true
+#        gamma-api:
+#          host: '{organization}.{account}.api.gamma.example.com'
+#          secured: true
+#      environment:
+#        portal:
+#          host: '{environment}.{organization}.{account}.example.com'
+#          secured: true
+#        portal-api:
+#          host: '{environment}.{organization}.{account}.example.com'
+#          secured: true
+#        gateway:
+#          host: '{environment}.{organization}.{account}.example.com'
+#          secured: true
+#        tcp-gateway:
+#          host: '{environment}.{organization}.{account}.example.com'
+#          secured: true
+#        kafka-gateway:
+#          host: '{apiHost}.{environment}.{organization}.{account}.example.com'
+#          secured: true
+
+# External Authentication
+#auth:
+#  external:
+#    enabled: false
+#    algorithm: HS256
+#    verificationKey: ozhbx5HJCS41NzKrBSQ0vZU1WOmG0Uhm
+#    issuer: my-issuer
+#    allowAccountDeletion: true
+
+# Integration
+integration:
+  enabled: false
+  controller:
+    ws:
+      port: 8072
+
+api:
+  v2:
+    # V4 Emulation engine allows strict respect of the policy execution order, as it defines it the policy studio whereas, in "v3" mode, execution order may differ depending on policy REQUEST_CONTENT or RESPONSE_CONTENT scope.
+    emulateV4Engine:
+      # Allow to emulate v4 engine by default when no execution mode is specified on an api
+      # Possible values: yes | creation_only | no; Default: yes
+      default: yes
+  # Encrypt API properties using this secret
+  properties:
+    encryption:
+      secret: vvLJ4Q8Khvv9tm2tIPdkGEdmgKUruAL6
+
+# Scoring
+scoring:
+  enabled: false
+
+gamma:
+  enabled: false
+
+# Gamma authorization entity store (FGA). Tuning knobs for the AM -> entity store sync and the
+# cascade guard. All optional; the values shown are the defaults applied when left unset.
+#authz:
+#  # Max entities a single cascade operation may touch before it is rejected.
+#  cascade-hard-limit: 500
+#  sync:
+#    # Max entities pulled from AM in one sync run.
+#    max-entities: 1000
+#    # Page size used when paging users/groups/roles/agents out of AM.
+#    page-size: 50
+#    # Number of entities per bulk upsert into the entity store.
+#    batch-size: 50

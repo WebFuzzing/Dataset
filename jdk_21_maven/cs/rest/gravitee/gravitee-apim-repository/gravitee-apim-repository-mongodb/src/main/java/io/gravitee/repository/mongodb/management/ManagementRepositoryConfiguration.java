@@ -1,0 +1,111 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.repository.mongodb.management;
+
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import io.gravitee.platform.repository.api.Scope;
+import io.gravitee.repository.mongodb.common.AbstractRepositoryConfiguration;
+import io.gravitee.repository.mongodb.common.MongoFactory;
+import io.gravitee.repository.mongodb.encryption.EncryptionConfiguration;
+import io.gravitee.repository.mongodb.management.converters.BsonUndefinedToNullReadingConverter;
+import java.util.concurrent.TimeUnit;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+
+/**
+ * @author David BRASSELY (david.brassely at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@Configuration
+@Import(EncryptionConfiguration.class)
+@ComponentScan(basePackages = { "io.gravitee.repository.mongodb.management", "io.gravitee.repository.mongodb.utils" })
+@EnableMongoRepositories
+@Profile("!test")
+public class ManagementRepositoryConfiguration extends AbstractRepositoryConfiguration {
+
+    @Autowired
+    @Qualifier("managementMongo")
+    private MongoFactory mongoFactory;
+
+    public ManagementRepositoryConfiguration(Environment environment, ApplicationContext applicationContext) {
+        super(environment, applicationContext);
+    }
+
+    @Bean
+    public BsonUndefinedToNullReadingConverter bsonUndefinedToNullReadingConverter() {
+        return new BsonUndefinedToNullReadingConverter();
+    }
+
+    @Bean(name = "managementMongo")
+    public MongoFactory mongoFactory(Environment environment) {
+        return new MongoFactory(environment, Scope.MANAGEMENT.getName());
+    }
+
+    @Override
+    public MongoClient mongoClient() {
+        try {
+            return mongoFactory.getObject();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Primary
+    @Bean(name = "managementMongoTemplate")
+    public MongoOperations mongoOperations(MongoDatabaseFactory mongoDbFactory, MappingMongoConverter converter) {
+        try {
+            MongoTemplate template = new MongoTemplate(mongoDbFactory, converter);
+            // Register in parent context so sibling plugin contexts can reuse it.
+            DefaultListableBeanFactory beanFactory =
+                (DefaultListableBeanFactory) ((ConfigurableApplicationContext) applicationContext.getParent()).getBeanFactory();
+            beanFactory.registerSingleton("managementMongoTemplate", template);
+            return template;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Bean(name = "indexManagementReactiveMongoTemplate")
+    public ReactiveMongoOperations indexReactiveMongoOperations() {
+        try {
+            MongoClientSettings build = MongoClientSettings.builder(mongoFactory.buildMongoClientSettings(true))
+                .applyToSocketSettings(b -> b.connectTimeout(1, TimeUnit.HOURS).readTimeout(1, TimeUnit.HOURS)) // long window for slow index builds
+                .applyToConnectionPoolSettings(b -> b.maxSize(5).minSize(0))
+                .build();
+            return new ReactiveMongoTemplate(com.mongodb.reactivestreams.client.MongoClients.create(build), getDatabaseName());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+}

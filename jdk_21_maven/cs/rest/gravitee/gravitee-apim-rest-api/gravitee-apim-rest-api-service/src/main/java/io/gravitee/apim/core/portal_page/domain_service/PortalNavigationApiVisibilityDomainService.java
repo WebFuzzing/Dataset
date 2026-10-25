@@ -1,0 +1,168 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.portal_page.domain_service;
+
+import io.gravitee.apim.core.DomainService;
+import io.gravitee.apim.core.membership.domain_service.ApiPortalMembershipDomainService;
+import io.gravitee.apim.core.portal_page.model.PortalNavigationApi;
+import io.gravitee.apim.core.portal_page.model.PortalNavigationItem;
+import io.gravitee.apim.core.portal_page.model.PortalNavigationItemQueryCriteria;
+import io.gravitee.apim.core.portal_page.model.PortalNavigationItemType;
+import io.gravitee.apim.core.portal_page.model.PortalNavigationItemViewerContext;
+import io.gravitee.apim.core.portal_page.model.PortalVisibility;
+import io.gravitee.apim.core.portal_page.query_service.PortalNavigationItemsQueryService;
+import jakarta.annotation.Nullable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import lombok.RequiredArgsConstructor;
+
+@DomainService
+@RequiredArgsConstructor
+public class PortalNavigationApiVisibilityDomainService {
+
+    private final PortalNavigationItemsQueryService queryService;
+    private final ApiPortalMembershipDomainService apiMembershipDomainService;
+
+    /**
+     * Resolves visible APIs for unauthenticated portal access where only public APIs should be exposed.
+     */
+    public List<PortalNavigationApi> resolveVisibleItems(String environmentId) {
+        return fetchApiItems(environmentId)
+            .stream()
+            .filter(i -> PortalVisibility.PUBLIC.equals(i.getVisibility()))
+            .toList();
+    }
+
+    /**
+     * Enforces portal navigation access control by filtering APIs based on visibility rules and user permissions.
+     */
+    public List<PortalNavigationApi> resolveVisibleItems(String environmentId, String userId) {
+        List<PortalNavigationApi> apiItems = fetchApiItems(environmentId);
+
+        Set<String> publicIds = new HashSet<>();
+        Set<String> privateIds = new HashSet<>();
+        for (PortalNavigationApi item : apiItems) {
+            if (PortalVisibility.PUBLIC.equals(item.getVisibility())) {
+                publicIds.add(item.getApiId());
+            } else {
+                privateIds.add(item.getApiId());
+            }
+        }
+
+        Set<String> allowedIds = new HashSet<>(publicIds);
+        allowedIds.addAll(apiMembershipDomainService.filterApiIdsByUserMembership(userId, privateIds));
+        allowedIds.addAll(apiMembershipDomainService.filterAllowedApiIdsBySubscription(userId, privateIds));
+
+        return apiItems
+            .stream()
+            .filter(i -> allowedIds.contains(i.getApiId()))
+            .toList();
+    }
+
+    private List<PortalNavigationApi> fetchApiItems(String environmentId) {
+        return queryService
+            .search(
+                PortalNavigationItemQueryCriteria.builder()
+                    .environmentId(environmentId)
+                    .published(true)
+                    .root(false)
+                    .type(PortalNavigationItemType.API)
+                    .build()
+            )
+            .stream()
+            .filter(PortalNavigationApi.class::isInstance)
+            .map(PortalNavigationApi.class::cast)
+            .toList();
+    }
+
+    /**
+     * Checks if an API is visible in portal navigation for the given user, looking it up by API ID.
+     */
+    public boolean isApiVisibleToUser(String environmentId, String apiId, @Nullable String userId) {
+        return queryService
+            .search(
+                PortalNavigationItemQueryCriteria.builder()
+                    .environmentId(environmentId)
+                    .published(true)
+                    .root(false)
+                    .type(PortalNavigationItemType.API)
+                    .apiIds(Set.of(apiId))
+                    .build()
+            )
+            .stream()
+            .filter(PortalNavigationApi.class::isInstance)
+            .map(PortalNavigationApi.class::cast)
+            .findFirst()
+            .map(item -> isVisibleToUser(item, userId))
+            .orElse(false);
+    }
+
+    /**
+     * Checks visibility of a single PortalNavigationApi for the given user.
+     */
+    public boolean isVisibleToUser(PortalNavigationApi item, String userId) {
+        if (PortalVisibility.PUBLIC.equals(item.getVisibility())) {
+            return true;
+        }
+        Set<String> candidate = Set.of(item.getApiId());
+        return (
+            !apiMembershipDomainService.filterApiIdsByUserMembership(userId, candidate).isEmpty() ||
+            !apiMembershipDomainService.filterAllowedApiIdsBySubscription(userId, candidate).isEmpty()
+        );
+    }
+
+    /**
+     * Returns {@code true} when the given API navigation item must be hidden from the viewer,
+     * applying portal visibility (PUBLIC / PRIVATE) and, for authenticated users, API
+     * membership and subscription-based access rules. Mirrors the logic used by the catalog
+     * endpoint so navigation and catalog expose the same set of APIs.
+     */
+    public boolean isApiItemHidden(PortalNavigationApi item, PortalNavigationItemViewerContext viewerContext) {
+        if (!viewerContext.isPortalMode()) {
+            return false;
+        }
+        if (PortalVisibility.PUBLIC.equals(item.getVisibility())) {
+            return false;
+        }
+        if (!viewerContext.isAuthenticated()) {
+            return true;
+        }
+        return viewerContext
+            .userId()
+            .map(uid -> !isVisibleToUser(item, uid))
+            .orElse(true);
+    }
+
+    /**
+     * Walks the parent chain of the given item and returns {@code true} if any ancestor is a
+     * {@link PortalNavigationApi} hidden from the viewer. Used to prevent direct access (by id)
+     * to descendants of an API navigation item the viewer cannot see.
+     */
+    public boolean hasHiddenApiAncestor(String environmentId, PortalNavigationItem item, PortalNavigationItemViewerContext viewerContext) {
+        if (!viewerContext.isPortalMode()) {
+            return false;
+        }
+        PortalNavigationItem current = item;
+        while (current != null && current.getParentId() != null) {
+            current = queryService.findByIdAndEnvironmentId(environmentId, current.getParentId());
+            if (current instanceof PortalNavigationApi apiAncestor && isApiItemHidden(apiAncestor, viewerContext)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

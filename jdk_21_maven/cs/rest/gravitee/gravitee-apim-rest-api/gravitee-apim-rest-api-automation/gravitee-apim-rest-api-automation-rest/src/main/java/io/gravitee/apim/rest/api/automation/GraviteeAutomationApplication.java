@@ -1,0 +1,85 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.rest.api.automation;
+
+import io.gravitee.apim.rest.api.automation.exception.mapping.HRIDNotFoundMapper;
+import io.gravitee.apim.rest.api.automation.exception.mapping.ValidationDomainMapper;
+import io.gravitee.apim.rest.api.automation.resource.ApiSubscriptionsResource;
+import io.gravitee.apim.rest.api.automation.resource.ApisResource;
+import io.gravitee.apim.rest.api.automation.resource.ApplicationsResource;
+import io.gravitee.apim.rest.api.automation.resource.DictionariesResource;
+import io.gravitee.apim.rest.api.automation.resource.DictionaryResource;
+import io.gravitee.apim.rest.api.automation.resource.EnvironmentResource;
+import io.gravitee.apim.rest.api.automation.resource.EnvironmentsResource;
+import io.gravitee.apim.rest.api.automation.resource.GroupResource;
+import io.gravitee.apim.rest.api.automation.resource.GroupsResource;
+import io.gravitee.apim.rest.api.automation.resource.OpenAPIResource;
+import io.gravitee.apim.rest.api.automation.resource.OrganizationResource;
+import io.gravitee.apim.rest.api.automation.resource.PortalResource;
+import io.gravitee.apim.rest.api.automation.resource.PortalsResource;
+import io.gravitee.apim.rest.api.automation.resource.SharedPolicyGroupsResource;
+import io.gravitee.apim.rest.api.automation.spring.PermissionsFilter;
+import io.gravitee.rest.api.management.v2.rest.exceptionmapper.BadRequestExceptionMapper;
+import io.gravitee.rest.api.management.v2.rest.exceptionmapper.ConstraintValidationExceptionMapper;
+import io.gravitee.rest.api.management.v2.rest.exceptionmapper.JsonMappingExceptionMapper;
+import io.gravitee.rest.api.management.v2.rest.exceptionmapper.ManagementExceptionMapper;
+import io.gravitee.rest.api.management.v2.rest.exceptionmapper.NotAllowedExceptionMapper;
+import io.gravitee.rest.api.management.v2.rest.provider.ObjectMapperResolver;
+import jakarta.inject.Inject;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+
+/**
+ * @author Antoine CORDIER (antoine.cordier at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+public class GraviteeAutomationApplication extends ResourceConfig {
+
+    @Inject
+    public GraviteeAutomationApplication() {
+        register(OpenAPIResource.class);
+
+        register(OrganizationResource.class);
+        register(EnvironmentsResource.class);
+        register(EnvironmentResource.class);
+        register(ApisResource.class);
+        register(ApiSubscriptionsResource.class);
+        register(ApplicationsResource.class);
+        register(GroupResource.class);
+        register(GroupsResource.class);
+        register(SharedPolicyGroupsResource.class);
+        register(DictionariesResource.class);
+        register(DictionaryResource.class);
+        register(PortalsResource.class);
+        register(PortalResource.class);
+
+        register(ValidationDomainMapper.class);
+        register(HRIDNotFoundMapper.class);
+        register(ManagementExceptionMapper.class);
+        register(ConstraintValidationExceptionMapper.class);
+        register(BadRequestExceptionMapper.class);
+        register(ConstraintValidationExceptionMapper.class);
+        register(JsonMappingExceptionMapper.class);
+        register(NotAllowedExceptionMapper.class);
+
+        register(ObjectMapperResolver.class);
+
+        register(PermissionsFilter.class);
+
+        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
+    }
+}

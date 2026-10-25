@@ -1,0 +1,155 @@
+
+
+<div align="center">
+  <a href="https://www.gravitee.io/">
+    <picture>
+      <source srcset="https://raw.githubusercontent.com/gravitee-io/gravitee-api-management/refs/heads/master/assets/gravitee-dark-mode.svg" media="(prefers-color-scheme: dark)">
+      <source srcset="https://raw.githubusercontent.com/gravitee-io/gravitee-api-management/refs/heads/master/assets/gravitee-light-mode.svg" media="(prefers-color-scheme: light)">
+      <img src="https://raw.githubusercontent.com/gravitee-io/gravitee-api-management/refs/heads/master/assets/gravitee-dark-mode.svg" alt="Gravitee Logo" style="max-width: 100%; height: auto;">
+    </picture>
+  </a>
+</div>
+
+<br/>
+
+![Version][version-badge]
+[![License][license-badge]][license-url]
+[![LinkedIn][linkedin-badge]][linkedin-url]
+[![Twitter][twitter-badge]][twitter-url]  
+![Commit Activity][commit-activity-badge]
+![Last Commit][last-commit-badge]
+![CircleCI][circleci-badge]
+[![Community][community-badge]][community-url]
+[![Documentation][docs-badge]][docs-url]
+---
+
+<span style="color:#ea3527"><strong>Gravitee API Management</strong></span> (also called <span style="color:#ea3527"><strong>Gravitee APIM</strong></span>)
+is a flexible, lightweight, and blazing-fast Open Source solution that helps your organization control who, when, and how users access your APIs. \
+Effortlessly manage the lifecycle of your APIs.
+
+Download API Management to document, discover, and publish your APIs.
+
+Different ways to start using <span style="color:#ea3527"><strong>Gravitee APIM</strong></span>:
+
+
+
+| Tool                                                                                                                   | &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Target  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+|------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="https://documentation.gravitee.io/gravitee-cloud" style="color:#ea3527; font-weight:bold;">Gravitee Cloud</a> | <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" alt="Azure Logo" height="25" style=" vertical-align:middle; margin-right:8px;"> <img src="https://icon.icepanel.io/Technology/svg/Google-Cloud.svg" alt="Google Cloud Logo" height="25" style="vertical-align:middle; margin-right:8px;"> <img src="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" alt="AWS Logo" height="25" style="vertical-align:middle; margin-right:8px;">                                                                                                                                                                                                                                                                                                                                                                                              |
+| [Helm Chart][Helm-Chart-url]                                                                                           | <img src="https://raw.githubusercontent.com/kubernetes/kubernetes/refs/heads/master/logo/logo_with_border.svg" alt="Kubernetes Logo" height="35" style=" vertical-align:middle; margin-right:8px;"> <img src="https://az-icons.com/export/icons/d43291e40cdbc1574f9487f4370a746e.svg" alt="AKS Logo" height="35" style=" vertical-align:middle; margin-right:8px;"> <img src="https://www.gstatic.com/bricks/image/720ca2d9f0621d313fdc08f1d086a1638e65ea5fa08a0a18cf6eb58c8e974fd4.svg" alt="GKS Logo" height="35" style=" vertical-align:middle; margin-right:8px;"><img src="https://icon.icepanel.io/AWS/svg/Containers/EKS-Cloud.svg" alt="EKS Logo" height="35" style=" vertical-align:middle; margin-right:8px;"> <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/OpenShift-LogoType.svg" alt="Openshift Logo" height="35" style=" vertical-align:middle; margin-right:8px;"> |
+| [docker-compose / make][quick-setup]                                                                                   | <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" alt="Kubernetes Logo" height="20" style=" vertical-align:middle; margin-right:8px;">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+
+---
+[Installation](https://documentation.gravitee.io/apim/getting-started/local-install-with-docker) | [Documentation](https://documentation.gravitee.io/apim) | [Community](https://community.gravitee.io/) | [Contributing](./CONTRIBUTING.adoc) | [License](./LICENSE.txt) | [Website][gravitee-url]
+
+---
+
+
+## Getting Started
+Do you only have a few minutes or want to try it out without installation or configuration?  
+<a href="https://documentation.gravitee.io/gravitee-cloud" style="color:#ea3527; font-weight:bold;">Gravitee Cloud</a> has you covered. <strong>Try our Saas offer with a [free trial][free-trial-url] today!</strong>
+
+If you prefer to use <span style="color:#ea3527"><strong>Gravitee APIM</strong></span> on your own infrastructure with Docker, follow the steps below.
+
+1) Clone the <span style="color:#ea3527"><strong>Gravitee APIM</strong></span> repository 
+```sh
+   git clone --depth=1 https://github.com/gravitee-io/gravitee-api-management
+   cd gravitee-api-management/docker
+```
+
+
+2) Start the <a href="https://www.gravitee.io/platform/api-management" style="color:#ea3527; font-weight:bold;">Gravitee Console</a>, <a href="https://www.gravitee.io/platform/api-developer-portal" style="color:#ea3527; font-weight:bold;">Portal</a> and <a href="https://www.gravitee.io/platform/api-gateway" style="color:#ea3527; font-weight:bold;">Gateway</a> with a MongoDB database
+
+ - Run the `Make` command
+
+```sh
+  make mongodb
+```
+
+- Or the `Docker` command
+```sh
+   cd quick-setup/mongodb && docker compose down -v && docker compose pull && docker compose up -d
+```
+
+3. <span style="color:#ea3527"><strong>Gravitee APIM</strong></span> is now up and running!<br>
+   Let's explore some of the subcomponents you've deployed:
+
+- `:4100` - [Portal UI](http://localhost:4100) ~ A catalog of your APIs, complete with documentation and more.
+- `:8084` - [Console UI](http://localhost:8084) ~ The administrative interface for managing your APIs.
+- `:8082` - Gateway ~ Gravitee's powerful API gateway.
+- `:8083` - [APIM Backend](http://localhost:8083/portal/openapi) ~ Backend for both the Portal and Console UIs.  
+
+Default credentials: `admin` / `admin`
+
+\
+What's next?
+[Follow our documentation](https://documentation.gravitee.io/apim/how-to-guides) and learn how to create an API, add a Policy,... and more!
+
+4.  💡 Tips (Optional)
+
+>💡 Tip 1: Use your **Enterprise License**  
+If you have an Enterprise License, you can export it as a Base64-encoded environment variable or move your license file into `docker/quick-setup/mongodb/.license` to gain full access to <span style="color:#ea3527"><strong>Gravitee APIM</strong></span> features.
+ ```sh
+    export LICENSE_KEY=*****
+```
+
+>💡 Tip 2: Issue when starting <span style="color:#ea3527"><strong>Gravitee APIM</strong></span>  
+If you're having an issue during `.license` folder creation (using Rancher Desktop for example), please run:
+
+```sh
+   make prepare TARGET=mongodb
+```
+
+## Features
+
+<div style="text-align: center;">
+  <span style="
+    background: linear-gradient(99deg, #f09135 2.8%, #ea3527 96.58%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: 24px;
+  ">
+    Hold Nothing Back!
+  </span>
+</div>
+
+-   **Register your API**: Create and register APIs in a few clicks to easily expose your secured APIs to internal and external consumers.
+-   **Configure policies using flows**: Gravitee.io API Management provides over 50 pre-built policies to effectively shape
+    traffic reaching the gateway according to your business requirements.
+-   **Developer portal**: Build the portal that your developers want with a custom theme, full-text search, and API documentation.
+-   **Analytics dashboard**: The out-of-the-box dashboards give you a 360-degree view of your API. You can also build your own
+    dashboards from Gravitee.io or use all metrics with external tools like Grafana or Kibana.
+-   **Register applications**: Users and administrators can register applications for consuming APIs with ease. Gravitee.io
+    provides advanced dynamic client registration to link API Management and Access Management effectively.
+-   **Secured plans**: Create plans to define the rate limits, quotas, and security policies that apply to your APIs.
+
+[![][gravitee-features]][gravitee-url]
+
+[gravitee-url]: https://www.gravitee.io
+[gravitee-features]: https://www.gravitee.io/hubfs/Spiralyze/assets/hero_1002.png
+[free-trial-url]: https://eu-auth.cloud.gravitee.io/cloud/register?response_type=code&client_id=fd45d898-e621-4b12-85d8-98e621ab1237&state=enlSaG1YWThMfmc4QXFLZE5aZGdpYUJrcF9VR0tGa3ZRfjBjWm12a2pXY1Bj&redirect_uri=https%3A%2F%2Feu.cloud.gravitee.io&scope=openid+profile+email+offline_access&code_challenge=Zqs-oyj0nSZXIt__zhOTZRmpoR2ShAaQRWksGEQeIYQ&code_challenge_method=S256&nonce=enlSaG1YWThMfmc4QXFLZE5aZGdpYUJrcF9VR0tGa3ZRfjBjWm12a2pXY1Bj
+[quick-setup]: docker/README.md
+[Helm-Chart-url]: https://documentation.gravitee.io/apim/hybrid-installation-and-configuration-guides/next-gen-cloud/kubernetes
+
+[license-badge]: https://img.shields.io/github/license/gravitee-io/gravitee-api-management?style=flat&label=license&color=FF8A00
+[license-url]: https://github.com/gravitee-io/gravitee-api-management/blob/master/LICENSE.txt
+
+[linkedin-badge]: https://img.shields.io/badge/LinkedIn-Follow-blue?style=flat&color=22A3B3
+[linkedin-url]: https://www.linkedin.com/company/gravitee-io
+
+[twitter-badge]: https://img.shields.io/badge/Twitter-Follow-blue?style=flat&color=22A3B3
+[twitter-url]: https://twitter.com/intent/follow?screen_name=graviteeio
+
+[community-badge]: https://img.shields.io/badge/community-join-F76C6C?style=flat
+[community-url]: https://community.gravitee.io
+
+[docs-badge]: https://img.shields.io/badge/documentation-see-F76C6C?style=flat
+[docs-url]: https://documentation.gravitee.io/apim
+
+---
+
+[version-badge]: https://img.shields.io/github/v/tag/gravitee-io/gravitee-api-management?style=flat&label=version&color=FF8A00
+[commit-activity-badge]: https://img.shields.io/github/commit-activity/m/gravitee-io/gravitee-api-management?style=flat&color=F76C6C
+[last-commit-badge]: https://img.shields.io/github/last-commit/gravitee-io/gravitee-api-management?style=flat&color=F76C6C
+[circleci-badge]: https://img.shields.io/circleci/build/github/gravitee-io/gravitee-api-management?style=flat&color=F76C6C  

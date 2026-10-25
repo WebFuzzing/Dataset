@@ -1,0 +1,64 @@
+[
+  {
+    "id": "new",
+    "organizationId": "DEFAULT",
+    "environmentId": "DEFAULT",
+    "referenceId": "1",
+    "referenceType": "API",
+    "event": "PLAN_CREATED",
+    "properties": {
+      "PLAN": "123"
+    },
+    "user": "JohnDoe",
+    "createdAt": 1486771200000,
+    "patch": "diff"
+  },
+  {
+    "id": "searchable1",
+    "referenceId": "2",
+    "referenceType": "API",
+    "event": "PLAN_CREATED",
+    "properties": {
+      "PLAN": "123"
+    },
+    "user": "JohnDoe",
+    "createdAt": 1000000000000,
+    "patch": "diff"
+  },
+  {
+    "id": "searchable2",
+    "referenceId": "2",
+    "referenceType": "API",
+    "event": "PLAN_UPDATED",
+    "properties": {
+      "PLAN": "456"
+    },
+    "user": "JohnDoe",
+    "createdAt": 2000000000000,
+    "patch": "diff"
+  },
+  {
+    "id": "ToBeDeleted1",
+    "referenceId": "ToBeDeleted",
+    "referenceType": "API",
+    "event": "PLAN_CREATED",
+    "properties": {
+      "PLAN": "456"
+    },
+    "user": "JohnDoe",
+    "createdAt": 2000000000010,
+    "patch": "diff"
+  },
+  {
+    "id": "ToBeDeleted2",
+    "referenceId": "ToBeDeleted",
+    "referenceType": "API",
+    "event": "PLAN_CREATED",
+    "properties": {
+      "PLAN": "456"
+    },
+    "user": "JohnDoe",
+    "createdAt": 2000000000012,
+    "patch": "diff"
+  }
+]

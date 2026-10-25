@@ -1,0 +1,275 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.api.domain_service;
+
+import io.gravitee.apim.core.DomainService;
+import io.gravitee.apim.core.api.exception.InvalidPathsException;
+import io.gravitee.apim.core.api.model.ApiFieldFilter;
+import io.gravitee.apim.core.api.model.ApiSearchCriteria;
+import io.gravitee.apim.core.api.model.Path;
+import io.gravitee.apim.core.api.query_service.ApiQueryService;
+import io.gravitee.apim.core.installation.model.RestrictedDomain;
+import io.gravitee.apim.core.installation.query_service.InstallationAccessQueryService;
+import io.gravitee.apim.core.utils.CollectionUtils;
+import io.gravitee.apim.core.validation.Validator;
+import io.gravitee.definition.model.DefinitionVersion;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import lombok.CustomLog;
+
+/**
+ * @author Antoine CORDIER (antoine.cordier at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@CustomLog
+@DomainService
+public class VerifyApiPathDomainService implements Validator<VerifyApiPathDomainService.Input> {
+
+    public record Input(String environmentId, String apiId, List<Path> paths) implements Validator.Input {}
+
+    private static final List<DefinitionVersion> PATH_BEARING_DEFINITIONS = List.of(DefinitionVersion.V2, DefinitionVersion.V4);
+
+    /**
+     * Slack subtracted from the snapshot watermark when issuing the supplementary "recently updated" Mongo query.
+     * Sized to absorb realistic inter-pod clock skew plus a cron-batch processing window. A too-tight value just
+     * widens the per-conflict recheck cohort (still one batch query), so this is a perf knob, not a correctness one.
+     */
+    private static final Duration SAFETY_MARGIN = Duration.ofSeconds(10);
+
+    private final ApiQueryService apiSearchService;
+    private final InstallationAccessQueryService installationAccessQueryService;
+    private final ApiHostValidatorDomainService apiHostValidatorDomainService;
+    private final ApiPathIndexReader apiPathIndex;
+
+    public VerifyApiPathDomainService(
+        ApiQueryService apiSearchService,
+        InstallationAccessQueryService installationAccessQueryService,
+        ApiHostValidatorDomainService apiHostValidatorDomainService,
+        ApiPathIndexReader apiPathIndex
+    ) {
+        this.apiSearchService = apiSearchService;
+        this.installationAccessQueryService = installationAccessQueryService;
+        this.apiHostValidatorDomainService = apiHostValidatorDomainService;
+        this.apiPathIndex = apiPathIndex;
+    }
+
+    @Override
+    public Result<VerifyApiPathDomainService.Input> validateAndSanitize(VerifyApiPathDomainService.Input input) {
+        if (CollectionUtils.isEmpty(input.paths)) {
+            return Result.ofErrors(List.of(Error.severe("HTTP listener requires a minimum of one path")));
+        }
+
+        var sanitizedBuilder = input.paths.stream().map(Path::toBuilder).toList();
+
+        var errors = new ArrayList<Error>();
+
+        errors.addAll(invalidPathErrors(sanitizedBuilder));
+
+        errors.addAll(duplicatePathErrors(sanitizedBuilder));
+
+        errors.addAll(invalidDomainErrors(input.environmentId, sanitizedBuilder));
+
+        errors.addAll(unavailablePathErrors(input, sanitizedBuilder));
+
+        var sanitized = sanitizedBuilder.stream().map(Path.PathBuilder::build).toList();
+
+        return Result.ofBoth(new Input(input.environmentId, input.apiId, sanitized), errors);
+    }
+
+    private List<Error> invalidDomainErrors(String environmentId, List<Path.PathBuilder> sanitizedBuilder) throws InvalidPathsException {
+        var errors = new ArrayList<Error>();
+
+        var restrictedDomains = installationAccessQueryService.getGatewayRestrictedDomains(environmentId);
+
+        if (CollectionUtils.isNotEmpty(restrictedDomains)) {
+            for (var builder : sanitizedBuilder) {
+                if (builder.build().hasHost()) {
+                    invalidDomainError(builder.build(), restrictedDomains).ifPresent(errors::add);
+                }
+            }
+            if (sanitizedBuilder.stream().noneMatch(builder -> builder.build().isOverrideAccess())) {
+                sanitizedBuilder
+                    .stream()
+                    .findFirst()
+                    .ifPresent(builder -> builder.overrideAccess(true));
+            }
+        }
+
+        return errors;
+    }
+
+    private Optional<Validator.Error> invalidDomainError(Path path, List<RestrictedDomain> restrictedDomains) {
+        var hostWithoutPort = extractHost(path.getHost());
+        var hostPort = extractPort(path.getHost());
+
+        var restrictedDomainsWithoutPort = restrictedDomains
+            .stream()
+            .map(restrictedDomainEntity -> extractHost(restrictedDomainEntity.getDomain()))
+            .toList();
+
+        var isValidDomain = apiHostValidatorDomainService.isValidDomainOrSubDomain(hostWithoutPort, restrictedDomainsWithoutPort);
+
+        var isValidPort = isValidPort(hostPort, restrictedDomains);
+
+        if (!isValidDomain || !isValidPort) {
+            return Optional.of(Validator.Error.severe("Domain [%s] is invalid", path.getHost()));
+        }
+        return Optional.empty();
+    }
+
+    private List<Error> unavailablePathErrors(Input input, List<Path.PathBuilder> sanitizedBuilder) {
+        var candidatePaths = sanitizedBuilder.stream().map(Path.PathBuilder::build).toList();
+        var env = input.environmentId;
+        var excludeApiId = input.apiId;
+
+        var snapshot = apiPathIndex.snapshotOf(env, () -> searchPathBearing(env, null));
+        var snapshotConflicts = ApiPathIndex.scanPaths(snapshot.pathsByApiId(), excludeApiId, candidatePaths);
+
+        // Snapshot is clean → the only remaining risk is a cross-pod create/update we haven't seen via the broadcast
+        // cron yet. One bounded supplementary query catches that. This is the common case (most validates pass).
+        if (snapshotConflicts.isEmpty()) {
+            return supplementaryScan(env, snapshot.refreshedAt(), excludeApiId, candidatePaths);
+        }
+
+        // Snapshot says conflict — but the snapshot can lag a remote update/delete by one cron interval. Re-read just
+        // the rows we collided with in one batched query (the {_id IN (...)} hits the PK index) and rescan against
+        // their current paths. Single round-trip even for multiple conflicting apiIds.
+        var distinctApiIds = snapshotConflicts.stream().map(ApiPathIndex.Conflict::apiId).distinct().toList();
+        var rechecked = new HashMap<String, List<Path>>();
+        try (var stream = searchByIds(env, distinctApiIds)) {
+            stream.forEach(api -> {
+                var paths = ApiPathExtractor.extractPaths(api);
+                if (!paths.isEmpty()) {
+                    rechecked.put(api.getId(), paths);
+                }
+            });
+        }
+        var confirmed = ApiPathIndex.scanPaths(rechecked, excludeApiId, candidatePaths);
+        if (!confirmed.isEmpty()) {
+            // Snapshot conflict survived recheck — real. Return without firing the supplementary query.
+            return confirmed.stream().map(ApiPathIndex.Conflict::error).toList();
+        }
+
+        // All snapshot conflicts were stale (the rows moved their paths, became non-HTTP, or were hard-deleted).
+        // We still need to check whether a recently-created remote API happens to take the now-free path before
+        // returning "no conflict".
+        return supplementaryScan(env, snapshot.refreshedAt(), excludeApiId, candidatePaths);
+    }
+
+    /**
+     * Fetches APIs updated since {@code refreshedAt - SAFETY_MARGIN} (indexed by {@code (environmentId, updatedAt)})
+     * and scans them for conflicts against the candidate paths. Used both when the snapshot is clean and as a fallback
+     * when every snapshot conflict has been resolved by the recheck — in both cases we need to surface a remote
+     * create that hasn't propagated via the broadcast cron yet.
+     */
+    private List<Error> supplementaryScan(String env, java.time.Instant refreshedAt, String excludeApiId, List<Path> candidatePaths) {
+        var since = refreshedAt.minus(SAFETY_MARGIN);
+        var recentPaths = new HashMap<String, List<Path>>();
+        try (var recent = searchPathBearing(env, since)) {
+            recent.forEach(api -> {
+                var paths = ApiPathExtractor.extractPaths(api);
+                if (!paths.isEmpty()) {
+                    recentPaths.put(api.getId(), paths);
+                }
+            });
+        }
+        return ApiPathIndex.scanPaths(recentPaths, excludeApiId, candidatePaths).stream().map(ApiPathIndex.Conflict::error).toList();
+    }
+
+    private java.util.stream.Stream<io.gravitee.apim.core.api.model.Api> searchPathBearing(String envId, java.time.Instant updatedAtFrom) {
+        var criteria = ApiSearchCriteria.builder()
+            .environmentId(envId)
+            .definitionVersion(PATH_BEARING_DEFINITIONS)
+            .updatedAtFrom(updatedAtFrom)
+            .build();
+        return apiSearchService.search(criteria, null, ApiFieldFilter.builder().pictureExcluded(true).build());
+    }
+
+    private java.util.stream.Stream<io.gravitee.apim.core.api.model.Api> searchByIds(String envId, List<String> ids) {
+        var criteria = ApiSearchCriteria.builder().environmentId(envId).ids(ids).definitionVersion(PATH_BEARING_DEFINITIONS).build();
+        return apiSearchService.search(criteria, null, ApiFieldFilter.builder().pictureExcluded(true).build());
+    }
+
+    private List<Error> invalidPathErrors(List<Path.PathBuilder> sanitizedBuilder) {
+        var errors = new ArrayList<Error>();
+
+        sanitizedBuilder.forEach(builder -> {
+            var path = builder.build();
+            try {
+                var sanitized = path.sanitize();
+                builder.path(sanitized.getPath());
+            } catch (InvalidPathsException e) {
+                errors.add(Error.severe("Path [%s] is invalid", path.getPath()));
+            }
+        });
+
+        return errors;
+    }
+
+    private List<Error> duplicatePathErrors(List<Path.PathBuilder> sanitizedBuilder) {
+        var seen = new HashSet<>();
+        return sanitizedBuilder
+            .stream()
+            .map(Path.PathBuilder::build)
+            .filter(path -> !seen.add(path))
+            .map(duplicate -> Error.severe("Path [%s] is duplicated", duplicate.getPath()))
+            .toList();
+    }
+
+    private static boolean isValidPort(final String port, final List<RestrictedDomain> restrictedDomainEntities) {
+        return restrictedDomainEntities
+            .stream()
+            .anyMatch(restrictedDomainEntity -> {
+                String restrictedDomain = restrictedDomainEntity.getDomain();
+                String restrictedPort = extractPort(restrictedDomain);
+                return isValidPort(port, restrictedPort);
+            });
+    }
+
+    private static boolean isValidPort(String port, String restrictedPort) {
+        if (port == null && restrictedPort == null) {
+            return true;
+        }
+        if (port == null && isDefaultHttp(restrictedPort)) {
+            return true;
+        }
+        if (restrictedPort == null && isDefaultHttp(port)) {
+            return true;
+        }
+        return Objects.equals(port, restrictedPort);
+    }
+
+    private static boolean isDefaultHttp(final String domainRestrictionOnlyPort) {
+        return "80".equals(domainRestrictionOnlyPort) || "443".equals(domainRestrictionOnlyPort);
+    }
+
+    private static String extractHost(final String hostAndPort) {
+        return hostAndPort.split(":")[0];
+    }
+
+    private static String extractPort(final String hostAndPort) {
+        String[] split = hostAndPort.split(":");
+        if (split.length > 1) {
+            return split[1];
+        }
+        return null;
+    }
+}

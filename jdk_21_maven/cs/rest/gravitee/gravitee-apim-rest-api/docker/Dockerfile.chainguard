@@ -1,0 +1,73 @@
+#
+# Copyright © 2015 The Gravitee team (http://gravitee.io)
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# First stage to share environment variable
+# Override BASE_IMAGE to build the FIPS variant (graviteeio.azurecr.io/java:21-chainguard-fips)
+ARG BASE_IMAGE=graviteeio.azurecr.io/java:21-chainguard
+FROM ${BASE_IMAGE} AS base
+ENV GRAVITEEIO_HOME=/opt/graviteeio-management-api
+
+# Second stage to add the folder and change the permissions and ownership
+FROM base AS builder
+COPY --chown=graviteeio:graviteeio ./distribution ${GRAVITEEIO_HOME}/
+USER root
+# The FIPS base image ships BouncyCastle FIPS under /usr/share/java/bouncycastle-fips and puts that
+# directory on the JVM --module-path, but bin/gravitee starts the JVM with `-cp <bootstrap jar>`,
+# which drops the CLASSPATH the image exports. Only bc-fips ends up resolved that way, so the
+# extension class loader over lib/ext resolves org.bouncycastle.asn1.bc from bc-fips while
+# org.bouncycastle.cms and .operator still come from the non-FIPS jars sitting there. Both
+# distributions publish those package names, so classes link across the two and fail on first use:
+# NoSuchFieldError on BCObjectIdentifiers.sphincsPlus_sha2_128s_r3, which answers 500 to any attempt
+# to register or rotate an mTLS client certificate on an application.
+# Swapping lib/ext over to the FIPS artifacts keeps every BouncyCastle class coming from a single
+# distribution. It is a no-op on the non-FIPS base image, which exports no such variable.
+# The swap is entered on JAVA_FIPS_CLASSPATH, which the FIPS base image exports and which names where
+# it keeps those jars: that is the capability itself, so it still holds when the base is pinned by
+# digest or its tag is renamed. BASE_IMAGE only serves the reverse check — a base that calls itself
+# FIPS while exporting nothing fails the build rather than silently shipping the broken mix again.
+# The wildcards below sit outside the quotes on purpose. Quoting them along with the variable, as a
+# shell linter will suggest, stops the glob expanding: the ls check would then always fail and the
+# rm would match nothing, leaving the non-FIPS jars in place — the very mix this swap removes.
+ARG BASE_IMAGE
+RUN if [ -n "${JAVA_FIPS_CLASSPATH}" ]; then \
+        BC_FIPS_DIR=$(dirname "${JAVA_FIPS_CLASSPATH}"); \
+        for jar in bcpkix-fips.jar bcutil-fips.jar; do \
+            [ -f "${BC_FIPS_DIR}/${jar}" ] || \
+                { echo "FIPS base image provides no ${BC_FIPS_DIR}/${jar}" >&2; exit 1; }; \
+        done; \
+        ls "${GRAVITEEIO_HOME}"/lib/ext/bcprov-jdk18on-*.jar >/dev/null 2>&1 || \
+            { echo "no non-FIPS BouncyCastle jar in lib/ext: the swap below would be a silent no-op" >&2; exit 1; }; \
+        rm -f "${GRAVITEEIO_HOME}"/lib/ext/bcprov-jdk18on-*.jar \
+              "${GRAVITEEIO_HOME}"/lib/ext/bcpkix-jdk18on-*.jar \
+              "${GRAVITEEIO_HOME}"/lib/ext/bcutil-jdk18on-*.jar; \
+        cp "${BC_FIPS_DIR}/bcpkix-fips.jar" "${BC_FIPS_DIR}/bcutil-fips.jar" "${GRAVITEEIO_HOME}/lib/ext/"; \
+        chmod 644 "${GRAVITEEIO_HOME}/lib/ext/bcpkix-fips.jar" "${GRAVITEEIO_HOME}/lib/ext/bcutil-fips.jar"; \
+    else \
+        case "${BASE_IMAGE}" in \
+            *fips*) echo "BASE_IMAGE names a FIPS base but it exports no JAVA_FIPS_CLASSPATH" >&2; exit 1 ;; \
+        esac; \
+    fi
+RUN chgrp -R 0 ${GRAVITEEIO_HOME} && \
+    chmod -R g=u ${GRAVITEEIO_HOME}
+
+# Third stage to build the final docker image. COPY preserves ownership & permissions
+FROM base
+LABEL maintainer="contact@graviteesource.com"
+COPY --from=builder ${GRAVITEEIO_HOME} ${GRAVITEEIO_HOME}
+WORKDIR ${GRAVITEEIO_HOME}
+EXPOSE 8083
+USER graviteeio
+ENTRYPOINT ["./bin/gravitee"]

@@ -1,0 +1,17 @@
+{
+  "id": "application-id",
+  "name": "with-empty-redirect-uri",
+  "description": "SPA with empty redirect uris",
+  "domain": "test-domain",
+  "settings": {
+    "oauth": {
+      "applicationType": "BROWSER",
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "redirectUris": []
+    }
+  },
+  "metadata": [],
+  "origin": "kubernetes"
+}

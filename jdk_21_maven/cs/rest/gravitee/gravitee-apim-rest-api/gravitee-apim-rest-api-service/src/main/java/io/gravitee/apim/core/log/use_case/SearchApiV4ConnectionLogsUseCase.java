@@ -1,0 +1,171 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.log.use_case;
+
+import io.gravitee.apim.core.UseCase;
+import io.gravitee.apim.core.api.crud_service.ApiCrudService;
+import io.gravitee.apim.core.api_product.model.ApiProduct;
+import io.gravitee.apim.core.api_product.query_service.ApiProductQueryService;
+import io.gravitee.apim.core.application.crud_service.ApplicationCrudService;
+import io.gravitee.apim.core.log.crud_service.ConnectionLogsCrudService;
+import io.gravitee.apim.core.plan.crud_service.PlanCrudService;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.rest.api.model.BaseApplicationEntity;
+import io.gravitee.rest.api.model.analytics.SearchLogsFilters;
+import io.gravitee.rest.api.model.common.Pageable;
+import io.gravitee.rest.api.model.common.PageableImpl;
+import io.gravitee.rest.api.model.v4.log.SearchLogsResponse;
+import io.gravitee.rest.api.model.v4.log.connection.BaseConnectionLog;
+import io.gravitee.rest.api.model.v4.log.connection.ConnectionLogModel;
+import io.gravitee.rest.api.model.v4.plan.BasePlanEntity;
+import io.gravitee.rest.api.model.v4.plan.GenericPlanEntity;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.exceptions.ApplicationNotFoundException;
+import io.gravitee.rest.api.service.exceptions.PlanNotFoundException;
+import io.gravitee.rest.api.service.exceptions.TechnicalManagementException;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@UseCase
+public class SearchApiV4ConnectionLogsUseCase {
+
+    static final String UNKNOWN = "Unknown";
+    private final ConnectionLogsCrudService connectionLogsCrudService;
+    private final PlanCrudService planCrudService;
+    private final ApplicationCrudService applicationCrudService;
+    private final ApiCrudService apiCrudService;
+    private final ApiProductQueryService apiProductQueryService;
+
+    public SearchApiV4ConnectionLogsUseCase(
+        ConnectionLogsCrudService connectionLogsCrudService,
+        PlanCrudService planCrudService,
+        ApplicationCrudService applicationCrudService,
+        ApiCrudService apiCrudService,
+        ApiProductQueryService apiProductQueryService
+    ) {
+        this.connectionLogsCrudService = connectionLogsCrudService;
+        this.planCrudService = planCrudService;
+        this.applicationCrudService = applicationCrudService;
+        this.apiCrudService = apiCrudService;
+        this.apiProductQueryService = apiProductQueryService;
+    }
+
+    public Output execute(ExecutionContext executionContext, Input input) {
+        apiCrudService.get(input.apiId()); // 404 propagation if the API doesn't exist
+
+        var pageable = input.pageable.orElse(new PageableImpl(1, 20));
+        var response = connectionLogsCrudService.searchApiConnectionLogs(
+            executionContext,
+            input.apiId(),
+            input.logsFilters(),
+            pageable,
+            List.of(DefinitionVersion.V2, DefinitionVersion.V4)
+        );
+
+        return mapToResponse(executionContext, response);
+    }
+
+    private Output mapToResponse(ExecutionContext executionContext, SearchLogsResponse<BaseConnectionLog> logs) {
+        var total = logs.total();
+        var logList = logs.logs();
+        var apiProductNames = prefetchApiProductNames(executionContext, logList);
+        var data = logList
+            .stream()
+            .map(log -> mapToModel(executionContext, log, apiProductNames))
+            .toList();
+
+        return new Output(total, data);
+    }
+
+    private Map<String, String> prefetchApiProductNames(ExecutionContext executionContext, List<BaseConnectionLog> logs) {
+        var ids = logs.stream().map(BaseConnectionLog::getApiProductId).filter(Objects::nonNull).collect(Collectors.toSet());
+        if (ids.isEmpty()) {
+            return Map.of();
+        }
+
+        return apiProductQueryService
+            .findByEnvironmentIdAndIdIn(executionContext.getEnvironmentId(), ids)
+            .stream()
+            .collect(Collectors.toMap(ApiProduct::getId, ApiProduct::getName));
+    }
+
+    private ConnectionLogModel mapToModel(
+        ExecutionContext executionContext,
+        BaseConnectionLog connectionLog,
+        Map<String, String> apiProductNames
+    ) {
+        return ConnectionLogModel.builder()
+            .apiId(connectionLog.getApiId())
+            .requestId(connectionLog.getRequestId())
+            .timestamp(connectionLog.getTimestamp())
+            .application(getApplicationEntity(executionContext, connectionLog.getApplicationId()))
+            .clientIdentifier(connectionLog.getClientIdentifier() != null ? connectionLog.getClientIdentifier() : UNKNOWN)
+            .method(connectionLog.getMethod())
+            .plan(getPlanInfo(connectionLog.getPlanId()))
+            .requestEnded(connectionLog.isRequestEnded())
+            .transactionId(connectionLog.getTransactionId())
+            .status(connectionLog.getStatus())
+            .gatewayResponseTime(connectionLog.getGatewayResponseTime())
+            .uri(connectionLog.getUri())
+            .endpoint(connectionLog.getEndpoint())
+            .errorComponentType(connectionLog.getErrorComponentType())
+            .errorComponentName(connectionLog.getErrorComponentName())
+            .errorKey(connectionLog.getErrorKey())
+            .message(connectionLog.getMessage())
+            .warnings(connectionLog.getWarnings() != null ? connectionLog.getWarnings() : List.of())
+            .additionalMetrics(connectionLog.getAdditionalMetrics() != null ? connectionLog.getAdditionalMetrics() : Map.of())
+            .apiProductId(connectionLog.getApiProductId())
+            .apiProductName(connectionLog.getApiProductId() != null ? apiProductNames.get(connectionLog.getApiProductId()) : null)
+            .build();
+    }
+
+    private GenericPlanEntity getPlanInfo(String planId) {
+        final BasePlanEntity unknownPlan = BasePlanEntity.builder().id(planId).name(UNKNOWN).build();
+
+        try {
+            return planId != null ? planCrudService.getById(planId) : unknownPlan;
+        } catch (PlanNotFoundException | TechnicalManagementException e) {
+            return unknownPlan;
+        }
+    }
+
+    private BaseApplicationEntity getApplicationEntity(ExecutionContext executionContext, String applicationId) {
+        if (applicationId == null) {
+            return BaseApplicationEntity.builder().id(UNKNOWN.toLowerCase()).name(UNKNOWN).build();
+        }
+
+        try {
+            return applicationCrudService.findById(applicationId, executionContext.getEnvironmentId());
+        } catch (ApplicationNotFoundException | TechnicalManagementException e) {
+            return BaseApplicationEntity.builder().id(applicationId).name(UNKNOWN).build();
+        }
+    }
+
+    public record Input(String apiId, SearchLogsFilters logsFilters, Optional<Pageable> pageable) {
+        public Input(String apiId, SearchLogsFilters logsFilters) {
+            this(apiId, logsFilters, Optional.empty());
+        }
+
+        public Input(String apiId, SearchLogsFilters logsFilters, Pageable pageable) {
+            this(apiId, logsFilters, Optional.of(pageable));
+        }
+    }
+
+    public record Output(long total, List<ConnectionLogModel> data) {}
+}

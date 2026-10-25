@@ -1,0 +1,5 @@
+title: |
+  [${application.name}] Subscription Accepted
+message: |
+  The subscription request to the plan "${plan.name}" 
+  of the <#if api??>api "${api.name}"<#elseif apiProduct??>API Product "${apiProduct.name}"<#else>api/product</#if> was accepted.

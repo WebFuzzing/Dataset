@@ -1,0 +1,165 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.portal.rest.mapper;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import io.gravitee.apim.core.membership.model.Membership;
+import io.gravitee.apim.core.user.model.BaseUserEntity;
+import io.gravitee.rest.api.model.MemberEntity;
+import io.gravitee.rest.api.model.RoleEntity;
+import io.gravitee.rest.api.model.UserEntity;
+import io.gravitee.rest.api.portal.rest.model.Member;
+import io.gravitee.rest.api.portal.rest.model.User;
+import io.gravitee.rest.api.service.UserService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
+
+/**
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class MemberMapperTest {
+
+    private static final String MEMBER_DISPLAYNAME = "my-member-display-name";
+    private static final String MEMBER_EMAIL = "my-member-email";
+    private static final String MEMBER_ID = "my-member-id";
+
+    private MemberEntity memberEntity;
+
+    @InjectMocks
+    private MemberMapper memberMapper;
+
+    @Mock
+    private UriInfo uriInfo;
+
+    @Mock
+    private UserService userService;
+
+    @Spy
+    private UserMapper userMapper = new UserMapper();
+
+    @Test
+    public void testConvert() {
+        Instant now = Instant.now();
+        Date nowDate = Date.from(now);
+
+        //init
+        RoleEntity ownerRoleEntity = new RoleEntity();
+        ownerRoleEntity.setName("OWNER");
+
+        memberEntity = new MemberEntity();
+
+        memberEntity.setCreatedAt(nowDate);
+        memberEntity.setDisplayName(MEMBER_DISPLAYNAME);
+        memberEntity.setEmail(MEMBER_EMAIL);
+        memberEntity.setId(MEMBER_ID);
+        memberEntity.setRoles(Arrays.asList(ownerRoleEntity));
+        memberEntity.setUpdatedAt(nowDate);
+
+        UserEntity userEntity = Mockito.mock(UserEntity.class);
+        when(userEntity.getDisplayName()).thenReturn(MEMBER_DISPLAYNAME);
+        when(userEntity.getEmail()).thenReturn(MEMBER_EMAIL);
+        when(userEntity.getId()).thenReturn(MEMBER_ID);
+
+        when(uriInfo.getBaseUriBuilder()).thenReturn(UriBuilder.fromPath(""));
+
+        when(userService.findById(GraviteeContext.getExecutionContext(), MEMBER_ID)).thenReturn(userEntity);
+        when(userMapper.convert(userEntity)).thenCallRealMethod();
+        when(userMapper.computeUserLinks(anyString(), any())).thenCallRealMethod();
+
+        //Test
+        Member responseMember = memberMapper.convert(GraviteeContext.getExecutionContext(), memberEntity, uriInfo);
+        assertNotNull(responseMember);
+        assertEquals(now.toEpochMilli(), responseMember.getCreatedAt().toInstant().toEpochMilli());
+        assertEquals(MEMBER_ID, responseMember.getId());
+        assertEquals("OWNER", responseMember.getRole());
+        assertEquals(now.toEpochMilli(), responseMember.getUpdatedAt().toInstant().toEpochMilli());
+
+        User user = responseMember.getUser();
+        assertNotNull(user);
+        assertEquals(MEMBER_DISPLAYNAME, user.getDisplayName());
+        assertEquals(MEMBER_EMAIL, user.getEmail());
+        assertEquals(MEMBER_ID, user.getId());
+        assertEquals("environments/DEFAULT/users/" + MEMBER_ID + "/avatar?", user.getLinks().getAvatar());
+    }
+
+    @Test
+    public void testConvertMemberships() {
+        Instant now = Instant.now();
+        Date nowDate = Date.from(now.minusSeconds(60));
+        Date userUpdatedAt = Date.from(now);
+
+        Membership membership = Membership.builder()
+            .id("00000000-0000-0000-0000-000000000001")
+            .memberId(MEMBER_ID)
+            .memberType(Membership.Type.USER)
+            .referenceType(Membership.ReferenceType.APPLICATION)
+            .referenceId("application-id")
+            .roleId("role-id")
+            .createdAt(nowDate.toInstant().atZone(ZoneId.systemDefault()))
+            .updatedAt(nowDate.toInstant().atZone(ZoneId.systemDefault()))
+            .build();
+        BaseUserEntity baseUser = BaseUserEntity.builder()
+            .id(MEMBER_ID)
+            .firstname("my-member")
+            .lastname("display-name")
+            .email(MEMBER_EMAIL)
+            .updatedAt(userUpdatedAt)
+            .build();
+        RoleEntity role = new RoleEntity();
+        role.setName("OWNER");
+
+        when(uriInfo.getBaseUriBuilder()).thenReturn(UriBuilder.fromPath(""));
+        when(userMapper.computeUserLinks(anyString(), any())).thenCallRealMethod();
+
+        Member responseMember = memberMapper.convert(List.of(membership), List.of(baseUser), Map.of("role-id", role), uriInfo).get(0);
+
+        assertNotNull(responseMember);
+        assertEquals(nowDate.toInstant().toEpochMilli(), responseMember.getCreatedAt().toInstant().toEpochMilli());
+        assertEquals(MEMBER_ID, responseMember.getId());
+        assertEquals("OWNER", responseMember.getRole());
+        assertEquals(nowDate.toInstant().toEpochMilli(), responseMember.getUpdatedAt().toInstant().toEpochMilli());
+
+        User responseUser = responseMember.getUser();
+        assertNotNull(responseUser);
+        assertEquals("my-member display-name", responseUser.getDisplayName());
+        assertEquals(MEMBER_EMAIL, responseUser.getEmail());
+        assertEquals(MEMBER_ID, responseUser.getId());
+        assertEquals(
+            "environments/DEFAULT/users/" + MEMBER_ID + "/avatar?" + userUpdatedAt.toInstant().toEpochMilli(),
+            responseUser.getLinks().getAvatar()
+        );
+    }
+}

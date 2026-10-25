@@ -1,0 +1,408 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.service.v4.impl.validation;
+
+import static io.gravitee.rest.api.model.api.ApiLifecycleState.ARCHIVED;
+import static io.gravitee.rest.api.model.api.ApiLifecycleState.CREATED;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import io.gravitee.apim.core.api_product.query_service.ApiProductQueryService;
+import io.gravitee.apim.core.flow.domain_service.FlowValidationDomainService;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.definition.model.v4.ApiType;
+import io.gravitee.definition.model.v4.flow.Flow;
+import io.gravitee.definition.model.v4.plan.PlanStatus;
+import io.gravitee.definition.model.v4.resource.Resource;
+import io.gravitee.definition.model.v4.service.Service;
+import io.gravitee.rest.api.model.PrimaryOwnerEntity;
+import io.gravitee.rest.api.model.WorkflowState;
+import io.gravitee.rest.api.model.api.ApiLifecycleState;
+import io.gravitee.rest.api.model.context.OriginContext;
+import io.gravitee.rest.api.model.v4.api.ApiEntity;
+import io.gravitee.rest.api.model.v4.api.NewApiEntity;
+import io.gravitee.rest.api.model.v4.api.UpdateApiEntity;
+import io.gravitee.rest.api.model.v4.plan.PlanEntity;
+import io.gravitee.rest.api.sanitizer.HtmlSanitizer;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.LegacySslConfigurationNormalizer;
+import io.gravitee.rest.api.service.exceptions.DefinitionVersionException;
+import io.gravitee.rest.api.service.exceptions.DynamicPropertiesInvalidException;
+import io.gravitee.rest.api.service.exceptions.InvalidDataException;
+import io.gravitee.rest.api.service.exceptions.LifecycleStateChangeNotAllowedException;
+import io.gravitee.rest.api.service.impl.TransactionalService;
+import io.gravitee.rest.api.service.v4.ApiServicePluginService;
+import io.gravitee.rest.api.service.v4.PlanSearchService;
+import io.gravitee.rest.api.service.v4.exception.ApiTypeException;
+import io.gravitee.rest.api.service.v4.exception.ListenerMissingException;
+import io.gravitee.rest.api.service.v4.validation.AnalyticsValidationService;
+import io.gravitee.rest.api.service.v4.validation.ApiValidationService;
+import io.gravitee.rest.api.service.v4.validation.EndpointGroupsValidationService;
+import io.gravitee.rest.api.service.v4.validation.FlowValidationService;
+import io.gravitee.rest.api.service.v4.validation.GroupValidationService;
+import io.gravitee.rest.api.service.v4.validation.ListenerValidationService;
+import io.gravitee.rest.api.service.v4.validation.PlanValidationService;
+import io.gravitee.rest.api.service.v4.validation.ResourcesValidationService;
+import io.gravitee.rest.api.service.v4.validation.TagsValidationService;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
+import lombok.CustomLog;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author Guillaume LAMIRAND (guillaume.lamirand at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@Component
+@CustomLog
+public class ApiValidationServiceImpl extends TransactionalService implements ApiValidationService {
+
+    private final TagsValidationService tagsValidationService;
+    private final GroupValidationService groupValidationService;
+    private final ListenerValidationService listenerValidationService;
+    private final EndpointGroupsValidationService endpointGroupsValidationService;
+    private final FlowValidationService flowValidationService;
+    private final ResourcesValidationService resourcesValidationService;
+    private final AnalyticsValidationService analyticsValidationService;
+    private final PlanSearchService planSearchService;
+    private final PlanValidationService planValidationService;
+    private final ApiServicePluginService apiServicePluginService;
+    private final FlowValidationDomainService flowValidationDomainService;
+    private final ApiProductQueryService apiProductQueryService;
+
+    public ApiValidationServiceImpl(
+        final TagsValidationService tagsValidationService,
+        final GroupValidationService groupValidationService,
+        final ListenerValidationService listenerValidationService,
+        final EndpointGroupsValidationService endpointGroupsValidationService,
+        final FlowValidationService flowValidationService,
+        final ResourcesValidationService resourcesValidationService,
+        final AnalyticsValidationService loggingValidationService,
+        final PlanSearchService planSearchService,
+        final PlanValidationService planValidationService,
+        ApiServicePluginService apiServicePluginService,
+        FlowValidationDomainService flowValidationDomainService,
+        ApiProductQueryService apiProductQueryService
+    ) {
+        this.tagsValidationService = tagsValidationService;
+        this.groupValidationService = groupValidationService;
+        this.listenerValidationService = listenerValidationService;
+        this.endpointGroupsValidationService = endpointGroupsValidationService;
+        this.flowValidationService = flowValidationService;
+        this.resourcesValidationService = resourcesValidationService;
+        this.analyticsValidationService = loggingValidationService;
+        this.planSearchService = planSearchService;
+        this.planValidationService = planValidationService;
+        this.apiServicePluginService = apiServicePluginService;
+        this.flowValidationDomainService = flowValidationDomainService;
+        this.apiProductQueryService = apiProductQueryService;
+    }
+
+    @Override
+    public void validateAndSanitizeNewApi(
+        final ExecutionContext executionContext,
+        final NewApiEntity newApiEntity,
+        final PrimaryOwnerEntity primaryOwnerEntity
+    ) {
+        // Validate version
+        this.validateDefinitionVersion(null, newApiEntity.getDefinitionVersion());
+        // Validate API Type
+        this.validateApiType(null, newApiEntity.getType());
+        // Validate and clean tags
+        newApiEntity.setTags(tagsValidationService.validateAndSanitize(executionContext, null, newApiEntity.getTags()));
+        // Validate and clean groups
+        newApiEntity.setGroups(
+            groupValidationService.validateAndSanitize(executionContext, null, newApiEntity.getGroups(), null, primaryOwnerEntity, true)
+        );
+        // Validate and clean listeners
+        newApiEntity.setListeners(
+            listenerValidationService.validateAndSanitizeHttpV4(
+                executionContext,
+                null,
+                newApiEntity.getListeners(),
+                newApiEntity.getEndpointGroups()
+            )
+        );
+        // Validate and clean endpoints
+        newApiEntity.setEndpointGroups(
+            endpointGroupsValidationService.validateAndSanitizeHttpV4(newApiEntity.getType(), newApiEntity.getEndpointGroups())
+        );
+        // Validate and clean logging
+        newApiEntity.setAnalytics(
+            analyticsValidationService.validateAndSanitize(executionContext, newApiEntity.getType(), newApiEntity.getAnalytics())
+        );
+        // Validate and clean flow
+        newApiEntity.setFlows(flowValidationService.validateAndSanitize(newApiEntity.getType(), newApiEntity.getFlows()));
+
+        flowValidationDomainService.validatePathParameters(
+            newApiEntity.getType(),
+            (newApiEntity.getFlows() != null ? newApiEntity.getFlows().stream() : Stream.empty()),
+            Stream.empty()
+        );
+
+        newApiEntity.setDescription(HtmlSanitizer.sanitize(newApiEntity.getDescription()));
+    }
+
+    @Override
+    public void validateAndSanitizeUpdateApi(
+        final ExecutionContext executionContext,
+        final UpdateApiEntity updateApiEntity,
+        final PrimaryOwnerEntity primaryOwnerEntity,
+        final ApiEntity existingApiEntity
+    ) {
+        // Validate version
+        this.validateDefinitionVersion(existingApiEntity.getDefinitionVersion(), updateApiEntity.getDefinitionVersion());
+        // Validate API Type
+        this.validateApiType(existingApiEntity.getType(), updateApiEntity.getType());
+        // Validate and clean lifecycle state
+        updateApiEntity.setLifecycleState(this.validateAndSanitizeLifecycleState(existingApiEntity, updateApiEntity));
+        // Validate and clean tags
+        updateApiEntity.setTags(
+            tagsValidationService.validateAndSanitize(executionContext, existingApiEntity.getTags(), updateApiEntity.getTags())
+        );
+        // Validate and clean groups
+        updateApiEntity.setGroups(
+            groupValidationService.validateAndSanitize(
+                executionContext,
+                updateApiEntity.getId(),
+                updateApiEntity.getGroups(),
+                existingApiEntity.getGroups(),
+                primaryOwnerEntity,
+                existingApiEntity.getOriginContext().origin().equals(OriginContext.Origin.KUBERNETES)
+            )
+        );
+        // Validate and clean listeners
+        updateApiEntity.setListeners(
+            listenerValidationService.validateAndSanitizeHttpV4(
+                executionContext,
+                updateApiEntity.getId(),
+                updateApiEntity.getListeners(),
+                updateApiEntity.getEndpointGroups()
+            )
+        );
+        // Validate and clean endpoints
+        updateApiEntity.setEndpointGroups(
+            endpointGroupsValidationService.validateAndSanitizeHttpV4(updateApiEntity.getType(), updateApiEntity.getEndpointGroups())
+        );
+        // Validate and clean logging
+        updateApiEntity.setAnalytics(
+            analyticsValidationService.validateAndSanitize(executionContext, updateApiEntity.getType(), updateApiEntity.getAnalytics())
+        );
+        // Validate and clean flow
+        updateApiEntity.setFlows(
+            flowValidationDomainService.validateAndSanitizeHttpV4(updateApiEntity.getType(), updateApiEntity.getFlows())
+        );
+
+        // Validate and clean plans
+        updateApiEntity.setPlans(planValidationService.validateAndSanitize(updateApiEntity.getType(), updateApiEntity.getPlans()));
+
+        // Validate path parameters
+        flowValidationDomainService.validatePathParameters(
+            updateApiEntity.getType(),
+            (updateApiEntity.getFlows() != null ? updateApiEntity.getFlows().stream() : Stream.empty()),
+            getPlansFlows(updateApiEntity.getPlans())
+        );
+
+        // Validate and clean resources
+        updateApiEntity.setResources(validateAndSanitize(updateApiEntity.getResources()));
+
+        this.validateDynamicProperties(updateApiEntity.getServices() != null ? updateApiEntity.getServices().getDynamicProperty() : null);
+    }
+
+    @Override
+    public void validateAndSanitizeImportApiForCreation(
+        final ExecutionContext executionContext,
+        final ApiEntity apiEntity,
+        final PrimaryOwnerEntity primaryOwnerEntity
+    ) {
+        // Validate version
+        this.validateDefinitionVersion(null, apiEntity.getDefinitionVersion());
+        // Validate API Type
+        this.validateApiType(null, apiEntity.getType());
+        // Validate and clean lifecycle state. In creation, lifecycle state can't be set.
+        apiEntity.setLifecycleState(null);
+        // Validate and clean tags
+        apiEntity.setTags(tagsValidationService.validateAndSanitize(executionContext, null, apiEntity.getTags()));
+        // Validate and clean groups
+        apiEntity.setGroups(
+            groupValidationService.validateAndSanitize(executionContext, null, apiEntity.getGroups(), null, primaryOwnerEntity, true)
+        );
+        // Validate and clean listeners
+        // ApiEntity.getListeners() is a plain Lombok getter (returns null when unset); unlike definition-layer models
+        // whose getters coalesce null → List.of(), an explicit null guard is required here before delegating.
+        if (apiEntity.getListeners() == null) {
+            throw new ListenerMissingException();
+        }
+        apiEntity.setListeners(
+            listenerValidationService.validateAndSanitizeHttpV4(
+                executionContext,
+                null,
+                apiEntity.getListeners(),
+                apiEntity.getEndpointGroups()
+            )
+        );
+        // Validate and clean endpoints
+        apiEntity.setEndpointGroups(
+            endpointGroupsValidationService.validateAndSanitizeHttpV4(apiEntity.getType(), apiEntity.getEndpointGroups())
+        );
+        // Validate and clean logging
+        apiEntity.setAnalytics(
+            analyticsValidationService.validateAndSanitize(executionContext, apiEntity.getType(), apiEntity.getAnalytics())
+        );
+        // Validate and clean flow
+        apiEntity.setFlows(flowValidationService.validateAndSanitize(apiEntity.getType(), apiEntity.getFlows()));
+
+        // Validate and clean plans
+        apiEntity.setPlans(planValidationService.validateAndSanitize(apiEntity.getType(), apiEntity.getPlans()));
+
+        // Validate path parameters
+        flowValidationDomainService.validatePathParameters(
+            apiEntity.getType(),
+            (apiEntity.getFlows() != null ? apiEntity.getFlows().stream() : Stream.empty()),
+            getPlansFlows(apiEntity.getPlans())
+        );
+
+        // Validate and clean resources
+        apiEntity.setResources(validateAndSanitize(apiEntity.getResources()));
+
+        // Sanitize Description
+        apiEntity.setDescription(HtmlSanitizer.sanitize(apiEntity.getDescription()));
+
+        this.validateDynamicProperties(apiEntity.getServices() != null ? apiEntity.getServices().getDynamicProperty() : null);
+    }
+
+    @Override
+    public boolean canDeploy(ExecutionContext executionContext, String apiId) {
+        boolean hasPublishedOrDeprecatedPlan = planSearchService
+            .findByApi(executionContext, apiId, false)
+            .stream()
+            .anyMatch(
+                planEntity ->
+                    PlanStatus.PUBLISHED.equals(planEntity.getPlanStatus()) || PlanStatus.DEPRECATED.equals(planEntity.getPlanStatus())
+            );
+        if (hasPublishedOrDeprecatedPlan) {
+            return true;
+        }
+        String environmentId = executionContext.getEnvironmentId();
+        return apiProductQueryService
+            .findByApiId(apiId)
+            .stream()
+            .filter(product -> Objects.equals(product.getEnvironmentId(), environmentId))
+            .anyMatch(product -> hasPublishedOrDeprecatedPlanForApiProduct(executionContext, product.getId()));
+    }
+
+    private boolean hasPublishedOrDeprecatedPlanForApiProduct(ExecutionContext executionContext, String apiProductId) {
+        return planSearchService
+            .findByApiProduct(executionContext, apiProductId)
+            .stream()
+            .anyMatch(
+                planEntity ->
+                    PlanStatus.PUBLISHED.equals(planEntity.getPlanStatus()) || PlanStatus.DEPRECATED.equals(planEntity.getPlanStatus())
+            );
+    }
+
+    public void validateDynamicProperties(Service dynamicProperties) {
+        if (dynamicProperties == null) {
+            return;
+        }
+        if (isBlank(dynamicProperties.getType())) {
+            log.debug("Dynamic properties requires a type");
+            throw new DynamicPropertiesInvalidException(dynamicProperties.getType());
+        }
+
+        if (dynamicProperties.isEnabled()) {
+            dynamicProperties.setConfiguration(
+                this.apiServicePluginService.validateApiServiceConfiguration(
+                    dynamicProperties.getType(),
+                    LegacySslConfigurationNormalizer.normalizeLegacySslNoneValues(
+                        dynamicProperties.getType(),
+                        dynamicProperties.getConfiguration()
+                    )
+                )
+            );
+        }
+    }
+
+    public List<Resource> validateAndSanitize(List<Resource> resources) {
+        return resourcesValidationService.validateAndSanitize(resources);
+    }
+
+    private Stream<Flow> getPlansFlows(Set<PlanEntity> plans) {
+        if (plans == null) {
+            return Stream.empty();
+        }
+        return plans.stream().flatMap(plan -> plan.getFlows() == null ? Stream.empty() : plan.getFlows().stream());
+    }
+
+    private void validateDefinitionVersion(final DefinitionVersion oldDefinitionVersion, final DefinitionVersion newDefinitionVersion) {
+        if (newDefinitionVersion != DefinitionVersion.V4) {
+            throw new InvalidDataException("Definition version is unsupported, should be V4 or higher");
+        }
+        if (oldDefinitionVersion != null && oldDefinitionVersion.asInteger() > newDefinitionVersion.asInteger()) {
+            // not allowed downgrading definition version
+            throw new DefinitionVersionException();
+        }
+    }
+
+    private void validateApiType(final ApiType oldApiType, final ApiType newApiType) {
+        if (newApiType == null) {
+            throw new InvalidDataException("ApiType cannot be null.");
+        }
+        if (oldApiType != null && oldApiType != newApiType) {
+            // not allowed changing API Type
+            throw new ApiTypeException();
+        }
+    }
+
+    private ApiLifecycleState validateAndSanitizeLifecycleState(final ApiEntity existingApiEntity, final UpdateApiEntity updateApiEntity) {
+        var existingState = existingApiEntity.getLifecycleState();
+        var newState = updateApiEntity.getLifecycleState();
+
+        if (newState == null) {
+            return existingState;
+        }
+
+        if (existingState == newState) {
+            return existingState;
+        }
+
+        return switch (existingState) {
+            case DEPRECATED -> {
+                if (newState != ARCHIVED) {
+                    throw new LifecycleStateChangeNotAllowedException(newState.name());
+                }
+                yield newState;
+            }
+            case ARCHIVED -> {
+                throw new LifecycleStateChangeNotAllowedException(newState.name());
+            }
+            case UNPUBLISHED -> {
+                if (newState == CREATED) {
+                    throw new LifecycleStateChangeNotAllowedException(newState.name());
+                }
+                yield newState;
+            }
+            case CREATED -> {
+                if (existingApiEntity.getWorkflowState() == WorkflowState.IN_REVIEW) {
+                    throw new LifecycleStateChangeNotAllowedException(newState.name());
+                }
+                yield newState;
+            }
+            default -> newState;
+        };
+    }
+}

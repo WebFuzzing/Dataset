@@ -1,0 +1,96 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.rest.api.automation.resource;
+
+import io.gravitee.apim.core.audit.model.AuditActor;
+import io.gravitee.apim.core.audit.model.AuditInfo;
+import io.gravitee.apim.core.shared_policy_group.crud_service.SharedPolicyGroupCrudService;
+import io.gravitee.apim.core.shared_policy_group.exception.SharedPolicyGroupNotFoundException;
+import io.gravitee.apim.core.shared_policy_group.use_case.DeleteSharedPolicyGroupUseCase;
+import io.gravitee.apim.rest.api.automation.exception.HRIDNotFoundException;
+import io.gravitee.apim.rest.api.automation.mapper.SharedPolicyGroupMapper;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.rest.annotation.Permission;
+import io.gravitee.rest.api.rest.annotation.Permissions;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.common.HRIDToUUID;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Response;
+import lombok.CustomLog;
+
+/**
+ * @author Antoine CORDIER (antoine.cordier at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@CustomLog
+public class SharedPolicyGroupResource extends AbstractResource {
+
+    @Inject
+    private SharedPolicyGroupCrudService sharedPolicyGroupCrudService;
+
+    @Inject
+    private DeleteSharedPolicyGroupUseCase deleteSharedPolicyGroupUseCase;
+
+    @GET
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_SHARED_POLICY_GROUP, acls = { RolePermissionAction.READ }) })
+    public Response get(@PathParam("hrid") String hrid, @QueryParam("hridContainsUUID") boolean hridContainsUUID) {
+        var executionContext = GraviteeContext.getExecutionContext();
+
+        try {
+            var sharedPolicyGroup = sharedPolicyGroupCrudService.getByEnvironmentId(
+                executionContext.getEnvironmentId(),
+                hridContainsUUID ? hrid : HRIDToUUID.sharedPolicyGroup().context(executionContext).hrid(hrid).id()
+            );
+            return Response.ok(SharedPolicyGroupMapper.INSTANCE.toState(sharedPolicyGroup)).build();
+        } catch (SharedPolicyGroupNotFoundException e) {
+            log.warn("SharedPolicyGroup not found for hrid: {}, operation: get", hrid);
+            throw new HRIDNotFoundException(hrid);
+        }
+    }
+
+    @DELETE
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_SHARED_POLICY_GROUP, acls = { RolePermissionAction.DELETE }) })
+    public Response delete(
+        @PathParam("hrid") String hrid,
+        @QueryParam("dryRun") boolean dryRun,
+        @QueryParam("hridContainsUUID") boolean hridContainsUUID
+    ) {
+        var executionContext = GraviteeContext.getExecutionContext();
+        var userDetails = getAuthenticatedUserDetails();
+
+        try {
+            var sharedPolicyGroup = sharedPolicyGroupCrudService.getByEnvironmentId(
+                executionContext.getEnvironmentId(),
+                hridContainsUUID ? hrid : HRIDToUUID.sharedPolicyGroup().context(executionContext).hrid(hrid).id()
+            );
+            if (!dryRun) {
+                deleteSharedPolicyGroupUseCase.execute(
+                    new DeleteSharedPolicyGroupUseCase.Input(sharedPolicyGroup.getId(), buildAuditInfo(executionContext, userDetails))
+                );
+            }
+        } catch (SharedPolicyGroupNotFoundException e) {
+            log.warn("SharedPolicyGroup not found for hrid: {}, operation: delete", hrid);
+            throw new HRIDNotFoundException(hrid);
+        }
+
+        return Response.noContent().build();
+    }
+}

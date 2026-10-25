@@ -1,0 +1,223 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.kafkaexplorer.infrastructure.domain_service;
+
+import io.gravitee.apim.core.cluster.model.KafkaClusterStandaloneConfiguration;
+import io.gravitee.rest.api.kafkaexplorer.domain.domain_service.KafkaClusterDomainService;
+import io.gravitee.rest.api.kafkaexplorer.domain.domain_service.MessageConsumer;
+import io.gravitee.rest.api.kafkaexplorer.domain.exception.KafkaExplorerException;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.BrokerInfo;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.BrowseMessagesResult;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.ConsumerGroup;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.ConsumerGroupDetail;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.ConsumerGroupsPage;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.KafkaClusterInfo;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.KafkaTopic;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.TopicDetail;
+import io.gravitee.rest.api.kafkaexplorer.domain.model.TopicsPage;
+import java.util.Comparator;
+import java.util.List;
+
+public class KafkaClusterDomainServiceInMemory implements KafkaClusterDomainService {
+
+    private KafkaClusterInfo result;
+    private List<KafkaTopic> topics;
+    private TopicDetail topicDetail;
+    private BrokerInfo brokerInfo;
+    private List<ConsumerGroup> consumerGroups;
+    private ConsumerGroupDetail consumerGroupDetail;
+    private BrowseMessagesResult browseMessagesResult;
+    private KafkaExplorerException exception;
+
+    public void givenBrowseMessagesResult(BrowseMessagesResult result) {
+        this.browseMessagesResult = result;
+        this.exception = null;
+    }
+
+    public void givenClusterInfo(KafkaClusterInfo info) {
+        this.result = info;
+        this.exception = null;
+    }
+
+    public void givenTopics(List<KafkaTopic> topics) {
+        this.topics = topics;
+        this.exception = null;
+    }
+
+    public void givenTopicDetail(TopicDetail detail) {
+        this.topicDetail = detail;
+        this.exception = null;
+    }
+
+    public void givenBrokerInfo(BrokerInfo info) {
+        this.brokerInfo = info;
+        this.exception = null;
+    }
+
+    public void givenConsumerGroups(List<ConsumerGroup> consumerGroups) {
+        this.consumerGroups = consumerGroups;
+        this.exception = null;
+    }
+
+    public void givenConsumerGroupDetail(ConsumerGroupDetail detail) {
+        this.consumerGroupDetail = detail;
+        this.exception = null;
+    }
+
+    public void givenException(KafkaExplorerException exception) {
+        this.exception = exception;
+        this.result = null;
+        this.topics = null;
+        this.topicDetail = null;
+        this.brokerInfo = null;
+        this.consumerGroups = null;
+        this.consumerGroupDetail = null;
+        this.browseMessagesResult = null;
+    }
+
+    @Override
+    public KafkaClusterInfo describeCluster(KafkaClusterStandaloneConfiguration config) {
+        if (exception != null) {
+            throw exception;
+        }
+        return result;
+    }
+
+    @Override
+    public TopicsPage listTopics(
+        KafkaClusterStandaloneConfiguration config,
+        String nameFilter,
+        int page,
+        int perPage,
+        String sortBy,
+        String sortOrder
+    ) {
+        if (exception != null) {
+            throw exception;
+        }
+
+        Comparator<KafkaTopic> comparator = Comparator.comparing(KafkaTopic::name);
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            comparator = comparator.reversed();
+        }
+        List<KafkaTopic> filtered = topics
+            .stream()
+            .filter(t -> nameFilter == null || nameFilter.isBlank() || t.name().toLowerCase().contains(nameFilter.toLowerCase()))
+            .sorted(comparator)
+            .toList();
+
+        int totalCount = filtered.size();
+        int fromIndex = Math.min(page * perPage, totalCount);
+        int toIndex = Math.min(fromIndex + perPage, totalCount);
+
+        return new TopicsPage(filtered.subList(fromIndex, toIndex), totalCount, page, perPage);
+    }
+
+    @Override
+    public TopicDetail describeTopic(KafkaClusterStandaloneConfiguration config, String topicName) {
+        if (exception != null) {
+            throw exception;
+        }
+        return topicDetail;
+    }
+
+    @Override
+    public BrokerInfo describeBroker(KafkaClusterStandaloneConfiguration config, int brokerId) {
+        if (exception != null) {
+            throw exception;
+        }
+        return brokerInfo;
+    }
+
+    @Override
+    public ConsumerGroupsPage listConsumerGroups(
+        KafkaClusterStandaloneConfiguration config,
+        String nameFilter,
+        String topicFilter,
+        int page,
+        int perPage,
+        String sortBy,
+        String sortOrder
+    ) {
+        if (exception != null) {
+            throw exception;
+        }
+
+        Comparator<ConsumerGroup> comparator = Comparator.comparing(ConsumerGroup::groupId);
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            comparator = comparator.reversed();
+        }
+        List<ConsumerGroup> filtered = consumerGroups
+            .stream()
+            .filter(g -> nameFilter == null || nameFilter.isBlank() || g.groupId().toLowerCase().contains(nameFilter.toLowerCase()))
+            .sorted(comparator)
+            .toList();
+
+        int totalCount = filtered.size();
+        int fromIndex = Math.min(page * perPage, totalCount);
+        int toIndex = Math.min(fromIndex + perPage, totalCount);
+
+        return new ConsumerGroupsPage(filtered.subList(fromIndex, toIndex), totalCount, page, perPage);
+    }
+
+    @Override
+    public ConsumerGroupDetail describeConsumerGroup(KafkaClusterStandaloneConfiguration config, String groupId) {
+        if (exception != null) {
+            throw exception;
+        }
+        return consumerGroupDetail;
+    }
+
+    @Override
+    public BrowseMessagesResult browseMessages(
+        KafkaClusterStandaloneConfiguration config,
+        String topicName,
+        Integer partition,
+        String offsetMode,
+        Long offsetValue,
+        String keyFilter,
+        String valueFilter,
+        int limit
+    ) {
+        if (exception != null) {
+            throw exception;
+        }
+        return browseMessagesResult;
+    }
+
+    @Override
+    public void tailMessages(
+        KafkaClusterStandaloneConfiguration config,
+        String topicName,
+        Integer partition,
+        String keyFilter,
+        String valueFilter,
+        int maxMessages,
+        int durationSeconds,
+        MessageConsumer consumer
+    ) {
+        if (exception != null) {
+            throw exception;
+        }
+        if (browseMessagesResult != null) {
+            for (var msg : browseMessagesResult.messages()) {
+                if (!consumer.accept(msg)) {
+                    break;
+                }
+            }
+        }
+    }
+}

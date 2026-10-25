@@ -1,0 +1,21 @@
+management:
+  type: mongodb
+  mongodb:
+    prefix: test_prefix_
+    dbname: test
+    username: gravitee
+    password: gravitee
+    authSource: admin
+    connectTimeout: 10000
+    socketTimeout: 2500
+    serverSelectionTimeout: 10000
+    readPreference: secondary
+    readPreferenceTags: dc:india, sc:prod
+    encryption:
+      kms:
+        - type: local
+          local:
+            key: s1LSgcxwixnMWuPMWuNQpZZVHbaaT9pbyAuqrExk38gmcgg9DomK7IoYsvWpG+aZcOB7MfGTdRVILjNWL4mbEQ00f0Kz+W6f9Hu+npzOpMsbkH3SC/FlJEaeWrwavNQZ
+      keyVault:
+        collectionName: __dataKeysForTest
+        keyAlternativeName: encryption-test

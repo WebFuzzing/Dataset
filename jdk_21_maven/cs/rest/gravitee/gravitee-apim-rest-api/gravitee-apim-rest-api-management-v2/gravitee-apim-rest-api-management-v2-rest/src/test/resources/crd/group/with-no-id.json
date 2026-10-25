@@ -1,0 +1,15 @@
+{
+  "name": "with-no-id",
+  "notifyMembers": false,
+  "members": [
+    {
+      "source": "memory",
+      "sourceId": "api1",
+      "roles": {
+        "API": "OWNER",
+        "APPLICATION": "OWNER",
+        "INTEGRATION": "USER"
+      }
+    }
+  ]
+}

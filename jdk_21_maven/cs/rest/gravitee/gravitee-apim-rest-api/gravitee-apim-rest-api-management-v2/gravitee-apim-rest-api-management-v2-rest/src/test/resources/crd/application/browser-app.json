@@ -1,0 +1,19 @@
+{
+  "id": "application-id",
+  "name": "browser-app",
+  "description": "Single Page Application",
+  "domain": "test-domain",
+  "settings": {
+    "oauth": {
+      "applicationType": "BROWSER",
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "redirectUris": [
+        "https://my-redirect-url.com"
+      ]
+    }
+  },
+  "metadata": [],
+  "origin": "kubernetes"
+}

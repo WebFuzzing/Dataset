@@ -1,0 +1,19 @@
+{
+  "id": "application-id",
+  "name": "with-invalid-redirect-uri",
+  "description": "SPA with invalid redirect uri",
+  "domain": "test-domain",
+  "settings": {
+    "oauth": {
+      "applicationType": "BROWSER",
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "redirectUris": [
+        "https://invalid my-redirect-url.com"
+      ]
+    }
+  },
+  "metadata": [],
+  "origin": "kubernetes"
+}
