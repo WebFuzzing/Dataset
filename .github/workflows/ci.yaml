@@ -94,6 +94,9 @@ jobs:
         with:
           java-version: ${{ matrix.jdk-version }}
           distribution: 'zulu'
+      - name: Enable long paths on Windows
+        if: runner.os == 'Windows'
+        run: git config --system core.longpaths true
       - name: Checkout WFD
         uses: actions/checkout@v6
       - name: Build WFD
