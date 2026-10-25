@@ -74,10 +74,12 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- MODIFIED: duplicate of the declaration above, newer Maven versions reject it
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>test</scope>
         </dependency>
+        -->
     </dependencies>
 </project>
