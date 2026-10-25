@@ -1,0 +1,17 @@
+auth:
+  - name: admin
+    fixedHeaders:
+      - name: Authorization
+        value: Basic YWRtaW46YWRtaW4=
+  - name: user
+    fixedHeaders:
+      - name: Authorization
+        value: Basic dXNlcjpwYXNzd29yZA==
+  - name: application1
+    fixedHeaders:
+      - name: Authorization
+        value: Basic YXBwbGljYXRpb24xOmFwcGxpY2F0aW9uMQ==
+  - name: api1
+    fixedHeaders:
+      - name: Authorization
+        value: Basic YXBpMTphcGkx

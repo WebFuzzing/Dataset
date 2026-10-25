@@ -276,6 +276,7 @@ services:
         cp cs/rest/testing-system/target/testing-system-sut.jar /dist/
         cp cs/rest/flight-search-api/target/flight-search-api-sut.jar /dist/
         cp cs/rest/pn-paper-tracker/target/pn-paper-tracker-sut.jar /dist/
+        cp cs/rest/gravitee/gravitee-apim-rest-api/gravitee-apim-rest-api-standalone/gravitee-apim-rest-api-standalone-distribution/target/gravitee-sut.jar /dist/
         cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
         cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
@@ -289,6 +290,7 @@ services:
           cp em/external/rest/testing-system/target/testing-system-evomaster-runner.jar /dist/
           cp em/external/rest/flight-search-api/target/flight-search-api-evomaster-runner.jar /dist/
           cp em/external/rest/pn-paper-tracker/target/pn-paper-tracker-evomaster-runner.jar /dist/
+          cp em/external/rest/gravitee/target/gravitee-evomaster-runner.jar /dist/
           cp em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar /dist/
           cp em/external/rest-gui/microcks/target/microcks-evomaster-runner.jar /dist/
         fi

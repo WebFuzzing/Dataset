@@ -16,11 +16,17 @@
 package io.gravitee.rest.api.standalone.boostrap;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * @author David BRASSELY (david.brassely at graviteesource.com)
@@ -109,6 +115,10 @@ public class Bootstrap {
      */
     private void setGraviteeHome() {
         String installPath = System.getProperty(GRAVITEE_HOME_PROP);
+        // MODIFIED: WFD runs the SUT as a single jar that embeds the distribution
+        if (installPath == null && Bootstrap.class.getResource("/gravitee-home/config/gravitee.yml") != null) {
+            installPath = unpackEmbeddedHome();
+        }
         if (installPath == null) {
             File installDir = new File(System.getProperty("user.dir"));
 
@@ -124,6 +134,33 @@ public class Bootstrap {
 
         // pass this information along to the core framework
         System.setProperty(GRAVITEE_HOME_PROP, graviteeHomeDir.getAbsolutePath());
+    }
+
+    // MODIFIED: unpacks gravitee-home/ of the WFD sut jar into a temp dir, also used by the embedded driver
+    public static String unpackEmbeddedHome() {
+        try {
+            Path home = Files.createTempDirectory("gravitee-home");
+            File jar = new File(Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            try (JarFile jarFile = new JarFile(jar)) {
+                for (JarEntry entry : Collections.list(jarFile.entries())) {
+                    if (!entry.getName().startsWith("gravitee-home/")) {
+                        continue;
+                    }
+                    Path target = home.resolve(entry.getName().substring("gravitee-home/".length()));
+                    if (entry.isDirectory()) {
+                        Files.createDirectories(target);
+                    } else {
+                        Files.createDirectories(target.getParent());
+                        try (InputStream in = jarFile.getInputStream(entry)) {
+                            Files.copy(in, target);
+                        }
+                    }
+                }
+            }
+            return home.toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot unpack the embedded Gravitee.io home", e);
+        }
     }
 
     private void checkInstallRoot(File graviteeHomeDir) {

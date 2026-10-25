@@ -212,6 +212,8 @@
                 <version>${openapi-generator.version}</version>
                 <configuration>
                     <inputSpec>${project.basedir}/src/main/resources/open-api.yaml</inputSpec>
+                    <!-- MODIFIED: the OpenAPI 3.1 parser rejects Windows paths; models are the same as on Linux -->
+                    <skipValidateSpec>true</skipValidateSpec>
                     <generatorName>java</generatorName>
                     <library>jersey3</library>
                     <modelPackage>${openapi.modelPackage}</modelPackage>

@@ -66,4 +66,5 @@ TRUE,traccar,REST,Java,JDK 21,Gradle,1478,141962,H2,Apache,117,TRUE,https://gith
 TRUE,flight-search-api,REST,Java,JDK 21,Maven,194,14440,MongoDB,MIT,40,TRUE,https://github.com/Rapter1990/flightsearchapi
 TRUE,notebook-manager,REST,Java,JDK 8,Maven,10,826,MySQL,UNDEFINED,5,FALSE,https://github.com/birddevelper/NoteBookManager
 TRUE,pn-paper-tracker,REST,Java,JDK 21,Maven,254,24197,DynamoDB,EUPL,8,FALSE,https://github.com/pagopa/pn-paper-tracker
+TRUE,gravitee,REST,Java,JDK 21,Maven,7349,886852,MongoDB,Apache,1007,TRUE,https://github.com/gravitee-io/gravitee-api-management
 

@@ -173,7 +173,8 @@
     <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <swagger-maven-plugin.version>>2.2.9</swagger-maven-plugin.version>
-    <skip.validation>false</skip.validation>
+    <!-- MODIFIED: prettier check fails on Windows checkouts (CRLF), not needed for fuzzing -->
+    <skip.validation>true</skip.validation>
     <gravitee-plugin-common-configurations-maven-plugin.version>1.0.0</gravitee-plugin-common-configurations-maven-plugin.version>
 
     <!-- Versions of the plugins for the full distribution -->
@@ -557,11 +558,15 @@
         <module>gravitee-apim-common</module>
         <module>gravitee-apim-definition</module>
         <module>gravitee-apim-distribution</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-gateway</module>
+        -->
         <module>gravitee-apim-parent</module>
         <module>gravitee-apim-plugin</module>
         <module>gravitee-apim-repository</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-reporter</module>
+        -->
         <module>gravitee-apim-rest-api</module>
         <module>gravitee-gamma</module>
       </modules>

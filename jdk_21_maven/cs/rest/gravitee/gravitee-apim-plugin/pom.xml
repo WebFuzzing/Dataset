@@ -51,8 +51,12 @@
     <modules>
         <module>gravitee-apim-plugin-endpoint</module>
         <module>gravitee-apim-plugin-entrypoint</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-plugin-coverage</module>
+        -->
         <module>gravitee-apim-plugin-apiservice</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-plugin-reactor</module>
+        -->
     </modules>
 </project>

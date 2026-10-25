@@ -24,6 +24,7 @@ suts <- function(){
 "traccar",
 "genome-nexus",
 "gestaohospital",
+"gravitee",
 "http-patch-spring",
 "jasper",
 "joinus",
