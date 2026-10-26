@@ -169,7 +169,8 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         neo4j.start();
         mongoClient = MongoClients.create(mongodbUri());
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
-        seed();
+        seedMongo();
+        seedNeo4j();
 
         ctx = SpringApplication.run(LoveMiningApplication.class, new String[]{
                 "--server.port=0",
@@ -182,7 +183,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         return "http://localhost:" + getSutPort();
     }
 
-    private void seed() {
+    private void seedMongo() {
         MongoDatabase db = mongoClient.getDatabase(MONGODB_DATABASE);
         List<Document> users = new ArrayList<>();
         for (Document u : USERS) {
@@ -190,7 +191,10 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         }
         db.getCollection("users").insertMany(users);
         db.getCollection("reviews").insertMany(reviews());
+    }
 
+    /** Seeded once at startup: from then on, the graph is restored by employSmartNeo4jClean(). */
+    private void seedNeo4j() {
         try (Session session = neo4jDriver.session()) {
             session.run("""
                             MERGE (s:State {name: $state})
@@ -271,10 +275,13 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         for (String name : db.listCollectionNames()) {
             db.getCollection(name).deleteMany(new Document());
         }
-        try (Session session = neo4jDriver.session()) {
-            session.run("MATCH (n) DETACH DELETE n").consume();
-        }
-        seed();
+        seedMongo();
+    }
+
+    /** Puts the graph back as it was seeded at startup before each test. */
+    @Override
+    public boolean employSmartNeo4jClean() {
+        return true;
     }
 
     @Override
