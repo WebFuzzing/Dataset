@@ -46,9 +46,9 @@ services:
       MYSQL_DATABASE: arimaadockermysqldb
       MYSQL_ROOT_PASSWORD: wfdRootPass123!
     volumes:
-      - ../jdk_21_maven/cs/rest/arimaa/Database/mysql:/docker-entrypoint-initdb.d
+      - ./additional_files/arimaa/mysql:/docker-entrypoint-initdb.d
     healthcheck:
-      test: mysqladmin ping -h localhost -u root -pwfdRootPass123! --silent
+      test: mysql -h 127.0.0.1 -u admin -pAdminPassword123! -e 'SELECT 1' arimaadockermysqldb
       interval: 30s
       timeout: 30s
       retries: 3
