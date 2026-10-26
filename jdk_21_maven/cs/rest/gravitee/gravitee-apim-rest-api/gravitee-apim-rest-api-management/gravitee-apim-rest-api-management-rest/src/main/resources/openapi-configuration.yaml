@@ -1,0 +1,13 @@
+resourcePackages:
+  - io.gravitee.rest.api.management.rest.resource
+cacheTTL: 0
+openAPI:
+  servers:
+    - url: /management
+  info:
+    version: '${project.version}'
+    title: Gravitee.io - Management API
+    description: >
+      Management API v1 for Gravitee APIM, primarily for V1 and V2 API definitions.
+      For V4 or Federated APIs, use Management API v2
+      (base path /management/v2/environments/{envId}/apis/{apiId}/...).

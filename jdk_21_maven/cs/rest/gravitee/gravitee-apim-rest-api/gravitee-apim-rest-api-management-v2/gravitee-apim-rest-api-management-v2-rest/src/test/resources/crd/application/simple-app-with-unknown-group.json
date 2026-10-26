@@ -1,0 +1,15 @@
+{
+  "id": "application-id",
+  "name": "with-unknown-group",
+  "description": "Application with unknown group",
+  "domain": "https://example.com",
+  "settings": {
+    "app": {
+      "type": "WEB"
+    }
+  },
+  "notifyMembers": false,
+  "metadata": [],
+  "origin": "kubernetes",
+  "groups":["unknown-group"]
+}

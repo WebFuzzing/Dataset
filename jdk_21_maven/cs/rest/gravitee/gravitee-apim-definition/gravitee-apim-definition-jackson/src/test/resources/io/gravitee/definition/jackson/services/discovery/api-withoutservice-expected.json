@@ -1,0 +1,12 @@
+{
+  "id": "my-api",
+  "name": "my-team-api",
+
+  "proxy": {
+    "virtual_hosts": [
+      {
+        "path": "/team"
+      }
+    ]
+  }
+}

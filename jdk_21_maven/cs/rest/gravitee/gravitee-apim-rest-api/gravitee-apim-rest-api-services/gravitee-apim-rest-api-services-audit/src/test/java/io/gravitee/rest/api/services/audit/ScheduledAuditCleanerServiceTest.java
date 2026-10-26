@@ -1,0 +1,168 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.services.audit;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
+import io.gravitee.apim.core.audit.use_case.RemoveOldAuditDataUseCase;
+import io.gravitee.node.api.cluster.ClusterManager;
+import io.gravitee.node.api.cluster.Member;
+import io.gravitee.rest.api.model.EnvironmentEntity;
+import io.gravitee.rest.api.model.OrganizationEntity;
+import io.gravitee.rest.api.service.EnvironmentService;
+import io.gravitee.rest.api.service.OrganizationService;
+import java.time.Duration;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.support.CronTrigger;
+
+@ExtendWith(MockitoExtension.class)
+class ScheduledAuditCleanerServiceTest {
+
+    @Mock
+    RemoveOldAuditDataUseCase removeOldAuditDataUseCase;
+
+    @Mock
+    OrganizationService organizationService;
+
+    @Mock
+    EnvironmentService environmentService;
+
+    @Mock
+    TaskScheduler scheduler;
+
+    @Mock
+    ClusterManager clusterManager;
+
+    ScheduledAuditCleanerService sut;
+
+    @Captor
+    ArgumentCaptor<RemoveOldAuditDataUseCase.Input> inputArgumentCaptor;
+
+    @BeforeEach
+    void setup() {
+        sut = new ScheduledAuditCleanerService(
+            scheduler,
+            "",
+            true,
+            1,
+            removeOldAuditDataUseCase,
+            organizationService,
+            environmentService,
+            clusterManager
+        );
+    }
+
+    @Test
+    void run_cleaning_on_all_environments() {
+        // given
+        Member mockMember = mock(Member.class);
+        when(mockMember.primary()).thenReturn(true);
+        when(clusterManager.self()).thenReturn(mockMember);
+        OrganizationEntity org = new OrganizationEntity();
+        org.setId("oId");
+        when(organizationService.findAll()).thenReturn(List.of(org));
+        EnvironmentEntity env1 = new EnvironmentEntity();
+        env1.setId("env1");
+        EnvironmentEntity env2 = new EnvironmentEntity();
+        env2.setId("env2");
+        when(environmentService.findByOrganization(any())).thenReturn(List.of(env1, env2));
+
+        // when
+        sut.run();
+
+        // then
+        verify(removeOldAuditDataUseCase, times(2)).execute(inputArgumentCaptor.capture());
+        assertThat(inputArgumentCaptor.getAllValues()).map(RemoveOldAuditDataUseCase.Input::environmentId).containsOnly("env1", "env2");
+        assertThat(inputArgumentCaptor.getAllValues())
+            .map(RemoveOldAuditDataUseCase.Input::maxAge)
+            .containsOnly(Duration.ofDays(1), Duration.ofDays(1));
+    }
+
+    @Test
+    void should_schedule_even_when_not_primary_at_startup() throws Exception {
+        // Given - simulate the cluster race: primary not yet elected at doStart() time
+        var service = new ScheduledAuditCleanerService(
+            scheduler,
+            "@daily",
+            true,
+            1,
+            removeOldAuditDataUseCase,
+            organizationService,
+            environmentService,
+            clusterManager
+        );
+
+        // When
+        service.doStart();
+
+        // Then - scheduler is registered regardless; primary check happens in run()
+        verify(scheduler).schedule(eq(service), any(CronTrigger.class));
+    }
+
+    @Test
+    void run_continues_to_next_environment_when_one_environment_fails() {
+        Member mockMember = mock(Member.class);
+        when(mockMember.primary()).thenReturn(true);
+        when(clusterManager.self()).thenReturn(mockMember);
+        OrganizationEntity org = new OrganizationEntity();
+        org.setId("oId");
+        when(organizationService.findAll()).thenReturn(List.of(org));
+        EnvironmentEntity env1 = new EnvironmentEntity();
+        env1.setId("env1");
+        EnvironmentEntity env2 = new EnvironmentEntity();
+        env2.setId("env2");
+        when(environmentService.findByOrganization(any())).thenReturn(List.of(env1, env2));
+        doThrow(new RuntimeException("boom"))
+            .when(removeOldAuditDataUseCase)
+            .execute(argThat(input -> "env1".equals(input.environmentId())));
+
+        sut.run();
+
+        verify(removeOldAuditDataUseCase, times(2)).execute(inputArgumentCaptor.capture());
+        assertThat(inputArgumentCaptor.getAllValues()).map(RemoveOldAuditDataUseCase.Input::environmentId).containsExactly("env1", "env2");
+    }
+
+    @Test
+    void should_skip_cleanup_when_not_primary() {
+        // Given
+        Member mockMember = mock(Member.class);
+        when(mockMember.primary()).thenReturn(false);
+        when(clusterManager.self()).thenReturn(mockMember);
+
+        // When
+        sut.run();
+
+        // Then
+        verifyNoInteractions(organizationService);
+    }
+}

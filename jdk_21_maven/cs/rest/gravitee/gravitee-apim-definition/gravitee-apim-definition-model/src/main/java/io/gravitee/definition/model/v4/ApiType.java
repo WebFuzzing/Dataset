@@ -1,0 +1,59 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.definition.model.v4;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @author Guillaume LAMIRAND (guillaume.lamirand at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@RequiredArgsConstructor
+@Getter
+public enum ApiType {
+    A2A_PROXY("a2a-proxy"),
+    AUTHZ("authz"),
+    EDGE("edge"),
+    LLM_PROXY("llm-proxy"),
+    MCP_PROXY("mcp-proxy"),
+    MESSAGE("message"),
+    NATIVE("native"),
+    PROXY("proxy");
+
+    private static final Map<String, ApiType> LABELS_MAP = Map.ofEntries(
+        Map.entry(A2A_PROXY.label, A2A_PROXY),
+        Map.entry(AUTHZ.label, AUTHZ),
+        Map.entry(EDGE.label, EDGE),
+        Map.entry(LLM_PROXY.label, LLM_PROXY),
+        Map.entry(MCP_PROXY.label, MCP_PROXY),
+        Map.entry(MESSAGE.label, MESSAGE),
+        Map.entry(NATIVE.label, NATIVE),
+        Map.entry(PROXY.label, PROXY)
+    );
+
+    @JsonValue
+    private final String label;
+
+    public static ApiType fromLabel(final String label) {
+        if (label != null) {
+            return LABELS_MAP.get(label);
+        }
+        return null;
+    }
+}

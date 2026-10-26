@@ -1,0 +1,776 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.infra.domain_service.subscription;
+
+import static fixtures.core.model.MembershipFixtures.anApplicationPrimaryOwnerUserMembership;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import fixtures.ApplicationModelFixtures;
+import fixtures.core.model.AuditInfoFixtures;
+import inmemory.ApiCrudServiceInMemory;
+import inmemory.ApiKeyCrudServiceInMemory;
+import inmemory.ApiKeyQueryServiceInMemory;
+import inmemory.ApplicationCrudServiceInMemory;
+import inmemory.AuditCrudServiceInMemory;
+import inmemory.GroupQueryServiceInMemory;
+import inmemory.IntegrationAgentInMemory;
+import inmemory.IntegrationCrudServiceInMemory;
+import inmemory.MembershipQueryServiceInMemory;
+import inmemory.MetadataCrudServiceInMemory;
+import inmemory.ParametersQueryServiceInMemory;
+import inmemory.PlanCrudServiceInMemory;
+import inmemory.RoleQueryServiceInMemory;
+import inmemory.SubscriptionCrudServiceInMemory;
+import inmemory.TriggerNotificationDomainServiceInMemory;
+import inmemory.UserCrudServiceInMemory;
+import io.gravitee.apim.core.api.model.Api;
+import io.gravitee.apim.core.api_key.domain_service.GenerateApiKeyDomainService;
+import io.gravitee.apim.core.api_key.domain_service.ReconcileApiKeysDomainService;
+import io.gravitee.apim.core.api_key.domain_service.RevokeApiKeyDomainService;
+import io.gravitee.apim.core.audit.domain_service.AuditDomainService;
+import io.gravitee.apim.core.audit.model.AuditInfo;
+import io.gravitee.apim.core.membership.domain_service.ApplicationPrimaryOwnerDomainService;
+import io.gravitee.apim.core.plan.model.Plan;
+import io.gravitee.apim.core.subscription.domain_service.AcceptSubscriptionDomainService;
+import io.gravitee.apim.core.subscription.domain_service.CloseSubscriptionDomainService;
+import io.gravitee.apim.core.subscription.domain_service.RejectSubscriptionDomainService;
+import io.gravitee.apim.core.subscription.domain_service.SubscriptionCRDDomainService;
+import io.gravitee.apim.core.subscription.exception.SubscriptionApplicationImmutableException;
+import io.gravitee.apim.core.subscription.exception.SubscriptionPlanImmutableException;
+import io.gravitee.apim.core.subscription.model.SubscriptionConfiguration;
+import io.gravitee.apim.core.subscription.model.SubscriptionEntity;
+import io.gravitee.apim.core.subscription.model.SubscriptionReferenceType;
+import io.gravitee.apim.core.subscription.model.crd.ApiKeyCRDSpec;
+import io.gravitee.apim.core.subscription.model.crd.SubscriptionCRDSpec;
+import io.gravitee.apim.core.user.model.BaseUserEntity;
+import io.gravitee.apim.infra.adapter.SubscriptionAdapterImpl;
+import io.gravitee.apim.infra.json.jackson.JacksonJsonDeserializer;
+import io.gravitee.apim.infra.json.jackson.JacksonJsonDiffProcessor;
+import io.gravitee.apim.infra.json.jackson.JacksonJsonSerializer;
+import io.gravitee.common.utils.TimeProvider;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.rest.api.model.PrimaryOwnerEntity;
+import io.gravitee.rest.api.model.UpdateSubscriptionEntity;
+import io.gravitee.rest.api.model.context.OriginContext;
+import io.gravitee.rest.api.service.SubscriptionService;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.UuidString;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class SubscriptionCRDDomainServiceImplTest {
+
+    private static final Instant THEN = Instant.parse("2023-10-22T10:15:30Z");
+
+    private static final String ORGANIZATION_ID = "TEST";
+    private static final String ENVIRONMENT_ID = "TEST";
+
+    private static final String USER_ID = "user-id";
+
+    private static final AuditInfo AUDIT_INFO = AuditInfoFixtures.anAuditInfo(ORGANIZATION_ID, ENVIRONMENT_ID, USER_ID);
+    private static final ExecutionContext EXECUTION_CONTEXT = new ExecutionContext(ORGANIZATION_ID, ENVIRONMENT_ID);
+
+    private static final String API_ID = "api-id";
+    private static final String APPLICATION_ID = "application-id";
+    private static final String PLAN_ID = "plan-id";
+    private static final String SUBSCRIPTION_ID = "subscription-id";
+    private static final String CUSTOM_API_KEY = "my-custom-api-key-with-32-chars!!";
+
+    private static final SubscriptionCRDSpec SPEC = SubscriptionCRDSpec.builder()
+        .id(SUBSCRIPTION_ID)
+        .referenceId(API_ID)
+        .referenceType(SubscriptionReferenceType.API)
+        .applicationId(APPLICATION_ID)
+        .planId(PLAN_ID)
+        .build();
+
+    private final SubscriptionCrudServiceInMemory subscriptionCrudService = new SubscriptionCrudServiceInMemory();
+    private final AuditCrudServiceInMemory auditCrudService = new AuditCrudServiceInMemory();
+    private final ApiCrudServiceInMemory apiCrudService = new ApiCrudServiceInMemory();
+    private final PlanCrudServiceInMemory planCrudService = new PlanCrudServiceInMemory();
+    private final TriggerNotificationDomainServiceInMemory notificationService = new TriggerNotificationDomainServiceInMemory();
+    private final UserCrudServiceInMemory userCrudService = new UserCrudServiceInMemory();
+    private final ApiKeyCrudServiceInMemory apiKeyCrudService = new ApiKeyCrudServiceInMemory();
+    private final ApplicationCrudServiceInMemory applicationCrudService = new ApplicationCrudServiceInMemory();
+    private final IntegrationAgentInMemory integrationAgent = new IntegrationAgentInMemory();
+    private final ApiKeyQueryServiceInMemory apiKeyQueryService = new ApiKeyQueryServiceInMemory(apiKeyCrudService);
+    private final SubscriptionAdapterImpl subscriptionAdapter = new SubscriptionAdapterImpl();
+    private final GroupQueryServiceInMemory groupQueryService = new GroupQueryServiceInMemory();
+    private final MembershipQueryServiceInMemory membershipQueryService = new MembershipQueryServiceInMemory();
+    private final RoleQueryServiceInMemory roleQueryService = new RoleQueryServiceInMemory();
+    private final ApplicationPrimaryOwnerDomainService applicationPrimaryOwnerDomainService = new ApplicationPrimaryOwnerDomainService(
+        groupQueryService,
+        membershipQueryService,
+        roleQueryService,
+        userCrudService
+    );
+    private final MetadataCrudServiceInMemory metadataCrudService = new MetadataCrudServiceInMemory();
+    private final IntegrationCrudServiceInMemory integrationCrudService = new IntegrationCrudServiceInMemory();
+
+    private final SubscriptionService subscriptionService = Mockito.mock(SubscriptionService.class);
+
+    private SubscriptionCRDDomainService cut;
+
+    @BeforeAll
+    static void init() {
+        UuidString.overrideGenerator(() -> "generated-id");
+        TimeProvider.overrideClock(Clock.fixed(THEN, ZoneId.systemDefault()));
+    }
+
+    @BeforeEach
+    void setUp() {
+        subscriptionAdapter.setJsonSerializer(new JacksonJsonSerializer());
+        subscriptionAdapter.setJsonDeserializer(new JacksonJsonDeserializer());
+
+        when(subscriptionService.create(eq(EXECUTION_CONTEXT), any(), isNull(), eq(SUBSCRIPTION_ID))).thenReturn(
+            subscriptionAdapter.map(subscriptionAdapter.fromSpec(SPEC))
+        );
+
+        subscriptionCrudService.initWith(
+            List.of(subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.PENDING).subscribedBy(USER_ID).build())
+        );
+
+        apiCrudService.initWith(List.of(Api.builder().id(API_ID).build()));
+        cut = new SubscriptionCRDDomainServiceImpl(
+            subscriptionService,
+            subscriptionAdapter,
+            acceptSubscriptionDomainService(),
+            closeSubscriptionDomainService(),
+            reconcileApiKeysDomainService(),
+            subscriptionCrudService
+        );
+
+        membershipQueryService.initWith(List.of(anApplicationPrimaryOwnerUserMembership(APPLICATION_ID, USER_ID, ORGANIZATION_ID)));
+        applicationCrudService.initWith(
+            List.of(
+                ApplicationModelFixtures.anApplicationEntity()
+                    .toBuilder()
+                    .id(APPLICATION_ID)
+                    .primaryOwner(PrimaryOwnerEntity.builder().id(USER_ID).displayName("Jane").build())
+                    .build()
+            )
+        );
+        roleQueryService.resetSystemRoles(ORGANIZATION_ID);
+        userCrudService.initWith(
+            List.of(BaseUserEntity.builder().id(USER_ID).firstname("Jane").lastname("Doe").email("jane.doe@gravitee.io").build())
+        );
+    }
+
+    @AfterEach
+    void tearDown() {
+        auditCrudService.reset();
+        subscriptionCrudService.reset();
+        apiCrudService.reset();
+        planCrudService.reset();
+        apiKeyCrudService.reset();
+        notificationService.reset();
+        userCrudService.reset();
+        integrationAgent.reset();
+        applicationCrudService.reset();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        UuidString.reset();
+        TimeProvider.overrideClock(Clock.systemDefaultZone());
+    }
+
+    @Test
+    void should_create() {
+        givenExistingJWTPlan();
+
+        cut.createOrUpdate(AUDIT_INFO, SPEC);
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID)).isNotNull();
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID).getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID).getOrigin()).isEqualTo(OriginContext.Origin.KUBERNETES);
+        });
+    }
+
+    @Test
+    void should_not_double_accept_when_subscription_already_accepted_for_api_key_plan() {
+        givenExistingApiKeyPlan();
+
+        // Simulate subscriptionService.create() internally auto-accepting the subscription (as it does for API_KEY plans)
+        when(subscriptionService.create(eq(EXECUTION_CONTEXT), any(), isNull(), eq(SUBSCRIPTION_ID))).thenReturn(
+            subscriptionAdapter.map(subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build())
+        );
+
+        var result = cut.createOrUpdate(AUDIT_INFO, SPEC);
+
+        // The returned subscription should be ACCEPTED
+        assertThat(result.getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+
+        // AcceptSubscriptionDomainService must NOT have been invoked a second time,
+        // so no API key should have been generated by the CRD service itself
+        assertThat(apiKeyCrudService.storage()).isEmpty();
+    }
+
+    @Test
+    void should_create_with_metadata() {
+        givenExistingJWTPlan();
+
+        var metadata = Map.of("key1", "value1", "key2", "value2");
+        var specWithMetadata = SPEC.toBuilder().metadata(metadata).build();
+
+        when(subscriptionService.create(eq(EXECUTION_CONTEXT), any(), isNull(), eq(SUBSCRIPTION_ID))).thenReturn(
+            subscriptionAdapter.map(subscriptionAdapter.fromSpec(specWithMetadata))
+        );
+
+        subscriptionCrudService.initWith(
+            List.of(
+                subscriptionAdapter
+                    .fromSpec(specWithMetadata)
+                    .toBuilder()
+                    .status(SubscriptionEntity.Status.PENDING)
+                    .subscribedBy(USER_ID)
+                    .build()
+            )
+        );
+
+        cut.createOrUpdate(AUDIT_INFO, specWithMetadata);
+
+        SoftAssertions.assertSoftly(soft -> {
+            var subscription = subscriptionCrudService.get(SUBSCRIPTION_ID);
+            soft.assertThat(subscription).isNotNull();
+            soft.assertThat(subscription.getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+            soft.assertThat(subscription.getMetadata()).isEqualTo(metadata);
+        });
+    }
+
+    @Test
+    void should_create_with_api_keys() {
+        givenExistingApiKeyPlan();
+
+        var apiKeys = List.of(ApiKeyCRDSpec.builder().key(CUSTOM_API_KEY).build());
+        var specWithApiKeys = SPEC.toBuilder().apiKeys(apiKeys).build();
+        when(subscriptionService.create(eq(EXECUTION_CONTEXT), any(), eq(CUSTOM_API_KEY), eq(SUBSCRIPTION_ID))).thenReturn(
+            subscriptionAdapter.map(subscriptionAdapter.fromSpec(specWithApiKeys))
+        );
+
+        subscriptionCrudService.initWith(
+            List.of(
+                subscriptionAdapter
+                    .fromSpec(specWithApiKeys)
+                    .toBuilder()
+                    .status(SubscriptionEntity.Status.PENDING)
+                    .subscribedBy(USER_ID)
+                    .build()
+            )
+        );
+
+        cut.createOrUpdate(AUDIT_INFO, specWithApiKeys);
+
+        verify(subscriptionService).create(eq(EXECUTION_CONTEXT), any(), eq(CUSTOM_API_KEY), eq(SUBSCRIPTION_ID));
+    }
+
+    @Test
+    void should_create_with_multiple_api_keys_and_reconcile() {
+        givenExistingApiKeyPlan();
+
+        var apiKeys = List.of(
+            ApiKeyCRDSpec.builder().key(CUSTOM_API_KEY).build(),
+            ApiKeyCRDSpec.builder().key("second-api-key-with-32-chars!!!!").build()
+        );
+        var specWithApiKeys = SPEC.toBuilder().apiKeys(apiKeys).build();
+        when(subscriptionService.create(eq(EXECUTION_CONTEXT), any(), eq(CUSTOM_API_KEY), eq(SUBSCRIPTION_ID))).thenReturn(
+            subscriptionAdapter.map(subscriptionAdapter.fromSpec(specWithApiKeys))
+        );
+
+        subscriptionCrudService.initWith(
+            List.of(
+                subscriptionAdapter
+                    .fromSpec(specWithApiKeys)
+                    .toBuilder()
+                    .status(SubscriptionEntity.Status.PENDING)
+                    .subscribedBy(USER_ID)
+                    .build()
+            )
+        );
+
+        cut.createOrUpdate(AUDIT_INFO, specWithApiKeys);
+
+        verify(subscriptionService).create(eq(EXECUTION_CONTEXT), any(), eq(CUSTOM_API_KEY), eq(SUBSCRIPTION_ID));
+
+        assertThat(apiKeyCrudService.storage()).extracting("key").contains("second-api-key-with-32-chars!!!!");
+    }
+
+    @Test
+    void should_reconcile_api_keys_on_update_revoking_removed_keys() {
+        givenExistingApiKeyPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        apiKeyCrudService.initWith(
+            List.of(
+                io.gravitee.apim.core.api_key.model.ApiKeyEntity.builder()
+                    .id("old-key-id")
+                    .key("old-api-key-value-with-32-chars!!")
+                    .applicationId(APPLICATION_ID)
+                    .subscriptions(List.of(SUBSCRIPTION_ID))
+                    .environmentId(ENVIRONMENT_ID)
+                    .createdAt(ZonedDateTime.now())
+                    .updatedAt(ZonedDateTime.now())
+                    .revoked(false)
+                    .build()
+            )
+        );
+
+        var specWithNewKeys = SPEC.toBuilder()
+            .apiKeys(List.of(ApiKeyCRDSpec.builder().key("new-api-key-value-with-32-chars!!").build()))
+            .build();
+
+        cut.createOrUpdate(AUDIT_INFO, specWithNewKeys);
+
+        var oldKey = apiKeyCrudService
+            .storage()
+            .stream()
+            .filter(k -> k.getKey().equals("old-api-key-value-with-32-chars!!"))
+            .findFirst()
+            .orElseThrow();
+        assertThat(oldKey.isRevoked()).isTrue();
+
+        var newKey = apiKeyCrudService
+            .storage()
+            .stream()
+            .filter(k -> k.getKey().equals("new-api-key-value-with-32-chars!!"))
+            .findFirst()
+            .orElseThrow();
+        assertThat(newKey.isRevoked()).isFalse();
+    }
+
+    @Test
+    void should_reconcile_api_keys_on_update_keeping_matching_keys() {
+        givenExistingApiKeyPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        apiKeyCrudService.initWith(
+            List.of(
+                io.gravitee.apim.core.api_key.model.ApiKeyEntity.builder()
+                    .id("key-id")
+                    .key(CUSTOM_API_KEY)
+                    .applicationId(APPLICATION_ID)
+                    .subscriptions(List.of(SUBSCRIPTION_ID))
+                    .environmentId(ENVIRONMENT_ID)
+                    .createdAt(ZonedDateTime.now())
+                    .updatedAt(ZonedDateTime.now())
+                    .revoked(false)
+                    .build()
+            )
+        );
+
+        var specWithSameKey = SPEC.toBuilder().apiKeys(List.of(ApiKeyCRDSpec.builder().key(CUSTOM_API_KEY).build())).build();
+
+        cut.createOrUpdate(AUDIT_INFO, specWithSameKey);
+
+        assertThat(apiKeyCrudService.storage()).hasSize(1);
+        assertThat(apiKeyCrudService.storage().get(0).isRevoked()).isFalse();
+        assertThat(apiKeyCrudService.storage().get(0).getKey()).isEqualTo(CUSTOM_API_KEY);
+    }
+
+    @Test
+    void should_update() {
+        givenExistingJWTPlan();
+
+        cut.createOrUpdate(AUDIT_INFO, SPEC.toBuilder().endingAt(ZonedDateTime.now()).build());
+
+        verify(subscriptionService).update(EXECUTION_CONTEXT, subscriptionAdapter.fromCoreForUpdate(subscriptionAdapter.fromSpec(SPEC)));
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID)).isNotNull();
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID).getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+        });
+    }
+
+    @Test
+    void should_update_metadata() {
+        givenExistingJWTPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        var metadata = Map.of("key1", "value1");
+        var result = cut.createOrUpdate(AUDIT_INFO, SPEC.toBuilder().metadata(metadata).build());
+
+        verify(subscriptionService).update(eq(EXECUTION_CONTEXT), any(io.gravitee.rest.api.model.UpdateSubscriptionEntity.class));
+        assertThat(result.getMetadata()).isEqualTo(metadata);
+    }
+
+    @Test
+    void should_update_consumer_configuration() {
+        givenExistingJWTPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        var consumerConfiguration = new SubscriptionCRDSpec.ConsumerConfiguration();
+        consumerConfiguration.setEntrypointId("entrypoint-id");
+        consumerConfiguration.setChannel("my-channel");
+        consumerConfiguration.setEntrypointConfiguration(Map.of("callback", "http://webhook.site"));
+
+        var result = cut.createOrUpdate(AUDIT_INFO, SPEC.toBuilder().consumerConfiguration(consumerConfiguration).build());
+
+        verify(subscriptionService).update(eq(EXECUTION_CONTEXT), any(io.gravitee.rest.api.model.UpdateSubscriptionEntity.class));
+        assertThat(result.getConfiguration()).isEqualTo(
+            SubscriptionConfiguration.builder()
+                .entrypointId("entrypoint-id")
+                .channel("my-channel")
+                .entrypointConfiguration("{\"callback\":\"http://webhook.site\"}")
+                .build()
+        );
+    }
+
+    @Test
+    void should_restore_as_accepted_a_closed_subscription() {
+        givenExistingJWTPlan();
+
+        var closedEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.CLOSED).subscribedBy(USER_ID).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(closedEntity);
+
+        // When restore is called on the mock, also update the in-memory crud service to PENDING
+        doAnswer(invocation -> {
+            subscriptionCrudService.update(
+                subscriptionCrudService.get(SUBSCRIPTION_ID).toBuilder().status(SubscriptionEntity.Status.PENDING).build()
+            );
+            return closedEntity;
+        })
+            .when(subscriptionService)
+            .restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+
+        var result = cut.createOrUpdate(AUDIT_INFO, SPEC);
+
+        verify(subscriptionService).restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(result.getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID).getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+        });
+    }
+
+    @Test
+    void should_restore_closed_subscription_with_custom_api_keys_reactivating_revoked_key() {
+        givenExistingApiKeyPlan();
+
+        var apiKeys = List.of(ApiKeyCRDSpec.builder().key(CUSTOM_API_KEY).build());
+        var specWithApiKeys = SPEC.toBuilder().apiKeys(apiKeys).build();
+
+        var closedEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(specWithApiKeys).toBuilder().status(SubscriptionEntity.Status.CLOSED).subscribedBy(USER_ID).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(closedEntity);
+
+        apiKeyCrudService.initWith(
+            List.of(
+                io.gravitee.apim.core.api_key.model.ApiKeyEntity.builder()
+                    .id("revoked-key-id")
+                    .key(CUSTOM_API_KEY)
+                    .applicationId(APPLICATION_ID)
+                    .subscriptions(List.of(SUBSCRIPTION_ID))
+                    .environmentId(ENVIRONMENT_ID)
+                    .createdAt(ZonedDateTime.now())
+                    .updatedAt(ZonedDateTime.now())
+                    .revoked(true)
+                    .revokedAt(ZonedDateTime.now())
+                    .build()
+            )
+        );
+
+        doAnswer(invocation -> {
+            subscriptionCrudService.update(
+                subscriptionCrudService.get(SUBSCRIPTION_ID).toBuilder().status(SubscriptionEntity.Status.PENDING).build()
+            );
+            return closedEntity;
+        })
+            .when(subscriptionService)
+            .restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+
+        var result = cut.createOrUpdate(AUDIT_INFO, specWithApiKeys);
+
+        verify(subscriptionService).restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+        assertThat(result.getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+
+        assertThat(apiKeyCrudService.storage())
+            .as("Only the custom key should exist, no transient UUID key")
+            .hasSize(1)
+            .first()
+            .satisfies(key -> {
+                assertThat(key.getKey()).isEqualTo(CUSTOM_API_KEY);
+                assertThat(key.isRevoked()).isFalse();
+            });
+    }
+
+    @Test
+    void should_restore_closed_subscription_on_api_key_plan_without_custom_keys() {
+        givenExistingApiKeyPlan();
+
+        var closedEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.CLOSED).subscribedBy(USER_ID).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(closedEntity);
+
+        doAnswer(invocation -> {
+            subscriptionCrudService.update(
+                subscriptionCrudService.get(SUBSCRIPTION_ID).toBuilder().status(SubscriptionEntity.Status.PENDING).build()
+            );
+            return closedEntity;
+        })
+            .when(subscriptionService)
+            .restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+
+        var result = cut.createOrUpdate(AUDIT_INFO, SPEC);
+
+        verify(subscriptionService).restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+        assertThat(result.getStatus()).isEqualTo(SubscriptionEntity.Status.ACCEPTED);
+
+        assertThat(apiKeyCrudService.storage())
+            .as("A UUID key should be generated when no custom keys are specified")
+            .hasSize(1)
+            .first()
+            .satisfies(key -> assertThat(key.isRevoked()).isFalse());
+    }
+
+    @Test
+    void should_fail_restoring_a_closed_subscription_while_modifying_application() {
+        givenExistingJWTPlan();
+
+        var closedEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.CLOSED).subscribedBy(USER_ID).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(closedEntity);
+
+        var withUpdatedApplication = SPEC.toBuilder().applicationId("other-application-id").build();
+        var copy = withUpdatedApplication.toBuilder().build();
+
+        assertThatThrownBy(() -> cut.createOrUpdate(AUDIT_INFO, withUpdatedApplication))
+            .isInstanceOf(SubscriptionApplicationImmutableException.class)
+            .hasMessageContaining(SUBSCRIPTION_ID)
+            .hasMessageContaining("application");
+
+        // make exception is raised before any alterations, and the perstance layer is never called
+        assertThat(withUpdatedApplication).usingRecursiveAssertion().isEqualTo(copy);
+        verify(subscriptionService, never()).restore(any(), any());
+        verify(subscriptionService, never()).update(any(), any(UpdateSubscriptionEntity.class));
+    }
+
+    @Test
+    void should_fail_restoring_a_closed_subscription_while_modifying_plan() {
+        givenExistingJWTPlan();
+
+        var closedEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.CLOSED).subscribedBy(USER_ID).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(closedEntity);
+
+        // When restore is called on the mock, also update the in-memory crud service to PENDING
+        doAnswer(invocation -> {
+            subscriptionCrudService.update(
+                subscriptionCrudService.get(SUBSCRIPTION_ID).toBuilder().status(SubscriptionEntity.Status.PENDING).build()
+            );
+            return closedEntity;
+        })
+            .when(subscriptionService)
+            .restore(EXECUTION_CONTEXT, SUBSCRIPTION_ID);
+
+        var withUpdatedPlan = SPEC.toBuilder().planId("other-plan-id").build();
+        var copy = withUpdatedPlan.toBuilder().build();
+
+        assertThatThrownBy(() -> cut.createOrUpdate(AUDIT_INFO, withUpdatedPlan))
+            .isInstanceOf(SubscriptionPlanImmutableException.class)
+            .hasMessageContaining(SUBSCRIPTION_ID)
+            .hasMessageContaining("plan");
+
+        // make exception is raised before any alterations, and the perstance layer is never called
+        assertThat(withUpdatedPlan).usingRecursiveAssertion().isEqualTo(copy);
+        verify(subscriptionService, never()).restore(any(), any());
+        verify(subscriptionService, never()).update(any(), any(UpdateSubscriptionEntity.class));
+    }
+
+    @Test
+    void should_reject_update_when_plan_changed() {
+        givenExistingJWTPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        var specWithDifferentPlan = SPEC.toBuilder().planId("other-plan-id").build();
+
+        assertThatThrownBy(() -> cut.createOrUpdate(AUDIT_INFO, specWithDifferentPlan))
+            .isInstanceOf(SubscriptionPlanImmutableException.class)
+            .hasMessageContaining(SUBSCRIPTION_ID);
+    }
+
+    @Test
+    void should_reject_update_when_application_changed() {
+        givenExistingJWTPlan();
+
+        var existingEntity = subscriptionAdapter.map(
+            subscriptionAdapter.fromSpec(SPEC).toBuilder().status(SubscriptionEntity.Status.ACCEPTED).build()
+        );
+        when(subscriptionService.findById(SUBSCRIPTION_ID)).thenReturn(existingEntity);
+
+        var specWithDifferentApp = SPEC.toBuilder().applicationId("other-application-id").build();
+
+        assertThatThrownBy(() -> cut.createOrUpdate(AUDIT_INFO, specWithDifferentApp))
+            .isInstanceOf(SubscriptionApplicationImmutableException.class)
+            .hasMessageContaining(SUBSCRIPTION_ID);
+    }
+
+    @Test
+    void should_close_on_delete() {
+        cut.delete(AUDIT_INFO, SPEC.getId());
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID)).isNotNull();
+            soft.assertThat(subscriptionCrudService.get(SUBSCRIPTION_ID).getStatus()).isEqualTo(SubscriptionEntity.Status.REJECTED);
+        });
+    }
+
+    private void givenExistingJWTPlan() {
+        givenExistingPlan(
+            Plan.builder()
+                .id(PLAN_ID)
+                .apiId(API_ID)
+                .definitionVersion(DefinitionVersion.V2)
+                .planDefinitionV2(io.gravitee.definition.model.Plan.builder().security("JWT").build())
+                .build()
+        );
+    }
+
+    private void givenExistingApiKeyPlan() {
+        givenExistingPlan(
+            Plan.builder()
+                .id(PLAN_ID)
+                .apiId(API_ID)
+                .definitionVersion(DefinitionVersion.V2)
+                .planDefinitionV2(io.gravitee.definition.model.Plan.builder().security("API_KEY").build())
+                .build()
+        );
+    }
+
+    private void givenExistingPlan(Plan plan) {
+        planCrudService.initWith(List.of(plan));
+    }
+
+    private CloseSubscriptionDomainService closeSubscriptionDomainService() {
+        return new CloseSubscriptionDomainService(
+            subscriptionCrudService,
+            applicationCrudService,
+            auditDomainService(),
+            notificationService,
+            rejectSubscriptionDomainService(),
+            revokeApiKeyDomainService(),
+            apiCrudService,
+            integrationAgent
+        );
+    }
+
+    private RevokeApiKeyDomainService revokeApiKeyDomainService() {
+        return new RevokeApiKeyDomainService(
+            apiKeyCrudService,
+            apiKeyQueryService,
+            subscriptionCrudService,
+            auditDomainService(),
+            notificationService
+        );
+    }
+
+    private RejectSubscriptionDomainService rejectSubscriptionDomainService() {
+        return new RejectSubscriptionDomainService(
+            subscriptionCrudService,
+            auditDomainService(),
+            notificationService,
+            userCrudService,
+            applicationPrimaryOwnerDomainService
+        );
+    }
+
+    private AcceptSubscriptionDomainService acceptSubscriptionDomainService() {
+        return new AcceptSubscriptionDomainService(
+            subscriptionCrudService,
+            auditDomainService(),
+            apiCrudService,
+            applicationCrudService,
+            planCrudService,
+            generateApiKeyDomainService(),
+            integrationAgent,
+            notificationService,
+            userCrudService,
+            applicationPrimaryOwnerDomainService,
+            metadataCrudService,
+            integrationCrudService
+        );
+    }
+
+    private AuditDomainService auditDomainService() {
+        return new AuditDomainService(auditCrudService, userCrudService, new JacksonJsonDiffProcessor());
+    }
+
+    private GenerateApiKeyDomainService generateApiKeyDomainService() {
+        return new GenerateApiKeyDomainService(
+            apiKeyCrudService,
+            new ApiKeyQueryServiceInMemory(apiKeyCrudService),
+            applicationCrudService,
+            auditDomainService(),
+            new ParametersQueryServiceInMemory()
+        );
+    }
+
+    private ReconcileApiKeysDomainService reconcileApiKeysDomainService() {
+        return new ReconcileApiKeysDomainService(
+            apiKeyQueryService,
+            apiKeyCrudService,
+            generateApiKeyDomainService(),
+            revokeApiKeyDomainService()
+        );
+    }
+}

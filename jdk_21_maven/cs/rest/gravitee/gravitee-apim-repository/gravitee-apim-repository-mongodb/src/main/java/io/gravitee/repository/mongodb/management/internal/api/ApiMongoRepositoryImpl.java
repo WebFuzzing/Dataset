@@ -1,0 +1,227 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.repository.mongodb.management.internal.api;
+
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Filters.in;
+import static com.mongodb.client.model.Sorts.ascending;
+import static java.util.Collections.emptyList;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
+import com.mongodb.client.AggregateIterable;
+import io.gravitee.common.data.domain.Page;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.repository.management.api.search.*;
+import io.gravitee.repository.mongodb.management.internal.model.ApiMongo;
+import io.gravitee.repository.mongodb.utils.FieldUtils;
+import io.gravitee.repository.mongodb.utils.MongoQueries;
+import java.util.*;
+import java.util.stream.Collectors;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
+/**
+ * @author Azize ELAMRANI (azize.elamrani at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+public class ApiMongoRepositoryImpl implements ApiMongoRepositoryCustom {
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private MongoQueries mongoQueries;
+
+    @Override
+    public Page<ApiMongo> search(ApiCriteria criteria, Sortable sortable, Pageable pageable, ApiFieldFilter apiFieldFilter) {
+        final Query query = buildQuery(apiFieldFilter, criteria == null ? emptyList() : List.of(criteria));
+
+        Sort sort = buildSort(sortable);
+
+        long total = mongoQueries.countOrTimeout(mongoTemplate, query, ApiMongo.class);
+
+        if (pageable != null) {
+            query.with(PageRequest.of(pageable.pageNumber(), pageable.pageSize(), sort));
+        }
+
+        List<ApiMongo> apis = mongoTemplate.find(query, ApiMongo.class);
+
+        return new Page<>(apis, pageable != null ? pageable.pageNumber() : 0, pageable != null ? pageable.pageSize() : 0, total);
+    }
+
+    @Override
+    public Page<String> searchIds(List<ApiCriteria> apiCriteria, Pageable pageable, Sortable sortable) {
+        Objects.requireNonNull(pageable, "Pageable must not be null");
+
+        final Query query = new Query();
+        // Only fetch the id
+        query.fields().include("_id");
+        fillQuery(query, apiCriteria);
+
+        Sort sort = buildSort(sortable);
+
+        // Get total count before adding pagination to the query
+        long total = mongoQueries.countOrTimeout(mongoTemplate, query, ApiMongo.class);
+
+        // set pageable
+        query.with(PageRequest.of(pageable.pageNumber(), pageable.pageSize(), sort));
+
+        List<String> apisIds = mongoTemplate.find(query, ApiMongo.class).stream().map(ApiMongo::getId).collect(Collectors.toList());
+
+        return new Page<>(apisIds, pageable.pageNumber(), apisIds.size(), total);
+    }
+
+    private Query buildQuery(ApiFieldFilter apiFieldFilter, List<ApiCriteria> orApiCriteria) {
+        final Query query = new Query();
+
+        if (apiFieldFilter != null) {
+            if (apiFieldFilter.isDefinitionExcluded()) {
+                query.fields().exclude("definition");
+            }
+            if (apiFieldFilter.isPictureExcluded()) {
+                query.fields().exclude("picture");
+                query.fields().exclude("background");
+            }
+        }
+
+        return fillQuery(query, orApiCriteria);
+    }
+
+    private Query fillQuery(Query query, List<ApiCriteria> orCriteria) {
+        if (orCriteria != null && !orCriteria.isEmpty()) {
+            List<List<Criteria>> convertedCriteria = orCriteria
+                .stream()
+                .filter(Objects::nonNull)
+                .map(apiCriteria -> {
+                    List<Criteria> criteria = new ArrayList<>();
+                    if (apiCriteria.getIds() != null && !apiCriteria.getIds().isEmpty()) {
+                        criteria.add(where("id").in(apiCriteria.getIds()));
+                    }
+                    if (apiCriteria.getGroups() != null && !apiCriteria.getGroups().isEmpty()) {
+                        criteria.add(where("groups").in(apiCriteria.getGroups()));
+                    }
+                    if (apiCriteria.getEnvironmentId() != null) {
+                        criteria.add(where("environmentId").is(apiCriteria.getEnvironmentId()));
+                    }
+                    if (apiCriteria.getEnvironments() != null && !apiCriteria.getEnvironments().isEmpty()) {
+                        criteria.add(where("environmentId").in(apiCriteria.getEnvironments()));
+                    }
+                    if (apiCriteria.getLabel() != null && !apiCriteria.getLabel().isEmpty()) {
+                        criteria.add(where("labels").in(apiCriteria.getLabel()));
+                    }
+                    if (apiCriteria.getName() != null && !apiCriteria.getName().isEmpty()) {
+                        criteria.add(where("name").is(apiCriteria.getName()));
+                    }
+                    if (apiCriteria.getState() != null) {
+                        criteria.add(where("lifecycleState").is(apiCriteria.getState()));
+                    }
+                    if (apiCriteria.getVersion() != null && !apiCriteria.getVersion().isEmpty()) {
+                        criteria.add(where("version").is(apiCriteria.getVersion()));
+                    }
+                    if (apiCriteria.getCategory() != null && !apiCriteria.getCategory().isEmpty()) {
+                        criteria.add(where("categories").in(apiCriteria.getCategory()));
+                    }
+                    if (apiCriteria.getVisibility() != null) {
+                        criteria.add(where("visibility").is(apiCriteria.getVisibility()));
+                    }
+                    if (apiCriteria.getLifecycleStates() != null && !apiCriteria.getLifecycleStates().isEmpty()) {
+                        criteria.add(where("apiLifecycleState").in(apiCriteria.getLifecycleStates()));
+                    }
+                    if (apiCriteria.getCrossId() != null && !apiCriteria.getCrossId().isEmpty()) {
+                        criteria.add(where("crossId").is(apiCriteria.getCrossId()));
+                    }
+                    if (apiCriteria.getDefinitionVersion() != null && !apiCriteria.getDefinitionVersion().isEmpty()) {
+                        var values = new ArrayList<DefinitionVersion>(apiCriteria.getDefinitionVersion());
+                        if (values.contains(DefinitionVersion.V2)) {
+                            // V2 APIs are stored with definitionVersion=null (or missing); $in matches both.
+                            values.add(null);
+                        }
+                        criteria.add(where("definitionVersion").in(values));
+                    }
+                    if (apiCriteria.getIntegrationId() != null && !apiCriteria.getIntegrationId().isEmpty()) {
+                        criteria.add(where("integrationId").is(apiCriteria.getIntegrationId()));
+                    }
+                    if (apiCriteria.getApiTypes() != null && !apiCriteria.getApiTypes().isEmpty()) {
+                        criteria.add(where("type").in(apiCriteria.getApiTypes()));
+                    }
+                    if (apiCriteria.getNotApiTypes() != null && !apiCriteria.getNotApiTypes().isEmpty()) {
+                        criteria.add(where("type").not().in(apiCriteria.getNotApiTypes()));
+                    }
+                    if (apiCriteria.getUpdatedAtFrom() != null) {
+                        criteria.add(where("updatedAt").gte(apiCriteria.getUpdatedAtFrom()));
+                    }
+                    return criteria;
+                })
+                .filter(criteria -> !criteria.isEmpty())
+                .toList();
+
+            if (convertedCriteria.size() > 1) {
+                query.addCriteria(
+                    new Criteria().orOperator(
+                        convertedCriteria
+                            .stream()
+                            .map(criteria -> new Criteria().andOperator(criteria))
+                            .collect(Collectors.toList())
+                    )
+                );
+            } else if (convertedCriteria.size() == 1) {
+                convertedCriteria.get(0).forEach(query::addCriteria);
+            }
+        }
+        return query;
+    }
+
+    /**
+     * Stable sort for offset pagination used by streamed search (batch size 100).
+     * Tie-break on id to avoid duplicate or skipped rows when primary sort keys collide.
+     */
+    private Sort buildSort(Sortable sortable) {
+        if (sortable == null) {
+            return Sort.by(ASC, "name", "id");
+        }
+        Sort.Direction sortOrder = sortable.order().equals(Order.ASC) ? ASC : Sort.Direction.DESC;
+        return Sort.by(sortOrder, FieldUtils.toCamelCase(sortable.field())).and(Sort.by(ASC, "id"));
+    }
+
+    @Override
+    public Set<String> listCategories(ApiCriteria apiCriteria) {
+        List<Bson> aggregations = new ArrayList<>();
+        if (apiCriteria.getIds() != null && !apiCriteria.getIds().isEmpty()) {
+            aggregations.add(match(in("_id", apiCriteria.getIds())));
+        }
+        aggregations.add(unwind("$categories"));
+        aggregations.add(group("$categories"));
+        aggregations.add(sort(ascending("_id")));
+
+        AggregateIterable<Document> distinctCategories = mongoTemplate
+            .getCollection(mongoTemplate.getCollectionName(ApiMongo.class))
+            .aggregate(aggregations);
+
+        Set<String> categories = new LinkedHashSet<>();
+        distinctCategories.forEach(document -> {
+            String category = document.getString("_id");
+            categories.add(category);
+        });
+        return categories;
+    }
+}

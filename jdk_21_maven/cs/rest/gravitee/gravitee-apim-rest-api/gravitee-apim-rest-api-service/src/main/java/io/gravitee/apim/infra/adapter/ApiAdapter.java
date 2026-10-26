@@ -1,0 +1,244 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.infra.adapter;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import io.gravitee.apim.core.api.model.Api;
+import io.gravitee.apim.core.api.model.crd.ApiCRDSpec;
+import io.gravitee.apim.core.membership.model.PrimaryOwnerEntity;
+import io.gravitee.apim.core.portal.model.NavigationPath;
+import io.gravitee.definition.model.ApiDefinition;
+import io.gravitee.definition.model.federation.FederatedAgent;
+import io.gravitee.definition.model.federation.FederatedApi;
+import io.gravitee.definition.model.v4.ApiType;
+import io.gravitee.definition.model.v4.edge.EdgeApi;
+import io.gravitee.definition.model.v4.nativeapi.NativeApi;
+import io.gravitee.node.logging.NodeLoggerFactory;
+import io.gravitee.rest.api.model.context.OriginContext;
+import io.gravitee.rest.api.model.federation.FederatedApiAgentEntity;
+import io.gravitee.rest.api.model.federation.FederatedApiEntity;
+import io.gravitee.rest.api.model.v4.api.ApiEntity;
+import io.gravitee.rest.api.model.v4.api.GenericApiEntity;
+import io.gravitee.rest.api.model.v4.api.NewApiEntity;
+import io.gravitee.rest.api.model.v4.api.UpdateApiEntity;
+import io.gravitee.rest.api.model.v4.nativeapi.NativeApiEntity;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import org.mapstruct.DecoratedWith;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ValueMapping;
+import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+
+@Mapper(uses = { PlanAdapter.class })
+@DecoratedWith(ApiAdapterDecorator.class)
+public interface ApiAdapter {
+    Logger log = NodeLoggerFactory.getLogger(ApiAdapter.class);
+    ApiAdapter INSTANCE = Mappers.getMapper(ApiAdapter.class);
+
+    @Mapping(target = "apiDefinitionValue", expression = "java(toApiDefinition(source))")
+    @Mapping(target = "portalNavigation", expression = "java(deserializePortalNavigation(source.getPortalNavigation()))")
+    Api toCoreModel(io.gravitee.repository.management.model.Api source);
+
+    default ApiDefinition toApiDefinition(io.gravitee.repository.management.model.Api source) {
+        return switch (source.getDefinitionVersion()) {
+            case V4 -> ApiType.NATIVE == source.getType()
+                ? deserialize(source, NativeApi.class)
+                : ApiType.EDGE == source.getType()
+                    ? deserialize(source, EdgeApi.class)
+                    : deserialize(source, io.gravitee.definition.model.v4.Api.class);
+            case FEDERATED -> deserialize(source, FederatedApi.class);
+            case FEDERATED_AGENT -> null; // TODO ???
+            case V2 -> deserialize(source, io.gravitee.definition.model.Api.class);
+            case null, default -> deserialize(source, io.gravitee.definition.model.Api.class);
+        };
+    }
+
+    Stream<Api> toCoreModelStream(Stream<io.gravitee.repository.management.model.Api> source);
+
+    @Mapping(target = "definition", expression = "java(serializeApiDefinition(source))")
+    @Mapping(target = "portalNavigation", expression = "java(serializePortalNavigation(source.getPortalNavigation()))")
+    io.gravitee.repository.management.model.Api toRepository(Api source);
+
+    Stream<io.gravitee.repository.management.model.Api> toRepositoryStream(Stream<Api> source);
+
+    @Mapping(target = "apiVersion", source = "version")
+    @Mapping(target = "tags", source = "apiDefinitionHttpV4.tags")
+    @Mapping(target = "listeners", source = "apiDefinitionHttpV4.listeners")
+    @Mapping(target = "endpointGroups", source = "apiDefinitionHttpV4.endpointGroups")
+    @Mapping(target = "analytics", source = "apiDefinitionHttpV4.analytics")
+    @Mapping(target = "flowExecution", source = "apiDefinitionHttpV4.flowExecution")
+    @Mapping(target = "flows", source = "apiDefinitionHttpV4.flows")
+    @Mapping(target = "failover", source = "apiDefinitionHttpV4.failover")
+    NewApiEntity toNewApiEntity(Api source);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(source = "version", target = "apiVersion")
+    @Mapping(target = "disableMembershipNotifications", expression = "java(!spec.isNotifyMembers())")
+    @Mapping(target = "listeners", expression = "java((List<Listener>) spec.getListeners())")
+    @Mapping(target = "endpointGroups", expression = "java((List<EndpointGroup>) spec.getEndpointGroups())")
+    @Mapping(target = "flows", expression = "java((List<Flow>) spec.getFlows())")
+    @Mapping(target = "plans", expression = "java(PlanAdapter.INSTANCE.toPlanEntityV4(spec, spec.getPlans()))")
+    UpdateApiEntity toUpdateApiEntity(ApiCRDSpec spec);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(target = "id", source = "api.id")
+    @Mapping(target = "name", source = "api.name")
+    @Mapping(target = "definitionVersion", source = "api.definitionVersion")
+    @Mapping(target = "type", source = "api.type")
+    @Mapping(target = "tags", source = "api.tags")
+    @Mapping(target = "apiVersion", source = "api.version")
+    @Mapping(target = "lifecycleState", source = "api.apiLifecycleState")
+    @Mapping(target = "resources", expression = "java(apiDefinitionV4 != null ? apiDefinitionV4.getResources() : null)")
+    @Mapping(target = "responseTemplates", expression = "java(apiDefinitionV4 != null ? apiDefinitionV4.getResponseTemplates() : null)")
+    UpdateApiEntity toUpdateApiEntity(Api api, io.gravitee.definition.model.v4.Api apiDefinitionV4);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(source = "version", target = "apiVersion")
+    @Mapping(target = "metadata", ignore = true)
+    @Mapping(target = "listeners", expression = "java((List<Listener>) api.getListeners())")
+    @Mapping(target = "plans", expression = "java(PlanAdapter.INSTANCE.toPlanEntityV4(api, api.getPlans()))")
+    ApiEntity toApiEntity(ApiCRDSpec api);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(source = "version", target = "apiVersion")
+    @Mapping(target = "metadata", ignore = true)
+    @Mapping(target = "listeners", expression = "java((List<Listener>) api.getApiListeners())")
+    ApiEntity toApiEntity(Api api);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(source = "version", target = "apiVersion")
+    @Mapping(target = "metadata", ignore = true)
+    @Mapping(target = "tags", source = "apiDefinitionNativeV4.tags")
+    @Mapping(target = "listeners", source = "apiDefinitionNativeV4.listeners")
+    @Mapping(target = "endpointGroups", source = "apiDefinitionNativeV4.endpointGroups")
+    @Mapping(target = "flows", source = "apiDefinitionNativeV4.flows")
+    @Mapping(target = "resources", source = "apiDefinitionNativeV4.resources")
+    @Mapping(target = "services", source = "apiDefinitionNativeV4.services")
+    @Mapping(target = "properties", source = "apiDefinitionNativeV4.properties")
+    @Mapping(target = "state", source = "lifecycleState")
+    @Mapping(target = "lifecycleState", source = "apiLifecycleState")
+    NativeApiEntity toNativeApiEntity(Api api);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(source = "source.version", target = "apiVersion")
+    @Mapping(source = "source.id", target = "id")
+    @Mapping(target = "primaryOwner", source = "primaryOwnerEntity")
+    @Mapping(target = "referenceId", source = "source.environmentId")
+    @Mapping(target = "referenceType", constant = "ENVIRONMENT")
+    @Mapping(source = "source.apiLifecycleState", target = "lifecycleState")
+    FederatedApiEntity toFederatedApiEntity(io.gravitee.repository.management.model.Api source, PrimaryOwnerEntity primaryOwnerEntity);
+
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    @Mapping(target = "apiVersion", source = "source.version")
+    @Mapping(target = "id", source = "source.id")
+    @Mapping(target = "primaryOwner", source = "primaryOwnerEntity")
+    @Mapping(target = "referenceId", source = "source.environmentId")
+    @Mapping(target = "referenceType", constant = "ENVIRONMENT")
+    @Mapping(target = "lifecycleState", source = "source.apiLifecycleState")
+    @Mapping(target = "provider", source = "agent.provider")
+    @Mapping(target = "defaultInputModes", source = "agent.defaultInputModes")
+    @Mapping(target = "defaultOutputModes", source = "agent.defaultOutputModes")
+    @Mapping(target = "capabilities", expression = "java(capabilities(agent))")
+    @Mapping(target = "skills", source = "agent.skills")
+    @Mapping(target = "securitySchemes", source = "agent.securitySchemes")
+    @Mapping(target = "security", source = "agent.security")
+    @Mapping(target = "name", source = "source.name")
+    @Mapping(target = "definitionVersion", source = "source.definitionVersion")
+    @Mapping(target = "description", source = "source.description")
+    @Mapping(target = "originContext", source = "originContext")
+    FederatedApiAgentEntity toFederatedAgentEntity(
+        io.gravitee.repository.management.model.Api source,
+        FederatedAgent agent,
+        PrimaryOwnerEntity primaryOwnerEntity,
+        OriginContext.Integration originContext
+    );
+
+    default Collection<String> capabilities(FederatedAgent agent) {
+        return agent == null || agent.getCapabilities() == null
+            ? null
+            : agent.getCapabilities().entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).toList();
+    }
+
+    @Mapping(source = "state", target = "lifecycleState")
+    @Mapping(source = "lifecycleState", target = "apiLifecycleState")
+    @ValueMapping(source = MappingConstants.ANY_REMAINING, target = MappingConstants.NULL)
+    Api fromApiEntity(GenericApiEntity apiEntity);
+
+    default <T> T deserialize(io.gravitee.repository.management.model.Api api, Class<T> clazz) {
+        if (api.getDefinition() == null) {
+            // This can happen when filtering the definition using ApiFieldFilter
+            return null;
+        }
+
+        try {
+            return GraviteeJacksonMapper.getInstance().readValue(api.getDefinition(), clazz);
+        } catch (IOException ioe) {
+            log.error("Unexpected error while deserializing V4 API definition", ioe);
+            return null;
+        }
+    }
+
+    default String serializeApiDefinition(Api api) {
+        return switch (api.getApiDefinitionValue()) {
+            case io.gravitee.definition.model.Api v2 -> serialize(v2, "V2 API");
+            case NativeApi nativeApi -> serialize(nativeApi, "V4 Native API");
+            case EdgeApi edgeApi -> serialize(edgeApi, "V4 Edge API");
+            case io.gravitee.definition.model.v4.Api v4 -> serialize(v4, "V4 API");
+            case FederatedApi federatedApi -> serialize(federatedApi, "Federated API");
+            case FederatedAgent federatedAgent -> serialize(federatedAgent, "Federated Agent");
+            default -> null;
+        };
+    }
+
+    default <T> String serialize(T value, String name) {
+        try {
+            return GraviteeJacksonMapper.getInstance().writeValueAsString(value);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Unexpected error while serializing " + name + " definition", ioe);
+        }
+    }
+
+    TypeReference<List<NavigationPath>> NAVIGATION_PATH_LIST = new TypeReference<>() {};
+
+    default String serializePortalNavigation(List<NavigationPath> portalNavigation) {
+        if (portalNavigation == null || portalNavigation.isEmpty()) {
+            return null;
+        }
+        try {
+            return GraviteeJacksonMapper.getInstance().writeValueAsString(portalNavigation);
+        } catch (IOException ioe) {
+            throw new RuntimeException("Unexpected error while serializing API portalNavigation", ioe);
+        }
+    }
+
+    default List<NavigationPath> deserializePortalNavigation(String json) {
+        if (json == null || json.isBlank()) {
+            return null;
+        }
+        try {
+            return GraviteeJacksonMapper.getInstance().readValue(json, NAVIGATION_PATH_LIST);
+        } catch (IOException ioe) {
+            log.error("Unexpected error while deserializing API portalNavigation", ioe);
+            return null;
+        }
+    }
+}

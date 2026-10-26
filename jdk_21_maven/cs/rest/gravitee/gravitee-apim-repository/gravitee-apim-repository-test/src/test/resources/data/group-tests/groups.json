@@ -1,0 +1,91 @@
+[
+  {
+    "id": "group-application-1",
+    "environmentId": "group-application-1 environment-id",
+    "name": "Group application 1",
+    "lockApiRole": true,
+    "lockApplicationRole": true,
+    "systemInvitation": true,
+    "emailInvitation": true,
+    "disableMembershipNotifications": true,
+    "maxInvitation": 99,
+    "eventRules": [
+      {
+        "event": "API_CREATE"
+      },
+      {
+        "event": "APPLICATION_CREATE"
+      }
+    ],
+    "apiPrimaryOwner": "api-primary-owner-id",
+    "apiProductPrimaryOwner": "api-product-primary-owner-id"
+  },
+  {
+    "id": "group-api-to-delete",
+    "environmentId": "DEFAULT",
+    "name": "Group API to delete"
+  },
+  {
+    "id": "group-1",
+    "environmentId": "DEFAULT",
+    "name": "group test 1",
+    "hrid": "group-test-1"
+  },
+  {
+    "id": "group-2",
+    "environmentId": "DEFAULT_2",
+    "name": "Group test 2",
+    "hrid": "group-test-2"
+  },
+  {
+    "id": "group-3",
+    "environmentId": "DEFAULT",
+    "name": "Group Test 3",
+    "hrid": "group-test-3"
+  },
+  {
+    "id": "group-4",
+    "environmentId": "DEFAULT",
+    "name": "GROUP TEST 4"
+  },
+  {
+    "id": "group-5",
+    "environmentId": "DEFAULT",
+    "name": "Test group 5"
+  },
+  {
+    "id": "group-6",
+    "environmentId": "DEFAULT",
+    "name": "6 - test group"
+  },
+  {
+    "id": "group-7",
+    "environmentId": "DEFAULT",
+    "name": "7th g. for testing"
+  },
+  {
+    "id": "group_env_1_org_1",
+    "environmentId": "ENV_ORG_1",
+    "name": "Group env 1 org 1"
+  },
+  {
+    "id": "group_env_2_org_1",
+    "environmentId": "SECOND_ENV_ORG_1",
+    "name": "Group env 2 org 1"
+  },
+  {
+    "id": "group_env_org_2",
+    "environmentId": "ENV_ORG_2",
+    "name": "Group env org 1"
+  },
+  {
+    "id": "group_env_to_delete_1",
+    "environmentId": "ToBeDeleted",
+    "name": "Group env to delete 1"
+  },
+  {
+    "id": "group_env_to_delete_2",
+    "environmentId": "ToBeDeleted",
+    "name": "Group env to delete 2"
+  }
+]

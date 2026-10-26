@@ -1,0 +1,144 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.gravitee.apim.core.scoring.use_case;
+
+import io.gravitee.apim.core.UseCase;
+import io.gravitee.apim.core.async_job.crud_service.AsyncJobCrudService;
+import io.gravitee.apim.core.scoring.crud_service.ScoringReportCrudService;
+import io.gravitee.apim.core.scoring.domain_service.ScoreComputingDomainService;
+import io.gravitee.apim.core.scoring.model.ScoringReport;
+import io.gravitee.apim.core.utils.StringUtils;
+import io.gravitee.common.utils.TimeProvider;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import lombok.RequiredArgsConstructor;
+
+@UseCase
+@RequiredArgsConstructor
+@CustomLog
+public class SaveScoringResponseUseCase {
+
+    /**
+     * Fallback used when the scoring provider reports a failure without any message, so the user is at least told the
+     * evaluation failed rather than being shown an empty error.
+     */
+    private static final String UNKNOWN_FAILURE_MESSAGE = "Scoring failed without any reported reason";
+
+    private final AsyncJobCrudService asyncJobCrudService;
+    private final ScoringReportCrudService scoringReportCrudService;
+    private final ScoreComputingDomainService scoreComputingDomainService;
+
+    public Completable execute(Input input) {
+        return Maybe.defer(() -> Maybe.fromOptional(asyncJobCrudService.findById(input.jobId)))
+            .subscribeOn(Schedulers.computation())
+            .flatMapCompletable(job -> {
+                if (!input.success) {
+                    // The scoring provider failed: keep the previous report and surface the failure on the job.
+                    var errorMessage = StringUtils.isEmpty(input.errorMessage) ? UNKNOWN_FAILURE_MESSAGE : input.errorMessage;
+                    return Completable.fromRunnable(() -> {
+                        log.warn("Scoring failed for API [{}]: {}", job.getSourceId(), errorMessage);
+                        asyncJobCrudService.update(job.error(errorMessage));
+                    });
+                }
+
+                String apiId = job.getSourceId();
+                String environmentId = job.getEnvironmentId();
+
+                var report = ScoringReport.builder()
+                    .id(job.getId())
+                    .apiId(apiId)
+                    .environmentId(environmentId)
+                    .createdAt(TimeProvider.now())
+                    .summary(processSummary(input.analyzedAssets))
+                    .assets(input.analyzedAssets)
+                    .build();
+
+                return Completable.fromRunnable(() -> scoringReportCrudService.deleteByApi(apiId))
+                    .andThen(Completable.fromRunnable(() -> scoringReportCrudService.create(report)))
+                    .doOnComplete(() -> asyncJobCrudService.update(job.complete()))
+                    .doOnError(throwable -> log.error("Fail to save scoring report for API [{}]", apiId, throwable));
+            })
+            .onErrorComplete();
+    }
+
+    private ScoringReport.Summary processSummary(List<ScoringReport.Asset> assets) {
+        var assetsSummary = new ArrayList<ScoringReport.Summary>();
+        assets
+            .stream()
+            .filter(asset -> asset.errors().isEmpty())
+            .forEach(asset -> {
+                var counters = asset
+                    .diagnostics()
+                    .stream()
+                    .collect(Collectors.groupingBy(ScoringReport.Diagnostic::severity, Collectors.counting()));
+
+                var nbErrors = counters.getOrDefault(ScoringReport.Severity.ERROR, 0L);
+                var nbWarnings = counters.getOrDefault(ScoringReport.Severity.WARN, 0L);
+                var nbInfos = counters.getOrDefault(ScoringReport.Severity.INFO, 0L);
+                var nbHints = counters.getOrDefault(ScoringReport.Severity.HINT, 0L);
+
+                assetsSummary.add(
+                    new ScoringReport.Summary(
+                        scoreComputingDomainService.computeScore(nbErrors, nbWarnings, nbInfos, nbHints),
+                        nbErrors,
+                        nbWarnings,
+                        nbInfos,
+                        nbHints
+                    )
+                );
+            });
+
+        var SCORING_NOT_AVAILABLE = -1.0;
+        var averageScore = BigDecimal.valueOf(
+            assetsSummary
+                .stream()
+                .filter(summary -> summary.score() != null)
+                .mapToDouble(ScoringReport.Summary::score)
+                .average()
+                .orElse(SCORING_NOT_AVAILABLE)
+        ).setScale(2, RoundingMode.HALF_EVEN);
+
+        return assetsSummary
+            .stream()
+            .reduce(new ScoringReport.Summary(averageScore.doubleValue(), 0L, 0L, 0L, 0L), (s1, s2) ->
+                new ScoringReport.Summary(
+                    averageScore.doubleValue(),
+                    s1.errors() + s2.errors(),
+                    s1.warnings() + s2.warnings(),
+                    s1.infos() + s2.infos(),
+                    s1.hints() + s2.hints()
+                )
+            );
+    }
+
+    public record Input(String jobId, List<ScoringReport.Asset> analyzedAssets, boolean success, String errorMessage) {
+        public static Input success(String jobId, List<ScoringReport.Asset> analyzedAssets) {
+            return new Input(jobId, analyzedAssets, true, null);
+        }
+
+        public static Input failure(String jobId, String errorMessage) {
+            return new Input(jobId, List.of(), false, errorMessage);
+        }
+    }
+}

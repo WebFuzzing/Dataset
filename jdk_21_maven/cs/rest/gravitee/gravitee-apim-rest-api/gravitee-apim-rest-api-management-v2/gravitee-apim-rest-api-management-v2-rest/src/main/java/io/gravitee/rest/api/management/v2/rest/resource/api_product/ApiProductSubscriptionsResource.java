@@ -1,0 +1,392 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.v2.rest.resource.api_product;
+
+import static java.lang.String.format;
+
+import io.gravitee.apim.core.subscription.model.SubscriptionConfiguration;
+import io.gravitee.apim.core.subscription.model.SubscriptionReferenceType;
+import io.gravitee.apim.core.subscription.use_case.AcceptSubscriptionUseCase;
+import io.gravitee.apim.core.subscription.use_case.CreateSubscriptionUseCase;
+import io.gravitee.apim.core.subscription.use_case.SearchSubscriptionsUseCase;
+import io.gravitee.common.data.domain.Page;
+import io.gravitee.common.http.MediaType;
+import io.gravitee.rest.api.management.v2.rest.mapper.SubscriptionMapper;
+import io.gravitee.rest.api.management.v2.rest.model.*;
+import io.gravitee.rest.api.management.v2.rest.model.Error;
+import io.gravitee.rest.api.management.v2.rest.model.SubscriptionStatus;
+import io.gravitee.rest.api.management.v2.rest.pagination.PaginationInfo;
+import io.gravitee.rest.api.management.v2.rest.resource.AbstractResource;
+import io.gravitee.rest.api.management.v2.rest.resource.param.PaginationParam;
+import io.gravitee.rest.api.management.v2.rest.utils.SubscriptionExpandHelper;
+import io.gravitee.rest.api.model.ApiKeyMode;
+import io.gravitee.rest.api.model.SubscriptionConfigurationEntity;
+import io.gravitee.rest.api.model.SubscriptionEntity;
+import io.gravitee.rest.api.model.common.Pageable;
+import io.gravitee.rest.api.model.parameters.Key;
+import io.gravitee.rest.api.model.parameters.ParameterReferenceType;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.model.subscription.SubscriptionMetadataQuery;
+import io.gravitee.rest.api.rest.annotation.Permission;
+import io.gravitee.rest.api.rest.annotation.Permissions;
+import io.gravitee.rest.api.service.ApiKeyService;
+import io.gravitee.rest.api.service.ParameterService;
+import io.gravitee.rest.api.service.SubscriptionService;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.validator.CustomApiKey;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * API Product Subscriptions REST resource (collection).
+ * Handles collection operations: list all subscriptions and create new subscriptions.
+ * Individual subscription operations are handled by ApiProductSubscriptionResource.
+ *
+ * @author GraviteeSource Team
+ */
+@CustomLog
+public class ApiProductSubscriptionsResource extends AbstractResource {
+
+    private final SubscriptionMapper subscriptionMapper = SubscriptionMapper.INSTANCE;
+
+    @Context
+    private ResourceContext resourceContext;
+
+    @Inject
+    private SubscriptionExpandHelper subscriptionExpandHelper;
+
+    @Inject
+    private CreateSubscriptionUseCase createSubscriptionUseCase;
+
+    @Inject
+    private AcceptSubscriptionUseCase acceptSubscriptionUseCase;
+
+    @Inject
+    private SearchSubscriptionsUseCase searchSubscriptionsUseCase;
+
+    @Inject
+    private ApiKeyService apiKeyService;
+
+    @Inject
+    private ParameterService parameterService;
+
+    @Inject
+    private SubscriptionService subscriptionService;
+
+    @PathParam("apiProductId")
+    private String apiProductId;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.API_PRODUCT_SUBSCRIPTION, acls = { RolePermissionAction.READ }) })
+    public Response getApiProductSubscriptions(
+        @QueryParam("applicationIds") Set<String> applicationIds,
+        @QueryParam("planIds") Set<String> planIds,
+        @QueryParam("statuses") @DefaultValue("ACCEPTED") Set<SubscriptionStatus> statuses,
+        @QueryParam("apiKey") String apiKey,
+        @QueryParam("expands") Set<String> expands,
+        @BeanParam @Valid PaginationParam paginationParam
+    ) {
+        log.debug("Getting subscriptions for API Product {}", apiProductId);
+        final ExecutionContext executionContext = GraviteeContext.getExecutionContext();
+        Page<SubscriptionEntity> subscriptionPage = searchApiProductSubscriptions(
+            applicationIds,
+            planIds,
+            statuses,
+            apiKey,
+            paginationParam.toPageable()
+        );
+
+        List<Subscription> subscriptions = subscriptionMapper.mapToList(subscriptionPage.getContent());
+        subscriptions.forEach(sub -> {
+            sub.setApi(null);
+            sub.setApiProduct(new BaseApiProduct().id(apiProductId));
+        });
+        subscriptions = subscriptions.stream().map(this::filterSensitiveData).collect(Collectors.toList());
+        subscriptionExpandHelper.expandForApiProduct(executionContext, apiProductId, subscriptions, expands);
+
+        long totalCount = subscriptionPage.getTotalElements();
+        int pageItemsCount = Math.toIntExact(subscriptionPage.getPageElements());
+        log.debug("Found {} subscriptions for API Product {}", totalCount, apiProductId);
+        return Response.ok(
+            new SubscriptionsResponse()
+                .data(new java.util.ArrayList<>(subscriptions))
+                .pagination(PaginationInfo.computePaginationInfo(totalCount, pageItemsCount, paginationParam))
+                .links(computePaginationLinks((int) totalCount, paginationParam))
+        ).build();
+    }
+
+    @GET
+    @Path("_export")
+    @Produces("text/csv")
+    @Permissions({ @Permission(value = RolePermission.API_PRODUCT_SUBSCRIPTION, acls = { RolePermissionAction.READ }) })
+    public Response exportApiProductSubscriptions(
+        @QueryParam("applicationIds") Set<String> applicationIds,
+        @QueryParam("planIds") Set<String> planIds,
+        @QueryParam("statuses") @DefaultValue("ACCEPTED") Set<SubscriptionStatus> statuses,
+        @QueryParam("apiKey") String apiKey,
+        @BeanParam @Valid PaginationParam paginationParam
+    ) {
+        final ExecutionContext executionContext = GraviteeContext.getExecutionContext();
+        Page<SubscriptionEntity> subscriptionPage = searchApiProductSubscriptions(
+            applicationIds,
+            planIds,
+            statuses,
+            apiKey,
+            paginationParam.toPageable()
+        );
+
+        final Map<String, Map<String, Object>> metadata;
+        if (subscriptionPage.getPageElements() > 0) {
+            final SubscriptionMetadataQuery subscriptionMetadataQuery = new SubscriptionMetadataQuery(
+                executionContext.getOrganizationId(),
+                executionContext.getEnvironmentId(),
+                subscriptionPage.getContent()
+            )
+                .withApiProducts(true)
+                .withApplications(true)
+                .withPlans(true);
+            metadata = subscriptionService.getMetadata(executionContext, subscriptionMetadataQuery).toMap();
+        } else {
+            metadata = new HashMap<>();
+        }
+
+        return Response.ok(subscriptionService.exportAsCsv(subscriptionPage.getContent(), metadata))
+            .header(
+                HttpHeaders.CONTENT_DISPOSITION,
+                format("attachment;filename=subscriptions-%s-%s.csv", apiProductId, System.currentTimeMillis())
+            )
+            .build();
+    }
+
+    private Page<SubscriptionEntity> searchApiProductSubscriptions(
+        Set<String> applicationIds,
+        Set<String> planIds,
+        Set<SubscriptionStatus> statuses,
+        String apiKey,
+        Pageable pageable
+    ) {
+        Page<SubscriptionEntity> page = searchSubscriptionsUseCase
+            .execute(
+                new SearchSubscriptionsUseCase.Input(
+                    GraviteeContext.getExecutionContext(),
+                    apiProductId,
+                    SubscriptionReferenceType.API_PRODUCT,
+                    applicationIds,
+                    planIds,
+                    subscriptionMapper.mapToStatusSet(statuses),
+                    apiKey,
+                    pageable
+                )
+            )
+            .page();
+        return page != null ? page : new Page<>(List.of(), 0, 0, 0);
+    }
+
+    @GET
+    @Path("_canCreate")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.API_PRODUCT_SUBSCRIPTION, acls = { RolePermissionAction.READ }) })
+    public Response canCreateApiProductSubscription(
+        @QueryParam("key") @CustomApiKey @NotNull String key,
+        @QueryParam("application") @NotNull String application
+    ) {
+        final ExecutionContext executionContext = GraviteeContext.getExecutionContext();
+        boolean canCreate = apiKeyService.canCreate(
+            executionContext,
+            key,
+            apiProductId,
+            SubscriptionReferenceType.API_PRODUCT.name(),
+            application
+        );
+        return Response.ok(canCreate).build();
+    }
+
+    @POST
+    @Path("_verify")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.API_PRODUCT_SUBSCRIPTION, acls = { RolePermissionAction.CREATE }) })
+    public Response verifyCreateApiProductSubscription(@Valid @NotNull VerifySubscription verifySubscription) {
+        final ExecutionContext executionContext = GraviteeContext.getExecutionContext();
+        boolean canCreate = apiKeyService.canCreate(
+            executionContext,
+            verifySubscription.getApiKey(),
+            apiProductId,
+            SubscriptionReferenceType.API_PRODUCT.name(),
+            verifySubscription.getApplicationId()
+        );
+        return Response.ok(new VerifySubscriptionResponse().ok(canCreate)).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.API_PRODUCT_SUBSCRIPTION, acls = { RolePermissionAction.CREATE }) })
+    public Response createApiProductSubscription(@Valid @NotNull CreateSubscription createSubscription) {
+        log.debug(
+            "Creating subscription for API Product {} with plan {} and application {}",
+            apiProductId,
+            createSubscription.getPlanId(),
+            createSubscription.getApplicationId()
+        );
+        final ExecutionContext executionContext = GraviteeContext.getExecutionContext();
+
+        if (
+            StringUtils.isNotEmpty(createSubscription.getCustomApiKey()) &&
+            !parameterService.findAsBoolean(executionContext, Key.PLAN_SECURITY_APIKEY_CUSTOM_ALLOWED, ParameterReferenceType.ENVIRONMENT)
+        ) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                .entity(subscriptionInvalid("You are not allowed to provide a custom API Key"))
+                .build();
+        }
+
+        SubscriptionConfiguration coreConfig = null;
+        if (createSubscription.getConsumerConfiguration() != null) {
+            SubscriptionConfigurationEntity configEntity = subscriptionMapper.mapConsumerConfigurationToEntity(
+                createSubscription.getConsumerConfiguration()
+            );
+            coreConfig = SubscriptionConfiguration.builder()
+                .entrypointId(configEntity.getEntrypointId())
+                .channel(configEntity.getChannel())
+                .entrypointConfiguration(configEntity.getEntrypointConfiguration())
+                .build();
+        }
+
+        CreateSubscriptionUseCase.Input input = CreateSubscriptionUseCase.Input.builder()
+            .referenceId(apiProductId)
+            .referenceType(SubscriptionReferenceType.API_PRODUCT)
+            .planId(createSubscription.getPlanId())
+            .applicationId(createSubscription.getApplicationId())
+            .requestMessage(null)
+            .customApiKey(createSubscription.getCustomApiKey())
+            .configuration(coreConfig)
+            .metadata(createSubscription.getMetadata())
+            .apiKeyMode(getApiKeyMode(createSubscription))
+            .generalConditionsAccepted(null)
+            .generalConditionsContentRevision(null)
+            .auditInfo(getAuditInfo())
+            .subscriptionFormMetadataValidationRequired(false)
+            .build();
+
+        CreateSubscriptionUseCase.Output output = createSubscriptionUseCase.execute(input);
+        io.gravitee.apim.core.subscription.model.SubscriptionEntity createdSubscription = output.subscription();
+        Subscription subscription = subscriptionMapper.map(createdSubscription);
+        subscription.setApi(null);
+        subscription.setApiProduct(new BaseApiProduct().id(apiProductId));
+
+        if (createdSubscription.getStatus() == io.gravitee.apim.core.subscription.model.SubscriptionEntity.Status.PENDING) {
+            var result = acceptSubscriptionUseCase.execute(
+                AcceptSubscriptionUseCase.Input.builder()
+                    .referenceId(apiProductId)
+                    .referenceType(SubscriptionReferenceType.API_PRODUCT)
+                    .subscriptionId(createdSubscription.getId())
+                    .auditInfo(getAuditInfo())
+                    .customKey(getCustomApiKey(createSubscription))
+                    .build()
+            );
+            subscription = subscriptionMapper.map(result.subscription());
+            subscription.setApi(null);
+            subscription.setApiProduct(new BaseApiProduct().id(apiProductId));
+        }
+
+        log.debug("Created subscription {} for API Product {}", createdSubscription.getId(), apiProductId);
+        return Response.created(this.getLocationHeader(createdSubscription.getId())).entity(subscription).build();
+    }
+
+    private String getCustomApiKey(CreateSubscription createSubscription) {
+        return (createSubscription.getCustomApiKey() != null && !createSubscription.getCustomApiKey().isEmpty())
+            ? createSubscription.getCustomApiKey()
+            : null;
+    }
+
+    @Path("/{subscriptionId}")
+    public ApiProductSubscriptionResource getApiProductSubscriptionResource() {
+        return resourceContext.getResource(ApiProductSubscriptionResource.class);
+    }
+
+    private Subscription filterSensitiveData(Subscription subscription) {
+        // Similar to plan filtering: check if user has both API_PRODUCT_DEFINITION and API_PRODUCT_SUBSCRIPTION permissions
+        if (
+            hasPermission(
+                GraviteeContext.getExecutionContext(),
+                RolePermission.API_PRODUCT_DEFINITION,
+                apiProductId,
+                RolePermissionAction.READ
+            ) &&
+            hasPermission(
+                GraviteeContext.getExecutionContext(),
+                RolePermission.API_PRODUCT_SUBSCRIPTION,
+                apiProductId,
+                RolePermissionAction.READ
+            )
+        ) {
+            // Return complete information if user has permission.
+            return subscription;
+        }
+
+        // Return filtered subscription with limited information (similar to plan filtering)
+        // Subscriptions don't have sensitive data like flows/security definitions, so we return basic fields
+        Subscription filtered = new Subscription();
+        filtered.setId(subscription.getId());
+        filtered.setStatus(subscription.getStatus());
+        if (subscription.getPlan() != null) {
+            filtered.setPlan(subscription.getPlan());
+        }
+        if (subscription.getApplication() != null) {
+            filtered.setApplication(subscription.getApplication());
+        }
+        filtered.setCreatedAt(subscription.getCreatedAt());
+        filtered.setUpdatedAt(subscription.getUpdatedAt());
+        filtered.setStartingAt(subscription.getStartingAt());
+        filtered.setEndingAt(subscription.getEndingAt());
+        filtered.setConsumerStatus(subscription.getConsumerStatus());
+        filtered.setConsumerPausedAt(subscription.getConsumerPausedAt());
+
+        return filtered;
+    }
+
+    private Error subscriptionInvalid(String message) {
+        return new Error().httpStatus(Response.Status.BAD_REQUEST.getStatusCode()).message(message).technicalCode("subscription.invalid");
+    }
+
+    private ApiKeyMode getApiKeyMode(CreateSubscription createSubscription) {
+        return createSubscription.getApiKeyMode() != null ? ApiKeyMode.valueOf(createSubscription.getApiKeyMode().name()) : null;
+    }
+}

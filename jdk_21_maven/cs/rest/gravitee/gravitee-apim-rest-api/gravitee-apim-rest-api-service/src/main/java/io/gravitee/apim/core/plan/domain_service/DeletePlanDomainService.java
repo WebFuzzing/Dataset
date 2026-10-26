@@ -1,0 +1,101 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.plan.domain_service;
+
+import io.gravitee.apim.core.DomainService;
+import io.gravitee.apim.core.audit.domain_service.AuditDomainService;
+import io.gravitee.apim.core.audit.model.ApiAuditLogEntity;
+import io.gravitee.apim.core.audit.model.ApiProductAuditLogEntity;
+import io.gravitee.apim.core.audit.model.AuditInfo;
+import io.gravitee.apim.core.audit.model.AuditProperties;
+import io.gravitee.apim.core.audit.model.event.PlanAuditEvent;
+import io.gravitee.apim.core.exception.ValidationDomainException;
+import io.gravitee.apim.core.plan.crud_service.KafkaPortRangeCrudService;
+import io.gravitee.apim.core.plan.crud_service.PlanCrudService;
+import io.gravitee.apim.core.plan.model.Plan;
+import io.gravitee.apim.core.subscription.query_service.SubscriptionQueryService;
+import io.gravitee.common.utils.TimeProvider;
+import io.gravitee.rest.api.model.v4.plan.GenericPlanEntity;
+import java.util.Map;
+
+@DomainService
+public class DeletePlanDomainService {
+
+    private final PlanCrudService planCrudService;
+    private final SubscriptionQueryService subscriptionQueryService;
+    private final AuditDomainService auditService;
+    private final KafkaPortRangeCrudService kafkaPortRangeCrudService;
+
+    public DeletePlanDomainService(
+        PlanCrudService planCrudService,
+        SubscriptionQueryService subscriptionQueryService,
+        AuditDomainService auditService,
+        KafkaPortRangeCrudService kafkaPortRangeCrudService
+    ) {
+        this.planCrudService = planCrudService;
+        this.subscriptionQueryService = subscriptionQueryService;
+        this.auditService = auditService;
+        this.kafkaPortRangeCrudService = kafkaPortRangeCrudService;
+    }
+
+    public void delete(Plan plan, AuditInfo auditInfo) {
+        if (!subscriptionQueryService.findActiveSubscriptionsByPlan(plan.getId()).isEmpty()) {
+            throw new ValidationDomainException("Impossible to delete a plan with active subscriptions");
+        }
+        planCrudService.delete(plan.getId());
+        // Free the port allocation (no-op when the plan never had a port-range row).
+        kafkaPortRangeCrudService.delete(plan.getId());
+        createAuditLog(plan, auditInfo);
+    }
+
+    private void createAuditLog(Plan planToDelete, AuditInfo auditInfo) {
+        if (GenericPlanEntity.ReferenceType.API_PRODUCT.equals(planToDelete.getReferenceType())) {
+            createApiProductAuditLog(planToDelete, auditInfo);
+        } else {
+            createApiAuditLog(planToDelete, auditInfo);
+        }
+    }
+
+    private void createApiAuditLog(Plan planToDelete, AuditInfo auditInfo) {
+        auditService.createApiAuditLog(
+            ApiAuditLogEntity.builder()
+                .organizationId(auditInfo.organizationId())
+                .environmentId(auditInfo.environmentId())
+                .apiId(planToDelete.getReferenceId())
+                .event(PlanAuditEvent.PLAN_DELETED)
+                .actor(auditInfo.actor())
+                .oldValue(planToDelete)
+                .createdAt(TimeProvider.now())
+                .properties(Map.of(AuditProperties.PLAN, planToDelete.getId()))
+                .build()
+        );
+    }
+
+    private void createApiProductAuditLog(Plan planToDelete, AuditInfo auditInfo) {
+        auditService.createApiProductAuditLog(
+            ApiProductAuditLogEntity.builder()
+                .organizationId(auditInfo.organizationId())
+                .environmentId(auditInfo.environmentId())
+                .apiProductId(planToDelete.getReferenceId())
+                .event(PlanAuditEvent.PLAN_DELETED)
+                .actor(auditInfo.actor())
+                .oldValue(planToDelete)
+                .createdAt(TimeProvider.now())
+                .properties(Map.of(AuditProperties.PLAN, planToDelete.getId()))
+                .build()
+        );
+    }
+}

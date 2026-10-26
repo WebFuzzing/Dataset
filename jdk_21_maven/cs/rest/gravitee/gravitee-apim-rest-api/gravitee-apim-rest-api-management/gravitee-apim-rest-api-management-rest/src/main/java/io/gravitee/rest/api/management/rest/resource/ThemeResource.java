@@ -1,0 +1,175 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.rest.resource;
+
+import io.gravitee.common.http.MediaType;
+import io.gravitee.rest.api.model.InlinePictureEntity;
+import io.gravitee.rest.api.model.PictureEntity;
+import io.gravitee.rest.api.model.UrlPictureEntity;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.model.theme.GenericThemeEntity;
+import io.gravitee.rest.api.model.theme.ThemeType;
+import io.gravitee.rest.api.model.theme.portal.ThemeEntity;
+import io.gravitee.rest.api.model.theme.portal.UpdateThemeEntity;
+import io.gravitee.rest.api.rest.annotation.Permission;
+import io.gravitee.rest.api.rest.annotation.Permissions;
+import io.gravitee.rest.api.service.ThemeService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.exceptions.ThemeTypeNotSupportedException;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+
+/**
+ * The ThemeResource endpoints are only applicable to PORTAL type themes
+ *
+ * @author Guillaume CUSNIEUX (guillaume.cusnieux at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@Tag(name = "Themes")
+public class ThemeResource extends AbstractResource {
+
+    @Inject
+    private ThemeService themeService;
+
+    @PathParam("themeId")
+    @Parameter(name = "themeId", required = true)
+    private String themeId;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_THEME, acls = RolePermissionAction.READ) })
+    public ThemeEntity getTheme() {
+        var theme = themeService.findById(GraviteeContext.getExecutionContext(), themeId);
+        validateThemeType(theme);
+        return toThemeEntity(theme);
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_THEME, acls = RolePermissionAction.UPDATE) })
+    public ThemeEntity updateTheme(@Valid @NotNull final UpdateThemeEntity theme) {
+        validateThemeType(themeId);
+        theme.setId(themeId);
+        return themeService.updatePortalTheme(GraviteeContext.getExecutionContext(), theme);
+    }
+
+    @Path("/reset")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_THEME, acls = RolePermissionAction.UPDATE) })
+    public ThemeEntity resetTheme() {
+        validateThemeType(themeId);
+
+        return toThemeEntity(themeService.resetToDefaultTheme(GraviteeContext.getExecutionContext(), themeId));
+    }
+
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_THEME, acls = RolePermissionAction.DELETE) })
+    public void deleteTheme() {
+        validateThemeType(themeId);
+
+        themeService.delete(GraviteeContext.getExecutionContext(), themeId);
+    }
+
+    @GET
+    @Path("/logo")
+    public Response getThemeLogo(@Context Request request) {
+        validateThemeType(themeId);
+
+        return this.buildPictureResponse(themeService.getLogo(GraviteeContext.getExecutionContext(), themeId), request);
+    }
+
+    @GET
+    @Path("/optionalLogo")
+    public Response getLogoLight(@Context Request request) {
+        validateThemeType(themeId);
+
+        return this.buildPictureResponse(themeService.getOptionalLogo(GraviteeContext.getExecutionContext(), themeId), request);
+    }
+
+    @GET
+    @Path("/favicon")
+    public Response getFavicon(@Context Request request) {
+        validateThemeType(themeId);
+
+        return this.buildPictureResponse(themeService.getFavicon(GraviteeContext.getExecutionContext(), themeId), request);
+    }
+
+    @GET
+    @Path("/backgroundImage")
+    public Response getThemeBackground(@Context Request request) {
+        validateThemeType(themeId);
+
+        return this.buildPictureResponse(themeService.getBackgroundImage(GraviteeContext.getExecutionContext(), themeId), request);
+    }
+
+    private Response buildPictureResponse(PictureEntity picture, @Context Request request) {
+        if (picture == null) {
+            return Response.ok().build();
+        }
+
+        if (picture instanceof UrlPictureEntity) {
+            return Response.temporaryRedirect(URI.create(((UrlPictureEntity) picture).getUrl())).build();
+        }
+
+        CacheControl cc = new CacheControl();
+        cc.setNoTransform(true);
+        cc.setMustRevalidate(false);
+        cc.setNoCache(false);
+        cc.setMaxAge(86400);
+
+        InlinePictureEntity image = (InlinePictureEntity) picture;
+
+        EntityTag etag = new EntityTag(Integer.toString(new String(image.getContent()).hashCode()));
+        Response.ResponseBuilder builder = request.evaluatePreconditions(etag);
+
+        if (builder != null) {
+            // Preconditions are not met, returning HTTP 304 'not-modified'
+            return builder.cacheControl(cc).build();
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        baos.write(image.getContent(), 0, image.getContent().length);
+
+        return Response.ok().entity(baos).cacheControl(cc).tag(etag).type(image.getType()).build();
+    }
+
+    private ThemeEntity toThemeEntity(GenericThemeEntity genericThemeEntity) {
+        validateThemeType(genericThemeEntity);
+        return (ThemeEntity) genericThemeEntity;
+    }
+
+    private void validateThemeType(GenericThemeEntity genericThemeEntity) {
+        if (!ThemeType.PORTAL.equals(genericThemeEntity.getType())) {
+            throw new ThemeTypeNotSupportedException(genericThemeEntity.getId(), genericThemeEntity.getType());
+        }
+    }
+
+    private void validateThemeType(String id) {
+        var theme = themeService.findById(GraviteeContext.getExecutionContext(), themeId);
+        validateThemeType(theme);
+    }
+}

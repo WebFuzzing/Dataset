@@ -1,0 +1,127 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.repository.mongodb.management;
+
+import io.gravitee.common.data.domain.Page;
+import io.gravitee.repository.exceptions.TechnicalException;
+import io.gravitee.repository.management.api.PromotionRepository;
+import io.gravitee.repository.management.api.search.Pageable;
+import io.gravitee.repository.management.api.search.PromotionCriteria;
+import io.gravitee.repository.management.api.search.Sortable;
+import io.gravitee.repository.management.model.Promotion;
+import io.gravitee.repository.mongodb.management.internal.model.PromotionMongo;
+import io.gravitee.repository.mongodb.management.internal.promotion.PromotionMongoRepository;
+import io.gravitee.repository.mongodb.management.mapper.GraviteeMapper;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@CustomLog
+@Component
+public class MongoPromotionRepository implements PromotionRepository {
+
+    @Autowired
+    private PromotionMongoRepository internalRepository;
+
+    @Autowired
+    private GraviteeMapper mapper;
+
+    @Override
+    public Optional<Promotion> findById(String id) throws TechnicalException {
+        log.debug("Find promotion by ID [{}]", id);
+
+        return internalRepository
+            .findById(id)
+            .map(promotionMongo -> {
+                log.debug("Find promotion by ID [{}] - Done", id);
+                return map(promotionMongo);
+            });
+    }
+
+    @Override
+    public Promotion create(Promotion promotion) throws TechnicalException {
+        log.debug("Create promotion [{}]", promotion.getId());
+        Promotion createdPromotion = map(internalRepository.insert(map(promotion)));
+        log.debug("Create promotion [{}] - Done", createdPromotion.getId());
+        return createdPromotion;
+    }
+
+    @Override
+    public Promotion update(Promotion promotion) throws TechnicalException {
+        if (promotion == null) {
+            throw new IllegalStateException("Promotion must not be null");
+        }
+
+        log.debug("Update promotion [{}]", promotion.getId());
+
+        // Whether the promotion exists is decided by the replacement itself rather than by a preceding read: a read
+        // may be served by a lagging secondary and miss a promotion another node has just written, which would
+        // refuse an update the database would have accepted.
+        if (!internalRepository.replace(map(promotion))) {
+            throw new IllegalStateException(String.format("No promotion found with id [%s]", promotion.getId()));
+        }
+
+        log.debug("Update promotion [{}] - Done", promotion.getId());
+        return promotion;
+    }
+
+    @Override
+    public void delete(String id) throws TechnicalException {
+        log.debug("Delete promotion [{}]", id);
+        internalRepository.deleteById(id);
+        log.debug("Delete promotion [{}] - Done", id);
+    }
+
+    private PromotionMongo map(Promotion promotion) {
+        return mapper.map(promotion);
+    }
+
+    private Promotion map(PromotionMongo promotion) {
+        return mapper.map(promotion);
+    }
+
+    @Override
+    public Page<Promotion> search(PromotionCriteria criteria, Sortable sortable, Pageable pageable) {
+        log.debug("Searching promotions");
+
+        var promotions = internalRepository.search(criteria, sortable, pageable).map(mapper::map);
+
+        log.debug("Searching promotions - Done");
+        return promotions;
+    }
+
+    @Override
+    public List<String> deleteByApiId(String apiId) throws TechnicalException {
+        log.debug("Delete all by api id [{}]", apiId);
+        try {
+            final var allByApiId = internalRepository.deleteByApiId(apiId).stream().map(PromotionMongo::getId).toList();
+            log.debug("Delete all by api id [{}] -- Done", apiId);
+            return allByApiId;
+        } catch (Exception ex) {
+            log.error("Failed to delete promotion order by apiId: {}", apiId, ex);
+            throw new TechnicalException("Failed to delete promotion by apiId");
+        }
+    }
+
+    @Override
+    public Set<Promotion> findAll() throws TechnicalException {
+        return internalRepository.findAll().stream().map(this::map).collect(Collectors.toSet());
+    }
+}

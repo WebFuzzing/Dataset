@@ -1,0 +1,739 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.service.impl;
+
+import static io.gravitee.repository.management.model.Audit.AuditProperties.PARAMETER;
+import static io.gravitee.repository.management.model.Parameter.AuditEvent.PARAMETER_CREATED;
+import static io.gravitee.repository.management.model.Parameter.AuditEvent.PARAMETER_UPDATED;
+import static io.gravitee.rest.api.model.parameters.ParameterReferenceType.ENVIRONMENT;
+import static io.gravitee.rest.api.model.parameters.ParameterReferenceType.ORGANIZATION;
+import static java.lang.String.join;
+import static java.util.Arrays.stream;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonMap;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import io.gravitee.common.event.EventManager;
+import io.gravitee.common.utils.UUID;
+import io.gravitee.node.api.Node;
+import io.gravitee.repository.exceptions.TechnicalException;
+import io.gravitee.repository.management.api.CommandRepository;
+import io.gravitee.repository.management.api.ParameterRepository;
+import io.gravitee.repository.management.model.Command;
+import io.gravitee.repository.management.model.MessageRecipient;
+import io.gravitee.repository.management.model.Parameter;
+import io.gravitee.repository.management.model.ParameterReferenceType;
+import io.gravitee.rest.api.model.InvalidateParameterCacheCommandEntity;
+import io.gravitee.rest.api.model.command.CommandTags;
+import io.gravitee.rest.api.model.parameters.Key;
+import io.gravitee.rest.api.model.parameters.KeyScope;
+import io.gravitee.rest.api.service.AuditService;
+import io.gravitee.rest.api.service.EnvironmentService;
+import io.gravitee.rest.api.service.ParameterService;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.exceptions.TechnicalManagementException;
+import jakarta.inject.Inject;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+import lombok.CustomLog;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author Azize ELAMRANI (azize at graviteesource.com)
+ * @author Nicolas GERAUD (nicolas.geraud at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@CustomLog
+@Component
+public class ParameterServiceImpl extends TransactionalService implements ParameterService {
+
+    public static final String SEPARATOR = ";";
+    public static final String KV_SEPARATOR = "@";
+
+    private static final int CACHE_EXPIRE_AFTER_WRITE_SECOND = 60;
+    private final Cache<String, Optional<Parameter>> cache = CacheBuilder.newBuilder()
+        .expireAfterWrite(CACHE_EXPIRE_AFTER_WRITE_SECOND, TimeUnit.SECONDS)
+        .build();
+
+    @Lazy
+    @Inject
+    private ParameterRepository parameterRepository;
+
+    @Inject
+    private AuditService auditService;
+
+    @Inject
+    private ConfigurableEnvironment environment;
+
+    @Inject
+    private EventManager eventManager;
+
+    @Inject
+    @Lazy
+    private EnvironmentService environmentService;
+
+    @Inject
+    private ObjectMapper objectMapper;
+
+    @Inject
+    private Node node;
+
+    @Lazy
+    @Inject
+    private CommandRepository commandRepository;
+
+    // Current context
+    @Override
+    public String find(
+        ExecutionContext executionContext,
+        Key key,
+        io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return find(executionContext, key, null, referenceType);
+    }
+
+    @Override
+    public boolean findAsBoolean(
+        ExecutionContext executionContext,
+        final Key key,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAsBoolean(executionContext, key, null, referenceType);
+    }
+
+    @Override
+    public List<String> findAll(
+        ExecutionContext executionContext,
+        final Key key,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, key, Function.identity(), null, null, referenceType);
+    }
+
+    @Override
+    public Map<String, List<String>> findAll(
+        ExecutionContext executionContext,
+        final List<Key> keys,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, keys, Function.identity(), null, null, referenceType);
+    }
+
+    @Override
+    public <T> List<T> findAll(
+        ExecutionContext executionContext,
+        final Key key,
+        final Function<String, T> mapper,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, key, mapper, null, null, referenceType);
+    }
+
+    @Override
+    public <T> Map<String, List<T>> findAll(
+        ExecutionContext executionContext,
+        final List<Key> keys,
+        final Function<String, T> mapper,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, keys, mapper, null, null, referenceType);
+    }
+
+    @Override
+    public <T> List<T> findAll(
+        ExecutionContext executionContext,
+        final Key key,
+        final Function<String, T> mapper,
+        final Predicate<String> filter,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, key, mapper, filter, null, referenceType);
+    }
+
+    @Override
+    public <T> Map<String, List<T>> findAll(
+        ExecutionContext executionContext,
+        List<Key> keys,
+        Function<String, T> mapper,
+        Predicate<String> filter,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, keys, mapper, filter, null, referenceType);
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final String value,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return save(executionContext, key, value, null, referenceType);
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final List<String> values,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return save(executionContext, key, values, null, referenceType);
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final Map<String, String> values,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return save(executionContext, key, values, null, referenceType);
+    }
+
+    // Specific context
+    @Override
+    public String find(
+        ExecutionContext executionContext,
+        final Key key,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return GraviteeContext.getCurrentParameters().computeIfAbsent(key, k -> {
+            final List<String> values = findAll(k, referenceId, referenceType, executionContext);
+            final String value;
+            if (values == null || values.isEmpty()) {
+                value = k.defaultValue();
+            } else {
+                value = String.join(SEPARATOR, values);
+            }
+            return value;
+        });
+    }
+
+    @Override
+    public boolean findAsBoolean(
+        ExecutionContext executionContext,
+        final Key key,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return Boolean.parseBoolean(find(executionContext, key, referenceId, referenceType));
+    }
+
+    @Override
+    public List<String> findAll(
+        final Key key,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType,
+        ExecutionContext executionContext
+    ) {
+        return findAll(executionContext, key, Function.identity(), null, referenceId, referenceType);
+    }
+
+    @Override
+    public Map<String, List<String>> findAll(
+        final List<Key> keys,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType,
+        ExecutionContext executionContext
+    ) {
+        return findAll(executionContext, keys, Function.identity(), null, referenceId, referenceType);
+    }
+
+    @Override
+    public <T> List<T> findAll(
+        ExecutionContext executionContext,
+        final Key key,
+        final Function<String, T> mapper,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, key, mapper, null, referenceId, referenceType);
+    }
+
+    @Override
+    public <T> Map<String, List<T>> findAll(
+        ExecutionContext executionContext,
+        final List<Key> keys,
+        final Function<String, T> mapper,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return findAll(executionContext, keys, mapper, null, referenceId, referenceType);
+    }
+
+    @Override
+    public <T> List<T> findAll(
+        ExecutionContext executionContext,
+        final Key key,
+        final Function<String, T> mapper,
+        final Predicate<String> filter,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        String refIdToUse = getEffectiveReferenceId(executionContext, referenceId, referenceType);
+        try {
+            Optional<Parameter> optionalParameter = this.getSystemParameter(key);
+            if (optionalParameter.isPresent()) {
+                return splitValue(optionalParameter.get().getValue(), mapper, filter);
+            }
+
+            if (referenceType == ENVIRONMENT) {
+                optionalParameter = this.getEnvParameter(key, refIdToUse);
+                if (optionalParameter.isPresent()) {
+                    return splitValue(optionalParameter.get().getValue(), mapper, filter);
+                }
+                String organizationId = environmentService.findById(refIdToUse).getOrganizationId();
+                optionalParameter = this.getOrgParameter(key, organizationId);
+                if (optionalParameter.isPresent()) {
+                    return splitValue(optionalParameter.get().getValue(), mapper, filter);
+                }
+            }
+
+            if (referenceType == ORGANIZATION) {
+                optionalParameter = this.getOrgParameter(key, refIdToUse);
+                if (optionalParameter.isPresent()) {
+                    return splitValue(optionalParameter.get().getValue(), mapper, filter);
+                }
+            }
+
+            return splitValue(this.getDefaultParameterValue(key), mapper, filter);
+        } catch (final TechnicalException ex) {
+            throw new TechnicalManagementException("An error occurs while trying to find parameter values with key: " + key, ex);
+        }
+    }
+
+    @Override
+    public <T> Map<String, List<T>> findAll(
+        ExecutionContext executionContext,
+        List<Key> keys,
+        Function<String, T> mapper,
+        Predicate<String> filter,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        String refIdToUse = getEffectiveReferenceId(executionContext, referenceId, referenceType);
+        try {
+            List<Key> keysToFind = new ArrayList<>(keys);
+            Map<String, List<T>> result = new HashMap<>();
+
+            // Get System parameters
+            for (Key keyToFind : keys) {
+                this.getSystemParameter(keyToFind).ifPresent(p -> {
+                    result.put(p.getKey(), splitValue(p.getValue(), mapper, filter));
+                    keysToFind.remove(keyToFind);
+                });
+            }
+
+            if (!keysToFind.isEmpty()) {
+                switch (referenceType) {
+                    case ENVIRONMENT:
+                        this.getEnvParameters(keysToFind, refIdToUse).forEach(p -> {
+                            result.put(p.getKey(), splitValue(p.getValue(), mapper, filter));
+                            keysToFind.remove(Key.findByKey(p.getKey()));
+                        });
+                        if (!keysToFind.isEmpty()) {
+                            //String organizationId = "DEFAULT";//environmentService.findById(referenceId).getOrganizationId();
+                            String organizationId = environmentService.findById(refIdToUse).getOrganizationId();
+                            this.getOrgParameters(keysToFind, organizationId).forEach(p -> {
+                                result.put(p.getKey(), splitValue(p.getValue(), mapper, filter));
+                                keysToFind.remove(Key.findByKey(p.getKey()));
+                            });
+                            if (!keysToFind.isEmpty()) {
+                                keysToFind.forEach(k -> result.put(k.key(), splitValue(k.defaultValue(), mapper, filter)));
+                            }
+                        }
+                        break;
+                    case ORGANIZATION:
+                        this.getOrgParameters(keysToFind, refIdToUse).forEach(p -> {
+                            result.put(p.getKey(), splitValue(p.getValue(), mapper, filter));
+                            keysToFind.remove(Key.findByKey(p.getKey()));
+                        });
+                        if (!keysToFind.isEmpty()) {
+                            keysToFind.forEach(k -> result.put(k.key(), splitValue(k.defaultValue(), mapper, filter)));
+                        }
+                        break;
+                    default:
+                        keysToFind.forEach(k -> result.put(k.key(), splitValue(k.defaultValue(), mapper, filter)));
+                        break;
+                }
+            }
+
+            return result;
+        } catch (final TechnicalException ex) {
+            throw new TechnicalManagementException("An error occurs while trying to find parameter values with keys: " + keys, ex);
+        }
+    }
+
+    private String getEffectiveReferenceId(
+        ExecutionContext executionContext,
+        String referenceId,
+        io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        String refIdToUse = referenceId;
+        if (refIdToUse == null) {
+            if (referenceType == io.gravitee.rest.api.model.parameters.ParameterReferenceType.ORGANIZATION) {
+                refIdToUse = executionContext.getOrganizationId();
+            } else if (referenceType == ENVIRONMENT) {
+                refIdToUse = executionContext.getEnvironmentId();
+            }
+        }
+        return refIdToUse;
+    }
+
+    private <T> List<T> splitValue(final String value, final Function<String, T> mapper, final Predicate<String> filter) {
+        if (value == null) {
+            return emptyList();
+        }
+        Stream<String> stream = stream(value.split(SEPARATOR));
+        if (filter != null) {
+            stream = stream.filter(filter);
+        }
+        return stream.map(mapper).collect(toList());
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final String value,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        String refIdToUse = getEffectiveReferenceId(executionContext, referenceId, referenceType);
+        try {
+            Optional<Parameter> optionalParameter = parameterRepository.findById(
+                key.key(),
+                refIdToUse,
+                ParameterReferenceType.valueOf(referenceType.name())
+            );
+            final boolean updateMode = optionalParameter.isPresent();
+
+            final Parameter parameter = new Parameter();
+            parameter.setKey(key.key());
+            parameter.setReferenceId(refIdToUse);
+            parameter.setReferenceType(ParameterReferenceType.valueOf(referenceType.name()));
+            parameter.setValue(value);
+
+            if (environment.containsProperty(key.key()) && key.isOverridable()) {
+                parameter.setValue(toSemicolonSeparatedString(key, environment.getProperty(key.key())));
+                return parameter;
+            }
+
+            if (updateMode) {
+                if (value == null) {
+                    parameterRepository.delete(key.key(), refIdToUse, ParameterReferenceType.valueOf(referenceType.name()));
+                    cache.invalidate(computeCacheKey(key.key(), refIdToUse, ParameterReferenceType.valueOf(referenceType.name())));
+                    sendInvalidateParameterCacheCommand(
+                        key.key(),
+                        refIdToUse,
+                        ParameterReferenceType.valueOf(referenceType.name()),
+                        executionContext
+                    );
+                    return null;
+                } else if (!value.equals(optionalParameter.get().getValue())) {
+                    final Parameter updatedParameter = parameterRepository.update(parameter);
+                    cache.invalidate(computeCacheKey(key.key(), refIdToUse, ParameterReferenceType.valueOf(referenceType.name())));
+                    sendInvalidateParameterCacheCommand(
+                        key.key(),
+                        refIdToUse,
+                        ParameterReferenceType.valueOf(referenceType.name()),
+                        executionContext
+                    );
+                    auditService.createAuditLog(
+                        executionContext,
+                        AuditService.AuditLogData.builder()
+                            .properties(singletonMap(PARAMETER, updatedParameter.getKey()))
+                            .event(PARAMETER_UPDATED)
+                            .createdAt(new Date())
+                            .oldValue(optionalParameter.get())
+                            .newValue(updatedParameter)
+                            .build()
+                    );
+                    eventManager.publishEvent(key, parameter);
+                    return updatedParameter;
+                } else {
+                    return optionalParameter.get();
+                }
+            } else {
+                if (value == null) {
+                    return null;
+                }
+                final Parameter savedParameter = parameterRepository.create(parameter);
+                cache.invalidate(computeCacheKey(key.key(), refIdToUse, ParameterReferenceType.valueOf(referenceType.name())));
+                sendInvalidateParameterCacheCommand(
+                    key.key(),
+                    refIdToUse,
+                    ParameterReferenceType.valueOf(referenceType.name()),
+                    executionContext
+                );
+                auditService.createAuditLog(
+                    executionContext,
+                    AuditService.AuditLogData.builder()
+                        .properties(singletonMap(PARAMETER, savedParameter.getKey()))
+                        .event(PARAMETER_CREATED)
+                        .createdAt(new Date())
+                        .oldValue(null)
+                        .newValue(savedParameter)
+                        .build()
+                );
+                eventManager.publishEvent(key, parameter);
+                return savedParameter;
+            }
+        } catch (final TechnicalException ex) {
+            throw new TechnicalManagementException(
+                "An error occurs while trying to create parameter for key/value: " + key + '/' + value,
+                ex
+            );
+        }
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final List<String> values,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return save(
+            executionContext,
+            key,
+            (values == null || values.isEmpty()) ? null : join(SEPARATOR, values),
+            referenceId,
+            referenceType
+        );
+    }
+
+    @Override
+    public Parameter save(
+        ExecutionContext executionContext,
+        final Key key,
+        final Map<String, String> values,
+        final String referenceId,
+        final io.gravitee.rest.api.model.parameters.ParameterReferenceType referenceType
+    ) {
+        return save(
+            executionContext,
+            key,
+            values == null
+                ? null
+                : values
+                    .entrySet()
+                    .stream()
+                    .map(entry -> entry.getKey() + KV_SEPARATOR + entry.getValue())
+                    .collect(joining(SEPARATOR)),
+            referenceId,
+            referenceType
+        );
+    }
+
+    private String toSemicolonSeparatedString(Key key, String value) {
+        if (key.type() != null && List.class.isAssignableFrom(key.type())) {
+            value = value.replace(",", SEPARATOR);
+        }
+        return value;
+    }
+
+    private Optional<Parameter> getEnvParameter(Key key, String environmentId) throws TechnicalException {
+        if (key.scopes().contains(KeyScope.ENVIRONMENT)) {
+            String cacheKey = computeCacheKey(key.key(), environmentId, ParameterReferenceType.ENVIRONMENT);
+            try {
+                return cache.get(cacheKey, () ->
+                    parameterRepository.findById(key.key(), environmentId, ParameterReferenceType.ENVIRONMENT)
+                );
+            } catch (Exception e) {
+                throw new TechnicalException(e);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private List<Parameter> getEnvParameters(List<Key> keys, String environmentId) throws TechnicalException {
+        List<Key> keysToFind = keys
+            .stream()
+            .filter(k -> k.scopes().contains(KeyScope.ENVIRONMENT))
+            .collect(toList());
+        if (!keysToFind.isEmpty()) {
+            List<Parameter> parameters = new ArrayList<>();
+            List<Key> keysMissingInCache = new ArrayList<>();
+
+            for (Key key : keysToFind) {
+                String cacheKey = computeCacheKey(key.key(), environmentId, ParameterReferenceType.ENVIRONMENT);
+                Optional<Parameter> cached = cache.getIfPresent(cacheKey);
+                if (cached != null) {
+                    cached.ifPresent(parameters::add);
+                } else {
+                    keysMissingInCache.add(key);
+                }
+            }
+
+            if (!keysMissingInCache.isEmpty()) {
+                List<Parameter> foundParameters = parameterRepository.findByKeys(
+                    keysMissingInCache.stream().map(Key::key).collect(toList()),
+                    environmentId,
+                    ParameterReferenceType.ENVIRONMENT
+                );
+                for (Key key : keysMissingInCache) {
+                    Optional<Parameter> found = foundParameters
+                        .stream()
+                        .filter(p -> p.getKey().equals(key.key()))
+                        .findFirst();
+                    cache.put(computeCacheKey(key.key(), environmentId, ParameterReferenceType.ENVIRONMENT), found);
+                    found.ifPresent(parameters::add);
+                }
+            }
+            return parameters;
+        }
+        return Collections.emptyList();
+    }
+
+    private Optional<Parameter> getOrgParameter(Key key, String organizationId) throws TechnicalException {
+        if (key.scopes().contains(KeyScope.ORGANIZATION)) {
+            String cacheKey = computeCacheKey(key.key(), organizationId, ParameterReferenceType.ORGANIZATION);
+            try {
+                return cache.get(cacheKey, () ->
+                    parameterRepository.findById(key.key(), organizationId, ParameterReferenceType.ORGANIZATION)
+                );
+            } catch (Exception e) {
+                throw new TechnicalException(e);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private List<Parameter> getOrgParameters(List<Key> keys, String organizationId) throws TechnicalException {
+        List<Key> keysToFind = keys
+            .stream()
+            .filter(k -> k.scopes().contains(KeyScope.ORGANIZATION))
+            .collect(toList());
+        if (!keysToFind.isEmpty()) {
+            List<Parameter> parameters = new ArrayList<>();
+            List<Key> keysMissingInCache = new ArrayList<>();
+
+            for (Key key : keysToFind) {
+                String cacheKey = computeCacheKey(key.key(), organizationId, ParameterReferenceType.ORGANIZATION);
+                Optional<Parameter> cached = cache.getIfPresent(cacheKey);
+                if (cached != null) {
+                    cached.ifPresent(parameters::add);
+                } else {
+                    keysMissingInCache.add(key);
+                }
+            }
+
+            if (!keysMissingInCache.isEmpty()) {
+                List<Parameter> foundParameters = parameterRepository.findByKeys(
+                    keysMissingInCache.stream().map(Key::key).collect(toList()),
+                    organizationId,
+                    ParameterReferenceType.ORGANIZATION
+                );
+                for (Key key : keysMissingInCache) {
+                    Optional<Parameter> found = foundParameters
+                        .stream()
+                        .filter(p -> p.getKey().equals(key.key()))
+                        .findFirst();
+                    cache.put(computeCacheKey(key.key(), organizationId, ParameterReferenceType.ORGANIZATION), found);
+                    found.ifPresent(parameters::add);
+                }
+            }
+            return parameters;
+        }
+        return Collections.emptyList();
+    }
+
+    private String computeCacheKey(String key, String referenceId, ParameterReferenceType referenceType) {
+        return key + referenceId + referenceType;
+    }
+
+    private Optional<Parameter> getSystemParameter(Key key) {
+        if (environment.containsProperty(key.key()) && key.isOverridable()) {
+            final Parameter parameter = new Parameter();
+            parameter.setKey(key.key());
+            parameter.setValue(toSemicolonSeparatedString(key, environment.getProperty(key.key())));
+            return Optional.of(parameter);
+        }
+        return Optional.empty();
+    }
+
+    private String getDefaultParameterValue(Key key) {
+        return key.defaultValue();
+    }
+
+    @Override
+    public void invalidateCache(String key, String referenceId, String referenceType) {
+        String cacheKey = computeCacheKey(key, referenceId, ParameterReferenceType.valueOf(referenceType));
+        cache.invalidate(cacheKey);
+    }
+
+    private void sendInvalidateParameterCacheCommand(
+        String key,
+        String referenceId,
+        ParameterReferenceType referenceType,
+        ExecutionContext context
+    ) {
+        Command command = new Command();
+        command.setOrganizationId(context.getOrganizationId());
+        command.setFrom(node.id());
+        command.setTo(MessageRecipient.MANAGEMENT_APIS.name());
+        command.setTags(List.of(CommandTags.PARAMETER_CACHE_UPDATE.name()));
+
+        if (context.hasEnvironmentId()) {
+            command.setEnvironmentId(context.getEnvironmentId());
+        }
+
+        Instant timestamp = Instant.now();
+        InvalidateParameterCacheCommandEntity eventData = InvalidateParameterCacheCommandEntity.builder()
+            .key(key)
+            .referenceId(referenceId)
+            .referenceType(referenceType.name())
+            .createdAt(Date.from(timestamp))
+            .updatedAt(Date.from(timestamp))
+            .build();
+
+        try {
+            String content = objectMapper.writeValueAsString(eventData);
+            command.setContent(content);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize parameter cache invalidation data {}", eventData, e);
+            return;
+        }
+
+        try {
+            commandRepository.create(command);
+        } catch (TechnicalException e) {
+            log.error("Failed to create command to invalidate cached parameter for {}", eventData, e);
+        }
+    }
+}

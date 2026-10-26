@@ -1,0 +1,130 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.v2.rest.spring;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.gravitee.apim.core.analytics_engine.domain_service.BucketNamesPostProcessor;
+import io.gravitee.apim.core.analytics_engine.domain_service.QueryFilterTransformer;
+import io.gravitee.apim.core.analytics_engine.domain_service.UnitEnrichmentPostProcessor;
+import io.gravitee.apim.core.analytics_engine.query_service.AnalyticsDefinitionQueryService;
+import io.gravitee.apim.core.api.use_case.PatchApiUseCase.ApiV4Deserializer;
+import io.gravitee.apim.core.plan.use_case.PatchPlanUseCase.PlanFlowsConverter;
+import io.gravitee.apim.core.user.domain_service.UserContextLoader;
+import io.gravitee.apim.infra.domain_service.analytics_engine.ManagementContextLoader;
+import io.gravitee.apim.infra.domain_service.analytics_engine.processors.ApiTypeFilterTransformer;
+import io.gravitee.apim.infra.domain_service.analytics_engine.processors.BucketNamesPostProcessorImpl;
+import io.gravitee.apim.infra.domain_service.analytics_engine.processors.UnitEnrichmentPostProcessorImpl;
+import io.gravitee.apim.infra.domain_service.user.UserContextLoaderImpl;
+import io.gravitee.apim.infra.spring.AnalyticsEngineRoutingConfiguration;
+import io.gravitee.apim.infra.spring.UsecaseSpringConfiguration;
+import io.gravitee.el.ExpressionLanguageInitializer;
+import io.gravitee.repository.management.api.ApiRepository;
+import io.gravitee.rest.api.kafkaexplorer.spring.KafkaExplorerSpringConfiguration;
+import io.gravitee.rest.api.management.v2.rest.adapter.PatchApiV4Deserializer;
+import io.gravitee.rest.api.management.v2.rest.adapter.PatchPlanFlowsDeserializer;
+import io.gravitee.rest.api.management.v2.rest.mapper.FlowMapper;
+import io.gravitee.rest.api.management.v2.rest.model.FlowV4;
+import io.gravitee.rest.api.management.v2.rest.resource.api.RemoteApiDefinitionParser;
+import io.gravitee.rest.api.management.v2.rest.utils.SubscriptionExpandHelper;
+import io.gravitee.rest.api.service.ApplicationService;
+import io.gravitee.rest.api.service.PermissionService;
+import io.gravitee.rest.api.service.UserService;
+import io.gravitee.rest.api.service.spring.ServiceConfiguration;
+import io.gravitee.rest.api.service.v4.ApiAuthorizationService;
+import io.gravitee.rest.api.service.v4.PlanSearchService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.EnableAsync;
+
+/**
+ * @author David BRASSELY (david.brassely at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@Configuration
+@Import(
+    {
+        ServiceConfiguration.class,
+        UsecaseSpringConfiguration.class,
+        KafkaExplorerSpringConfiguration.class,
+        AnalyticsEngineRoutingConfiguration.class,
+    }
+)
+@EnableAsync
+public class RestManagementConfiguration {
+
+    @Bean
+    public ApiV4Deserializer apiV4Deserializer(ObjectMapper objectMapper) {
+        return new PatchApiV4Deserializer(objectMapper);
+    }
+
+    @Bean
+    public PlanFlowsConverter planFlowsDeserializer(ObjectMapper objectMapper) {
+        return new PatchPlanFlowsDeserializer(objectMapper);
+    }
+
+    @Bean
+    public ExpressionLanguageInitializer expressionLanguageInitializer() {
+        return new ExpressionLanguageInitializer();
+    }
+
+    @Bean
+    public RemoteApiDefinitionParser remoteApiDefinitionParser(ObjectMapper objectMapper) {
+        return new RemoteApiDefinitionParser(objectMapper);
+    }
+
+    @Bean
+    public BucketNamesPostProcessor bucketNamesPostProcessor(
+        @Lazy ApiRepository apiRepository,
+        ApplicationService applicationSearchService
+    ) {
+        return new BucketNamesPostProcessorImpl(apiRepository, applicationSearchService);
+    }
+
+    @Bean
+    public UnitEnrichmentPostProcessor unitEnrichmentPostProcessor(AnalyticsDefinitionQueryService analyticsDefinitionQueryService) {
+        return new UnitEnrichmentPostProcessorImpl(analyticsDefinitionQueryService);
+    }
+
+    @Bean
+    public QueryFilterTransformer apiTypeFilterTransformer() {
+        return new ApiTypeFilterTransformer();
+    }
+
+    @Bean
+    public UserContextLoader userContextLoader(ApiAuthorizationService apiAuthorizationService, @Lazy ApiRepository apiRepository) {
+        return new UserContextLoaderImpl(apiAuthorizationService, apiRepository);
+    }
+
+    @Bean
+    public SubscriptionExpandHelper subscriptionExpandHelper(
+        PlanSearchService planSearchService,
+        ApplicationService applicationService,
+        UserService userService
+    ) {
+        return new SubscriptionExpandHelper(planSearchService, applicationService, userService);
+    }
+
+    @Bean
+    public ManagementContextLoader managementContextLoader(
+        ApiAuthorizationService apiAuthorizationService,
+        @Lazy ApiRepository apiRepository,
+        PermissionService permissionService
+    ) {
+        return new ManagementContextLoader(apiAuthorizationService, apiRepository, permissionService);
+    }
+}

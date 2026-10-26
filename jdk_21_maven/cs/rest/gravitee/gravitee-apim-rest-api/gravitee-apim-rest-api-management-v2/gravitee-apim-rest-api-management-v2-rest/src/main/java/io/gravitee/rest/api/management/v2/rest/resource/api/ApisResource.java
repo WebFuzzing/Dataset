@@ -1,0 +1,496 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.v2.rest.resource.api;
+
+import static io.gravitee.apim.core.utils.CollectionUtils.isNotEmpty;
+import static io.gravitee.apim.core.utils.CollectionUtils.stream;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_ALLOW_IN_API_PRODUCTS;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_API_TYPE;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_CATEGORIES;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_DEFINITION_VERSION;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_PORTAL_STATUS;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_STATUS;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_TAGS;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_TYPE_VALUE;
+import static io.gravitee.rest.api.service.impl.search.lucene.transformer.ApiDocumentTransformer.FIELD_VISIBILITY;
+
+import com.google.common.base.Strings;
+import io.gravitee.apim.core.api.domain_service.ApiStateDomainService;
+import io.gravitee.apim.core.api.exception.InvalidPathsException;
+import io.gravitee.apim.core.api.model.import_definition.ImportDefinition;
+import io.gravitee.apim.core.api.use_case.CreateHttpApiUseCase;
+import io.gravitee.apim.core.api.use_case.CreateNativeApiUseCase;
+import io.gravitee.apim.core.api.use_case.ImportApiCRDUseCase;
+import io.gravitee.apim.core.api.use_case.ImportApiDefinitionFromUrlUseCase;
+import io.gravitee.apim.core.api.use_case.ImportApiDefinitionUseCase;
+import io.gravitee.apim.core.api.use_case.OAIToImportApiUseCase;
+import io.gravitee.apim.core.api.use_case.ValidateApiCRDUseCase;
+import io.gravitee.apim.core.api.use_case.VerifyApiHostsUseCase;
+import io.gravitee.apim.core.api.use_case.VerifyApiPathsUseCase;
+import io.gravitee.apim.core.api.use_case.WsdlToImportApiUseCase;
+import io.gravitee.apim.core.audit.model.AuditInfo;
+import io.gravitee.apim.core.utils.CollectionUtils;
+import io.gravitee.common.data.domain.Page;
+import io.gravitee.common.http.MediaType;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.rest.api.exception.InvalidImageException;
+import io.gravitee.rest.api.management.v2.rest.mapper.ApiMapper;
+import io.gravitee.rest.api.management.v2.rest.mapper.ImportExportApiMapper;
+import io.gravitee.rest.api.management.v2.rest.mapper.ListenerMapper;
+import io.gravitee.rest.api.management.v2.rest.model.ApiCRDSpec;
+import io.gravitee.rest.api.management.v2.rest.model.ApiSearchQuery;
+import io.gravitee.rest.api.management.v2.rest.model.ApiType;
+import io.gravitee.rest.api.management.v2.rest.model.ApisResponse;
+import io.gravitee.rest.api.management.v2.rest.model.CreateApiV4;
+import io.gravitee.rest.api.management.v2.rest.model.ExportApiV4;
+import io.gravitee.rest.api.management.v2.rest.model.GenericApi;
+import io.gravitee.rest.api.management.v2.rest.model.ImportSwaggerDescriptor;
+import io.gravitee.rest.api.management.v2.rest.model.ImportWsdlDescriptor;
+import io.gravitee.rest.api.management.v2.rest.model.VerifyApiHosts;
+import io.gravitee.rest.api.management.v2.rest.model.VerifyApiHostsResponse;
+import io.gravitee.rest.api.management.v2.rest.model.VerifyApiPaths;
+import io.gravitee.rest.api.management.v2.rest.model.VerifyApiPathsResponse;
+import io.gravitee.rest.api.management.v2.rest.pagination.PaginationInfo;
+import io.gravitee.rest.api.management.v2.rest.resource.AbstractResource;
+import io.gravitee.rest.api.management.v2.rest.resource.param.ApiSortByParam;
+import io.gravitee.rest.api.management.v2.rest.resource.param.PaginationParam;
+import io.gravitee.rest.api.model.ImportSwaggerDescriptorEntity;
+import io.gravitee.rest.api.model.common.SortableImpl;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.model.v4.api.ApiEntity;
+import io.gravitee.rest.api.model.v4.api.GenericApiEntity;
+import io.gravitee.rest.api.rest.annotation.Permission;
+import io.gravitee.rest.api.rest.annotation.Permissions;
+import io.gravitee.rest.api.security.utils.ImageUtils;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.search.query.QueryBuilder;
+import io.gravitee.rest.api.service.spring.ImportConfiguration;
+import io.gravitee.rest.api.service.v4.ApiStateService;
+import io.gravitee.rest.api.service.v4.exception.InvalidPathException;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DefaultValue;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.CustomLog;
+
+/**
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@CustomLog
+@Path("/apis")
+public class ApisResource extends AbstractResource {
+
+    private static final String EXPAND_DEPLOYMENT_STATE = "deploymentState";
+
+    @Context
+    private ResourceContext resourceContext;
+
+    @Context
+    protected UriInfo uriInfo;
+
+    @Inject
+    private ApiStateService apiStateService;
+
+    @Inject
+    private VerifyApiPathsUseCase verifyApiPathsUsecase;
+
+    @Inject
+    private VerifyApiHostsUseCase verifyApiHostsUseCase;
+
+    @Path("{apiId}")
+    public ApiResource getApiResource() {
+        return resourceContext.getResource(ApiResource.class);
+    }
+
+    @Inject
+    private ApiStateDomainService apiStateDomainService;
+
+    @Inject
+    private CreateHttpApiUseCase createHttpApiUseCase;
+
+    @Inject
+    private CreateNativeApiUseCase createNativeApiUseCase;
+
+    @Inject
+    private ImportApiCRDUseCase importCRDUseCase;
+
+    @Inject
+    private ValidateApiCRDUseCase validateApiCRDUseCase;
+
+    @Inject
+    private ImportApiDefinitionUseCase importApiDefinitionUseCase;
+
+    @Inject
+    private ImportApiDefinitionFromUrlUseCase importApiDefinitionFromUrlUseCase;
+
+    @Inject
+    private OAIToImportApiUseCase oaiToImportApiUseCase;
+
+    @Inject
+    private WsdlToImportApiUseCase wsdlToImportApiUseCase;
+
+    @Inject
+    private ImportConfiguration importConfiguration;
+
+    @Inject
+    private RemoteApiDefinitionParser remoteApiDefinitionParser;
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = { RolePermissionAction.CREATE }) })
+    public Response createApi(@Valid @NotNull final CreateApiV4 api) {
+        // NOTE: Only for V4 API. V2 API is planned to be supported in the future.
+        AuditInfo audit = getAuditInfo();
+
+        var createdApi = api.getType() == ApiType.NATIVE
+            ? createNativeApiUseCase.execute(new CreateNativeApiUseCase.Input(ApiMapper.INSTANCE.mapToNewNativeApi(api), audit)).api()
+            : createHttpApiUseCase.execute(new CreateHttpApiUseCase.Input(ApiMapper.INSTANCE.mapToNewHttpApi(api), audit)).api();
+
+        boolean isSynchronized = apiStateDomainService.isSynchronized(createdApi, audit);
+        GenericApi.DeploymentStateEnum deploymentState = isSynchronized
+            ? GenericApi.DeploymentStateEnum.DEPLOYED
+            : GenericApi.DeploymentStateEnum.NEED_REDEPLOY;
+        return Response.created(this.getLocationHeader(createdApi.getId()))
+            .entity(ApiMapper.INSTANCE.mapToV4(createdApi, uriInfo, deploymentState))
+            .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = { RolePermissionAction.READ }) })
+    public ApisResponse getApis(@BeanParam @Valid PaginationParam paginationParam, @QueryParam("expands") Set<String> expands) {
+        Page<GenericApiEntity> apis = apiServiceV4.findAll(
+            GraviteeContext.getExecutionContext(),
+            getAuthenticatedUser(),
+            isAdmin(),
+            expands,
+            new SortableImpl("name", true),
+            paginationParam.toPageable()
+        );
+
+        long totalCount = apis.getTotalElements();
+        Integer pageItemsCount = Math.toIntExact(apis.getPageElements());
+        return new ApisResponse()
+            .data(
+                ApiMapper.INSTANCE.map(
+                    apis.getContent(),
+                    uriInfo,
+                    api -> {
+                        if (expands == null || expands.isEmpty() || !expands.contains(EXPAND_DEPLOYMENT_STATE)) {
+                            return null;
+                        }
+                        return apiStateService.isSynchronized(GraviteeContext.getExecutionContext(), api);
+                    },
+                    expands
+                )
+            )
+            .pagination(PaginationInfo.computePaginationInfo(totalCount, pageItemsCount, paginationParam))
+            .links(computePaginationLinks(totalCount, paginationParam));
+    }
+
+    @PUT
+    @Path("/_import/crd")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = RolePermissionAction.CREATE) })
+    public Response createApiWithCRD(@Valid ApiCRDSpec crd, @QueryParam("dryRun") boolean dryRun) {
+        var input = new ImportApiCRDUseCase.Input(getAuditInfo(), ApiMapper.INSTANCE.map(crd));
+
+        return dryRun
+            ? Response.ok(validateApiCRDUseCase.execute(input).status()).build()
+            : Response.ok(importCRDUseCase.execute(input).status()).build();
+    }
+
+    @POST
+    @Path("/_import/swagger")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = RolePermissionAction.CREATE) })
+    public Response createApiFromSwagger(@Valid @NotNull ImportSwaggerDescriptor descriptor) {
+        try {
+            var audit = getAuditInfo();
+            var importSwaggerDescriptor = ImportSwaggerDescriptorEntity.builder()
+                .payload(descriptor.getPayload())
+                .withDocumentation(Boolean.TRUE.equals(descriptor.getWithDocumentation()))
+                .build();
+
+            OAIToImportApiUseCase.Output importOutput = oaiToImportApiUseCase.execute(
+                OAIToImportApiUseCase.Input.builder()
+                    .importSwaggerDescriptor(importSwaggerDescriptor)
+                    .auditInfo(audit)
+                    .withDocumentation(Boolean.TRUE.equals(descriptor.getWithDocumentation()))
+                    .withOASValidationPolicy(Boolean.TRUE.equals(descriptor.getWithOASValidationPolicy()))
+                    .build()
+            );
+
+            boolean isSynchronized = apiStateDomainService.isSynchronized(importOutput.apiWithFlows(), audit);
+
+            return Response.created(this.getLocationHeader(importOutput.apiWithFlows().getId()))
+                .entity(ApiMapper.INSTANCE.map(importOutput.apiWithFlows(), uriInfo, isSynchronized))
+                .build();
+        } catch (InvalidPathsException e) {
+            throw new InvalidPathException("Cannot import API with invalid paths", e);
+        }
+    }
+
+    @POST
+    @Path("/_import/wsdl")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = RolePermissionAction.CREATE) })
+    public Response createApiFromWsdl(@Valid @NotNull ImportWsdlDescriptor descriptor) {
+        try {
+            var audit = getAuditInfo();
+            var output = wsdlToImportApiUseCase.execute(
+                WsdlToImportApiUseCase.Input.of(
+                    descriptor.getPayload(),
+                    ImportWsdlDescriptor.TypeEnum.URL.equals(descriptor.getType()),
+                    Boolean.TRUE.equals(descriptor.getWithDocumentation()),
+                    Boolean.TRUE.equals(descriptor.getWithOASValidationPolicy()),
+                    Optional.ofNullable(descriptor.getWithPolicies()).map(ArrayList::new).orElse(null),
+                    audit
+                )
+            );
+
+            boolean isSynchronized = apiStateDomainService.isSynchronized(output.apiWithFlows(), audit);
+
+            return Response.created(this.getLocationHeader(output.apiWithFlows().getId()))
+                .entity(ApiMapper.INSTANCE.map(output.apiWithFlows(), uriInfo, isSynchronized))
+                .build();
+        } catch (InvalidPathsException e) {
+            throw new InvalidPathException("Cannot import API with invalid paths", e);
+        }
+    }
+
+    @POST
+    @Path("/_import/definition")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = RolePermissionAction.CREATE) })
+    public Response createApiWithDefinition(@Valid ExportApiV4 apiToImport) {
+        verifyImage(apiToImport.getApiPicture(), "picture");
+        verifyImage(apiToImport.getApiBackground(), "background");
+
+        ImportDefinition importDefinition = ImportExportApiMapper.INSTANCE.toImportDefinition(apiToImport);
+
+        try {
+            var audit = getAuditInfo();
+            ImportApiDefinitionUseCase.Output output = importApiDefinitionUseCase.execute(
+                new ImportApiDefinitionUseCase.Input(importDefinition, audit)
+            );
+
+            boolean isSynchronized = apiStateDomainService.isSynchronized(output.apiWithFlows(), audit);
+
+            return Response.created(this.getLocationHeader(output.apiWithFlows().getId()))
+                .entity(ApiMapper.INSTANCE.map(output.apiWithFlows(), uriInfo, isSynchronized))
+                .build();
+        } catch (InvalidPathsException e) {
+            throw new InvalidPathException("Cannot import API with invalid paths", e);
+        }
+    }
+
+    @POST
+    @Path("/_import/definition-url")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = RolePermissionAction.CREATE) })
+    public Response createApiWithDefinitionFromUrl(@NotNull String apiDefinitionUrl) {
+        var input = new ImportApiDefinitionFromUrlUseCase.Input(
+            apiDefinitionUrl,
+            importConfiguration.getImportWhitelist(),
+            importConfiguration.isAllowImportFromPrivate()
+        );
+        var output = importApiDefinitionFromUrlUseCase.execute(input);
+
+        ExportApiV4 apiToImport = remoteApiDefinitionParser.parseAndValidate(output.apiDefinitionContent());
+        return createApiWithDefinition(apiToImport);
+    }
+
+    private static void verifyImage(String imageContent, String imageUsage) {
+        try {
+            ImageUtils.verify(imageContent);
+        } catch (InvalidImageException e) {
+            log.warn("Error while parsing {} while importing api", imageUsage, e);
+            throw new BadRequestException("Invalid image format for api " + imageUsage);
+        }
+    }
+
+    @POST
+    @Path("_search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = { RolePermissionAction.READ }) })
+    public ApisResponse searchApis(
+        @BeanParam @Valid PaginationParam paginationParam,
+        @BeanParam ApiSortByParam apiSortByParam,
+        final @Valid @NotNull ApiSearchQuery apiSearchQuery,
+        @QueryParam("expands") Set<String> expands,
+        @QueryParam("manageOnly") @DefaultValue("true") boolean manageOnly
+    ) {
+        apiSortByParam.validate();
+
+        QueryBuilder<ApiEntity> apiQueryBuilder = QueryBuilder.create(ApiEntity.class);
+
+        if (!Strings.isNullOrEmpty(apiSearchQuery.getQuery())) {
+            apiQueryBuilder.setQuery(apiSearchQuery.getQuery());
+        }
+
+        if (Objects.nonNull(apiSearchQuery.getIds()) && !apiSearchQuery.getIds().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_TYPE_VALUE, apiSearchQuery.getIds());
+        }
+
+        if (apiSearchQuery.getApiTypes() != null && !apiSearchQuery.getApiTypes().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_API_TYPE, apiSearchQuery.getApiTypes());
+        }
+
+        if (apiSearchQuery.getStatuses() != null && !apiSearchQuery.getStatuses().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_STATUS, apiSearchQuery.getStatuses());
+        }
+
+        if (apiSearchQuery.getTags() != null && !apiSearchQuery.getTags().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_TAGS, apiSearchQuery.getTags());
+        }
+
+        if (apiSearchQuery.getCategories() != null && !apiSearchQuery.getCategories().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_CATEGORIES, apiSearchQuery.getCategories());
+        }
+
+        if (apiSearchQuery.getPublished() != null && !apiSearchQuery.getPublished().isEmpty()) {
+            apiQueryBuilder.addFilter(FIELD_PORTAL_STATUS, apiSearchQuery.getPublished());
+        }
+
+        if (CollectionUtils.isNotEmpty(apiSearchQuery.getVisibilities())) {
+            apiQueryBuilder.addFilter(FIELD_VISIBILITY, apiSearchQuery.getVisibilities());
+        }
+
+        if (apiSearchQuery.getAllowedInApiProducts() != null) {
+            apiQueryBuilder.addFilter(FIELD_ALLOW_IN_API_PRODUCTS, apiSearchQuery.getAllowedInApiProducts());
+        }
+
+        var selectedDefinitions = Stream.concat(
+            Stream.ofNullable(apiSearchQuery.getDefinitionVersion()),
+            stream(apiSearchQuery.getDefinitionVersions())
+        )
+            .filter(Objects::nonNull)
+            .map(ApiMapper.INSTANCE::mapDefinitionVersion)
+            .map(DefinitionVersion::getLabel)
+            .collect(Collectors.toSet());
+        if (isNotEmpty(selectedDefinitions)) {
+            apiQueryBuilder.addFilter(FIELD_DEFINITION_VERSION, selectedDefinitions);
+        }
+
+        apiQueryBuilder.setSort(apiSortByParam.toSortable());
+
+        boolean expandDeploymentState = Objects.nonNull(expands) && expands.contains(EXPAND_DEPLOYMENT_STATE);
+
+        Page<GenericApiEntity> apis = apiSearchService.search(
+            GraviteeContext.getExecutionContext(),
+            getAuthenticatedUser(),
+            isAdmin(),
+            apiQueryBuilder,
+            paginationParam.toPageable(),
+            expandDeploymentState,
+            manageOnly,
+            expands,
+            apiSearchQuery.getHasOpenApiDocumentation()
+        );
+
+        long totalCount = apis.getTotalElements();
+        Integer pageItemsCount = Math.toIntExact(apis.getPageElements());
+        return new ApisResponse()
+            .data(
+                ApiMapper.INSTANCE.map(
+                    apis.getContent(),
+                    uriInfo,
+                    api -> expandDeploymentState ? apiStateService.isSynchronized(GraviteeContext.getExecutionContext(), api) : null,
+                    expands
+                )
+            )
+            .pagination(PaginationInfo.computePaginationInfo(totalCount, pageItemsCount, paginationParam))
+            .links(computePaginationLinks(totalCount, paginationParam));
+    }
+
+    @POST
+    @Path("_verify/paths")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = { RolePermissionAction.READ }) })
+    public Response verifyPaths(VerifyApiPaths verifyPayload) {
+        try {
+            verifyApiPathsUsecase.execute(
+                new VerifyApiPathsUseCase.Request(
+                    verifyPayload.getApiId(),
+                    verifyPayload
+                        .getPaths()
+                        .stream()
+                        .map(p ->
+                            io.gravitee.apim.core.api.model.Path.builder()
+                                .path(p.getPath())
+                                .host(p.getHost())
+                                .overrideAccess(Boolean.TRUE.equals(p.getOverrideAccess()))
+                                .build()
+                        )
+                        .toList()
+                )
+            );
+
+            return Response.accepted(new VerifyApiPathsResponse().ok(true)).build();
+        } catch (InvalidPathsException e) {
+            return Response.accepted(new VerifyApiPathsResponse().ok(false).reason(e.getMessage())).build();
+        }
+    }
+
+    @POST
+    @Path("_verify/hosts")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Permissions({ @Permission(value = RolePermission.ENVIRONMENT_API, acls = { RolePermissionAction.READ }) })
+    public Response verifyHosts(VerifyApiHosts verifyPayload) {
+        var executionContext = GraviteeContext.getExecutionContext();
+        try {
+            verifyApiHostsUseCase.execute(
+                new VerifyApiHostsUseCase.Input(
+                    executionContext.getEnvironmentId(),
+                    verifyPayload.getApiId(),
+                    ListenerMapper.INSTANCE.map(verifyPayload.getListenerType()),
+                    verifyPayload.getHosts()
+                )
+            );
+            return Response.accepted(new VerifyApiHostsResponse().ok(true)).build();
+        } catch (Exception e) {
+            return Response.accepted(new VerifyApiHostsResponse().ok(false).reason(e.getMessage())).build();
+        }
+    }
+}

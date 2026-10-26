@@ -1,0 +1,209 @@
+[
+    {
+        "id": "1e9013a0-fc13-4bd0-b2e2-cdf2b1895b46",
+        "apiId": "api1",
+        "environmentId": "env1",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 1,
+            "errors": 0,
+            "warnings": 0,
+            "infos": 0,
+            "hints": 0
+        },
+        "assets": [
+            {
+                "pageId": "a8e754af-a593-4dc5-bf38-2d0b83a7edc1",
+                "type": "SWAGGER",
+                "diagnostics": [],
+                "errors": []
+            }
+        ]
+    },
+    {
+        "id": "cad107c9-27f2-40b2-9107-c927f2e0b2fc",
+        "apiId": "api2",
+        "environmentId": "env1",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 0.74,
+            "errors": 1,
+            "warnings": 2,
+            "infos": 3,
+            "hints": 4
+        },
+        "assets": [
+            {
+                "pageId": "f931618f-3207-412a-adad-5bffdce746f7",
+                "type": "SWAGGER",
+                "diagnostics": [
+                    {
+                        "severity": "WARN",
+                        "range": {
+                            "start": {
+                                "line": 1,
+                                "character": 1
+                            },
+                            "end": {
+                                "line": 1,
+                                "character": 1
+                            }
+                        },
+                        "rule": "operation-operationId",
+                        "message": "Operation must have \"operationId\".",
+                        "path": "paths./echo.options"
+                    }
+                ],
+                "errors": []
+            },
+            {
+                "pageId": "7f2ad639-3ac4-4517-8dbe-55f377e9118a",
+                "type": "ASYNCAPI",
+                "diagnostics": [],
+                "errors": []
+            },
+            {
+                "type": "GRAVITEE_DEFINITION",
+                "diagnostics": [],
+                "errors": []
+            }
+        ]
+    },
+    {
+        "id": "b1419ea8-75c6-4fd9-a8c8-b43a6bda6ee9",
+        "apiId": "api3",
+        "environmentId": "env1",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 1,
+            "errors": 0,
+            "warnings": 0,
+            "infos": 0,
+            "hints": 0
+        },
+        "assets": []
+    },
+    {
+        "id": "c6bfb040-b185-4f11-880a-5ed1add052bc",
+        "apiId": "api4",
+        "environmentId": "env1",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 0.55,
+            "errors": 4,
+            "warnings": 3,
+            "infos": 2,
+            "hints": 1
+        },
+        "assets": [
+            {
+                "pageId": "e0abd870-cb65-4be0-a65e-001f07c5d980",
+                "type": "SWAGGER",
+                "diagnostics": [
+                    {
+                        "severity": "WARN",
+                        "range": {
+                            "start": {
+                                "line": 1,
+                                "character": 1
+                            },
+                            "end": {
+                                "line": 1,
+                                "character": 1
+                            }
+                        },
+                        "rule": "operation-operationId",
+                        "message": "Operation must have \"operationId\".",
+                        "path": "paths./echo.options"
+                    }
+                ],
+                "errors": []
+            },
+            {
+                "pageId": "a5fd25a3-73d7-4338-b027-f24029cfa582",
+                "type": "ASYNCAPI",
+                "diagnostics": [],
+                "errors": []
+            },
+            {
+                "type": "GRAVITEE_DEFINITION",
+                "diagnostics": [],
+                "errors": []
+            }
+        ]
+    },
+    {
+        "id": "26a590f2-05fa-433e-a982-d64c0a274ee9",
+        "apiId": "api5",
+        "environmentId": "env2",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 0.95,
+            "errors": 0,
+            "warnings": 1,
+            "infos": 0,
+            "hints": 0
+        },
+        "assets": [
+            {
+                "pageId": "9a2803c3-6467-49ff-840e-981fb391df94",
+                "type": "SWAGGER",
+                "diagnostics": [
+                    {
+                        "severity": "WARN",
+                        "range": {
+                            "start": {
+                                "line": 1,
+                                "character": 1
+                            },
+                            "end": {
+                                "line": 1,
+                                "character": 1
+                            }
+                        },
+                        "rule": "operation-operationId",
+                        "message": "Operation must have \"operationId\".",
+                        "path": "paths./echo.options"
+                    }
+                ],
+                "errors": []
+            },
+            {
+                "pageId": "a89bfa49-65ac-4529-abf6-0efdb8415a99",
+                "type": "ASYNCAPI",
+                "diagnostics": [],
+                "errors": []
+            },
+            {
+                "type": "GRAVITEE_DEFINITION",
+                "diagnostics": [],
+                "errors": []
+            }
+        ]
+    },
+    {
+        "id": "65a209b1-e872-4e1c-a7a1-e72d4a40b12a",
+        "apiId": "api6",
+        "environmentId": "env2",
+        "createdAt": 1470157767000,
+        "summary": {
+            "score": 0.0,
+            "errors": 0,
+            "warnings": 0,
+            "infos": 0,
+            "hints": 0
+        },
+        "assets": [
+            {
+                "type": "GRAVITEE_DEFINITION",
+                "diagnostics": [],
+                "errors": [
+                    {
+                        "code": "undefined-function",
+                        "path": ["rules", "api-key-security-scheme", "then", "function"]
+                    }
+                ]
+            }
+        ]
+    }
+]
