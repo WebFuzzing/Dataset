@@ -1,0 +1,105 @@
+---
+apiVersion: "gravitee.io/v1alpha1"
+kind: "ApiDefinition"
+metadata:
+  name: "export-test-api"
+  annotations: {}
+  labels: {}
+spec:
+  name: "Export Test API"
+  crossId: "test-api-cross-id"
+  execution_mode: "v3"
+  description: "Gravitee.io"
+  gravitee: "2.0.0"
+  flow_mode: "DEFAULT"
+  resources: []
+  properties: []
+  groups:
+  - "developers"
+  members: []
+  pages:
+    My Folder:
+      name: "My Folder"
+      type: "FOLDER"
+      order: 1
+      published: false
+      visibility: "PUBLIC"
+      homepage: false
+      excludedAccessControls: false
+    Github-Fetcher:
+      name: "Github-Fetcher"
+      type: "ROOT"
+      order: 2
+      published: false
+      visibility: "PUBLIC"
+      source:
+        type: "github-fetcher"
+      homepage: false
+      excludedAccessControls: false
+    HTTP-Fetcher:
+      name: "HTTP-Fetcher"
+      type: "SWAGGER"
+      order: 5
+      published: false
+      visibility: "PUBLIC"
+      source:
+        type: "http-fetcher"
+      homepage: false
+      excludedAccessControls: false
+  plans:
+  - id: "plan-id"
+    crossId: "test-plan-cross-id"
+    description: "free plan"
+    validation: "AUTO"
+    security: "API_KEY"
+    type: "API"
+    status: "PUBLISHED"
+    api: "id-api"
+    order: 0
+    comment_required: false
+    flows: []
+  id: "id-api"
+  path_mappings: []
+  proxy:
+    virtual_hosts:
+    - path: "/test"
+    strip_context_path: false
+    preserve_host: false
+    logging:
+      mode: "CLIENT_PROXY"
+      content: "NONE"
+      scope: "NONE"
+      condition: "condition"
+    groups:
+    - name: "default-group"
+      endpoints:
+      - name: "default"
+        target: "http://test"
+        weight: 1
+        backup: false
+        type: "http"
+      load_balancing:
+        type: "ROUND_ROBIN"
+      http:
+        connectTimeout: 5000
+        idleTimeout: 60000
+        keepAliveTimeout: 30000
+        keepAlive: true
+        readTimeout: 10000
+        pipelining: false
+        maxConcurrentConnections: 100
+        useCompression: true
+        followRedirects: false
+        maxHeaderSize: 8192
+        maxChunkSize: 8192
+  response_templates:
+    API_KEY_MISSING:
+      '*/*':
+        status: 400
+        body: "{\"bad\":\"news\"}"
+        propagateErrorKeyToLogs: false
+  state: "STOPPED"
+  contextRef:
+    name: "apim-dev-ctx"
+    namespace: "default"
+  notifyMembers: true

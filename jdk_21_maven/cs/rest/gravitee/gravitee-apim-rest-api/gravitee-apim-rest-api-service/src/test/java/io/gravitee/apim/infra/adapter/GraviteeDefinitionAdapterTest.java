@@ -1,0 +1,312 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.infra.adapter;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.gravitee.apim.core.api.model.Api;
+import io.gravitee.apim.core.api.model.NewApiMetadata;
+import io.gravitee.apim.core.api.model.import_definition.ApiDescriptor;
+import io.gravitee.apim.core.api.model.import_definition.PlanDescriptor;
+import io.gravitee.apim.core.membership.model.PrimaryOwnerEntity;
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.definition.model.v4.ApiType;
+import io.gravitee.definition.model.v4.flow.Flow;
+import io.gravitee.definition.model.v4.nativeapi.NativeAnalytics;
+import io.gravitee.definition.model.v4.nativeapi.NativeApi;
+import io.gravitee.definition.model.v4.nativeapi.NativeFlow;
+import io.gravitee.definition.model.v4.nativeapi.NativePlan;
+import io.gravitee.definition.model.v4.plan.PlanMode;
+import io.gravitee.definition.model.v4.plan.PlanStatus;
+import io.gravitee.rest.api.model.WorkflowState;
+import java.util.List;
+import java.util.Set;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class GraviteeDefinitionAdapterTest {
+
+    @Test
+    void mapV4_should_propagate_allowedInApiProducts_from_definition() {
+        // Given a core Api with a V4 HTTP PROXY definition
+        var v4Definition = new io.gravitee.definition.model.v4.Api();
+        v4Definition.setDefinitionVersion(DefinitionVersion.V4);
+        v4Definition.setType(ApiType.PROXY);
+        v4Definition.setApiVersion("1.0.0");
+        v4Definition.setName("my-api");
+        v4Definition.setAllowedInApiProducts(true);
+
+        Api coreApi = Api.builder()
+            .id("api-id")
+            .environmentId("env-id")
+            .version("1.0.0")
+            .definitionVersion(DefinitionVersion.V4)
+            .type(ApiType.PROXY)
+            .apiDefinitionHttpV4(v4Definition)
+            .build();
+
+        var primaryOwner = PrimaryOwnerEntity.builder()
+            .id("po-id")
+            .email("po@acme.test")
+            .displayName("PO")
+            .type(PrimaryOwnerEntity.Type.USER)
+            .build();
+        var metadata = java.util.Collections.<NewApiMetadata>emptyList();
+
+        // When
+        ApiDescriptor.ApiDescriptorV4 descriptor = GraviteeDefinitionAdapter.INSTANCE.mapV4(
+            coreApi,
+            primaryOwner,
+            WorkflowState.REVIEW_OK,
+            Set.of("group-1"),
+            (java.util.Collection<NewApiMetadata>) metadata,
+            List.of(new Flow()),
+            false
+        );
+
+        // Then
+        assertThat(descriptor.allowedInApiProducts()).isTrue();
+    }
+
+    @Test
+    void mapV4_should_default_allowedInApiProducts_to_false_when_missing_from_proxy_definition() {
+        var v4Definition = new io.gravitee.definition.model.v4.Api();
+        v4Definition.setDefinitionVersion(DefinitionVersion.V4);
+        v4Definition.setType(ApiType.PROXY);
+        v4Definition.setApiVersion("1.0.0");
+        v4Definition.setName("my-api");
+        // no allowedInApiProducts set
+
+        Api coreApi = Api.builder()
+            .id("api-id")
+            .environmentId("env-id")
+            .version("1.0.0")
+            .definitionVersion(DefinitionVersion.V4)
+            .type(ApiType.PROXY)
+            .apiDefinitionHttpV4(v4Definition)
+            .build();
+
+        var primaryOwner = PrimaryOwnerEntity.builder()
+            .id("po-id")
+            .email("po@acme.test")
+            .displayName("PO")
+            .type(PrimaryOwnerEntity.Type.USER)
+            .build();
+        var metadata = java.util.Collections.<NewApiMetadata>emptyList();
+
+        ApiDescriptor.ApiDescriptorV4 descriptor = GraviteeDefinitionAdapter.INSTANCE.mapV4(
+            coreApi,
+            primaryOwner,
+            WorkflowState.REVIEW_OK,
+            Set.of("group-1"),
+            (java.util.Collection<NewApiMetadata>) metadata,
+            List.of(new Flow()),
+            false
+        );
+
+        assertThat(descriptor.allowedInApiProducts()).isFalse();
+    }
+
+    @Test
+    void mapV4_should_export_metadata_even_without_value() {
+        // APIM-14929: an API-level metadata entry stored without a value must not break the export
+        var v4Definition = new io.gravitee.definition.model.v4.Api();
+        v4Definition.setDefinitionVersion(DefinitionVersion.V4);
+        v4Definition.setType(ApiType.PROXY);
+        v4Definition.setApiVersion("1.0.0");
+        v4Definition.setName("my-api");
+
+        Api coreApi = Api.builder()
+            .id("api-id")
+            .environmentId("env-id")
+            .version("1.0.0")
+            .definitionVersion(DefinitionVersion.V4)
+            .type(ApiType.PROXY)
+            .apiDefinitionHttpV4(v4Definition)
+            .build();
+
+        var primaryOwner = PrimaryOwnerEntity.builder()
+            .id("po-id")
+            .email("po@acme.test")
+            .displayName("PO")
+            .type(PrimaryOwnerEntity.Type.USER)
+            .build();
+
+        var metadata = List.of(
+            NewApiMetadata.builder().key("overridden").name("overridden").value("api-value").defaultValue("env-value").build(),
+            NewApiMetadata.builder().key("inherited").name("inherited").defaultValue("env-value").build(),
+            NewApiMetadata.builder().key("no-value").name("no-value").build()
+        );
+
+        ApiDescriptor.ApiDescriptorV4 descriptor = GraviteeDefinitionAdapter.INSTANCE.mapV4(
+            coreApi,
+            primaryOwner,
+            WorkflowState.REVIEW_OK,
+            Set.of("group-1"),
+            metadata,
+            List.of(new Flow()),
+            false
+        );
+
+        assertThat(descriptor.metadata())
+            .containsEntry("overridden", "api-value")
+            .containsEntry("inherited", "env-value")
+            .containsEntry("no-value", null)
+            .hasSize(3);
+    }
+
+    @Test
+    void mapV4_should_leave_allowedInApiProducts_null_for_non_proxy_api() {
+        var v4Definition = new io.gravitee.definition.model.v4.Api();
+        v4Definition.setDefinitionVersion(DefinitionVersion.V4);
+        v4Definition.setType(ApiType.MESSAGE);
+        v4Definition.setApiVersion("1.0.0");
+        v4Definition.setName("my-api");
+
+        Api coreApi = Api.builder()
+            .id("api-id")
+            .environmentId("env-id")
+            .version("1.0.0")
+            .definitionVersion(DefinitionVersion.V4)
+            .type(ApiType.MESSAGE)
+            .apiDefinitionHttpV4(v4Definition)
+            .build();
+
+        var primaryOwner = PrimaryOwnerEntity.builder()
+            .id("po-id")
+            .email("po@acme.test")
+            .displayName("PO")
+            .type(PrimaryOwnerEntity.Type.USER)
+            .build();
+        var metadata = java.util.Collections.<NewApiMetadata>emptyList();
+
+        ApiDescriptor.ApiDescriptorV4 descriptor = GraviteeDefinitionAdapter.INSTANCE.mapV4(
+            coreApi,
+            primaryOwner,
+            WorkflowState.REVIEW_OK,
+            Set.of("group-1"),
+            (java.util.Collection<NewApiMetadata>) metadata,
+            List.of(new Flow()),
+            false
+        );
+
+        assertThat(descriptor.allowedInApiProducts()).isNull();
+    }
+
+    @Test
+    void mapPlanNative_should_propagate_port_routing_fields_from_definition() {
+        // Given a core Plan with port-based routing configured on the native definition
+        var nativePlanDefinition = NativePlan.builder()
+            .security(io.gravitee.definition.model.v4.plan.PlanSecurity.builder().type("key-less").build())
+            .mode(PlanMode.STANDARD)
+            .status(PlanStatus.PUBLISHED)
+            .bootstrapPort(9092)
+            .brokerRangeStart(9100)
+            .brokerRangeEnd(9102)
+            .build();
+
+        var corePlan = io.gravitee.apim.core.plan.model.Plan.builder()
+            .id("plan-id")
+            .name("plan-name")
+            .definitionVersion(DefinitionVersion.V4)
+            .apiType(ApiType.NATIVE)
+            .validation(io.gravitee.apim.core.plan.model.Plan.PlanValidationType.MANUAL)
+            .planDefinitionNativeV4(nativePlanDefinition)
+            .build();
+
+        // When exported via GraviteeDefinitionAdapter
+        PlanDescriptor.Native descriptor = GraviteeDefinitionAdapter.INSTANCE.mapPlanNative(corePlan, false);
+
+        // Then port fields are present in the exported descriptor
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(descriptor.bootstrapPort()).isEqualTo(9092);
+            soft.assertThat(descriptor.brokerRangeStart()).isEqualTo(9100);
+            soft.assertThat(descriptor.brokerRangeEnd()).isEqualTo(9102);
+        });
+    }
+
+    @Test
+    void mapNative_should_propagate_reporterMetricsEnabled_from_analytics() {
+        // Given a Native API whose analytics explicitly opts out of connection-metrics reporting
+        var nativeDefinition = new NativeApi();
+        nativeDefinition.setDefinitionVersion(DefinitionVersion.V4);
+        nativeDefinition.setType(ApiType.NATIVE);
+        nativeDefinition.setApiVersion("1.0.0");
+        nativeDefinition.setName("my-kafka");
+        nativeDefinition.setAnalytics(NativeAnalytics.builder().enabled(true).reporterMetricsEnabled(false).build());
+
+        Api coreApi = Api.builder()
+            .id("api-id")
+            .environmentId("env-id")
+            .version("1.0.0")
+            .definitionVersion(DefinitionVersion.V4)
+            .type(ApiType.NATIVE)
+            .apiDefinitionNativeV4(nativeDefinition)
+            .build();
+
+        var primaryOwner = PrimaryOwnerEntity.builder()
+            .id("po-id")
+            .email("po@acme.test")
+            .displayName("PO")
+            .type(PrimaryOwnerEntity.Type.USER)
+            .build();
+
+        // When
+        ApiDescriptor.Native descriptor = GraviteeDefinitionAdapter.INSTANCE.mapNative(
+            coreApi,
+            primaryOwner,
+            WorkflowState.REVIEW_OK,
+            Set.of("group-1"),
+            java.util.Collections.<NewApiMetadata>emptyList(),
+            List.of(new NativeFlow()),
+            false
+        );
+
+        // Then the descriptor carries the flag's non-default value end-to-end — proves the @Mapping wiring.
+        assertThat(descriptor.analytics()).isNotNull();
+        assertThat(descriptor.analytics().isReporterMetricsEnabled()).isFalse();
+    }
+
+    @Test
+    void mapPlanNative_should_leave_port_routing_fields_null_when_not_set() {
+        // Given a native plan in host/SNI routing mode (no port fields)
+        var nativePlanDefinition = NativePlan.builder()
+            .security(io.gravitee.definition.model.v4.plan.PlanSecurity.builder().type("key-less").build())
+            .mode(PlanMode.STANDARD)
+            .status(PlanStatus.PUBLISHED)
+            .build();
+
+        var corePlan = io.gravitee.apim.core.plan.model.Plan.builder()
+            .id("plan-id")
+            .name("plan-name")
+            .definitionVersion(DefinitionVersion.V4)
+            .apiType(ApiType.NATIVE)
+            .validation(io.gravitee.apim.core.plan.model.Plan.PlanValidationType.MANUAL)
+            .planDefinitionNativeV4(nativePlanDefinition)
+            .build();
+
+        PlanDescriptor.Native descriptor = GraviteeDefinitionAdapter.INSTANCE.mapPlanNative(corePlan, false);
+
+        SoftAssertions.assertSoftly(soft -> {
+            soft.assertThat(descriptor.bootstrapPort()).isNull();
+            soft.assertThat(descriptor.brokerRangeStart()).isNull();
+            soft.assertThat(descriptor.brokerRangeEnd()).isNull();
+        });
+    }
+}

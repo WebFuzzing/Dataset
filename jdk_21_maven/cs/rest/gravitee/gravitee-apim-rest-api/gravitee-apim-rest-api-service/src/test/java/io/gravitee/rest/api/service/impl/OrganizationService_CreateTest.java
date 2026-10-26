@@ -1,0 +1,209 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.service.impl;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.gravitee.definition.model.flow.Flow;
+import io.gravitee.repository.management.api.OrganizationRepository;
+import io.gravitee.repository.management.model.Organization;
+import io.gravitee.repository.management.model.flow.FlowReferenceType;
+import io.gravitee.rest.api.model.EnvironmentEntity;
+import io.gravitee.rest.api.model.EventType;
+import io.gravitee.rest.api.model.OrganizationEntity;
+import io.gravitee.rest.api.model.UpdateOrganizationEntity;
+import io.gravitee.rest.api.service.AuditService;
+import io.gravitee.rest.api.service.EnvironmentService;
+import io.gravitee.rest.api.service.EventService;
+import io.gravitee.rest.api.service.RoleService;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.configuration.flow.FlowService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+/**
+ * @author Nicolas GERAUD (nicolas.geraud at graviteesource.com)
+ * @author Titouan COMPIEGNE (titouan.compiegne at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class OrganizationService_CreateTest {
+
+    @InjectMocks
+    private OrganizationServiceImpl organizationService = new OrganizationServiceImpl();
+
+    @Mock
+    private OrganizationRepository mockOrganizationRepository;
+
+    @Mock
+    private RoleService mockRoleService;
+
+    @Mock
+    private FlowService mockFlowService;
+
+    @Mock
+    private EventService eventService;
+
+    @Mock
+    private EnvironmentService environmentService;
+
+    @Mock
+    private AuditService auditService;
+
+    @Mock
+    private ObjectMapper mapper;
+
+    @Before
+    public void setup() {
+        GraviteeContext.fromExecutionContext(new ExecutionContext("org_id"));
+    }
+
+    @After
+    public void tearDown() {
+        GraviteeContext.cleanContext();
+    }
+
+    @Test
+    public void create_or_update_should_create_organization_without_touching_flows() throws Exception {
+        when(mockOrganizationRepository.findById(any())).thenReturn(Optional.empty());
+
+        UpdateOrganizationEntity org1 = new UpdateOrganizationEntity();
+        org1.setHrids(List.of("orgid"));
+        org1.setName("org_name");
+        org1.setDescription("org_desc");
+        org1.setFlows(List.of());
+
+        Organization createdOrganization = new Organization();
+        createdOrganization.setId("org_id");
+
+        EnvironmentEntity env1 = new EnvironmentEntity();
+        env1.setId("env_1");
+
+        EnvironmentEntity env2 = new EnvironmentEntity();
+        env2.setId("env_2");
+
+        when(environmentService.findByOrganization(createdOrganization.getId())).thenReturn(List.of(env1, env2));
+
+        when(mockOrganizationRepository.create(any())).thenReturn(createdOrganization);
+        when(mockFlowService.findByReference(FlowReferenceType.ORGANIZATION, "org_id")).thenReturn(new ArrayList<>());
+        OrganizationEntity organization = organizationService.createOrUpdate("org_id", org1);
+
+        assertNotNull("result is null", organization);
+        verify(mockOrganizationRepository, times(1)).create(
+            argThat(arg -> arg != null && arg.getName().equals("org_name") && arg.getDescription().equals("org_desc"))
+        );
+        verify(mockOrganizationRepository, never()).update(any());
+        verify(mockRoleService, times(1)).initialize(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockRoleService, times(1)).createOrUpdateSystemRoles(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockFlowService, never()).save(any(), any(), any());
+        verify(eventService, times(1)).createOrganizationEvent(
+            eq(new ExecutionContext("org_id")),
+            eq(Set.of("env_1", "env_2")),
+            eq("org_id"),
+            eq(EventType.PUBLISH_ORGANIZATION),
+            any()
+        );
+    }
+
+    @Test
+    public void create_or_update_should_update_existing_organization_without_touching_flows() throws Exception {
+        when(mockOrganizationRepository.findById(any())).thenReturn(Optional.of(new Organization()));
+
+        UpdateOrganizationEntity org1 = new UpdateOrganizationEntity();
+        org1.setHrids(List.of("orgid"));
+        org1.setName("org_name");
+        org1.setDescription("org_desc");
+        org1.setFlows(List.of(mock(Flow.class)));
+
+        Organization createdOrganization = new Organization();
+        createdOrganization.setId("org_id");
+        when(mockOrganizationRepository.update(any())).thenReturn(createdOrganization);
+        when(mockFlowService.findByReference(FlowReferenceType.ORGANIZATION, "org_id")).thenReturn(org1.getFlows());
+
+        EnvironmentEntity env1 = new EnvironmentEntity();
+        env1.setId("env_1");
+
+        EnvironmentEntity env2 = new EnvironmentEntity();
+        env2.setId("env_2");
+
+        when(environmentService.findByOrganization(createdOrganization.getId())).thenReturn(List.of(env1, env2));
+
+        OrganizationEntity organization = organizationService.createOrUpdate("org_id", org1);
+
+        assertNotNull("result is null", organization);
+        verify(mockOrganizationRepository, times(1)).update(
+            argThat(arg -> arg != null && arg.getName().equals("org_name") && arg.getDescription().equals("org_desc"))
+        );
+        verify(mockOrganizationRepository, never()).create(any());
+        verify(mockRoleService, never()).initialize(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockRoleService, never()).createOrUpdateSystemRoles(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockFlowService, never()).save(any(), any(), any());
+        verify(eventService, times(1)).createOrganizationEvent(
+            eq(new ExecutionContext("org_id")),
+            eq(Set.of("env_1", "env_2")),
+            eq("org_id"),
+            eq(EventType.PUBLISH_ORGANIZATION),
+            any()
+        );
+    }
+
+    @Test
+    public void create_or_update_should_preserve_existing_flows_when_payload_has_null_flows() throws Exception {
+        when(mockOrganizationRepository.findById(any())).thenReturn(Optional.of(new Organization()));
+
+        UpdateOrganizationEntity payloadWithoutFlows = new UpdateOrganizationEntity();
+        payloadWithoutFlows.setHrids(List.of("orgid"));
+        payloadWithoutFlows.setName("org_name");
+        payloadWithoutFlows.setDescription("org_desc");
+
+        Organization updatedOrganization = new Organization();
+        updatedOrganization.setId("org_id");
+        when(mockOrganizationRepository.update(any())).thenReturn(updatedOrganization);
+
+        Flow existingFlow = mock(Flow.class);
+        when(mockFlowService.findByReference(FlowReferenceType.ORGANIZATION, "org_id")).thenReturn(List.of(existingFlow));
+
+        EnvironmentEntity env1 = new EnvironmentEntity();
+        env1.setId("env_1");
+        when(environmentService.findByOrganization("org_id")).thenReturn(List.of(env1));
+
+        OrganizationEntity organization = organizationService.createOrUpdate("org_id", payloadWithoutFlows);
+
+        assertNotNull(organization);
+        assertEquals(List.of(existingFlow), organization.getFlows());
+        verify(mockFlowService, never()).save(any(), any(), any());
+    }
+}

@@ -1,0 +1,141 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.portal.rest.resource;
+
+import io.gravitee.common.http.MediaType;
+import io.gravitee.repository.healthcheck.query.availability.AvailabilityQuery.Field;
+import io.gravitee.rest.api.model.SubscriptionEntity;
+import io.gravitee.rest.api.model.SubscriptionStatus;
+import io.gravitee.rest.api.model.analytics.query.StatsAnalytics;
+import io.gravitee.rest.api.model.analytics.query.StatsQuery;
+import io.gravitee.rest.api.model.api.ApiLifecycleState;
+import io.gravitee.rest.api.model.subscription.SubscriptionQuery;
+import io.gravitee.rest.api.model.v4.api.ApiEntity;
+import io.gravitee.rest.api.model.v4.api.GenericApiEntity;
+import io.gravitee.rest.api.portal.rest.model.ApiMetrics;
+import io.gravitee.rest.api.portal.rest.security.RequirePortalAuth;
+import io.gravitee.rest.api.service.AnalyticsService;
+import io.gravitee.rest.api.service.HealthCheckService;
+import io.gravitee.rest.api.service.SubscriptionService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import io.gravitee.rest.api.service.exceptions.ApiNotFoundException;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Request;
+import jakarta.ws.rs.core.Response;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+public class ApiMetricsResource extends AbstractResource {
+
+    @Inject
+    private SubscriptionService subscriptionService;
+
+    @Inject
+    private AnalyticsService analyticsService;
+
+    @Inject
+    private HealthCheckService healthCheckService;
+
+    @GET
+    @Produces({ MediaType.APPLICATION_JSON })
+    @RequirePortalAuth
+    public Response getApiMetricsByApiId(@Context Request request, @PathParam("apiId") String apiId) {
+        GenericApiEntity api = apiSearchService.findGenericById(GraviteeContext.getExecutionContext(), apiId, false, false, false);
+
+        if (api.getLifecycleState() != ApiLifecycleState.PUBLISHED) {
+            throw new ApiNotFoundException(apiId);
+        }
+
+        Number healthRatio = getHealthRatio(apiId);
+        Number nbHits = getNbHits(apiId);
+        Number subscribers = getApiNbSubscribers(apiId);
+
+        ApiMetrics metrics = new ApiMetrics();
+        metrics.setHealth(healthRatio);
+        metrics.setHits(nbHits);
+        metrics.setSubscribers(subscribers);
+
+        return Response.ok(metrics).build();
+    }
+
+    private Number getHealthRatio(String apiId) {
+        io.gravitee.rest.api.model.healthcheck.ApiMetrics<?> apiAvailability = healthCheckService.getAvailability(
+            GraviteeContext.getExecutionContext(),
+            apiId,
+            Field.ENDPOINT.name()
+        );
+        if (apiAvailability != null) {
+            Map<String, Double> globalAvailability = apiAvailability.getGlobal();
+            if (globalAvailability != null && globalAvailability.get("1w") != null) {
+                try {
+                    return BigDecimal.valueOf(globalAvailability.get("1w")).divide(BigDecimal.valueOf(100), 4, RoundingMode.DOWN);
+                } catch (NumberFormatException nfe) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Number getNbHits(String apiId) {
+        StatsQuery query = new StatsQuery();
+        Instant now = Instant.now();
+        query.setFrom(now.minus(7, ChronoUnit.DAYS).toEpochMilli());
+        query.setTo(now.toEpochMilli());
+        query.setInterval(43200000);
+        query.setRootField("api");
+        query.setRootIdentifier(apiId);
+        query.setField("response-time");
+
+        try {
+            final StatsAnalytics analytics = analyticsService.execute(GraviteeContext.getExecutionContext(), query);
+            if (analytics != null) {
+                return analytics.getCount();
+            }
+        } catch (final Exception e) {
+            // do nothing as the analytics errors should not break the portal
+        }
+        return null;
+    }
+
+    private Number getApiNbSubscribers(String apiId) {
+        // find all subscribed apis
+        SubscriptionQuery subscriptionQuery = new SubscriptionQuery();
+        subscriptionQuery.setApi(apiId);
+        subscriptionQuery.setStatuses(Arrays.asList(SubscriptionStatus.ACCEPTED, SubscriptionStatus.PAUSED));
+
+        // group by apis
+        Collection<SubscriptionEntity> searchResult = subscriptionService.search(GraviteeContext.getExecutionContext(), subscriptionQuery);
+        if (searchResult != null) {
+            return searchResult.stream().collect(Collectors.groupingBy(SubscriptionEntity::getApi, Collectors.counting())).get(apiId);
+        }
+        return null;
+    }
+}

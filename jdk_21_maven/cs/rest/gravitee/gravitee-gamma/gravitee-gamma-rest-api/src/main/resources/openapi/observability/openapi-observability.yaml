@@ -1,0 +1,1953 @@
+openapi: 3.0.3
+info:
+    title: Gravitee.io Gamma - Observability
+    description: |
+        Observability API for Gravitee Gamma. Provides unified access to monitoring and
+        diagnostic capabilities: shared filter catalog, analytics, logs, and traces.
+
+        Endpoints are grouped by domain. Each group exposes the resources needed to build
+        observability views in the Gamma UI.
+    contact:
+        email: team-apim@graviteesource.com
+    license:
+        name: Apache 2.0
+        url: http://www.apache.org/licenses/LICENSE-2.0.html
+    version: 1.0.0
+
+security:
+    - CookieAuth: []
+
+servers:
+    - url: "/gamma"
+      description: Gravitee.io Gamma host application
+
+tags:
+    - name: Filters
+      description: |
+          Shared filter catalog for observability views. Provides three capabilities: discover
+          available filters for a given signal and API type, list the selectable values for a
+          filter, and resolve entity ids into human-readable labels in bulk.
+
+          Each filter declares which signals and API types it applies to, its data type, supported
+          operators, and — for ENUM filters — its allowed values with labels.
+
+          Value listing is type-driven: ENUM filters return their static values, KEYWORD filters
+          return distinct values from the data store, NUMBER and STRING filters have no enumerable
+          values (400). Id-based KEYWORD filters (API, APPLICATION, PLAN, API_PRODUCT) return
+          entity ids as values; use the `resolve` endpoint to hydrate them into display labels.
+    - name: Logs
+      description: |
+          Environment-wide log search returning light rows from the `v4-metrics` index. Results
+          are RBAC-scoped: the caller only sees logs for APIs they have read access to.
+
+          Filter conditions reference the shared filter catalog narrowed to the `LOGS` signal.
+          When no explicit entrypoint filter is supplied, the server injects the canonical HTTP
+          entrypoints so table totals match the analytics dashboard.
+    - name: Analytics
+      description: |
+          Environment-wide analytics computation: aggregate measures, faceted breakdowns, and
+          time-series histograms. Backed by the Elasticsearch analytics engine.
+
+          Filter conditions reference the shared filter catalog narrowed to the `ANALYTICS` signal.
+          RBAC scoping ensures the caller only sees metrics for APIs they have read access to.
+          When no explicit `ENTRYPOINT` filter is supplied, the server injects the canonical HTTP
+          entrypoints (`http-get`, `http-post`, `http-proxy`, `llm-proxy`, `mcp-proxy`).
+
+          All three endpoints return opaque JSON produced by the APIM analytics engine — the
+          response schemas below document the stable structure but additional fields may appear.
+
+paths:
+    /organizations/{orgId}/environments/{envId}/observability/filters/definition:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        get:
+            tags:
+                - Filters
+            summary: List the observability filter catalog
+            description: |
+                Returns the filter catalog, optionally narrowed by signal and/or API type. Both axes
+                are optional and multi-valued; omitting an axis means no constraint on it. A filter is
+                included when its declared signals/apiTypes intersect the requested values.
+            operationId: getObservabilityFilterDefinitions
+            parameters:
+                - name: signal
+                  in: query
+                  required: false
+                  description: Observability signal(s) to narrow by. Repeat for multiple values.
+                  example: LOGS
+                  schema:
+                      type: array
+                      items:
+                          $ref: "#/components/schemas/Signal"
+                - name: apiType
+                  in: query
+                  required: false
+                  description: API kind(s) to narrow by. Repeat for multiple values.
+                  example: HTTP_PROXY
+                  schema:
+                      type: array
+                      items:
+                          $ref: "#/components/schemas/ApiType"
+            responses:
+                "200":
+                    description: The filter catalog narrowed by the requested axes.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/FilterSpecsResponse"
+                            examples:
+                                full-catalog:
+                                    summary: Full catalog (no filter)
+                                    value:
+                                        data:
+                                            - name: "API_TYPE"
+                                              label: "API Type"
+                                              type: "enum"
+                                              operators: ["EQ", "IN"]
+                                              enumValues:
+                                                  - value: "HTTP_PROXY"
+                                                    label: "HTTP Proxy"
+                                                  - value: "NATIVE"
+                                                    label: "Kafka (native)"
+                                              signals: ["LOGS", "ANALYTICS"]
+                                              apiTypes: ["HTTP_PROXY", "LLM", "MESSAGE", "MCP", "NATIVE"]
+                                            - name: "HTTP_STATUS"
+                                              label: "Status Code"
+                                              type: "number"
+                                              operators: ["EQ", "GTE", "LTE"]
+                                              range:
+                                                  min: 100
+                                                  max: 599
+                                              signals: ["LOGS", "ANALYTICS"]
+                                              apiTypes: ["HTTP_PROXY", "LLM"]
+                                            - name: "ENTRYPOINT"
+                                              label: "Entrypoint"
+                                              type: "keyword"
+                                              operators: ["EQ", "IN"]
+                                              signals: ["LOGS", "ANALYTICS"]
+                                              apiTypes: ["HTTP_PROXY", "LLM", "MESSAGE", "MCP", "NATIVE", "EDGE"]
+                                            - name: "API"
+                                              label: "API"
+                                              type: "keyword"
+                                              operators: ["EQ", "IN"]
+                                              signals: ["LOGS", "ANALYTICS", "TRACES"]
+                                              apiTypes: ["HTTP_PROXY", "LLM", "MESSAGE", "MCP", "NATIVE"]
+                                narrowed-by-signal:
+                                    summary: Narrowed by signal=TRACES
+                                    value:
+                                        data:
+                                            - name: "API"
+                                              label: "API"
+                                              type: "keyword"
+                                              operators: ["EQ", "IN"]
+                                              signals: ["LOGS", "ANALYTICS", "TRACES"]
+                                              apiTypes: ["HTTP_PROXY", "LLM", "MESSAGE", "MCP", "NATIVE"]
+                "400":
+                    description: An unknown `signal` or `apiType` value was supplied.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 400
+                                message: "Unknown signal value 'INVALID'"
+                "403":
+                    description: The caller cannot read observability metadata in this environment.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability metadata."
+
+    /organizations/{orgId}/environments/{envId}/observability/filters/{filterName}/values:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        get:
+            tags:
+                - Filters
+            summary: List selectable values for a filter
+            description: |
+                Paginated selectable values for one filter. ENUM filters return their static labelled
+                values (optionally filtered by a case-insensitive substring `query`). KEYWORD filters
+                return distinct values from the data store. NUMBER and STRING filters have no
+                enumerable values and return 400.
+            operationId: getObservabilityFilterValues
+            parameters:
+                - name: filterName
+                  in: path
+                  required: true
+                  description: Canonical filter name (e.g. `API_TYPE`, `HTTP_METHOD`, `API`).
+                  example: API_TYPE
+                  schema:
+                      type: string
+                - name: query
+                  in: query
+                  required: false
+                  description: Case-insensitive substring filter applied to the value or label.
+                  example: proxy
+                  schema:
+                      type: string
+                - name: from
+                  in: query
+                  required: false
+                  description: Start of time range (epoch milliseconds). Only applies to KEYWORD filters.
+                  example: 1717200000000
+                  schema:
+                      type: integer
+                      format: int64
+                - name: to
+                  in: query
+                  required: false
+                  description: End of time range (epoch milliseconds). Only applies to KEYWORD filters.
+                  example: 1717286400000
+                  schema:
+                      type: integer
+                      format: int64
+                - name: page
+                  in: query
+                  required: false
+                  description: 1-based page number.
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                - name: perPage
+                  in: query
+                  required: false
+                  description: Page size (capped server-side at 100).
+                  schema:
+                      type: integer
+                      default: 10
+                      minimum: 1
+                      maximum: 100
+                - name: apiType
+                  in: query
+                  required: false
+                  description: |
+                      API kind(s) to restrict returned values to. Repeat for multiple values.
+                      When present, ENUM filters only return values matching the requested kinds,
+                      and KEYWORD filters only return entities associated with APIs of the requested kinds.
+                      When absent, no API-type constraint is applied (backward compatible).
+                  example: MCP
+                  schema:
+                      type: array
+                      items:
+                          $ref: "#/components/schemas/ApiType"
+            responses:
+                "200":
+                    description: A page of selectable values.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/FilterValuesResponse"
+                            examples:
+                                enum-values:
+                                    summary: ENUM filter values (static)
+                                    value:
+                                        data:
+                                            - value: "HTTP_PROXY"
+                                              label: "HTTP Proxy"
+                                            - value: "NATIVE"
+                                              label: "Kafka (native)"
+                                        pagination:
+                                            totalCount: 6
+                                            page: 1
+                                            perPage: 10
+                                            pageCount: 1
+                                            pageItemsCount: 2
+                                keyword-id-based:
+                                    summary: KEYWORD filter values (id-based, e.g. API)
+                                    value:
+                                        data:
+                                            - value: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                              label: "Petstore API"
+                                            - value: "a1b2c3d4-0000-1111-2222-333344445555"
+                                              label: "Weather Service"
+                                        pagination:
+                                            totalCount: 42
+                                            page: 1
+                                            perPage: 10
+                                            pageCount: 5
+                                            pageItemsCount: 2
+                                keyword-direct:
+                                    summary: KEYWORD filter values (direct, e.g. GATEWAY)
+                                    value:
+                                        data:
+                                            - value: "gateway-eu-west-1"
+                                            - value: "gateway-us-east-1"
+                                            - value: "gateway-ap-south-1"
+                                        pagination:
+                                            totalCount: 3
+                                            page: 1
+                                            perPage: 10
+                                            pageCount: 1
+                                            pageItemsCount: 3
+                "400":
+                    description: The filter type does not support value listing (NUMBER / STRING).
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 400
+                                message: "Filter type NUMBER does not support value listing."
+                                technicalCode: "filter.values.unsupported"
+                "403":
+                    description: The caller cannot read observability metadata in this environment.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability metadata."
+                "404":
+                    description: No filter with the given name exists in the catalog.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 404
+                                message: "Filter 'UNKNOWN_FILTER' not found in the catalog."
+
+    /organizations/{orgId}/environments/{envId}/observability/filters/resolve:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        post:
+            tags:
+                - Filters
+            summary: Resolve stored filter ids into labels
+            description: |
+                Resolves entity ids into display labels in bulk. Only id-based filters (API,
+                APPLICATION, PLAN, API_PRODUCT) produce labels; other filters return an empty label
+                map. Limits: at most 10 entries, at most 100 ids per entry.
+            operationId: resolveObservabilityFilterLabels
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ResolveFilterLabelsRequest"
+                        examples:
+                            resolve-apis:
+                                summary: Resolve API and APPLICATION ids
+                                value:
+                                    entries:
+                                        - filterName: "API"
+                                          ids:
+                                              - "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                              - "a1b2c3d4-0000-1111-2222-333344445555"
+                                        - filterName: "APPLICATION"
+                                          ids:
+                                              - "b5c6d7e8-9999-aaaa-bbbb-ccccddddeeee"
+            responses:
+                "200":
+                    description: The requested ids resolved to labels, grouped by filter.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ResolveFilterLabelsResponse"
+                            examples:
+                                resolved-labels:
+                                    summary: Resolved labels for API and APPLICATION
+                                    value:
+                                        entries:
+                                            - filterName: "API"
+                                              labels:
+                                                  "67e246cb-ab02-4da4-8f47-f9fa3e061d6b": "Petstore API"
+                                                  "a1b2c3d4-0000-1111-2222-333344445555": "Weather Service"
+                                            - filterName: "APPLICATION"
+                                              labels:
+                                                  "b5c6d7e8-9999-aaaa-bbbb-ccccddddeeee": "Mobile App"
+                "400":
+                    description: The request exceeds the entry / id limits.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 400
+                                message: "Request exceeds the maximum of 10 entries."
+                "403":
+                    description: The caller cannot read observability metadata in this environment.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability metadata."
+
+    /organizations/{orgId}/environments/{envId}/observability/logs/{requestId}:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        get:
+            tags:
+                - Logs
+            summary: Get a single merged log detail
+            description: |
+                Returns a single complete connection log by request id, merging enriched metadata
+                from the `v4-metrics` index with HTTP payloads (headers + body) from the `v4-log`
+                index. This is the heavy, lazy companion of the search endpoint — intended to be
+                called when a user clicks a row in the logs table.
+
+                **`apiId` is required** as a security defense: a known request id from API_B cannot
+                be read via API_A. The server verifies `API_LOG[READ]` on the given API and returns
+                404 (collapsed) when the log doesn't exist OR the caller can't access that API —
+                so cross-API existence cannot be probed.
+
+                **No search time-window needed** — the detail is resolved by request id alone.
+
+                **Enrichment**: plan name, application name, gateway hostname and IP are resolved
+                server-side.
+            operationId: getObservabilityLogDetail
+            parameters:
+                - name: requestId
+                  in: path
+                  required: true
+                  description: Unique identifier of the gateway request.
+                  example: req-abc-123
+                  schema:
+                      type: string
+                - name: apiId
+                  in: query
+                  required: true
+                  description: |
+                      API identifier scoping the request. Required as a security defense — prevents
+                      cross-API existence probing and enables Elasticsearch routing.
+                  example: 67e246cb-ab02-4da4-8f47-f9fa3e061d6b
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: The full merged log detail.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LogDetail"
+                            examples:
+                                full-detail:
+                                    summary: Complete log detail with metadata and payloads
+                                    value:
+                                        requestId: "req-abc-123"
+                                        apiId: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                        transactionId: "txn-xyz-789"
+                                        timestamp: "2026-06-10T14:32:01Z"
+                                        requestEnded: true
+                                        method: "GET"
+                                        uri: "/pets/42"
+                                        status: 200
+                                        endpoint: "https://backend.example.com/pets/42"
+                                        host: "api.example.com"
+                                        planId: "plan-001"
+                                        planName: "Gold"
+                                        applicationId: "app-001"
+                                        applicationName: "Mobile App"
+                                        gateway: "gw-eu-1"
+                                        gatewayHostname: "gateway-eu-west-1.example.com"
+                                        gatewayIp: "10.0.1.42"
+                                        remoteAddress: "203.0.113.42"
+                                        requestContentLength: 0
+                                        responseContentLength: 256
+                                        gatewayLatency: 3
+                                        gatewayResponseTime: 12
+                                        endpointResponseTime: 9
+                                        entrypointRequest:
+                                            method: "GET"
+                                            uri: "/pets/42"
+                                            headers:
+                                                Accept: ["application/json"]
+                                                X-Gravitee-Transaction-Id: ["txn-xyz-789"]
+                                        entrypointResponse:
+                                            status: 200
+                                            headers:
+                                                Content-Type: ["application/json"]
+                                            body: '{"id": 42, "name": "Fido"}'
+                                        endpointRequest:
+                                            method: "GET"
+                                            uri: "https://backend.example.com/pets/42"
+                                            headers:
+                                                Accept: ["application/json"]
+                                        endpointResponse:
+                                            status: 200
+                                            headers:
+                                                Content-Type: ["application/json"]
+                                            body: '{"id": 42, "name": "Fido"}'
+                "400":
+                    description: Missing or blank `apiId` query parameter.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 400
+                                message: "Required scope dimension 'apiId' is missing"
+                                technicalCode: "observability.log.scope.missing"
+                "404":
+                    description: |
+                        The log does not exist for the given request id and API scope, OR the caller
+                        does not have `API_LOG[READ]` permission on the API. Both cases return 404
+                        to prevent cross-API existence probing.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 404
+                                message: "Log req-abc-123 not found for API 67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+
+    /organizations/{orgId}/environments/{envId}/observability/logs/search:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        post:
+            tags:
+                - Logs
+            summary: Search environment-wide logs
+            description: |
+                Paginated log search across all APIs the caller has access to in the given
+                environment. Returns light rows from the `v4-metrics` Elasticsearch index — no
+                HTTP bodies or headers (those live in the detail endpoint, planned in GMA-424).
+
+                **RBAC scoping**: the response only contains logs for APIs the caller has `READ`
+                access to. When the caller requests specific APIs via an `API` filter, the server
+                intersects that set with the caller's accessible APIs. If the intersection is
+                empty, the response is an empty page (not 403).
+
+                **Filter validation**: every `FilterCondition` in the request body is validated
+                against the shared filter catalog (see the *Filters* tag) narrowed to the `LOGS`
+                signal. Unknown filter names or filters that do not apply to the `LOGS` signal
+                are rejected with 400. Use `GET /observability/filters/definition?signal=LOGS` to
+                discover valid filters.
+
+                **Default entrypoint scoping**: when no explicit `ENTRYPOINT` filter is supplied,
+                the server injects the canonical HTTP entrypoints (`http-get`, `http-post`,
+                `http-proxy`, `llm-proxy`, `mcp-proxy`) so log table totals match the analytics
+                dashboard for the same time range.
+
+                **Enrichment**: each log entry is enriched server-side with display names for API,
+                plan, application, gateway hostname, and API product. Use the `resolve` endpoint
+                from the *Filters* tag for batch id-to-label resolution on saved filter values.
+
+                **Pagination**: 1-based. `perPage` defaults to 20 and is clamped server-side at
+                100. The response `pagination` object reflects the effective (clamped) values.
+
+                **Supported API types**: only logs from `HTTP_PROXY`, `LLM`, and `MCP` APIs are
+                returned. `MESSAGE` and `NATIVE` APIs are excluded from the logs signal.
+            operationId: searchObservabilityLogs
+            parameters:
+                - name: page
+                  in: query
+                  required: false
+                  description: 1-based page number.
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                - name: perPage
+                  in: query
+                  required: false
+                  description: Page size (capped server-side at 100).
+                  schema:
+                      type: integer
+                      default: 20
+                      minimum: 1
+                      maximum: 100
+            requestBody:
+                required: false
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SearchLogsRequest"
+                        examples:
+                            with-time-range-and-filters:
+                                summary: Search with time range and status filter
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters:
+                                        - name: "HTTP_STATUS"
+                                          operator: "EQ"
+                                          value: "200"
+                            with-api-filter:
+                                summary: Search scoped to specific APIs
+                                value:
+                                    filters:
+                                        - name: "API"
+                                          operator: "IN"
+                                          value:
+                                              - "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                              - "a1b2c3d4-0000-1111-2222-333344445555"
+                            with-response-time-range:
+                                summary: Search with response time bounds
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters:
+                                        - name: "HTTP_GATEWAY_RESPONSE_TIME"
+                                          operator: "GTE"
+                                          value: "500"
+                                        - name: "HTTP_GATEWAY_RESPONSE_TIME"
+                                          operator: "LTE"
+                                          value: "5000"
+                            with-multiple-filters:
+                                summary: Combine status, method, and application filters
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters:
+                                        - name: "HTTP_STATUS"
+                                          operator: "EQ"
+                                          value: "500"
+                                        - name: "HTTP_METHOD"
+                                          operator: "IN"
+                                          value: ["GET", "POST"]
+                                        - name: "APPLICATION"
+                                          operator: "EQ"
+                                          value: "b5c6d7e8-9999-aaaa-bbbb-ccccddddeeee"
+                            empty-body:
+                                summary: Search with defaults (all accessible APIs, no filter)
+                                value: {}
+            responses:
+                "200":
+                    description: A page of log entries enriched with display names.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/LogsSearchResponse"
+                            examples:
+                                single-entry:
+                                    summary: Single HTTP proxy log entry
+                                    value:
+                                        data:
+                                            - apiId: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                              apiName: "Petstore API"
+                                              apiType: "HTTP_PROXY"
+                                              timestamp: "2026-06-10T14:32:01Z"
+                                              requestId: "req-abc-123"
+                                              transactionId: "txn-xyz-789"
+                                              method: "GET"
+                                              uri: "/pets/42"
+                                              status: 200
+                                              requestEnded: true
+                                              gatewayResponseTime: 12
+                                              planId: "plan-001"
+                                              planName: "Gold"
+                                              applicationId: "app-001"
+                                              applicationName: "Mobile App"
+                                              gateway: "gw-eu-1"
+                                              gatewayHostname: "gateway-eu-west-1.example.com"
+                                              apiProductName: "Standalone API"
+                                        pagination:
+                                            totalCount: 1
+                                            page: 1
+                                            perPage: 20
+                                            pageCount: 1
+                                            pageItemsCount: 1
+                                with-warnings:
+                                    summary: Log entry with policy warnings
+                                    value:
+                                        data:
+                                            - apiId: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                              apiName: "Petstore API"
+                                              timestamp: "2026-06-10T14:33:00Z"
+                                              requestId: "req-def-456"
+                                              method: "POST"
+                                              uri: "/pets"
+                                              status: 200
+                                              gatewayResponseTime: 85
+                                              warnings:
+                                                  - componentType: "policy"
+                                                    componentName: "rate-limit"
+                                                    key: "RATE_LIMIT_NOT_APPLIED"
+                                                    message: "Request bypassed rate limit policy due to internal error"
+                                        pagination:
+                                            totalCount: 1
+                                            page: 1
+                                            perPage: 20
+                                            pageCount: 1
+                                            pageItemsCount: 1
+                                empty-result:
+                                    summary: No logs match (empty page)
+                                    value:
+                                        data: []
+                                        pagination:
+                                            totalCount: 0
+                                            page: 1
+                                            perPage: 20
+                                            pageCount: 0
+                                            pageItemsCount: 0
+                "400":
+                    description: |
+                        A filter condition is invalid. Possible causes:
+                        - Unknown filter name (`observability.filter.unknown_name`)
+                        - Filter does not apply to the LOGS signal (`observability.filter.signal_mismatch`)
+                        - Operator not usable for this filter on log search (`observability.filter.unsupported_operator`).
+                        - Filter is valid for LOGS but not yet supported by log search (`observability.filter.search_translation_not_supported`)
+                        - A filter value is malformed or out of range (e.g. an `HTTP_STATUS` outside 100–599)
+                        - `from` is after `to` in the time range
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            examples:
+                                unknown-filter:
+                                    summary: Unknown filter name
+                                    value:
+                                        httpStatus: 400
+                                        message: "Filter 'UNKNOWN_FILTER' is not supported by this backend"
+                                        technicalCode: "observability.filter.unknown_name"
+                                signal-mismatch:
+                                    summary: Filter not applicable to LOGS signal
+                                    value:
+                                        httpStatus: 400
+                                        message: "Filter 'GATEWAY' does not apply to signal LOGS"
+                                        technicalCode: "observability.filter.signal_mismatch"
+                                unsupported-operator:
+                                    summary: Operator not usable for this filter on log search
+                                    value:
+                                        httpStatus: 400
+                                        message: "Operator 'GTE' is not supported for filter 'ERROR_KEY'"
+                                        technicalCode: "observability.filter.unsupported_operator"
+                                search-translation-not-supported:
+                                    summary: Filter valid for LOGS but not yet translated by log search
+                                    value:
+                                        httpStatus: 400
+                                        message: "Filter 'API_TYPE' is not yet supported for log search"
+                                        technicalCode: "observability.filter.search_translation_not_supported"
+                                invalid-filter-value:
+                                    summary: Malformed or out-of-range filter value
+                                    value:
+                                        httpStatus: 400
+                                        message: "Invalid HTTP status code: 1000. Must be between 100 and 599."
+                                invalid-time-range:
+                                    summary: Invalid time range (from > to)
+                                    value:
+                                        httpStatus: 400
+                                        message: "Invalid time range: 'from' must be before 'to'."
+                "403":
+                    description: The caller cannot read observability data in this environment (missing `ENVIRONMENT_DASHBOARD:READ` or `ENVIRONMENT_API:READ` permission).
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability data."
+
+    /organizations/{orgId}/environments/{envId}/observability/analytics/measures:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        post:
+            tags:
+                - Analytics
+            summary: Compute aggregate measures
+            description: |
+                Returns aggregate metric values (e.g. request count, average response time) for the
+                given time range and filter set. Use this endpoint to populate summary cards and KPI
+                panels in the dashboard.
+
+                **RBAC scoping**: only metrics from APIs the caller can read are included.
+
+                **Filter validation**: conditions are validated against the `ANALYTICS` signal catalog.
+            operationId: computeObservabilityMeasures
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AnalyticsMeasuresRequest"
+                        examples:
+                            simple-count:
+                                summary: Count all HTTP requests
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters: []
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                            entrypoint-filter:
+                                summary: MCP requests only (entrypoint filter)
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters:
+                                        - name: "ENTRYPOINT"
+                                          operator: "IN"
+                                          value: ["mcp-proxy"]
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                            multi-metric:
+                                summary: Count and response time stats
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters:
+                                        - name: "HTTP_STATUS"
+                                          operator: "EQ"
+                                          value: "200"
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                                        - name: "HTTP_GATEWAY_RESPONSE_TIME"
+                                          measures: ["AVG", "P99"]
+            responses:
+                "200":
+                    description: Aggregated metric measures.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MeasuresResponse"
+                            examples:
+                                single-metric:
+                                    summary: Single metric result
+                                    value:
+                                        metrics:
+                                            - name: "HTTP_REQUESTS"
+                                              unit: "NUMBER"
+                                              measures:
+                                                  - name: "COUNT"
+                                                    value: 42
+                "400":
+                    description: Invalid filter condition or time range.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                "403":
+                    description: Insufficient permissions.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability data."
+
+    /organizations/{orgId}/environments/{envId}/observability/analytics/facets:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        post:
+            tags:
+                - Analytics
+            summary: Compute faceted metric breakdowns
+            description: |
+                Returns metric values broken down by one or more facet dimensions (e.g. per API,
+                per HTTP status code group, per method). Facet buckets form a tree: leaf nodes carry
+                measures, group nodes carry nested buckets.
+
+                Use `limit` to cap the number of buckets per facet. Use `ranges` for numeric
+                range bucketing (e.g. status code groups 1xx/2xx/3xx/4xx/5xx).
+            operationId: computeObservabilityFacets
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AnalyticsFacetsRequest"
+                        examples:
+                            by-api:
+                                summary: Request count per API (top 10)
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters: []
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                                          sorts:
+                                              - measure: "COUNT"
+                                                order: "DESC"
+                                    by: ["API"]
+                                    limit: 10
+                            by-status-with-ranges:
+                                summary: Status code group distribution
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                                    by: ["HTTP_STATUS"]
+                                    ranges:
+                                        - from: 100
+                                          to: 199
+                                        - from: 200
+                                          to: 299
+                                        - from: 300
+                                          to: 399
+                                        - from: 400
+                                          to: 499
+                                        - from: 500
+                                          to: 599
+            responses:
+                "200":
+                    description: Faceted metric results.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/FacetsResponse"
+                            examples:
+                                by-api:
+                                    summary: Per-API request count
+                                    value:
+                                        metrics:
+                                            - metric: "HTTP_REQUESTS"
+                                              unit: "NUMBER"
+                                              buckets:
+                                                  - key: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                                                    name: null
+                                                    measures:
+                                                        - name: "COUNT"
+                                                          value: 30
+                                                  - key: "a1b2c3d4-0000-1111-2222-333344445555"
+                                                    name: null
+                                                    measures:
+                                                        - name: "COUNT"
+                                                          value: 12
+                "400":
+                    description: Invalid filter condition, facet name, or time range.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                "403":
+                    description: Insufficient permissions.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability data."
+
+    /organizations/{orgId}/environments/{envId}/observability/analytics/time-series:
+        parameters:
+            - $ref: "#/components/parameters/orgIdParam"
+            - $ref: "#/components/parameters/envIdParam"
+        post:
+            tags:
+                - Analytics
+            summary: Compute time-series histograms
+            description: |
+                Returns metric values bucketed by time intervals (e.g. per minute, per hour).
+                Use this endpoint to build line charts and histograms in the dashboard.
+
+                Each time bucket may optionally contain nested facet buckets when `by` is
+                provided, enabling per-API or per-status time-series breakdowns.
+
+                `interval` is in milliseconds (e.g. `60000` for 1 minute, `3600000` for 1 hour).
+            operationId: computeObservabilityTimeSeries
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/AnalyticsTimeSeriesRequest"
+                        examples:
+                            hourly-histogram:
+                                summary: Hourly request count
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T00:00:00Z"
+                                        to: "2026-06-11T00:00:00Z"
+                                    filters: []
+                                    interval: 3600000
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                            with-facets:
+                                summary: Per-minute with API facet breakdown
+                                value:
+                                    timeRange:
+                                        from: "2026-06-10T12:00:00Z"
+                                        to: "2026-06-10T13:00:00Z"
+                                    interval: 60000
+                                    metrics:
+                                        - name: "HTTP_REQUESTS"
+                                          measures: ["COUNT"]
+                                    by: ["API"]
+                                    facetSize: 5
+            responses:
+                "200":
+                    description: Time-series metric results.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TimeSeriesResponse"
+                            examples:
+                                hourly:
+                                    summary: Hourly buckets
+                                    value:
+                                        metrics:
+                                            - name: "HTTP_REQUESTS"
+                                              unit: "NUMBER"
+                                              buckets:
+                                                  - key: "2026-06-10T00:00:00Z"
+                                                    timestamp: 1749513600000
+                                                    measures:
+                                                        - name: "COUNT"
+                                                          value: 7
+                                                  - key: "2026-06-10T01:00:00Z"
+                                                    timestamp: 1749517200000
+                                                    measures:
+                                                        - name: "COUNT"
+                                                          value: 12
+                "400":
+                    description: Invalid filter condition, interval, or time range.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                "403":
+                    description: Insufficient permissions.
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                httpStatus: 403
+                                message: "Insufficient permissions to access observability data."
+
+components:
+    securitySchemes:
+        CookieAuth:
+            type: apiKey
+            in: cookie
+            name: Auth-Graviteeio-APIM
+
+    parameters:
+        orgIdParam:
+            name: orgId
+            in: path
+            required: true
+            description: Organization id or hrid.
+            schema:
+                type: string
+        envIdParam:
+            name: envId
+            in: path
+            required: true
+            description: Environment id or hrid.
+            schema:
+                type: string
+
+    schemas:
+        Signal:
+            type: string
+            description: Observability signal a filter applies to.
+            enum: [LOGS, ANALYTICS, TRACES]
+
+        ApiType:
+            type: string
+            description: API kind a filter is relevant to.
+            enum: [HTTP_PROXY, LLM, MESSAGE, MCP, NATIVE, EDGE]
+
+        FilterType:
+            type: string
+            description: Data type of the filter.
+            enum: [keyword, string, number, enum, boolean]
+
+        FilterOperator:
+            type: string
+            description: Comparison operator supported by a filter.
+            enum: [EQ, IN, NOT_IN, GTE, LTE]
+
+        EnumValue:
+            type: object
+            description: One allowed value of an ENUM filter with its display label.
+            required: [value, label]
+            properties:
+                value:
+                    type: string
+                    description: Stable technical value sent in filter queries.
+                    example: NATIVE
+                label:
+                    type: string
+                    description: Human-readable display text.
+                    example: Kafka (native)
+
+        Range:
+            type: object
+            description: Inclusive numeric bounds for NUMBER filters.
+            required: [min, max]
+            properties:
+                min:
+                    type: number
+                    description: Lower bound (inclusive).
+                    example: 100
+                max:
+                    type: number
+                    description: Upper bound (inclusive).
+                    example: 599
+
+        FilterSpec:
+            type: object
+            description: Specification of one filterable field in the catalog.
+            required: [name, label, type, operators, signals, apiTypes]
+            properties:
+                name:
+                    type: string
+                    description: Canonical unique identifier for this filter.
+                    example: HTTP_GATEWAY_RESPONSE_TIME
+                label:
+                    type: string
+                    description: Human-readable display name.
+                    example: Gateway Response Time
+                type:
+                    $ref: "#/components/schemas/FilterType"
+                operators:
+                    type: array
+                    description: Supported comparison operators for this filter.
+                    items:
+                        $ref: "#/components/schemas/FilterOperator"
+                enumValues:
+                    type: array
+                    nullable: true
+                    description: Allowed values. Present only for ENUM filters.
+                    items:
+                        $ref: "#/components/schemas/EnumValue"
+                range:
+                    nullable: true
+                    description: Numeric bounds. Present only for NUMBER filters.
+                    $ref: "#/components/schemas/Range"
+                signals:
+                    type: array
+                    description: Observability signals this filter applies to.
+                    items:
+                        $ref: "#/components/schemas/Signal"
+                apiTypes:
+                    type: array
+                    description: API kinds this filter is relevant to.
+                    items:
+                        $ref: "#/components/schemas/ApiType"
+
+        FilterSpecsResponse:
+            type: object
+            required: [data]
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FilterSpec"
+
+        FilterValue:
+            type: object
+            description: A selectable value for a filter.
+            required: [value]
+            properties:
+                value:
+                    type: string
+                    description: Technical value used in filter queries. For id-based filters, this is the entity id.
+                    example: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                label:
+                    type: string
+                    nullable: true
+                    description: Human-readable display text. Absent when identical to `value`.
+                    example: Petstore API
+
+        Pagination:
+            type: object
+            required: [totalCount, page, perPage, pageCount, pageItemsCount]
+            properties:
+                totalCount:
+                    type: integer
+                    format: int64
+                    description: Total number of items across all pages.
+                page:
+                    type: integer
+                    description: Current page number (1-based).
+                perPage:
+                    type: integer
+                    description: Effective page size (may be clamped by the server).
+                pageCount:
+                    type: integer
+                    description: Total number of pages.
+                pageItemsCount:
+                    type: integer
+                    description: Number of items in the current page.
+
+        FilterValuesResponse:
+            type: object
+            required: [data, pagination]
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FilterValue"
+                pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+        ResolveFilterLabelsRequestEntry:
+            type: object
+            description: A group of entity ids to resolve for one filter.
+            required: [filterName, ids]
+            properties:
+                filterName:
+                    type: string
+                    description: Name of the id-based filter (e.g. API, APPLICATION, PLAN).
+                    example: API
+                ids:
+                    type: array
+                    description: Entity ids to resolve into display labels.
+                    maxItems: 100
+                    items:
+                        type: string
+                    example: ["67e246cb-ab02-4da4-8f47-f9fa3e061d6b"]
+
+        ResolveFilterLabelsRequest:
+            type: object
+            required: [entries]
+            properties:
+                entries:
+                    type: array
+                    description: Filter groups to resolve. At most 10 entries.
+                    maxItems: 10
+                    items:
+                        $ref: "#/components/schemas/ResolveFilterLabelsRequestEntry"
+
+        ResolveFilterLabelsResponseEntry:
+            type: object
+            description: Resolved labels for one filter.
+            required: [filterName, labels]
+            properties:
+                filterName:
+                    type: string
+                    description: Name of the filter these labels belong to.
+                    example: API
+                labels:
+                    type: object
+                    description: Map of entity id to resolved display label.
+                    additionalProperties:
+                        type: string
+                    example:
+                        "67e246cb-ab02-4da4-8f47-f9fa3e061d6b": "Petstore API"
+
+        ResolveFilterLabelsResponse:
+            type: object
+            required: [entries]
+            properties:
+                entries:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ResolveFilterLabelsResponseEntry"
+
+        SearchLogsRequest:
+            type: object
+            description: Request body for the logs search endpoint.
+            properties:
+                timeRange:
+                    $ref: "#/components/schemas/TimeRange"
+                filters:
+                    type: array
+                    description: Filter conditions to apply. Validated against the LOGS signal catalog.
+                    items:
+                        $ref: "#/components/schemas/FilterCondition"
+
+        TimeRange:
+            type: object
+            description: |
+                ISO-8601 time window. Both bounds are optional; omitting either defers to server
+                defaults (no constraint on that side). When both are provided, `from` must be
+                before `to` — otherwise the server returns 400.
+            properties:
+                from:
+                    type: string
+                    format: date-time
+                    description: Start of the time window (inclusive).
+                    example: "2026-06-10T00:00:00Z"
+                to:
+                    type: string
+                    format: date-time
+                    description: End of the time window (inclusive).
+                    example: "2026-06-11T00:00:00Z"
+
+        FilterCondition:
+            type: object
+            description: |
+                A single filter condition. `operator` is uppercase (`EQ`, `IN`, `GTE`, `LTE`).
+                `value` is a scalar string for `EQ`/`GTE`/`LTE`, or an array of strings for `IN`.
+            required: [name, operator, value]
+            properties:
+                name:
+                    type: string
+                    description: Canonical filter name from the catalog.
+                    example: HTTP_STATUS
+                operator:
+                    $ref: "#/components/schemas/FilterOperator"
+                value:
+                    description: Scalar for EQ/GTE/LTE, array of strings for IN/NOT_IN.
+                    oneOf:
+                        - type: string
+                        - type: array
+                          items:
+                              type: string
+                    example: "200"
+
+        LogDetail:
+            type: object
+            description: |
+                Full merged log detail combining enriched metadata from the `v4-metrics` index
+                and HTTP payloads (headers + body) from the `v4-log` index. Returned by
+                `GET /observability/logs/{requestId}?apiId=`.
+            properties:
+                requestId:
+                    type: string
+                    description: Unique identifier of the gateway request.
+                    example: "req-abc-123"
+                apiId:
+                    type: string
+                    description: Identifier of the API that handled the request.
+                    example: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                transactionId:
+                    type: string
+                    description: Correlation id shared across chained requests.
+                    example: "txn-xyz-789"
+                clientIdentifier:
+                    type: string
+                    description: Client identifier extracted by the gateway.
+                timestamp:
+                    type: string
+                    format: date-time
+                    description: ISO-8601 instant the request was received.
+                    example: "2026-06-10T14:32:01Z"
+                requestEnded:
+                    type: boolean
+                    description: Whether the full request/response cycle completed.
+                method:
+                    type: string
+                    description: HTTP method of the client request.
+                    example: "GET"
+                uri:
+                    type: string
+                    description: Request URI path.
+                    example: "/pets/42"
+                status:
+                    type: integer
+                    description: HTTP status code returned to the client.
+                    example: 200
+                endpoint:
+                    type: string
+                    description: Backend endpoint the request was proxied to.
+                host:
+                    type: string
+                    description: Host header value from the client request.
+                planId:
+                    type: string
+                    description: Identifier of the plan the request was matched to.
+                planName:
+                    type: string
+                    description: Display name of the plan (enriched server-side).
+                    example: "Gold"
+                applicationId:
+                    type: string
+                    description: Identifier of the consuming application.
+                applicationName:
+                    type: string
+                    description: Display name of the application (enriched server-side).
+                    example: "Mobile App"
+                gateway:
+                    type: string
+                    description: Identifier of the gateway instance.
+                gatewayHostname:
+                    type: string
+                    description: Hostname of the gateway instance (enriched server-side).
+                    example: "gateway-eu-west-1.example.com"
+                gatewayIp:
+                    type: string
+                    description: IP address of the gateway instance (enriched server-side).
+                    example: "10.0.1.42"
+                remoteAddress:
+                    type: string
+                    description: IP address of the client.
+                    example: "203.0.113.42"
+                requestContentLength:
+                    type: integer
+                    format: int64
+                    description: Content length of the client request body in bytes.
+                responseContentLength:
+                    type: integer
+                    format: int64
+                    description: Content length of the response body in bytes.
+                gatewayLatency:
+                    type: integer
+                    format: int64
+                    description: Gateway processing latency in milliseconds (excluding backend time).
+                gatewayResponseTime:
+                    type: integer
+                    format: int64
+                    description: Total response time measured by the gateway in milliseconds.
+                    example: 12
+                endpointResponseTime:
+                    type: integer
+                    format: int64
+                    description: Backend response time in milliseconds.
+                    example: 9
+                message:
+                    type: string
+                    description: Error or diagnostic message.
+                errorKey:
+                    type: string
+                    description: Machine-readable error key.
+                errorComponentName:
+                    type: string
+                    description: Name of the component that produced the error.
+                errorComponentType:
+                    type: string
+                    description: Type of the component that produced the error.
+                warnings:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/LogEntryWarning"
+                additionalMetrics:
+                    type: object
+                    description: Extra metrics attached by plugins or custom policies.
+                    additionalProperties: true
+                entrypointRequest:
+                    $ref: "#/components/schemas/HttpPayload"
+                entrypointResponse:
+                    $ref: "#/components/schemas/HttpPayload"
+                endpointRequest:
+                    $ref: "#/components/schemas/HttpPayload"
+                endpointResponse:
+                    $ref: "#/components/schemas/HttpPayload"
+
+        HttpPayload:
+            type: object
+            description: |
+                HTTP request or response content from the `v4-log` index. Request payloads carry
+                `method` and `uri`; response payloads carry `status`. All fields are nullable —
+                only the fields relevant to the payload direction are populated.
+            properties:
+                method:
+                    type: string
+                    description: HTTP method (present on request payloads).
+                    example: "GET"
+                uri:
+                    type: string
+                    description: Request URI (present on request payloads).
+                    example: "/pets/42"
+                status:
+                    type: integer
+                    description: HTTP status code (present on response payloads).
+                    example: 200
+                headers:
+                    type: object
+                    description: HTTP headers as a map of header name to list of values.
+                    additionalProperties:
+                        type: array
+                        items:
+                            type: string
+                    example:
+                        Content-Type: ["application/json"]
+                        Accept: ["application/json"]
+                body:
+                    type: string
+                    description: HTTP body content.
+                    example: '{"id": 42, "name": "Fido"}'
+
+        LogEntry:
+            type: object
+            description: |
+                Light log row from the `v4-metrics` Elasticsearch index. Fields are enriched
+                server-side with display names so the UI can render without additional round-trips.
+                Null fields are omitted from the JSON response (`@JsonInclude(NON_NULL)`).
+            properties:
+                apiId:
+                    type: string
+                    description: Unique identifier of the API that handled the request.
+                    example: "67e246cb-ab02-4da4-8f47-f9fa3e061d6b"
+                apiName:
+                    type: string
+                    description: Display name of the API (enriched server-side).
+                    example: "Petstore API"
+                apiType:
+                    type: string
+                    description: API kind as stored in the definition (e.g. `HTTP_PROXY`, `LLM`, `MCP`).
+                    example: "HTTP_PROXY"
+                timestamp:
+                    type: string
+                    format: date-time
+                    description: ISO-8601 instant the request was received by the gateway.
+                    example: "2026-06-10T14:32:01Z"
+                requestId:
+                    type: string
+                    description: Unique identifier of the gateway request.
+                    example: "req-abc-123"
+                method:
+                    type: string
+                    description: HTTP method of the client request.
+                    example: "GET"
+                clientIdentifier:
+                    type: string
+                    description: Client identifier extracted by the gateway (e.g. subscription id, IP, header value).
+                planId:
+                    type: string
+                    description: Identifier of the plan the request was matched to.
+                    example: "plan-001"
+                planName:
+                    type: string
+                    description: Display name of the plan (enriched server-side).
+                    example: "Gold"
+                applicationId:
+                    type: string
+                    description: Identifier of the consuming application.
+                    example: "app-001"
+                applicationName:
+                    type: string
+                    description: Display name of the application (enriched server-side).
+                    example: "Mobile App"
+                transactionId:
+                    type: string
+                    description: Correlation id shared across chained requests in the same transaction.
+                    example: "txn-xyz-789"
+                status:
+                    type: integer
+                    description: HTTP status code returned to the client.
+                    example: 200
+                requestEnded:
+                    type: boolean
+                    description: Whether the full request/response cycle completed.
+                gatewayResponseTime:
+                    type: integer
+                    description: Total response time measured by the gateway, in milliseconds.
+                    example: 42
+                gateway:
+                    type: string
+                    description: Identifier of the gateway instance that processed the request.
+                    example: "gw-eu-1"
+                gatewayHostname:
+                    type: string
+                    description: Hostname of the gateway instance (enriched server-side).
+                    example: "gateway-eu-west-1.example.com"
+                uri:
+                    type: string
+                    description: Request URI path.
+                    example: "/pets/42"
+                endpoint:
+                    type: string
+                    description: Backend endpoint the request was proxied to.
+                message:
+                    type: string
+                    description: Error or diagnostic message attached to the log entry.
+                errorKey:
+                    type: string
+                    description: Machine-readable error key (e.g. `CORS_PREFLIGHT_FAILED`, `RATE_LIMIT_TOO_MANY_REQUESTS`).
+                errorComponentName:
+                    type: string
+                    description: Name of the component (policy, connector) that produced the error.
+                errorComponentType:
+                    type: string
+                    description: Type of the component that produced the error (e.g. `policy`, `connector`).
+                warnings:
+                    type: array
+                    description: Diagnostic warnings from policies that did not interrupt the request flow.
+                    items:
+                        $ref: "#/components/schemas/LogEntryWarning"
+                additionalMetrics:
+                    type: object
+                    description: Extra metrics attached by plugins or custom policies.
+                    additionalProperties: true
+                mcpMethod:
+                    type: string
+                    description: MCP method name (present only for `MCP` API type requests).
+                    example: "tools/list"
+                apiProductId:
+                    type: string
+                    description: Identifier of the API product the API belongs to (`null` for standalone APIs).
+                apiProductName:
+                    type: string
+                    description: Display name of the API product (enriched server-side). Returns `"Standalone API"` when the API has no product.
+                    example: "Standalone API"
+
+        LogEntryWarning:
+            type: object
+            description: |
+                A diagnostic warning attached to a log entry. Warnings are produced by policies
+                or connectors that encountered an issue but did not interrupt the request flow
+                (e.g. rate-limit bypass due to internal error).
+            properties:
+                componentType:
+                    type: string
+                    description: Type of the component that raised the warning (e.g. `policy`, `connector`).
+                    example: "policy"
+                componentName:
+                    type: string
+                    description: Name of the component.
+                    example: "rate-limit"
+                key:
+                    type: string
+                    description: Machine-readable warning key.
+                    example: "RATE_LIMIT_NOT_APPLIED"
+                message:
+                    type: string
+                    description: Human-readable description of what happened.
+                    example: "Request bypassed rate limit policy due to internal error"
+
+        LogsSearchResponse:
+            type: object
+            required: [data, pagination]
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/LogEntry"
+                pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+        MetricQuery:
+            type: object
+            description: A metric to compute with its requested measures. Used by the measures endpoint.
+            required: [name, measures]
+            properties:
+                name:
+                    type: string
+                    description: |
+                        Metric name from the analytics engine catalog (e.g. `HTTP_REQUESTS`,
+                        `HTTP_GATEWAY_RESPONSE_TIME`, `HTTP_ERRORS`, `LLM_PROMPT_TOTAL_TOKEN`).
+                    example: "HTTP_REQUESTS"
+                measures:
+                    type: array
+                    description: |
+                        Aggregation functions to apply. Valid values: `COUNT`, `AVG`, `MIN`, `MAX`,
+                        `SUM`, `P50`, `P90`, `P95`, `P99`, `PERCENTAGE`.
+                    items:
+                        type: string
+                    example: ["COUNT"]
+
+        SortSpec:
+            type: object
+            description: Sort directive for facet metric buckets.
+            required: [measure, order]
+            properties:
+                measure:
+                    type: string
+                    description: Name of the measure to sort by (must be present in the metric's `measures` list).
+                    example: "COUNT"
+                order:
+                    type: string
+                    description: Sort direction.
+                    enum: [ASC, DESC]
+                    example: "DESC"
+
+        FacetMetricQuery:
+            type: object
+            description: |
+                A metric to compute with its measures and optional sort directives. Used by the
+                facets and time-series endpoints.
+            required: [name, measures]
+            properties:
+                name:
+                    type: string
+                    description: Metric name from the analytics engine catalog.
+                    example: "HTTP_REQUESTS"
+                measures:
+                    type: array
+                    items:
+                        type: string
+                    example: ["COUNT"]
+                sorts:
+                    type: array
+                    nullable: true
+                    description: Sort directives for bucket ordering. Only applies to facets.
+                    items:
+                        $ref: "#/components/schemas/SortSpec"
+
+        NumberRange:
+            type: object
+            description: Numeric range for bucket-based aggregations (e.g. status code groups).
+            properties:
+                from:
+                    type: number
+                    description: Lower bound (inclusive).
+                    example: 200
+                to:
+                    type: number
+                    description: Upper bound (exclusive).
+                    example: 300
+
+        AnalyticsMeasuresRequest:
+            type: object
+            description: Request body for the measures endpoint.
+            required: [metrics]
+            properties:
+                timeRange:
+                    $ref: "#/components/schemas/TimeRange"
+                filters:
+                    type: array
+                    description: Filter conditions validated against the ANALYTICS signal catalog.
+                    items:
+                        $ref: "#/components/schemas/FilterCondition"
+                metrics:
+                    type: array
+                    description: One or more metrics to compute.
+                    items:
+                        $ref: "#/components/schemas/MetricQuery"
+
+        AnalyticsFacetsRequest:
+            type: object
+            description: Request body for the facets endpoint.
+            required: [metrics, by]
+            properties:
+                timeRange:
+                    $ref: "#/components/schemas/TimeRange"
+                filters:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FilterCondition"
+                metrics:
+                    type: array
+                    description: Metrics to compute per facet bucket.
+                    items:
+                        $ref: "#/components/schemas/FacetMetricQuery"
+                by:
+                    type: array
+                    description: |
+                        Facet dimensions to break down by (e.g. `API`, `HTTP_STATUS`,
+                        `HTTP_METHOD`, `APPLICATION`, `PLAN`, `GATEWAY`, `LLM_PROXY_MODEL`).
+                    items:
+                        type: string
+                    example: ["API"]
+                limit:
+                    type: integer
+                    nullable: true
+                    description: Maximum number of buckets per facet.
+                    example: 10
+                ranges:
+                    type: array
+                    nullable: true
+                    description: Numeric ranges for bucket-based aggregations.
+                    items:
+                        $ref: "#/components/schemas/NumberRange"
+
+        AnalyticsTimeSeriesRequest:
+            type: object
+            description: Request body for the time-series endpoint.
+            required: [metrics, interval]
+            properties:
+                timeRange:
+                    $ref: "#/components/schemas/TimeRange"
+                filters:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FilterCondition"
+                interval:
+                    type: integer
+                    format: int64
+                    description: Time bucket size in milliseconds (e.g. `60000` for 1 minute, `3600000` for 1 hour).
+                    example: 3600000
+                metrics:
+                    type: array
+                    description: Metrics to compute per time bucket.
+                    items:
+                        $ref: "#/components/schemas/FacetMetricQuery"
+                by:
+                    type: array
+                    nullable: true
+                    description: Optional facet dimensions for nested breakdown within each time bucket.
+                    items:
+                        type: string
+                facetSize:
+                    type: integer
+                    nullable: true
+                    description: Maximum facet values per time bucket.
+                    example: 5
+                ranges:
+                    type: array
+                    nullable: true
+                    items:
+                        $ref: "#/components/schemas/NumberRange"
+
+        MeasureValue:
+            type: object
+            description: A single aggregated measure result.
+            properties:
+                name:
+                    type: string
+                    description: Measure name (e.g. `COUNT`, `AVG`, `P99`).
+                    example: "COUNT"
+                value:
+                    type: number
+                    description: Computed value.
+                    example: 42
+
+        MetricResult:
+            type: object
+            description: Result for one metric in a measures response.
+            properties:
+                name:
+                    type: string
+                    description: Metric name.
+                    example: "HTTP_REQUESTS"
+                unit:
+                    type: string
+                    description: Unit of the metric values.
+                    example: "NUMBER"
+                measures:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/MeasureValue"
+
+        MeasuresResponse:
+            type: object
+            description: Response from the measures endpoint.
+            properties:
+                metrics:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/MetricResult"
+
+        FacetBucket:
+            type: object
+            description: |
+                A facet bucket. Leaf buckets carry `measures`; group buckets carry nested `buckets`.
+            required: [key, name, type]
+            properties:
+                key:
+                    type: string
+                    description: Raw bucket key from the analytics engine (e.g. API id, HTTP method code, status code).
+                name:
+                    type: string
+                    nullable: true
+                    description: |
+                        Human-readable label for the key. Enriched server-side for known facets:
+                        `API` → API display name, `APPLICATION` → application name,
+                        `HTTP_METHOD` → method name (GET, POST, …),
+                        `HTTP_STATUS` → labeled code (200 OK, 404 Not Found, …),
+                        `HTTP_STATUS_CODE_GROUP` → friendly group label (2xx Success, 4xx Client Error, …).
+                        Falls back to the raw key for unmapped facets.
+                type:
+                    type: string
+                    enum: [GROUP, LEAF]
+                    description: |
+                        Discriminator for nested facet trees. `GROUP` buckets contain nested
+                        `buckets`; `LEAF` buckets contain `measures`.
+                buckets:
+                    type: array
+                    nullable: true
+                    description: Nested sub-buckets (for multi-level faceting).
+                    items:
+                        $ref: "#/components/schemas/FacetBucket"
+                measures:
+                    type: array
+                    nullable: true
+                    items:
+                        $ref: "#/components/schemas/MeasureValue"
+
+        FacetMetricResult:
+            type: object
+            description: Result for one metric in a facets response.
+            properties:
+                metric:
+                    type: string
+                    description: Metric name.
+                    example: "HTTP_REQUESTS"
+                unit:
+                    type: string
+                    example: "NUMBER"
+                buckets:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FacetBucket"
+
+        FacetsResponse:
+            type: object
+            description: Response from the facets endpoint.
+            properties:
+                metrics:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/FacetMetricResult"
+
+        TimeSeriesBucket:
+            type: object
+            description: A time-series bucket with optional nested facet buckets.
+            required: [key, type]
+            properties:
+                key:
+                    type: string
+                    description: ISO-8601 timestamp of the bucket start.
+                    example: "2026-06-10T00:00:00Z"
+                name:
+                    type: string
+                    nullable: true
+                type:
+                    type: string
+                    enum: [GROUP, LEAF]
+                    description: |
+                        Discriminator for time-series buckets. `GROUP` buckets contain nested facet
+                        `buckets`; `LEAF` buckets contain `measures` only.
+                timestamp:
+                    type: integer
+                    format: int64
+                    description: Bucket start as epoch milliseconds.
+                    example: 1749513600000
+                buckets:
+                    type: array
+                    nullable: true
+                    description: Nested facet buckets within this time bucket.
+                    items:
+                        $ref: "#/components/schemas/FacetBucket"
+                measures:
+                    type: array
+                    nullable: true
+                    items:
+                        $ref: "#/components/schemas/MeasureValue"
+
+        TimeSeriesMetricResult:
+            type: object
+            description: Result for one metric in a time-series response.
+            properties:
+                name:
+                    type: string
+                    example: "HTTP_REQUESTS"
+                unit:
+                    type: string
+                    example: "NUMBER"
+                buckets:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TimeSeriesBucket"
+
+        TimeSeriesResponse:
+            type: object
+            description: Response from the time-series endpoint.
+            properties:
+                metrics:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/TimeSeriesMetricResult"
+
+        Error:
+            type: object
+            description: Standard error response.
+            required: [httpStatus, message]
+            properties:
+                httpStatus:
+                    type: integer
+                    description: HTTP status code.
+                message:
+                    type: string
+                    description: Human-readable error message.
+                technicalCode:
+                    type: string
+                    description: Machine-readable error code for programmatic handling.

@@ -1,0 +1,99 @@
+[
+   {
+      "id": "2535437f-ee99-4ab8-b543-7fee995ab847",
+      "type": "PLATFORM",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "DEFAULT",
+      "name": "Global dashboard",
+      "order": 0,
+      "enabled": true,
+      "definition": "{\"def\": \"value\"}",
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   }, {
+      "id": "6e0d09f0-ba5d-4571-8d09-f0ba5d7571c3",
+      "type": "PLATFORM",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "DEFAULT",
+      "name": "Device dashboard",
+      "order": 2,
+      "enabled": false,
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   }, {
+      "id": "4eeb1c56-6f4a-4925-ab1c-566f4aa925b8",
+      "type": "PLATFORM",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "DEFAULT",
+      "name": "Geo dashboard",
+      "order": 1,
+      "enabled": true,
+      "definition": "{\"def\": \"value\"}",
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   }, {
+      "id": "7589ef82-02ae-4fc7-89ef-8202ae3fc7cf",
+      "type": "API",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "DEFAULT",
+      "name": "Global dashboard",
+      "queryFilter": "api:b741b061-5377-43ea-81b0-61537793ea91",
+      "order": 0,
+      "enabled": true,
+      "definition": "{\"def\": \"value\"}",
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   },
+   {
+      "id": "c9d5390e-6387-4943-a123-603df96a429f",
+      "type": "API",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "OTHER_ENV",
+      "name": "Global dashboard",
+      "queryFilter": "api:b741b061-5377-43ea-81b0-61537793ea91",
+      "order": 0,
+      "enabled": true,
+      "definition": "{\"def\": \"value\"}",
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   },
+   {
+      "id": "c9d5390e-6387-4943-a123-613df16a419f",
+      "type": "API",
+      "referenceType": "ENVIRONMENT",
+      "referenceId": "OTHER_ENV",
+      "name": "Geo dashboard - the only one of OTHER_ENV",
+      "queryFilter": "api:b741b061-5377-43ea-81b0-61537793ea91",
+      "order": 1,
+      "enabled": true,
+      "definition": "{\"def\": \"value\"}",
+      "createdAt": 1000000000000,
+      "updatedAt": 1111111111111
+   },
+   {
+     "id": "to-be-deleted-1",
+     "type": "API",
+     "referenceType": "ENVIRONMENT",
+     "referenceId": "ToBeDeleted",
+     "name": "Geo dashboard - the only one of OTHER_ENV",
+     "queryFilter": "api:b741b061-5377-43ea-81b0-61537793ea91",
+     "order": 1,
+     "enabled": true,
+     "definition": "{\"def\": \"value\"}",
+     "createdAt": 1000000000000,
+     "updatedAt": 1111111111111
+   },
+   {
+     "id": "to-be-deleted-2",
+     "type": "API",
+     "referenceType": "ENVIRONMENT",
+     "referenceId": "ToBeDeleted",
+     "name": "Geo dashboard - the only one of OTHER_ENV",
+     "queryFilter": "api:b741b061-5377-43ea-81b0-61537793ea91",
+     "order": 1,
+     "enabled": true,
+     "definition": "{\"def\": \"value\"}",
+     "createdAt": 1000000000000,
+     "updatedAt": 1111111111111
+   }
+]

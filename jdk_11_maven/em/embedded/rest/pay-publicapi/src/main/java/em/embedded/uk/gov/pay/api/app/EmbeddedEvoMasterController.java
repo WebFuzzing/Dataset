@@ -8,6 +8,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import uk.gov.pay.api.app.PublicApi;
 import redis.clients.jedis.Jedis;
@@ -22,7 +23,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String REDIS_VERSION = "7.2.3";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer redisContainer = new GenericContainer("redis:" + REDIS_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(REDIS_PORT);
 
     private static String REDIS_URL = "";
@@ -75,7 +80,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     @Override
     public ProblemInfo getProblemInfo() {
         return new RestProblem(
-                "http://localhost:" + application.getJettyPort() + "/assets/swagger.json",
+                "http://localhost:" + application.getJettyPort() + "/assets/publicapi_spec.json",
                 null
         );
     }

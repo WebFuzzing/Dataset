@@ -9,6 +9,7 @@ import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.controller.redis.ReflectionBasedRedisClient;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.kafka.KafkaContainer;
@@ -59,11 +60,16 @@ public class ExternalEvoMasterController extends ExternalSutController {
                     " settlementdate text, postingdate text, status text, disputeid text," +
                     " transactionreturn text, location text, transactiontags text, primary key (tranid));";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer redis = new GenericContainer("redis/redis-stack-server:" + REDIS_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("REDIS_ARGS", "--requirepass " + REDIS_PASSWORD)
             .withExposedPorts(REDIS_PORT);
 
     private static final GenericContainer cassandra = new GenericContainer("cassandra:" + CASSANDRA_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("CASSANDRA_CLUSTER_NAME", CASSANDRA_CLUSTER)
             .withEnv("CASSANDRA_DC", CASSANDRA_DATACENTER)
             .withEnv("CASSANDRA_ENDPOINT_SNITCH", "SimpleSnitch")
@@ -73,7 +79,8 @@ public class ExternalEvoMasterController extends ExternalSutController {
             .waitingFor(Wait.forLogMessage(".*Startup complete.*", 1))
             .withStartupTimeout(Duration.ofMinutes(5));
 
-    private static final KafkaContainer kafka = new KafkaContainer("apache/kafka:" + KAFKA_VERSION);
+    private static final KafkaContainer kafka = new KafkaContainer("apache/kafka:" + KAFKA_VERSION)
+            .withCreateContainerCmdModifier(modifier);
 
 
     public static void main(String[] args) {

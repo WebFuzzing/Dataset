@@ -1,0 +1,341 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.api_product.use_case;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import fixtures.core.model.ApiFixtures;
+import fixtures.core.model.SubscriptionFixtures;
+import inmemory.AbstractUseCaseTest;
+import inmemory.ApiCrudServiceInMemory;
+import inmemory.ApiProductCrudServiceInMemory;
+import inmemory.ApiProductQueryServiceInMemory;
+import inmemory.ApiQueryServiceInMemory;
+import inmemory.IndexerInMemory;
+import inmemory.PlanQueryServiceInMemory;
+import inmemory.SubscriptionCrudServiceInMemory;
+import inmemory.SubscriptionQueryServiceInMemory;
+import io.gravitee.apim.core.api.domain_service.ApiStateDomainService;
+import io.gravitee.apim.core.api_product.domain_service.ApiProductIndexerDomainService;
+import io.gravitee.apim.core.api_product.domain_service.ValidateApiProductService;
+import io.gravitee.apim.core.api_product.exception.ApiProductNotFoundException;
+import io.gravitee.apim.core.api_product.model.ApiProduct;
+import io.gravitee.apim.core.audit.domain_service.AuditDomainService;
+import io.gravitee.apim.core.event.crud_service.EventCrudService;
+import io.gravitee.apim.core.event.crud_service.EventLatestCrudService;
+import io.gravitee.apim.core.membership.domain_service.ApiProductPrimaryOwnerDomainService;
+import io.gravitee.apim.core.search.model.IndexableApiProduct;
+import io.gravitee.apim.core.subscription.domain_service.CloseSubscriptionDomainService;
+import io.gravitee.apim.core.subscription.domain_service.DeleteSubscriptionDomainService;
+import io.gravitee.apim.core.subscription.model.SubscriptionEntity;
+import io.gravitee.apim.core.subscription.model.SubscriptionReferenceType;
+import io.gravitee.apim.infra.json.jackson.JacksonJsonDiffProcessor;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class DeleteApiProductUseCaseTest extends AbstractUseCaseTest {
+
+    private final ApiProductCrudServiceInMemory apiProductCrudService = new ApiProductCrudServiceInMemory();
+    private final ApiProductQueryServiceInMemory apiProductQueryService = new ApiProductQueryServiceInMemory();
+    private final ApiCrudServiceInMemory apiCrudService = new ApiCrudServiceInMemory();
+    private final ApiQueryServiceInMemory apiQueryService = new ApiQueryServiceInMemory(apiCrudService);
+    private final PlanQueryServiceInMemory planQueryService = new PlanQueryServiceInMemory();
+    private final SubscriptionCrudServiceInMemory subscriptionCrudService = new SubscriptionCrudServiceInMemory();
+    private final SubscriptionQueryServiceInMemory subscriptionQueryService = new SubscriptionQueryServiceInMemory(subscriptionCrudService);
+    private final EventCrudService eventCrudService = mock(EventCrudService.class);
+    private final EventLatestCrudService eventLatestCrudService = mock(EventLatestCrudService.class);
+    private final ApiStateDomainService apiStateDomainService = mock(ApiStateDomainService.class);
+    private final ApiProductIndexerDomainService apiProductIndexerDomainService = mock(ApiProductIndexerDomainService.class);
+    private final CloseSubscriptionDomainService closeSubscriptionDomainService = mock(CloseSubscriptionDomainService.class);
+    private final DeleteSubscriptionDomainService deleteSubscriptionDomainService = mock(DeleteSubscriptionDomainService.class);
+    private DeleteApiProductUseCase deleteApiProductUseCase;
+
+    @BeforeEach
+    void setUp() {
+        var auditService = new AuditDomainService(auditCrudService, userCrudService, new JacksonJsonDiffProcessor());
+        var validateApiProductService = new ValidateApiProductService(
+            apiQueryService,
+            apiCrudService,
+            planQueryService,
+            apiProductQueryService
+        );
+        deleteApiProductUseCase = new DeleteApiProductUseCase(
+            apiProductCrudService,
+            auditService,
+            apiProductQueryService,
+            validateApiProductService,
+            apiStateDomainService,
+            eventCrudService,
+            eventLatestCrudService,
+            apiProductIndexerDomainService,
+            subscriptionQueryService,
+            closeSubscriptionDomainService,
+            deleteSubscriptionDomainService
+        );
+    }
+
+    @Test
+    void should_delete_api_product() {
+        var productId = "api-product-id";
+        apiProductCrudService.create(
+            io.gravitee.apim.core.api_product.model.ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build()
+        );
+        apiProductQueryService.initWith(List.of(ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build()));
+        var input = new DeleteApiProductUseCase.Input(productId, AUDIT_INFO);
+        deleteApiProductUseCase.execute(input);
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+
+        // No APIs in product → stop must not be called
+        verify(apiStateDomainService, never()).stop(any(), any());
+        verify(eventCrudService).createEvent(eq(ORG_ID), eq(ENV_ID), any(), any(), any(), any());
+        verify(eventLatestCrudService).createOrPatchLatestEvent(eq(ORG_ID), eq(productId), any());
+        verify(apiProductIndexerDomainService).delete(any(), argThat(apiProduct -> productId.equals(apiProduct.getId())));
+        verify(apiProductIndexerDomainService, never()).index(any(), any(), any());
+    }
+
+    @Test
+    void should_remove_existing_api_product_from_index_when_deleted() {
+        var productId = "api-product-id";
+        var product = ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build();
+        apiProductCrudService.create(product);
+        apiProductQueryService.initWith(List.of(product));
+
+        IndexerInMemory indexer = new IndexerInMemory();
+        indexer.initWith(List.of(new IndexableApiProduct(product, null)));
+        assertThat(indexer.storage()).anyMatch(i -> productId.equals(i.getId()));
+
+        var primaryOwnerDomainService = mock(ApiProductPrimaryOwnerDomainService.class);
+        when(primaryOwnerDomainService.getApiProductPrimaryOwner(ORG_ID, productId)).thenReturn(null);
+        var realIndexerDomainService = new ApiProductIndexerDomainService(primaryOwnerDomainService, indexer);
+        var useCaseWithRealIndexer = new DeleteApiProductUseCase(
+            apiProductCrudService,
+            new io.gravitee.apim.core.audit.domain_service.AuditDomainService(
+                auditCrudService,
+                userCrudService,
+                new JacksonJsonDiffProcessor()
+            ),
+            apiProductQueryService,
+            new ValidateApiProductService(apiQueryService, apiCrudService, planQueryService, apiProductQueryService),
+            apiStateDomainService,
+            eventCrudService,
+            eventLatestCrudService,
+            realIndexerDomainService,
+            subscriptionQueryService,
+            closeSubscriptionDomainService,
+            deleteSubscriptionDomainService
+        );
+
+        useCaseWithRealIndexer.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO));
+
+        assertThat(indexer.storage()).noneMatch(i -> productId.equals(i.getId()));
+    }
+
+    @Test
+    void should_throw_exception_if_product_does_not_exist() {
+        var input = new DeleteApiProductUseCase.Input("missing-id", AUDIT_INFO);
+
+        assertThatThrownBy(() -> deleteApiProductUseCase.execute(input))
+            .isInstanceOf(ApiProductNotFoundException.class)
+            .hasMessage("API Product not found.");
+    }
+
+    @Test
+    void should_throw_exception_when_product_belongs_to_different_environment() {
+        var productId = "api-product-id";
+        apiProductQueryService.initWith(List.of(ApiProduct.builder().id(productId).name("Product").environmentId("other-env").build()));
+
+        assertThatThrownBy(() -> deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO))).isInstanceOf(
+            ApiProductNotFoundException.class
+        );
+    }
+
+    @Test
+    void should_auto_undeploy_deployed_api_without_plans_then_delete_product() {
+        var productId = "api-product-id";
+        var deployedApiNoPlans = ApiFixtures.aProxyApiV4()
+            .toBuilder()
+            .id("api-deployed-no-plans")
+            .environmentId(ENV_ID)
+            .deployedAt(ZonedDateTime.now())
+            .build();
+        ApiProduct product = ApiProduct.builder()
+            .id(productId)
+            .name("Product")
+            .environmentId(ENV_ID)
+            .apiIds(Set.of("api-deployed-no-plans"))
+            .build();
+
+        apiCrudService.initWith(List.of(deployedApiNoPlans));
+        apiProductCrudService.initWith(List.of(product));
+        apiProductQueryService.initWith(List.of(product));
+
+        var input = new DeleteApiProductUseCase.Input(productId, AUDIT_INFO);
+
+        deleteApiProductUseCase.execute(input);
+
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+        verify(apiStateDomainService).stop(argThat(api -> "api-deployed-no-plans".equals(api.getId())), eq(AUDIT_INFO));
+        verify(eventCrudService).createEvent(eq(ORG_ID), eq(ENV_ID), any(), any(), any(), any());
+        verify(apiProductIndexerDomainService).delete(any(), argThat(apiProduct -> productId.equals(apiProduct.getId())));
+        verify(apiProductIndexerDomainService, never()).index(any(), any(), any());
+    }
+
+    @Test
+    void should_not_call_stop_when_product_has_only_undeployed_apis() {
+        var productId = "api-product-id";
+        var undeployedApi = ApiFixtures.aProxyApiV4().toBuilder().id("api-undeployed").environmentId(ENV_ID).deployedAt(null).build();
+        ApiProduct product = ApiProduct.builder()
+            .id(productId)
+            .name("Product")
+            .environmentId(ENV_ID)
+            .apiIds(Set.of("api-undeployed"))
+            .build();
+
+        apiCrudService.initWith(List.of(undeployedApi));
+        apiProductCrudService.initWith(List.of(product));
+        apiProductQueryService.initWith(List.of(product));
+
+        deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO));
+
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+        verify(apiStateDomainService, never()).stop(any(), any());
+        verify(apiProductIndexerDomainService).delete(any(), argThat(apiProduct -> productId.equals(apiProduct.getId())));
+        verify(apiProductIndexerDomainService, never()).index(any(), any(), any());
+    }
+
+    @Test
+    void should_stop_each_deployed_api_without_plan_when_deleting_product_with_multiple_apis() {
+        var productId = "api-product-id";
+        var api1 = ApiFixtures.aProxyApiV4().toBuilder().id("api-1").environmentId(ENV_ID).deployedAt(ZonedDateTime.now()).build();
+        var api2 = ApiFixtures.aProxyApiV4().toBuilder().id("api-2").environmentId(ENV_ID).deployedAt(ZonedDateTime.now()).build();
+        ApiProduct product = ApiProduct.builder()
+            .id(productId)
+            .name("Product")
+            .environmentId(ENV_ID)
+            .apiIds(Set.of("api-1", "api-2"))
+            .build();
+
+        apiCrudService.initWith(List.of(api1, api2));
+        apiProductCrudService.initWith(List.of(product));
+        apiProductQueryService.initWith(List.of(product));
+
+        deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO));
+
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+        verify(apiStateDomainService, times(2)).stop(any(), eq(AUDIT_INFO));
+        verify(apiStateDomainService).stop(argThat(api -> "api-1".equals(api.getId())), eq(AUDIT_INFO));
+        verify(apiStateDomainService).stop(argThat(api -> "api-2".equals(api.getId())), eq(AUDIT_INFO));
+        verify(apiProductIndexerDomainService).delete(any(), argThat(apiProduct -> productId.equals(apiProduct.getId())));
+        verify(apiProductIndexerDomainService, never()).index(any(), any(), any());
+    }
+
+    @Test
+    void should_close_and_delete_subscriptions_when_deleting_api_product() {
+        var productId = "api-product-id";
+        ApiProduct product = ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build();
+        apiProductCrudService.create(product);
+        apiProductQueryService.initWith(List.of(product));
+
+        SubscriptionEntity subscription1 = SubscriptionFixtures.aSubscription()
+            .toBuilder()
+            .id("sub-1")
+            .referenceId(productId)
+            .referenceType(SubscriptionReferenceType.API_PRODUCT)
+            .build();
+        SubscriptionEntity subscription2 = SubscriptionFixtures.aSubscription()
+            .toBuilder()
+            .id("sub-2")
+            .referenceId(productId)
+            .referenceType(SubscriptionReferenceType.API_PRODUCT)
+            .build();
+        subscriptionCrudService.initWith(List.of(subscription1, subscription2));
+
+        deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO));
+
+        var inOrder = inOrder(closeSubscriptionDomainService, deleteSubscriptionDomainService);
+        inOrder.verify(closeSubscriptionDomainService).closeSubscription(subscription1, AUDIT_INFO);
+        inOrder.verify(deleteSubscriptionDomainService).delete(subscription1, AUDIT_INFO);
+        inOrder.verify(closeSubscriptionDomainService).closeSubscription(subscription2, AUDIT_INFO);
+        inOrder.verify(deleteSubscriptionDomainService).delete(subscription2, AUDIT_INFO);
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+    }
+
+    @Test
+    void should_not_call_close_or_delete_when_no_subscriptions_exist_for_api_product() {
+        var productId = "api-product-id";
+        ApiProduct product = ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build();
+        apiProductCrudService.create(product);
+        apiProductQueryService.initWith(List.of(product));
+
+        deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO));
+
+        verify(closeSubscriptionDomainService, never()).closeSubscription(any(SubscriptionEntity.class), any());
+        verify(deleteSubscriptionDomainService, never()).delete(any(), any());
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+    }
+
+    @Test
+    void should_continue_closing_remaining_subscriptions_when_one_close_throws() {
+        var productId = "api-product-id";
+        ApiProduct product = ApiProduct.builder().id(productId).name("Product").environmentId(ENV_ID).build();
+        apiProductCrudService.create(product);
+        apiProductQueryService.initWith(List.of(product));
+
+        SubscriptionEntity subscription1 = SubscriptionFixtures.aSubscription()
+            .toBuilder()
+            .id("sub-1")
+            .referenceId(productId)
+            .referenceType(SubscriptionReferenceType.API_PRODUCT)
+            .build();
+        SubscriptionEntity subscription2 = SubscriptionFixtures.aSubscription()
+            .toBuilder()
+            .id("sub-2")
+            .referenceId(productId)
+            .referenceType(SubscriptionReferenceType.API_PRODUCT)
+            .build();
+        subscriptionCrudService.initWith(List.of(subscription1, subscription2));
+
+        doThrow(new RuntimeException("close failed")).when(closeSubscriptionDomainService).closeSubscription(eq(subscription1), any());
+
+        // The product deletion must complete even though closing subscription1 throws:
+        // any subscription skipped here will never receive another close event once the product is gone.
+        assertThatCode(() ->
+            deleteApiProductUseCase.execute(new DeleteApiProductUseCase.Input(productId, AUDIT_INFO))
+        ).doesNotThrowAnyException();
+
+        // subscription2 must still be processed despite subscription1 failing
+        verify(closeSubscriptionDomainService).closeSubscription(eq(subscription2), any());
+        verify(deleteSubscriptionDomainService).delete(eq(subscription2), any());
+        // subscription1 delete is never called because its close threw
+        verify(deleteSubscriptionDomainService, never()).delete(eq(subscription1), any());
+        assertThat(apiProductCrudService.findById(productId)).isEmpty();
+    }
+}

@@ -10,6 +10,7 @@ import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -63,7 +64,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String AWS_REGION = "us-west-2";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer localstackContainer = new GenericContainer("localstack/localstack:" + LOCALSTACK_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("SERVICES", "dynamodb")
             .withEnv("DEFAULT_REGION", AWS_REGION)
             .withExposedPorts(LOCALSTACK_PORT)

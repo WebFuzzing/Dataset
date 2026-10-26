@@ -1,0 +1,79 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.portal.model;
+
+import jakarta.annotation.Nonnull;
+import java.util.List;
+import lombok.Getter;
+
+@Getter
+public class Portal {
+
+    @Nonnull
+    private final PortalId id;
+
+    @Nonnull
+    private final String environmentId;
+
+    @Nonnull
+    private final String organizationId;
+
+    @Nonnull
+    private final String name;
+
+    @Nonnull
+    private final List<NavigationPath> portalNavigation;
+
+    private Portal(PortalId id, String environmentId, String organizationId, String name, List<NavigationPath> portalNavigation) {
+        this.id = id;
+        this.environmentId = environmentId;
+        this.organizationId = organizationId;
+        this.name = name;
+        this.portalNavigation = portalNavigation == null ? List.of() : List.copyOf(portalNavigation);
+    }
+
+    /** New portal with a random id and no navigation. */
+    public static Portal create(String environmentId, String organizationId, String name) {
+        return new Portal(PortalId.random(), environmentId, organizationId, name, List.of());
+    }
+
+    /** Reconstitute a portal from a known id (HRID-derived, persistence, etc.). */
+    public static Portal of(PortalId id, String environmentId, String organizationId, String name) {
+        return new Portal(id, environmentId, organizationId, name, List.of());
+    }
+
+    /** Reconstitute a portal with a persisted navigation array. */
+    public static Portal of(PortalId id, String environmentId, String organizationId, String name, List<NavigationPath> portalNavigation) {
+        return new Portal(id, environmentId, organizationId, name, portalNavigation);
+    }
+
+    public Portal withNavigation(List<NavigationPath> portalNavigation) {
+        return new Portal(this.id, this.environmentId, this.organizationId, this.name, portalNavigation);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Portal that = (Portal) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+}

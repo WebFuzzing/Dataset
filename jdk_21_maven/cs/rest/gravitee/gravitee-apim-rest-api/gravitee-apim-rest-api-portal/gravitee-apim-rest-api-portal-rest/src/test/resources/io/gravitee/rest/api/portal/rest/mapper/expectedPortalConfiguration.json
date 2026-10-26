@@ -1,0 +1,159 @@
+{
+  "portal" : {
+    "entrypoint" : "https://api.company.com",
+    "apikeyHeader" : "X-Gravitee-Api-Key",
+    "support" : {
+      "enabled" : false
+    },
+    "applicationCreation" : {
+      "enabled" : true
+    },
+    "userCreation" : {
+      "enabled" : true,
+      "automaticValidation" : {
+        "enabled" : false
+      }
+    },
+    "apis" : {
+      "tilesMode" : {
+        "enabled" : true
+      },
+      "documentationOnlyMode": {
+        "enabled": false
+      },
+      "categoryMode" : {
+        "enabled" : true
+      },
+      "promotedApiMode": {
+        "enabled": true
+      },
+      "apiHeaderShowTags" : {
+        "enabled" : false
+      },
+      "apiHeaderShowCategories" : {
+        "enabled" : false
+      }
+    },
+    "analytics" : {
+      "enabled" : false
+    },
+    "rating" : {
+      "enabled" : false,
+      "comment" : {
+        "mandatory" : false
+      }
+    },
+    "uploadMedia" : {
+      "enabled" : false,
+      "maxSizeInBytes" : 1000000
+    }
+  },
+  "portalNext": {
+    "access": {
+      "enabled": true
+    },
+    "analytics": {
+      "enabled": false
+    },
+    "banner": {
+      "enabled": true,
+      "title": "banner title",
+      "subtitle": "banner subtitle",
+      "primaryButton": {
+        "enabled": true,
+        "label": "Primary button",
+        "target": "primary-button",
+        "type": "EXTERNAL",
+        "visibility": "PRIVATE"
+      },
+      "secondaryButton": {
+        "enabled": false
+      }
+    },
+    "catalog": {
+      "viewMode": "TABS"
+    }
+  },
+  "authentication" : {
+    "forceLogin" : {
+      "enabled" : false
+    },
+    "localLogin" : {
+      "enabled" : true
+    }
+  },
+  "scheduler" : {
+    "notificationsInSeconds" : 10
+  },
+  "documentation" : {
+    "url" : "https://documentation.gravitee.io/apim"
+  },
+  "plan" : {
+    "security" : {
+      "apikey" : {
+        "enabled" : true
+      },
+      "sharedApiKey" : {
+        "enabled" : true
+      },
+      "oauth2" : {
+        "enabled" : true
+      },
+      "keyless" : {
+        "enabled" : true
+      },
+      "jwt" : {
+        "enabled" : true
+      },
+      "mtls" : {
+        "enabled" : true
+      }
+    }
+  },
+  "apiReview" : {
+    "enabled" : false
+  },
+  "analytics" : {
+    "clientTimeout" : 30000
+  },
+  "application" : {
+    "registration" : {
+      "enabled" : true
+    },
+    "types" : {
+      "simple" : {
+        "enabled" : true
+      },
+      "browser" : {
+        "enabled" : true
+      },
+      "web" : {
+        "enabled" : true
+      },
+      "backend_to_backend" : {
+        "enabled" : true
+      },
+      "native" : {
+        "enabled" : true
+      }
+    }
+  },
+  "recaptcha" : {
+    "enabled" : true,
+    "siteKey" : "testSiteKey"
+  },
+  "alert" : {
+    "enabled" : true
+  },
+  "openAPIDocViewer" : {
+    "openAPIDocType" : {
+      "swagger" : {
+        "enabled" : true
+      },
+      "redoc" : {
+        "enabled" : false
+      },
+      "defaultType" : "Swagger"
+    }
+  }
+}

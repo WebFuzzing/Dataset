@@ -1,0 +1,243 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.rest.resource;
+
+import static io.gravitee.common.http.HttpStatusCode.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+import io.gravitee.definition.model.DefinitionVersion;
+import io.gravitee.rest.api.model.*;
+import io.gravitee.rest.api.model.api.ApiEntity;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.model.v4.plan.GenericPlanEntity;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+/**
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+public class ApiPlansResourceTest extends AbstractResourceTest {
+
+    private static final String API = "my-api";
+    private static final String PLAN = "my-plan";
+
+    @Override
+    protected String contextPath() {
+        return "apis";
+    }
+
+    @BeforeEach
+    public void init() {
+        Mockito.reset(planService, apiService, apiSearchServiceV4, groupService);
+        when(
+            permissionService.hasPermission(
+                any(ExecutionContext.class),
+                any(RolePermission.class),
+                anyString(),
+                any(RolePermissionAction[].class)
+            )
+        ).thenReturn(true);
+        GraviteeContext.cleanContext();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        GraviteeContext.cleanContext();
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenGettingPlansForV4Api() {
+        when(apiSearchServiceV4.findGenericById(GraviteeContext.getExecutionContext(), API, false, false, false)).thenReturn(
+            v4Api(DefinitionVersion.V4)
+        );
+
+        final Response response = envTarget().path(API).path("plans").request().get();
+
+        assertEquals(BAD_REQUEST_400, response.getStatus());
+        verify(apiService, never()).findById(any(), eq(API));
+        verify(planService, never()).findByApi(any(), any());
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenGettingSinglePlanForV4Api() {
+        when(apiSearchServiceV4.findGenericById(GraviteeContext.getExecutionContext(), API, false, false, false)).thenReturn(
+            v4Api(DefinitionVersion.V4)
+        );
+
+        final Response response = envTarget().path(API).path("plans").path(PLAN).request().get();
+
+        assertEquals(BAD_REQUEST_400, response.getStatus());
+        verify(apiService, never()).findById(any(), eq(API));
+        verify(planService, never()).findById(any(), any());
+    }
+
+    @Test
+    public void shouldGetApiPlansForV2Api() {
+        ApiEntity v2Api = readableV2Api();
+        when(apiSearchServiceV4.findGenericById(GraviteeContext.getExecutionContext(), API, false, false, false)).thenReturn(v2Api);
+        when(apiService.findById(GraviteeContext.getExecutionContext(), API)).thenReturn(v2Api);
+
+        PlanEntity publishedPlan = new PlanEntity();
+        publishedPlan.setId("published-plan");
+        publishedPlan.setReferenceId(API);
+        publishedPlan.setReferenceType(GenericPlanEntity.ReferenceType.API);
+        publishedPlan.setStatus(PlanStatus.PUBLISHED);
+        publishedPlan.setOrder(1);
+        publishedPlan.setSecurity(PlanSecurityType.KEY_LESS);
+        when(planService.findByApi(GraviteeContext.getExecutionContext(), API)).thenReturn(Set.of(publishedPlan));
+        when(groupService.isUserAuthorizedToAccessApiData(any(ApiEntity.class), any(), any())).thenReturn(true);
+
+        final Response response = envTarget().path(API).path("plans").request().get();
+
+        assertEquals(OK_200, response.getStatus());
+        List<PlanEntity> plans = response.readEntity(new GenericType<>() {});
+        assertNotNull(plans);
+        assertEquals(1, plans.size());
+    }
+
+    @Test
+    public void shouldCreateApiPlanForV4Api() {
+        when(apiSearchServiceV4.findGenericById(GraviteeContext.getExecutionContext(), API, false, false, false)).thenReturn(
+            v4Api(DefinitionVersion.V4)
+        );
+
+        NewPlanEntity newPlanEntity = new NewPlanEntity();
+        newPlanEntity.setName(PLAN);
+        newPlanEntity.setDescription("my-plan-description");
+        newPlanEntity.setValidation(PlanValidationType.AUTO);
+        newPlanEntity.setSecurity(PlanSecurityType.KEY_LESS);
+        newPlanEntity.setType(PlanType.API);
+        newPlanEntity.setStatus(PlanStatus.STAGING);
+
+        PlanEntity createdPlanEntity = new PlanEntity();
+        createdPlanEntity.setId("new-plan-id");
+        when(planService.create(eq(GraviteeContext.getExecutionContext()), any())).thenReturn(createdPlanEntity);
+
+        final Response response = envTarget().path(API).path("plans").request().post(Entity.json(newPlanEntity));
+
+        assertEquals(CREATED_201, response.getStatus());
+        verify(planService).create(eq(GraviteeContext.getExecutionContext()), any());
+    }
+
+    @Test
+    public void shouldCreateApiPlan() {
+        NewPlanEntity newPlanEntity = new NewPlanEntity();
+        newPlanEntity.setName(PLAN);
+        newPlanEntity.setDescription("my-plan-description");
+        newPlanEntity.setValidation(PlanValidationType.AUTO);
+        newPlanEntity.setSecurity(PlanSecurityType.KEY_LESS);
+        newPlanEntity.setType(PlanType.API);
+        newPlanEntity.setStatus(PlanStatus.STAGING);
+
+        PlanEntity createdPlanEntity = new PlanEntity();
+        createdPlanEntity.setId("new-plan-id");
+        when(planService.create(eq(GraviteeContext.getExecutionContext()), any())).thenReturn(createdPlanEntity);
+
+        final Response response = envTarget().path(API).path("plans").request().post(Entity.json(newPlanEntity));
+        assertEquals(CREATED_201, response.getStatus());
+        assertEquals(
+            envTarget().path(API).path("plans").path("new-plan-id").getUri().toString(),
+            response.getHeaders().getFirst(HttpHeaders.LOCATION)
+        );
+    }
+
+    @Test
+    public void shouldCloseApiPlan() {
+        ApiEntity api = getApi(DefinitionVersion.V2);
+
+        PlanEntity existingPlan = new PlanEntity();
+        existingPlan.setName(PLAN);
+        existingPlan.setReferenceId(API);
+        existingPlan.setReferenceType(GenericPlanEntity.ReferenceType.API);
+
+        PlanEntity closedPlan = new PlanEntity();
+        closedPlan.setId("closed-plan-id");
+        when(apiService.findById(GraviteeContext.getExecutionContext(), API)).thenReturn(api);
+        when(planService.findById(GraviteeContext.getExecutionContext(), PLAN)).thenReturn(existingPlan);
+        when(planService.close(eq(GraviteeContext.getExecutionContext()), any())).thenReturn(closedPlan);
+
+        final Response response = envTarget().path(API).path("plans").path(PLAN).path("_close").request().post(Entity.json(""));
+
+        assertEquals(OK_200, response.getStatus());
+        verify(planService, times(1)).close(eq(GraviteeContext.getExecutionContext()), eq(PLAN));
+        verify(apiService, never()).update(eq(GraviteeContext.getExecutionContext()), eq(API), any());
+    }
+
+    @Test
+    public void shouldDeleteApiPlan() {
+        ApiEntity api = getApi(DefinitionVersion.V2);
+
+        PlanEntity existingPlan = new PlanEntity();
+        existingPlan.setName(PLAN);
+        existingPlan.setReferenceId(API);
+        existingPlan.setReferenceType(GenericPlanEntity.ReferenceType.API);
+
+        when(apiService.findById(GraviteeContext.getExecutionContext(), API)).thenReturn(api);
+        when(planService.findById(GraviteeContext.getExecutionContext(), PLAN)).thenReturn(existingPlan);
+
+        final Response response = envTarget().path(API).path("plans").path(PLAN).request().delete();
+
+        assertEquals(NO_CONTENT_204, response.getStatus());
+        verify(planService, times(1)).delete(eq(GraviteeContext.getExecutionContext()), eq(PLAN));
+    }
+
+    private static io.gravitee.rest.api.model.v4.api.ApiEntity v4Api(DefinitionVersion definitionVersion) {
+        io.gravitee.rest.api.model.v4.api.ApiEntity api = new io.gravitee.rest.api.model.v4.api.ApiEntity();
+        api.setId(API);
+        api.setDefinitionVersion(definitionVersion);
+        return api;
+    }
+
+    private static ApiEntity readableV2Api() {
+        ApiEntity api = new ApiEntity();
+        api.setId(API);
+        api.setVisibility(Visibility.PUBLIC);
+        api.setGraviteeDefinitionVersion(DefinitionVersion.V2.getLabel());
+        return api;
+    }
+
+    private ApiEntity getApi(DefinitionVersion version) {
+        ApiEntity api = new ApiEntity();
+        api.setId(API);
+        api.setGraviteeDefinitionVersion(version.getLabel());
+
+        if (DefinitionVersion.V2.equals(version)) {
+            PlanEntity plan1 = new PlanEntity();
+            plan1.setId(PLAN);
+
+            PlanEntity plan2 = new PlanEntity();
+            plan2.setId("plan-2");
+            api.setPlans(Set.of(plan1, plan2));
+        }
+
+        return api;
+    }
+}

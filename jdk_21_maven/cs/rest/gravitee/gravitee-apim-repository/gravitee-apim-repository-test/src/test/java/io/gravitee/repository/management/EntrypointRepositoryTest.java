@@ -1,0 +1,172 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.repository.management;
+
+import static org.junit.Assert.*;
+
+import io.gravitee.repository.management.model.Entrypoint;
+import io.gravitee.repository.management.model.EntrypointReferenceType;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class EntrypointRepositoryTest extends AbstractManagementRepositoryTest {
+
+    @Override
+    protected String getTestCasesPath() {
+        return "/data/entrypoint-tests/";
+    }
+
+    @Test
+    public void shouldFindAllByReference() throws Exception {
+        final Set<Entrypoint> entrypoints = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION);
+
+        assertNotNull(entrypoints);
+        assertEquals(3, entrypoints.size());
+        assertEquals("HTTP", entrypoints.iterator().next().getTarget());
+
+        // Verify environmentIds is loaded for the entrypoint that has it
+        Optional<Entrypoint> withEnvIds = entrypoints
+            .stream()
+            .filter(e -> "fa29c012-a0d2-4721-a9c0-12a0d26721db".equals(e.getId()))
+            .findFirst();
+        assertTrue("Entrypoint with environmentIds not found", withEnvIds.isPresent());
+        assertEquals("env1;env2", withEnvIds.get().getEnvironmentIds());
+
+        // Verify referenceId and referenceType are correctly mapped from storage
+        assertEquals("DEFAULT", withEnvIds.get().getReferenceId());
+        assertEquals(EntrypointReferenceType.ORGANIZATION, withEnvIds.get().getReferenceType());
+
+        // Verify environmentIds is null for entrypoints that don't have it
+        Optional<Entrypoint> withoutEnvIds = entrypoints
+            .stream()
+            .filter(e -> "aaeddaec-0e94-4f49-adda-ec0e947f4965".equals(e.getId()))
+            .findFirst();
+        assertTrue("Entrypoint without environmentIds not found", withoutEnvIds.isPresent());
+        assertNull(withoutEnvIds.get().getEnvironmentIds());
+    }
+
+    @Test
+    public void shouldCreate() throws Exception {
+        final Entrypoint entrypoint = new Entrypoint();
+        entrypoint.setId("new-entrypoint");
+        entrypoint.setTarget("HTTP");
+        entrypoint.setReferenceId("DEFAULT");
+        entrypoint.setReferenceType(EntrypointReferenceType.ORGANIZATION);
+        entrypoint.setValue("Entrypoint value");
+        entrypoint.setTags("internal;product");
+        entrypoint.setEnvironmentIds("env1;env3");
+
+        int nbEntryPointsBeforeCreation = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+        entrypointRepository.create(entrypoint);
+        int nbEntryPointsAfterCreation = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+
+        Assert.assertEquals(nbEntryPointsBeforeCreation + 1, nbEntryPointsAfterCreation);
+
+        Optional<Entrypoint> optional = entrypointRepository.findById("new-entrypoint");
+        Assert.assertTrue("Entrypoint saved not found", optional.isPresent());
+        assertEquals("Invalid saved entrypoint.", entrypoint, optional.get());
+        assertEquals("Invalid saved target.", "HTTP", optional.get().getTarget());
+        assertEquals("Invalid saved environmentIds.", "env1;env3", optional.get().getEnvironmentIds());
+    }
+
+    @Test
+    public void shouldCreateWithNullEnvironmentIds() throws Exception {
+        final Entrypoint entrypoint = new Entrypoint();
+        entrypoint.setId("new-entrypoint-no-env");
+        entrypoint.setTarget("HTTP");
+        entrypoint.setReferenceId("DEFAULT");
+        entrypoint.setReferenceType(EntrypointReferenceType.ORGANIZATION);
+        entrypoint.setValue("Entrypoint value no env");
+        entrypoint.setTags("internal");
+
+        entrypointRepository.create(entrypoint);
+
+        Optional<Entrypoint> optional = entrypointRepository.findById("new-entrypoint-no-env");
+        Assert.assertTrue("Entrypoint saved not found", optional.isPresent());
+        assertNull("environmentIds should be null", optional.get().getEnvironmentIds());
+    }
+
+    @Test
+    public void shouldUpdate() throws Exception {
+        Optional<Entrypoint> optional = entrypointRepository.findById("fa29c012-a0d2-4721-a9c0-12a0d26721db");
+        Assert.assertTrue("EntryPoint to update not found", optional.isPresent());
+        Assert.assertEquals("Invalid saved entrypoint value.", "https://public-api.company.com", optional.get().getValue());
+        Assert.assertEquals("Invalid saved environmentIds.", "env1;env2", optional.get().getEnvironmentIds());
+
+        final Entrypoint entrypoint = optional.get();
+        entrypoint.setValue("New value");
+        entrypoint.setReferenceId("DEFAULT");
+        entrypoint.setReferenceType(EntrypointReferenceType.ORGANIZATION);
+        entrypoint.setTags("New tags");
+        entrypoint.setEnvironmentIds("env3");
+
+        int nbEntryPointsBeforeUpdate = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+        entrypointRepository.update(entrypoint);
+        int nbEntryPointsAfterUpdate = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+
+        Assert.assertEquals(nbEntryPointsBeforeUpdate, nbEntryPointsAfterUpdate);
+
+        Optional<Entrypoint> optionalUpdated = entrypointRepository.findById("fa29c012-a0d2-4721-a9c0-12a0d26721db");
+        Assert.assertTrue("Entrypoint saved not found", optionalUpdated.isPresent());
+        assertEquals("Invalid saved entrypoint.", entrypoint, optionalUpdated.get());
+        assertEquals("Invalid saved value.", "New value", optionalUpdated.get().getValue());
+        assertEquals("Invalid saved tags.", "New tags", optionalUpdated.get().getTags());
+        assertEquals("Invalid saved environmentIds.", "env3", optionalUpdated.get().getEnvironmentIds());
+    }
+
+    @Test
+    public void shouldDelete() throws Exception {
+        int nbEntryPointsBeforeDeletion = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+        entrypointRepository.delete("fa29c012-a0d2-4721-a9c0-12a0d26721db");
+        int nbEntryPointsAfterDeletion = entrypointRepository.findByReference("DEFAULT", EntrypointReferenceType.ORGANIZATION).size();
+
+        Assert.assertEquals(nbEntryPointsBeforeDeletion - 1, nbEntryPointsAfterDeletion);
+    }
+
+    @Test
+    public void should_delete_by_reference_id_and_reference_type() throws Exception {
+        final Set<Entrypoint> beforeDelete = entrypointRepository.findByReference("ToBeDeleted", EntrypointReferenceType.ORGANIZATION);
+
+        final List<String> deleted = entrypointRepository.deleteByReferenceIdAndReferenceType(
+            "ToBeDeleted",
+            EntrypointReferenceType.ORGANIZATION
+        );
+
+        final Set<Entrypoint> afterDelete = entrypointRepository.findByReference("ToBeDeleted", EntrypointReferenceType.ORGANIZATION);
+
+        assertNotNull(beforeDelete);
+        assertEquals(2, beforeDelete.size());
+        assertEquals(2, deleted.size());
+        assertEquals(0, afterDelete.size());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldNotUpdateUnknownEntryPoint() throws Exception {
+        Entrypoint unknownEntryPoint = new Entrypoint();
+        unknownEntryPoint.setId("unknown");
+        entrypointRepository.update(unknownEntryPoint);
+        fail("An unknown entrypoint should not be updated");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldNotUpdateNull() throws Exception {
+        entrypointRepository.update(null);
+        fail("A null entrypoint should not be updated");
+    }
+}

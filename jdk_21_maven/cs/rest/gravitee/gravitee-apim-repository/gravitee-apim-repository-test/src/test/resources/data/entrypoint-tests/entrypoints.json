@@ -1,0 +1,51 @@
+[
+   {
+      "id": "fa29c012-a0d2-4721-a9c0-12a0d26721db",
+     "target": "HTTP",
+      "referenceId": "DEFAULT",
+      "referenceType": "ORGANIZATION",
+      "value": "https://public-api.company.com",
+      "tags": "public",
+      "environmentIds": "env1;env2"
+   },
+   {
+      "id": "aaeddaec-0e94-4f49-adda-ec0e947f4965",
+     "target": "HTTP",
+      "referenceId": "DEFAULT",
+      "referenceType": "ORGANIZATION",
+      "value": "https://store-api.company.com",
+      "tags": "public;store"
+   },
+   {
+      "id": "fbbc53ea3-357e-45bf-853e-a3357ed5bfdd",
+     "target": "HTTP",
+      "referenceId": "DEFAULT",
+      "referenceType": "ORGANIZATION",
+      "value": "https://internal-api.company.com",
+      "tags": "private;store"
+   },
+   {
+      "id": "fbbc53ea3-357e-45bf-853e-a3357ed5bddkdd",
+     "target": "HTTP",
+      "referenceId": "OTHER",
+      "referenceType": "ORGANIZATION",
+      "value": "https://other-internal-api.company.com",
+      "tags": "private"
+   },
+   {
+      "id": "fbbc53ea3-357e-45bf-853e-a3357ed5abcd",
+     "target": "HTTP",
+      "referenceId": "ToBeDeleted",
+      "referenceType": "ORGANIZATION",
+      "value": "https://internal-api.company.com",
+      "tags": "private;store"
+   },
+   {
+      "id": "fbbc53ea3-357e-45bf-853e-a3357ed5bdefgh",
+     "target": "HTTP",
+      "referenceId": "ToBeDeleted",
+      "referenceType": "ORGANIZATION",
+      "value": "https://other-internal-api.company.com",
+      "tags": "private"
+   }
+]

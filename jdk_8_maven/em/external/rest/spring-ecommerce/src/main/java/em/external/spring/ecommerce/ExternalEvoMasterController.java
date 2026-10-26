@@ -15,6 +15,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -71,7 +72,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private static final String MONGODB_DATABASE_NAME = "test";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodbContainer = new GenericContainer("mongo:" + MONGODB_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withTmpFs(Collections.singletonMap("/data/db", "rw"))
             .withExposedPorts(MONGODB_PORT);
 
@@ -79,6 +84,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private static final int REDIS_PORT = 6379;
 
     private static final GenericContainer<?> redisContainer = new GenericContainer("redis:" + REDIS_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(REDIS_PORT)
             .withCommand("redis-server", "--appendonly", "yes");
 
@@ -89,6 +95,7 @@ public class ExternalEvoMasterController extends ExternalSutController {
     private static final GenericContainer<?> elasticsearchContainer =
             new GenericContainer<>(DockerImageName.parse(
                     "docker.elastic.co/elasticsearch/elasticsearch:" + ELASTICSEARCH_VERSION))
+                    .withCreateContainerCmdModifier(modifier)
                     .withEnv("discovery.type", "single-node")
                     .withEnv("cluster.name", "elasticsearch")
                     .withEnv("ES_JAVA_OPTS", "-Xms512m -Xmx512m")

@@ -1,0 +1,19 @@
+{
+  "id": "application-id",
+  "name": "with-missing-mandatory-grand-type",
+  "description": "SPA with missing mandatory grand type",
+  "domain": "test-domain",
+  "settings": {
+    "oauth": {
+      "applicationType": "WEB",
+      "grantTypes": [
+        "implicit"
+      ],
+      "redirectUris": [
+        "https://my-redirect-url.com"
+      ]
+    }
+  },
+  "metadata": [],
+  "origin": "kubernetes"
+}

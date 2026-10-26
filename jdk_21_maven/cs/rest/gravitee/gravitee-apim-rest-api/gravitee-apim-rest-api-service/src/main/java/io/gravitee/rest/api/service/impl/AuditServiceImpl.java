@@ -1,0 +1,441 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.service.impl;
+
+import static java.util.Map.entry;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.fge.jsonpatch.diff.JsonDiff;
+import io.gravitee.apim.core.utils.CollectionUtils;
+import io.gravitee.common.data.domain.MetadataPage;
+import io.gravitee.common.data.domain.Page;
+import io.gravitee.repository.exceptions.TechnicalException;
+import io.gravitee.repository.management.api.*;
+import io.gravitee.repository.management.api.search.AuditCriteria.Builder;
+import io.gravitee.repository.management.api.search.builder.PageableBuilder;
+import io.gravitee.repository.management.model.*;
+import io.gravitee.repository.management.model.Dashboard;
+import io.gravitee.rest.api.idp.api.authentication.UserDetails;
+import io.gravitee.rest.api.model.UserEntity;
+import io.gravitee.rest.api.model.audit.AuditEntity;
+import io.gravitee.rest.api.model.audit.AuditQuery;
+import io.gravitee.rest.api.model.audit.AuditReferenceType;
+import io.gravitee.rest.api.model.permissions.RolePermission;
+import io.gravitee.rest.api.model.permissions.RolePermissionAction;
+import io.gravitee.rest.api.service.AuditService;
+import io.gravitee.rest.api.service.PermissionService;
+import io.gravitee.rest.api.service.UserService;
+import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.UuidString;
+import io.gravitee.rest.api.service.exceptions.TechnicalManagementException;
+import io.gravitee.rest.api.service.exceptions.UserNotFoundException;
+import java.util.*;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author Nicolas GERAUD (nicolas.geraud at graviteesource.com)
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@Component
+@CustomLog
+public class AuditServiceImpl extends AbstractService implements AuditService {
+
+    private static final Map<Audit.AuditReferenceType, AuditReferenceType> AUDIT_REFERENCE_TYPE_AUDIT_REFERENCE_TYPE_MAP = Map.ofEntries(
+        entry(Audit.AuditReferenceType.ORGANIZATION, AuditReferenceType.ORGANIZATION),
+        entry(Audit.AuditReferenceType.ENVIRONMENT, AuditReferenceType.ENVIRONMENT),
+        entry(Audit.AuditReferenceType.APPLICATION, AuditReferenceType.APPLICATION),
+        entry(Audit.AuditReferenceType.API, AuditReferenceType.API),
+        entry(Audit.AuditReferenceType.API_PRODUCT, AuditReferenceType.API_PRODUCT),
+        entry(Audit.AuditReferenceType.DASHBOARD, AuditReferenceType.DASHBOARD)
+    );
+
+    @Lazy
+    @Autowired
+    private AuditRepository auditRepository;
+
+    @Lazy
+    @Autowired
+    private PageRepository pageRepository;
+
+    @Lazy
+    @Autowired
+    private PlanRepository planRepository;
+
+    @Lazy
+    @Autowired
+    private MetadataRepository metadataRepository;
+
+    @Lazy
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Lazy
+    @Autowired
+    private ApiRepository apiRepository;
+
+    @Lazy
+    @Autowired
+    private ApiProductsRepository apiProductsRepository;
+
+    @Lazy
+    @Autowired
+    private DashboardRepository dashboardRepository;
+
+    @Lazy
+    @Autowired
+    private EnvironmentRepository environmentRepository;
+
+    @Lazy
+    @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Lazy
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    @Lazy
+    private UserService userService;
+
+    @Autowired
+    @Lazy
+    private PermissionService permissionService;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Override
+    public MetadataPage<AuditEntity> search(final ExecutionContext executionContext, AuditQuery query) {
+        Builder criteria = new Builder().from(query.getFrom()).to(query.getTo());
+
+        criteria.organizationId(executionContext.getOrganizationId());
+        if (executionContext.hasEnvironmentId()) {
+            criteria.environmentIds(Collections.singletonList(executionContext.getEnvironmentId()));
+        }
+
+        if (
+            permissionService.hasPermission(
+                executionContext,
+                RolePermission.ORGANIZATION_AUDIT,
+                executionContext.getOrganizationId(),
+                RolePermissionAction.READ
+            ) &&
+            query.getReferenceType() != null &&
+            query.getReferenceType().equals(AuditReferenceType.ORGANIZATION)
+        ) {
+            criteria.references(Audit.AuditReferenceType.ORGANIZATION, null);
+        } else if (
+            (query.getEnvironmentIds() != null && !query.getEnvironmentIds().isEmpty()) ||
+            (query.getReferenceType() != null && query.getReferenceType().equals(AuditReferenceType.ENVIRONMENT))
+        ) {
+            criteria.references(Audit.AuditReferenceType.ENVIRONMENT, query.getEnvironmentIds());
+        } else if (
+            (query.getApplicationIds() != null && !query.getApplicationIds().isEmpty()) ||
+            (query.getReferenceType() != null && query.getReferenceType().equals(AuditReferenceType.APPLICATION))
+        ) {
+            criteria.references(Audit.AuditReferenceType.APPLICATION, query.getApplicationIds());
+        } else if (
+            (query.getApiIds() != null && !query.getApiIds().isEmpty()) ||
+            (query.getReferenceType() != null && query.getReferenceType().equals(AuditReferenceType.API))
+        ) {
+            criteria.references(Audit.AuditReferenceType.API, query.getApiIds());
+        }
+
+        if (query.getEvents() != null && !query.getEvents().isEmpty()) {
+            criteria.events(query.getEvents());
+        }
+
+        Page<Audit> auditPage = auditRepository.search(
+            criteria.build(),
+            new PageableBuilder().pageNumber(query.getPage() - 1).pageSize(query.getSize()).build()
+        );
+
+        List<AuditEntity> content = auditPage.getContent().stream().map(this::convert).collect(Collectors.toList());
+
+        return new MetadataPage<>(
+            content,
+            query.getPage(),
+            query.getSize(),
+            auditPage.getTotalElements(),
+            getMetadata(executionContext, content)
+        );
+    }
+
+    private Map<String, String> getMetadata(ExecutionContext executionContext, List<AuditEntity> content) {
+        Map<String, String> metadata = new HashMap<>();
+        for (AuditEntity auditEntity : content) {
+            //add user's display name
+            String metadataKey = "USER:" + auditEntity.getUser() + ":name";
+            try {
+                UserEntity user = userService.findById(executionContext, auditEntity.getUser());
+                metadata.put(metadataKey, user.getDisplayName());
+            } catch (TechnicalManagementException e) {
+                log.error("Error finding metadata {}", auditEntity.getUser());
+            } catch (UserNotFoundException unfe) {
+                metadata.put(metadataKey, auditEntity.getUser());
+            }
+
+            if (auditEntity.getReferenceType() == null) {
+                log.warn("Audit entry {} has null referenceType, skipping metadata resolution", auditEntity.getId());
+                continue;
+            }
+
+            if (Audit.AuditReferenceType.ORGANIZATION.name().equals(auditEntity.getReferenceType().name())) {
+                metadataKey = "ORGANIZATION:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        Optional<Organization> optOrganization = organizationRepository.findById(auditEntity.getReferenceId());
+                        if (optOrganization.isPresent()) {
+                            metadata.put(metadataKey, optOrganization.get().getName());
+                        }
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            } else if (Audit.AuditReferenceType.ENVIRONMENT.name().equals(auditEntity.getReferenceType().name())) {
+                metadataKey = "ENVIRONMENT:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        Optional<Environment> optEnvironment = environmentRepository.findById(auditEntity.getReferenceId());
+                        if (optEnvironment.isPresent()) {
+                            metadata.put(metadataKey, optEnvironment.get().getName());
+                        }
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            } else if (
+                auditEntity.getReferenceId() != null &&
+                Audit.AuditReferenceType.APPLICATION.name().equals(auditEntity.getReferenceType().name())
+            ) {
+                metadataKey = "APPLICATION:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        Optional<Application> optApp = applicationRepository.findById(auditEntity.getReferenceId());
+                        if (optApp.isPresent()) {
+                            metadata.put(metadataKey, optApp.get().getName());
+                        }
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            } else if (
+                auditEntity.getReferenceId() != null && Audit.AuditReferenceType.API.name().equals(auditEntity.getReferenceType().name())
+            ) {
+                metadataKey = "API:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        Optional<Api> optApi = apiRepository.findById(auditEntity.getReferenceId());
+                        if (optApi.isPresent()) {
+                            metadata.put(metadataKey, optApi.get().getName());
+                        }
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            } else if (
+                auditEntity.getReferenceId() != null &&
+                Audit.AuditReferenceType.API_PRODUCT.name().equals(auditEntity.getReferenceType().name())
+            ) {
+                metadataKey = "API_PRODUCT:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        Optional<io.gravitee.repository.management.model.ApiProduct> optApiProduct = apiProductsRepository.findById(
+                            auditEntity.getReferenceId()
+                        );
+                        if (optApiProduct.isPresent()) {
+                            metadata.put(metadataKey, optApiProduct.get().getName());
+                        }
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            } else if (auditEntity.getReferenceId() != null && auditEntity.getReferenceType() == AuditReferenceType.DASHBOARD) {
+                metadataKey = "DASHBOARD:" + auditEntity.getReferenceId() + ":name";
+                if (!metadata.containsKey(metadataKey)) {
+                    try {
+                        metadata.put(
+                            metadataKey,
+                            dashboardRepository
+                                .findById(auditEntity.getReferenceId())
+                                .map(Dashboard::getName)
+                                .orElse(auditEntity.getReferenceId())
+                        );
+                    } catch (TechnicalException e) {
+                        log.error("Error finding metadata {}", metadataKey);
+                        metadata.put(metadataKey, auditEntity.getReferenceId());
+                    }
+                }
+            }
+
+            //add property metadata
+            String name;
+            if (auditEntity.getProperties() != null) {
+                for (Map.Entry<String, String> property : auditEntity.getProperties().entrySet()) {
+                    metadataKey = new StringJoiner(":").add(property.getKey()).add(property.getValue()).add("name").toString();
+                    if (!metadata.containsKey(metadataKey)) {
+                        name = getName(property.getKey(), property.getValue(), executionContext, auditEntity);
+                        metadata.put(metadataKey, name);
+                    }
+                }
+            }
+        }
+        return metadata;
+    }
+
+    private String getName(String property, String value, ExecutionContext executionContext, AuditEntity auditEntity) {
+        try {
+            return switch (Audit.AuditProperties.valueOf(property)) {
+                case API -> apiRepository.findById(value).map(Api::getName).orElse(value);
+                case APPLICATION -> applicationRepository.findById(value).map(Application::getName).orElse(value);
+                case PAGE -> pageRepository.findById(value).map(io.gravitee.repository.management.model.Page::getName).orElse(value);
+                case PLAN -> planRepository.findById(value).map(Plan::getName).orElse(value);
+                case METADATA -> {
+                    MetadataReferenceType refType = MetadataReferenceType.parse(auditEntity.getReferenceType().name());
+                    Optional<Metadata> metadata = metadataRepository.findById(value, auditEntity.getReferenceId(), refType);
+                    yield metadata.map(Metadata::getName).orElse(value);
+                }
+                case GROUP -> groupRepository.findById(value).map(Group::getName).orElse(value);
+                case USER -> userService.findById(executionContext, value).getDisplayName();
+                default -> value;
+            };
+        } catch (UserNotFoundException ignored) {
+            // If the user is not found, we return the value as is
+            return value;
+        } catch (TechnicalException technicalException) {
+            log.error("Error finding metadata for property {} and value {}", property, value, technicalException);
+            return value; // Fallback to the value if an error occurs
+        }
+    }
+
+    private ObjectNode toObjectNode(Object value) {
+        if (value == null) {
+            return mapper.createObjectNode();
+        }
+        try {
+            return (ObjectNode) mapper.readTree(mapper.writeValueAsString(value));
+        } catch (JsonProcessingException e) {
+            log.warn("Failed to serialize value for audit log diff, using empty node", e);
+            return mapper.createObjectNode();
+        }
+    }
+
+    @Override
+    @Async
+    public void createAuditLog(ExecutionContext executionContext, AuditLogData auditLogData) {
+        if (auditLogData.getReferenceType() == null) {
+            if (executionContext.hasEnvironmentId()) {
+                auditLogData.setReferenceType(Audit.AuditReferenceType.ENVIRONMENT);
+                auditLogData.setReferenceId(executionContext.getEnvironmentId());
+            } else {
+                auditLogData.setReferenceType(Audit.AuditReferenceType.ORGANIZATION);
+                auditLogData.setReferenceId(executionContext.getOrganizationId());
+            }
+        }
+
+        Audit audit = new Audit();
+        audit.setId(UuidString.generateRandom());
+        audit.setOrganizationId(executionContext.getOrganizationId());
+        if (executionContext.hasEnvironmentId() && !auditLogData.getReferenceType().equals(Audit.AuditReferenceType.ORGANIZATION)) {
+            audit.setEnvironmentId(executionContext.getEnvironmentId());
+        }
+        audit.setCreatedAt(auditLogData.getCreatedAt() == null ? new Date() : auditLogData.getCreatedAt());
+
+        final UserDetails authenticatedUser = getAuthenticatedUser();
+        final String user;
+        if (authenticatedUser != null && "token".equals(authenticatedUser.getSource())) {
+            user =
+                userService.findById(executionContext, authenticatedUser.getUsername()).getDisplayName() +
+                " - (using token \"" +
+                authenticatedUser.getSourceId() +
+                "\")";
+        } else {
+            user = getAuthenticatedUsernameOrSystem();
+        }
+        audit.setUser(user);
+
+        if (auditLogData.getProperties() != null) {
+            Map<String, String> stringStringMap = new HashMap<>(auditLogData.getProperties().size());
+            auditLogData.getProperties().forEach((auditProperties, s) -> stringStringMap.put(auditProperties.name(), s));
+            audit.setProperties(stringStringMap);
+        }
+
+        audit.setReferenceType(auditLogData.getReferenceType());
+        audit.setReferenceId(auditLogData.getReferenceId());
+        audit.setEvent(auditLogData.getEvent().name());
+
+        ObjectNode oldNode = toObjectNode(auditLogData.getOldValue()).remove(Arrays.asList("updatedAt", "createdAt"));
+        ObjectNode newNode = toObjectNode(auditLogData.getNewValue()).remove(Arrays.asList("updatedAt", "createdAt"));
+
+        JsonNode diff = JsonDiff.asJson(oldNode, newNode);
+
+        if (CollectionUtils.isNotEmpty(auditLogData.getPathsToAnonymize())) {
+            anonymizeData(diff, auditLogData.getPathsToAnonymize());
+        }
+
+        audit.setPatch(diff.toString());
+
+        try {
+            auditRepository.create(audit);
+        } catch (TechnicalException e) {
+            log.error("Error occurs during the creation of an Audit Log {}.", e);
+        }
+    }
+
+    void anonymizeData(JsonNode diff, List<String> pathsToAnonymize) {
+        Iterator<JsonNode> diffElements = diff.elements();
+        while (diffElements.hasNext()) {
+            JsonNode element = diffElements.next();
+            String path = element.get("path").asText();
+            if (pathsToAnonymize.contains(path) && element.get("value") != null) {
+                ((ObjectNode) element).put("value", "*****");
+            }
+        }
+    }
+
+    private AuditEntity convert(Audit audit) {
+        AuditEntity auditEntity = new AuditEntity();
+
+        auditEntity.setReferenceType(AUDIT_REFERENCE_TYPE_AUDIT_REFERENCE_TYPE_MAP.get(audit.getReferenceType()));
+        auditEntity.setReferenceId(audit.getReferenceId());
+        auditEntity.setEvent(audit.getEvent());
+        auditEntity.setProperties(audit.getProperties());
+        auditEntity.setUser(audit.getUser());
+        auditEntity.setId(audit.getId());
+        auditEntity.setPatch(audit.getPatch());
+        auditEntity.setCreatedAt(audit.getCreatedAt());
+
+        return auditEntity;
+    }
+
+    private String getAuthenticatedUsernameOrSystem() {
+        return isAuthenticated() ? getAuthenticatedUsername() : "system";
+    }
+}

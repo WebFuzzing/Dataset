@@ -17,10 +17,10 @@ import org.bson.Document;
 import org.evomaster.client.java.controller.neo4j.ReflectionBasedNeo4jClient;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Session;
 import org.neo4j.driver.AuthTokens;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
@@ -76,7 +76,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
                     + "('wfd_admin1', 'wfd_admin1@example.com', '$2a$10$3mawxiylgOPZOvvJO24bxeuUcQyQf.n53SzzAX9fBNiT7bfzZn4WO', 'ADMIN', NOW(), NOW()), "
                     + "('wfd_admin2', 'wfd_admin2@example.com', '$2a$10$8h.Zwu6RHMf0VZsEIZ2rcewbF4CU/nLpzoSSPjE1M1D.nof/9ZQVy', 'ADMIN', NOW(), NOW());";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mysql = new GenericContainer(MYSQL_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("MYSQL_DATABASE", MYSQL_DATABASE)
             .withEnv("MYSQL_ROOT_PASSWORD", MYSQL_ROOT_PASSWORD)
             // Copy of cs/rest/arimaa/Database/mysql, bundled so it does not depend on the working directory.
@@ -87,9 +91,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             .withStartupTimeout(Duration.ofMinutes(3));
 
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(MONGODB_PORT);
 
     private static final GenericContainer neo4j = new GenericContainer(NEO4J_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USERNAME + "/" + NEO4J_PASSWORD)
             .withExposedPorts(NEO4J_BOLT_PORT)
             .waitingFor(Wait.forLogMessage(".*Started.*", 1))
@@ -119,13 +125,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     // Snapshot taken right after migration; resetStateOfSUT() wipes and replays it
     private Map<String, List<Document>> mongoSnapshot;
-
-    // Of the Neo4j data, only :User nodes (and the (:Player)-[:HAS_USER]->(:User) edges to them)
-    // are ever mutated through the API - Match/Player/Move/... are read-only, so only User needs
-    // resetting; that also keeps the reset itself fast (the full graph has ~11k nodes).
-    private List<Map<String, Object>> neo4jUserSnapshot;
-
-    private List<Map<String, Object>> neo4jHasUserSnapshot;
 
     public EmbeddedEvoMasterController() {
         this(0);
@@ -169,7 +168,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         mongoClient = MongoClients.create(mongodbUri());
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
         captureMongoSnapshot();
-        captureNeo4jUserSnapshot();
 
         return "http://localhost:" + getSutPort();
     }
@@ -181,16 +179,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             List<Document> docs = new ArrayList<>();
             db.getCollection(name).find().into(docs);
             mongoSnapshot.put(name, docs);
-        }
-    }
-
-    private void captureNeo4jUserSnapshot() {
-        try (Session session = neo4jDriver.session()) {
-            neo4jUserSnapshot = session.run("MATCH (u:User) RETURN properties(u) AS props")
-                    .list(r -> r.get("props").asMap());
-            neo4jHasUserSnapshot = session.run(
-                            "MATCH (p:Player)-[:HAS_USER]->(u:User) RETURN p.id AS playerId, u.id AS userId")
-                    .list(r -> Map.of("playerId", r.get("playerId").asObject(), "userId", r.get("userId").asObject()));
         }
     }
 
@@ -276,8 +264,14 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     @Override
     public void resetStateOfSUT() {
+        // the Neo4j graph is put back as it was after migration by employSmartNeo4jClean()
         resetMongo();
-        resetNeo4jUsers();
+    }
+
+    /** Puts the graph back as the migration left it before each test, including its users. */
+    @Override
+    public boolean employSmartNeo4jClean() {
+        return true;
     }
 
     private void resetMongo() {
@@ -291,24 +285,6 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
                     copies.add(new Document(d));
                 }
                 collection.insertMany(copies);
-            }
-        }
-    }
-
-    private void resetNeo4jUsers() {
-        try (Session session = neo4jDriver.session()) {
-            session.run("MATCH (u:User) DETACH DELETE u").consume();
-            if (!neo4jUserSnapshot.isEmpty()) {
-                session.run("UNWIND $rows AS row CREATE (u:User) SET u = row",
-                        Map.of("rows", neo4jUserSnapshot)).consume();
-            }
-            if (!neo4jHasUserSnapshot.isEmpty()) {
-                session.run("""
-                                UNWIND $rows AS row
-                                MATCH (p:Player {id: row.playerId}), (u:User {id: row.userId})
-                                MERGE (p)-[:HAS_USER]->(u)
-                                """,
-                        Map.of("rows", neo4jHasUserSnapshot)).consume();
             }
         }
     }

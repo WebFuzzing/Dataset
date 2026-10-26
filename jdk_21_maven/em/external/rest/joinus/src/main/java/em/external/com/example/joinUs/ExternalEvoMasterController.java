@@ -17,6 +17,7 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.AuthTokens;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -64,10 +65,15 @@ public class ExternalEvoMasterController extends ExternalSutController {
                 .append("_class", "com.example.joinUs.model.mongodb.User");
     }
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(MONGODB_PORT);
 
     private static final GenericContainer neo4j = new GenericContainer(NEO4J_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USERNAME + "/" + NEO4J_PASSWORD)
             .withExposedPorts(NEO4J_BOLT_PORT)
             .waitingFor(Wait.forLogMessage(".*Started.*", 1))
@@ -195,11 +201,16 @@ public class ExternalEvoMasterController extends ExternalSutController {
         neo4j.start();
         mongoClient = MongoClients.create(mongodbUri());
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
-        seedUsers();
+        seedMongoUsers();
+        seedNeo4jUsers();
     }
 
-    private void seedUsers() {
+    private void seedMongoUsers() {
         mongoClient.getDatabase(MONGODB_DATABASE).getCollection("members").insertMany(USERS);
+    }
+
+    /** Seeded once at startup: from then on, the graph is restored by employSmartNeo4jClean(). */
+    private void seedNeo4jUsers() {
         try (Session session = neo4jDriver.session()) {
             session.run("UNWIND $ids AS id CREATE (:Member {member_id: id, member_name: id})",
                     Map.of("ids", USERS.stream().map(u -> u.getString("_id")).toList())).consume();
@@ -241,10 +252,13 @@ public class ExternalEvoMasterController extends ExternalSutController {
         for (String name : db.listCollectionNames()) {
             db.getCollection(name).deleteMany(new Document());
         }
-        try (Session session = neo4jDriver.session()) {
-            session.run("MATCH (n) DETACH DELETE n").consume();
-        }
-        seedUsers();
+        seedMongoUsers();
+    }
+
+    /** Puts the graph back as it was seeded at startup before each test. */
+    @Override
+    public boolean employSmartNeo4jClean() {
+        return true;
     }
 
     // Lets EvoMaster compute its Mongo query heuristics; without it every test that touches a

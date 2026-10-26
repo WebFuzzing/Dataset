@@ -10,6 +10,7 @@ import org.evomaster.client.java.controller.api.dto.database.schema.DatabaseType
 import org.evomaster.client.java.sql.DbSpecification;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 
 import java.sql.Connection;
@@ -37,7 +38,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
 
     private static final String POSTGRES_PASSWORD = "password";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer postgres = new GenericContainer("postgres:" + POSTGRES_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
             .withEnv("POSTGRES_HOST_AUTH_METHOD", "trust")
             .withEnv("POSTGRES_DB", POSTGRES_DB)

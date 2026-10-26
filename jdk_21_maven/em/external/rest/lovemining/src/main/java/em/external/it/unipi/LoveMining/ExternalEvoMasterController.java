@@ -17,6 +17,7 @@ import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Session;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
@@ -110,10 +111,15 @@ public class ExternalEvoMasterController extends ExternalSutController {
         );
     }
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer mongodb = new GenericContainer(MONGODB_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(MONGODB_PORT);
 
     private static final GenericContainer neo4j = new GenericContainer(NEO4J_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("NEO4J_AUTH", NEO4J_USERNAME + "/" + NEO4J_PASSWORD)
             .withExposedPorts(NEO4J_BOLT_PORT)
             .waitingFor(Wait.forLogMessage(".*Started.*", 1))
@@ -235,10 +241,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
         neo4j.start();
         mongoClient = MongoClients.create(mongodbUri());
         neo4jDriver = GraphDatabase.driver(neo4jUri(), AuthTokens.basic(NEO4J_USERNAME, NEO4J_PASSWORD));
-        seed();
+        seedMongo();
+        seedNeo4j();
     }
 
-    private void seed() {
+    private void seedMongo() {
         MongoDatabase db = mongoClient.getDatabase(MONGODB_DATABASE);
         List<Document> users = new ArrayList<>();
         for (Document u : USERS) {
@@ -246,7 +253,10 @@ public class ExternalEvoMasterController extends ExternalSutController {
         }
         db.getCollection("users").insertMany(users);
         db.getCollection("reviews").insertMany(reviews());
+    }
 
+    /** Seeded once at startup: from then on, the graph is restored by employSmartNeo4jClean(). */
+    private void seedNeo4j() {
         try (Session session = neo4jDriver.session()) {
             session.run("""
                             MERGE (s:State {name: $state})
@@ -319,10 +329,13 @@ public class ExternalEvoMasterController extends ExternalSutController {
         for (String name : db.listCollectionNames()) {
             db.getCollection(name).deleteMany(new Document());
         }
-        try (Session session = neo4jDriver.session()) {
-            session.run("MATCH (n) DETACH DELETE n").consume();
-        }
-        seed();
+        seedMongo();
+    }
+
+    /** Puts the graph back as it was seeded at startup before each test. */
+    @Override
+    public boolean employSmartNeo4jClean() {
+        return true;
     }
 
     @Override

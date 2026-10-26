@@ -20,6 +20,7 @@ import org.evomaster.client.java.sql.DbSpecification;
 import org.jboss.resteasy.core.ResteasyDeploymentImpl;
 import org.jboss.resteasy.plugins.server.netty.NettyJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
@@ -45,8 +46,12 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
             "system", "system_auth", "system_distributed", "system_schema",
             "system_traces", "system_views", "system_virtual_schema"));
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     // the bridge (TCP to the agent socket) runs inside the container, as in the BB docker-compose
     private static final GenericContainer<?> cassandra = new GenericContainer<>(CASSANDRA_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withEnv("HEAP_NEWSIZE", "128M")
             .withEnv("MAX_HEAP_SIZE", "512M")
             .withEnv("JVM_EXTRA_OPTS", "-Ddb.unix_socket_file=" + AGENT_SOCKET)

@@ -1,0 +1,228 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.rest.api.management.v2.rest.resource.environment;
+
+import io.gravitee.apim.core.analytics.model.AnalyticsQueryParameters;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentRequestResponseTimeUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentResponseStatusOverTimeUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentResponseStatusRangesUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentResponseTimeOverTimeUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentTopAppsByRequestCountUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentTopFailedApisUseCase;
+import io.gravitee.apim.core.analytics.use_case.SearchEnvironmentTopHitsApisCountUseCase;
+import io.gravitee.apim.core.log.use_case.SearchEnvironmentConnectionLogErrorKeysUseCase;
+import io.gravitee.rest.api.management.v2.rest.mapper.EnvironmentAnalyticsMapper;
+import io.gravitee.rest.api.management.v2.rest.model.AnalyticTimeRange;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsOverPeriodResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsRequestResponseTimeResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsResponseStatusOvertimeResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsResponseStatusRangesResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsTopAppsByRequestCountResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsTopFailedApisResponse;
+import io.gravitee.rest.api.management.v2.rest.model.EnvironmentAnalyticsTopHitsApisResponse;
+import io.gravitee.rest.api.management.v2.rest.resource.analytics.computation.AnalyticsComputationResource;
+import io.gravitee.rest.api.management.v2.rest.resource.analytics.dashboards.DashboardsResource;
+import io.gravitee.rest.api.management.v2.rest.resource.analytics.definition.AnalyticsDefinitionResource;
+import io.gravitee.rest.api.management.v2.rest.resource.environment.param.TimeRangeParam;
+import io.gravitee.rest.api.service.common.GraviteeContext;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.container.ResourceContext;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+
+public class EnvironmentAnalyticsResource {
+
+    @Context
+    private ResourceContext resourceContext;
+
+    @Inject
+    SearchEnvironmentConnectionLogErrorKeysUseCase searchEnvironmentConnectionLogErrorKeysUseCase;
+
+    @Inject
+    SearchEnvironmentResponseStatusRangesUseCase searchEnvironmentResponseStatusRangesUseCase;
+
+    @Inject
+    SearchEnvironmentTopHitsApisCountUseCase searchEnvironmentTopHitsApisCountUseCase;
+
+    @Inject
+    SearchEnvironmentRequestResponseTimeUseCase searchEnvironmentRequestResponseTimeUseCase;
+
+    @Inject
+    SearchEnvironmentResponseTimeOverTimeUseCase searchEnvironmentResponseTimeOverTimeUseCase;
+
+    @Inject
+    SearchEnvironmentResponseStatusOverTimeUseCase searchEnvironmentResponseStatusOverTimeUseCase;
+
+    @Inject
+    SearchEnvironmentTopAppsByRequestCountUseCase searchEnvironmentTopAppsByRequestCountUseCase;
+
+    @Inject
+    SearchEnvironmentTopFailedApisUseCase searchEnvironmentTopFailedApisUseCase;
+
+    @Path("/response-status-ranges")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsResponseStatusRangesResponse getResponseStatusRanges(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var params = AnalyticsQueryParameters.builder().from(timeRangeParam.getFrom()).to(timeRangeParam.getTo()).build();
+        var input = new SearchEnvironmentResponseStatusRangesUseCase.Input(GraviteeContext.getExecutionContext(), params);
+
+        return searchEnvironmentResponseStatusRangesUseCase
+            .execute(input)
+            .responseStatusRanges()
+            .map(EnvironmentAnalyticsMapper.INSTANCE::map)
+            .orElse(new EnvironmentAnalyticsResponseStatusRangesResponse().ranges(Map.of()));
+    }
+
+    @Path("/error-keys")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<String> getEnvironmentLogErrorKeys(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var input = new SearchEnvironmentConnectionLogErrorKeysUseCase.Input(timeRangeParam.getFrom(), timeRangeParam.getTo());
+        return searchEnvironmentConnectionLogErrorKeysUseCase.execute(GraviteeContext.getExecutionContext(), input).errorKeys();
+    }
+
+    @Path("/top-hits")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsTopHitsApisResponse getTopHitsApis(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var params = AnalyticsQueryParameters.builder().from(timeRangeParam.getFrom()).to(timeRangeParam.getTo()).build();
+        var input = new SearchEnvironmentTopHitsApisCountUseCase.Input(GraviteeContext.getExecutionContext(), params);
+
+        var topHitsApis = searchEnvironmentTopHitsApisCountUseCase.execute(input).topHitsApis();
+
+        if (topHitsApis == null) {
+            return new EnvironmentAnalyticsTopHitsApisResponse();
+        }
+
+        return EnvironmentAnalyticsMapper.INSTANCE.map(topHitsApis);
+    }
+
+    @Path("/request-response-time")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsRequestResponseTimeResponse getRequestResponseTime(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var params = AnalyticsQueryParameters.builder().from(timeRangeParam.getFrom()).to(timeRangeParam.getTo()).build();
+        var input = new SearchEnvironmentRequestResponseTimeUseCase.Input(GraviteeContext.getExecutionContext(), params);
+
+        return searchEnvironmentRequestResponseTimeUseCase
+            .execute(input)
+            .requestResponseTime()
+            .map(EnvironmentAnalyticsMapper.INSTANCE::map)
+            .orElse(new EnvironmentAnalyticsRequestResponseTimeResponse());
+    }
+
+    @Path("/response-time-over-time")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsOverPeriodResponse getResponseTimeOverTime(@QueryParam("from") Long from, @QueryParam("to") Long to) {
+        Instant end = to != null ? Instant.ofEpochMilli(to) : Instant.now();
+        Instant start = from != null ? Instant.ofEpochMilli(from) : end.minus(Duration.ofDays(1));
+        var request = new SearchEnvironmentResponseTimeOverTimeUseCase.Input(GraviteeContext.getCurrentEnvironment(), start, end);
+
+        return searchEnvironmentResponseTimeOverTimeUseCase
+            .execute(GraviteeContext.getExecutionContext(), request)
+            .map(out ->
+                new EnvironmentAnalyticsOverPeriodResponse()
+                    .timeRange(
+                        new AnalyticTimeRange()
+                            .from(out.from().toEpochMilli())
+                            .to(out.to().toEpochMilli())
+                            .interval(out.interval().toMillis())
+                    )
+                    .data(out.data())
+            )
+            .blockingGet();
+    }
+
+    @Path("/response-status-overtime")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsResponseStatusOvertimeResponse getResponseStatusOvertime(
+        @QueryParam("from") Long from,
+        @QueryParam("to") Long to
+    ) {
+        Instant end = to != null ? Instant.ofEpochMilli(to) : Instant.now();
+        Instant start = from != null ? Instant.ofEpochMilli(from) : end.minus(Duration.ofDays(1));
+        var request = new SearchEnvironmentResponseStatusOverTimeUseCase.Input(GraviteeContext.getCurrentEnvironment(), start, end);
+
+        var result = searchEnvironmentResponseStatusOverTimeUseCase
+            .execute(GraviteeContext.getExecutionContext(), request)
+            .responseStatusOvertime();
+
+        if (result == null) {
+            return new EnvironmentAnalyticsResponseStatusOvertimeResponse();
+        }
+
+        return EnvironmentAnalyticsMapper.INSTANCE.map(result);
+    }
+
+    @Path("/top-apps-by-request-count")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsTopAppsByRequestCountResponse getTopAppsByRequestCount(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var params = AnalyticsQueryParameters.builder().from(timeRangeParam.getFrom()).to(timeRangeParam.getTo()).build();
+        var input = new SearchEnvironmentTopAppsByRequestCountUseCase.Input(GraviteeContext.getExecutionContext(), params);
+
+        var topHitsApps = searchEnvironmentTopAppsByRequestCountUseCase.execute(input).topHitsApps();
+
+        if (topHitsApps == null) {
+            return new EnvironmentAnalyticsTopAppsByRequestCountResponse();
+        }
+
+        return EnvironmentAnalyticsMapper.INSTANCE.map(topHitsApps);
+    }
+
+    @Path("/top-failed-apis")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EnvironmentAnalyticsTopFailedApisResponse getTopFailedApis(@BeanParam @Valid TimeRangeParam timeRangeParam) {
+        var params = AnalyticsQueryParameters.builder().from(timeRangeParam.getFrom()).to(timeRangeParam.getTo()).build();
+        var input = new SearchEnvironmentTopFailedApisUseCase.Input(GraviteeContext.getExecutionContext(), params);
+
+        var topFailedApis = searchEnvironmentTopFailedApisUseCase.execute(input).topFailedApis();
+
+        if (topFailedApis == null) {
+            return new EnvironmentAnalyticsTopFailedApisResponse();
+        }
+
+        return EnvironmentAnalyticsMapper.INSTANCE.map(topFailedApis);
+    }
+
+    @Path("/")
+    public AnalyticsComputationResource getAnalyticsComputationResource() {
+        return resourceContext.getResource(AnalyticsComputationResource.class);
+    }
+
+    @Path("/definition")
+    public AnalyticsDefinitionResource getAnalyticsDefinitionApisResource() {
+        return resourceContext.getResource(AnalyticsDefinitionResource.class);
+    }
+
+    @Path("/dashboards")
+    public DashboardsResource getDashboardsResource() {
+        return resourceContext.getResource(DashboardsResource.class);
+    }
+}

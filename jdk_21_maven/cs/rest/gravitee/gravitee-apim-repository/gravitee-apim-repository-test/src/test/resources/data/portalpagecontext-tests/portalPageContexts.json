@@ -1,0 +1,23 @@
+[
+   {
+      "id":"test-portal-page-context-id",
+      "pageId":"test-portal-page-id",
+      "contextType":"HOMEPAGE",
+      "environmentId":"test-environment",
+      "published": true
+   },
+   {
+      "id":"update-portal-page-context-id",
+      "pageId":"update-portal-page",
+      "contextType":"HOMEPAGE",
+      "environmentId":"test-environment",
+      "published": false
+   },
+  {
+    "id":"delete-by-env-portal-page-context-id",
+    "pageId":"delete-portal-page",
+    "contextType":"HOMEPAGE",
+    "environmentId":"delete-environment",
+    "published": false
+  }
+]

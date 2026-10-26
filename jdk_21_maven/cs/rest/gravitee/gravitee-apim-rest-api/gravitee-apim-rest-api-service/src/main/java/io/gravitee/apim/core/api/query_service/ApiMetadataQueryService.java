@@ -1,0 +1,38 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.apim.core.api.query_service;
+
+import io.gravitee.apim.core.api.model.ApiMetadata;
+import java.util.List;
+import java.util.Map;
+
+public interface ApiMetadataQueryService {
+    /**
+     * Find all metadata for an API, merging environment-level defaults with API-level overrides.
+     * @param environmentId The environment id.
+     * @param apiId The API id.
+     * @return A map of metadata key to metadata (API value takes precedence over env default).
+     */
+    Map<String, ApiMetadata> findApiMetadata(String environmentId, String apiId);
+
+    /**
+     * Batch-find all metadata for a list of APIs, merging environment-level defaults with API-level overrides.
+     * @param environmentId The environment id.
+     * @param apiIds The list of API ids.
+     * @return A map of apiId to (map of metadata key to metadata).
+     */
+    Map<String, Map<String, ApiMetadata>> findApiMetadataForApis(String environmentId, List<String> apiIds);
+}

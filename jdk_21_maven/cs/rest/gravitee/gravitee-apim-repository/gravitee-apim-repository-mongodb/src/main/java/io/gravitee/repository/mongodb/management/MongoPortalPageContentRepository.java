@@ -1,0 +1,137 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.gravitee.repository.mongodb.management;
+
+import io.gravitee.repository.exceptions.TechnicalException;
+import io.gravitee.repository.management.api.PortalPageContentRepository;
+import io.gravitee.repository.management.model.AutomationTargetReferenceType;
+import io.gravitee.repository.management.model.PortalPageContent;
+import io.gravitee.repository.mongodb.management.internal.model.PortalPageContentMongo;
+import io.gravitee.repository.mongodb.management.internal.portalpagecontent.PortalPageContentMongoRepository;
+import io.gravitee.repository.mongodb.management.mapper.GraviteeMapper;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@CustomLog
+@Component
+public class MongoPortalPageContentRepository implements PortalPageContentRepository {
+
+    @Autowired
+    private PortalPageContentMongoRepository internalRepo;
+
+    @Autowired
+    private GraviteeMapper mapper;
+
+    @Override
+    public List<PortalPageContent> findAllByType(PortalPageContent.Type type) throws TechnicalException {
+        try {
+            Set<PortalPageContentMongo> results = internalRepo.findAllByType(type);
+            return results.stream().map(mapper::map).collect(Collectors.toList());
+        } catch (Exception ex) {
+            log.error("Failed to find portal page contents by type", ex);
+            throw new TechnicalException("Failed to find portal page contents by type", ex);
+        }
+    }
+
+    @Override
+    public java.util.Optional<PortalPageContent> findById(String id) throws TechnicalException {
+        try {
+            return internalRepo.findById(id).map(mapper::map);
+        } catch (Exception ex) {
+            log.error("Failed to find portal page content by id", ex);
+            throw new TechnicalException("Failed to find portal page content by id", ex);
+        }
+    }
+
+    @Override
+    public PortalPageContent create(PortalPageContent item) throws TechnicalException {
+        try {
+            PortalPageContentMongo created = internalRepo.insert(mapper.map(item));
+            return mapper.map(created);
+        } catch (Exception ex) {
+            log.error("Failed to create portal page content", ex);
+            throw new TechnicalException("Failed to create portal page content", ex);
+        }
+    }
+
+    @Override
+    public PortalPageContent update(PortalPageContent item) throws TechnicalException {
+        try {
+            PortalPageContentMongo saved = internalRepo.save(mapper.map(item));
+            return mapper.map(saved);
+        } catch (Exception ex) {
+            log.error("Failed to update portal page content", ex);
+            throw new TechnicalException("Failed to update portal page content", ex);
+        }
+    }
+
+    @Override
+    public void delete(String id) throws TechnicalException {
+        try {
+            internalRepo.deleteById(id);
+        } catch (Exception ex) {
+            log.error("Failed to delete portal page content [{}]", id, ex);
+            throw new TechnicalException("Failed to delete portal page content", ex);
+        }
+    }
+
+    @Override
+    public java.util.Set<PortalPageContent> findAll() throws TechnicalException {
+        try {
+            java.util.List<PortalPageContentMongo> results = internalRepo.findAll();
+            return results.stream().map(mapper::map).collect(Collectors.toSet());
+        } catch (Exception ex) {
+            log.error("Failed to find all portal page contents", ex);
+            throw new TechnicalException("Failed to find all portal page contents", ex);
+        }
+    }
+
+    @Override
+    public List<PortalPageContent> findByAutomationReference(
+        String environmentId,
+        AutomationTargetReferenceType referenceType,
+        String referenceId
+    ) throws TechnicalException {
+        log.debug("Find portal page contents by automation reference [env={}, type={}, id={}]", environmentId, referenceType, referenceId);
+        try {
+            return internalRepo
+                .findByEnvironmentIdAndAutomationMetadata_ReferenceTypeAndAutomationMetadata_ReferenceId(
+                    environmentId,
+                    referenceType,
+                    referenceId
+                )
+                .stream()
+                .map(mapper::map)
+                .toList();
+        } catch (Exception e) {
+            throw new TechnicalException(
+                "An error occurred when finding portal page contents by automation reference [" +
+                    environmentId +
+                    ", " +
+                    referenceType +
+                    ", " +
+                    referenceId +
+                    "]",
+                e
+            );
+        }
+    }
+}

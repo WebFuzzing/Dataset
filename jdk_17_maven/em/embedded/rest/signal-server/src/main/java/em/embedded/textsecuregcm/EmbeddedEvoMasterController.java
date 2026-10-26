@@ -7,6 +7,7 @@ import org.evomaster.client.java.controller.api.dto.SutInfoDto;
 import org.evomaster.client.java.controller.problem.ProblemInfo;
 import org.evomaster.client.java.controller.problem.RestProblem;
 import org.evomaster.client.java.sql.DbSpecification;
+import com.github.dockerjava.api.model.Ulimit;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
@@ -22,7 +23,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
 
     private static final String DYNAMODB_VERSION = "1.25.0";
 
+    private static final java.util.function.Consumer<com.github.dockerjava.api.command.CreateContainerCmd> modifier =
+            cmd -> cmd.getHostConfig().withUlimits(new Ulimit[]{new Ulimit("nofile", 65536L, 65536L)});
+
     private static final GenericContainer dynamoDBContainer = new GenericContainer("amazon/dynamodb-local:" + DYNAMODB_VERSION)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(DYNAMODB_PORT);
 
     private static final int REDIS_PORT = 6379;
@@ -34,6 +39,7 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
     private static JedisPool jedisPool;
 
     private static final GenericContainer redisContainer = new GenericContainer(REDIS_IMAGE)
+            .withCreateContainerCmdModifier(modifier)
             .withExposedPorts(REDIS_PORT)
             .withEnv("ALLOW_EMPTY_PASSWORD", "yes")
             .withEnv("REDIS_NODES", "redis-cluster-01")

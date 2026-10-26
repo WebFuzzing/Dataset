@@ -1,0 +1,149 @@
+/*
+ * Copyright © 2015 The Gravitee team (http://gravitee.io)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.gravitee.repository.mongodb.management;
+
+import io.gravitee.repository.exceptions.TechnicalException;
+import io.gravitee.repository.management.api.OrganizationRepository;
+import io.gravitee.repository.management.model.Organization;
+import io.gravitee.repository.mongodb.management.internal.model.OrganizationMongo;
+import io.gravitee.repository.mongodb.management.internal.organization.OrganizationMongoRepository;
+import io.gravitee.repository.mongodb.management.mapper.GraviteeMapper;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.CustomLog;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+/**
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
+ * @author GraviteeSource Team
+ */
+@CustomLog
+@Component
+public class MongoOrganizationRepository implements OrganizationRepository {
+
+    @Autowired
+    private OrganizationMongoRepository internalOrganizationRepo;
+
+    @Autowired
+    private GraviteeMapper mapper;
+
+    @Override
+    public Optional<Organization> findById(String organizationId) throws TechnicalException {
+        log.debug("Find organization by ID [{}]", organizationId);
+
+        final OrganizationMongo organization = internalOrganizationRepo.findById(organizationId).orElse(null);
+
+        log.debug("Find organization by ID [{}] - Done", organization);
+        return Optional.ofNullable(mapper.map(organization));
+    }
+
+    @Override
+    public Organization create(Organization organization) throws TechnicalException {
+        log.debug("Create organization [{}]", organization.getName());
+
+        OrganizationMongo organizationMongo = mapper.map(organization);
+        OrganizationMongo createdOrganizationMongo = internalOrganizationRepo.insert(organizationMongo);
+
+        Organization res = mapper.map(createdOrganizationMongo);
+
+        log.debug("Create organization [{}] - Done", organization.getName());
+
+        return res;
+    }
+
+    @Override
+    public Organization update(Organization organization) throws TechnicalException {
+        if (organization == null || organization.getName() == null) {
+            throw new IllegalStateException("Organization to update must have a name");
+        }
+
+        final OrganizationMongo organizationMongo = internalOrganizationRepo.findById(organization.getId()).orElse(null);
+
+        if (organizationMongo == null) {
+            throw new IllegalStateException(String.format("No organization found with id [%s]", organization.getId()));
+        }
+
+        try {
+            //Update
+            organizationMongo.setName(organization.getName());
+            organizationMongo.setCockpitId(organization.getCockpitId());
+            organizationMongo.setDescription(organization.getDescription());
+            organizationMongo.setHrids(organization.getHrids());
+            organizationMongo.setFlowMode(organization.getFlowMode());
+
+            OrganizationMongo organizationMongoUpdated = internalOrganizationRepo.save(organizationMongo);
+            return mapper.map(organizationMongoUpdated);
+        } catch (Exception e) {
+            log.error("An error occurred when updating organization", e);
+            throw new TechnicalException("An error occurred when updating organization");
+        }
+    }
+
+    @Override
+    public void delete(String organizationId) throws TechnicalException {
+        try {
+            internalOrganizationRepo.deleteById(organizationId);
+        } catch (Exception e) {
+            log.error("An error occurred when deleting organization [{}]", organizationId, e);
+            throw new TechnicalException("An error occurred when deleting organization");
+        }
+    }
+
+    @Override
+    public Long count() throws TechnicalException {
+        try {
+            return internalOrganizationRepo.count();
+        } catch (Exception e) {
+            log.error("An error occurred when counting organizations", e);
+            throw new TechnicalException("An error occurred when counting organization");
+        }
+    }
+
+    @Override
+    public Set<Organization> findAll() throws TechnicalException {
+        try {
+            return internalOrganizationRepo
+                .findAll()
+                .stream()
+                .map(organization -> mapper.map(organization))
+                .collect(Collectors.toSet());
+        } catch (Exception e) {
+            log.error("An error occurred when counting organizations", e);
+            throw new TechnicalException("An error occurred when counting organization");
+        }
+    }
+
+    @Override
+    public Set<Organization> findByHrids(Set<String> hrids) {
+        final Set<OrganizationMongo> organizations = internalOrganizationRepo.findByHrids(hrids);
+        return organizations
+            .stream()
+            .map(organizationMongo -> mapper.map(organizationMongo))
+            .collect(Collectors.toSet());
+    }
+
+    @Override
+    public Optional<Organization> findByCockpitId(String cockpitId) throws TechnicalException {
+        log.debug("Find organization by cockpit ID [{}]", cockpitId);
+
+        final OrganizationMongo organization = internalOrganizationRepo.findByCockpitId(cockpitId).orElse(null);
+
+        log.debug("Find organization by cockpit ID [{}] - Done", organization);
+        return Optional.ofNullable(mapper.map(organization));
+    }
+}
