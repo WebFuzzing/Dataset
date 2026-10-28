@@ -167,6 +167,11 @@ public class EmbeddedEvoMasterController extends EmbeddedSutController {
         return null;
     }
 
+    @Override
+    public Object getDynamoDbConnection() {
+        return dynamo;
+    }
+
 
     @Override
     public List<AuthenticationDto> getInfoForAuthentication() {
