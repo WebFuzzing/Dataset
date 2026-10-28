@@ -77,6 +77,11 @@ jobs:
           # client library is on 8, but, to build whole EM, need higher.
           java-version: 17
           distribution: 'zulu'
+      - name: Setup Maven
+        # runner images ship Maven 3.10.0, which builds invalid jars for some SUTs
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.9
       - name: Checkout EvoMaster
         uses: actions/checkout@v6
         with:

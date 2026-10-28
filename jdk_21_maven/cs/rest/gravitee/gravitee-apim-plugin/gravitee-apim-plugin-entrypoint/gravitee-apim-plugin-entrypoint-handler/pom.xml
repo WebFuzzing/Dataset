@@ -24,16 +24,11 @@
     <parent>
         <groupId>io.gravitee.apim.plugin.entrypoint</groupId>
         <artifactId>gravitee-apim-plugin-entrypoint</artifactId>
-        <version>4.12.20</version>
+        <version>${revision}${sha1}${changelist}</version>
     </parent>
 
     <artifactId>gravitee-apim-plugin-entrypoint-handler</artifactId>
     <name>Gravitee.io APIM - Plugin - Entrypoint Handler</name>
-
-    <properties>
-        <!-- MODIFIED: the parent comes from Maven Central (fixed version), so the WFD skips are repeated here -->
-        <skip.validation>true</skip.validation>
-    </properties>
 
     <dependencies>
         <!-- Gravitee dependencies -->
