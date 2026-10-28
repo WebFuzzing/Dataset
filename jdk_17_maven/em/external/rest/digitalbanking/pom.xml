@@ -14,6 +14,26 @@
     </parent>
 
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Lettuce's transitive dependencies, on the versions managed by the SUT's Spring Boot (3.1.4) -->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-bom</artifactId>
+                <version>4.1.97.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>2022.0.11</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- The SUT needs Redis Stack, Cassandra and Kafka, so the driver starts them as containers -->
         <dependency>
@@ -34,6 +54,15 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>4.4.3</version>
+        </dependency>
+
+        <!-- EvoMaster's ReflectionBasedRedisClient (see getRedisConnection) looks Lettuce up by reflection
+             in the driver's own classpath, which does not include the SUT's libraries. Same version as the
+             one managed by the SUT's Spring Boot (3.1.4), as these classes also shadow the SUT's own. -->
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.2.6.RELEASE</version>
         </dependency>
     </dependencies>
 
