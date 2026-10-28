@@ -30,6 +30,11 @@
     <artifactId>gravitee-apim-plugin-apiservice-handler</artifactId>
     <name>Gravitee.io APIM - Plugin - Api Service Handler</name>
 
+    <properties>
+        <!-- MODIFIED: the parent comes from Maven Central (fixed version), so the WFD skips are repeated here -->
+        <skip.validation>true</skip.validation>
+    </properties>
+
     <dependencies>
         <!-- Gravitee dependencies -->
         <dependency>

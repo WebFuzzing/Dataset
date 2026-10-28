@@ -30,6 +30,12 @@
     <artifactId>gravitee-gamma-plugin-module-handler</artifactId>
     <name>Gravitee.io Gamma - Plugin - Module - Handler</name>
 
+    <properties>
+        <!-- MODIFIED: the parent comes from Maven Central (fixed version), so the WFD skips are repeated here -->
+        <skip.validation>true</skip.validation>
+        <skip.ui.build>true</skip.ui.build>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.gravitee.plugin</groupId>

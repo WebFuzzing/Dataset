@@ -29,6 +29,12 @@
     <artifactId>gravitee-gamma-plugin-module-api</artifactId>
     <name>Gravitee.io Gamma - Plugin - Module - Api</name>
 
+    <properties>
+        <!-- MODIFIED: the parent comes from Maven Central (fixed version), so the WFD skips are repeated here -->
+        <skip.validation>true</skip.validation>
+        <skip.ui.build>true</skip.ui.build>
+    </properties>
+
     <dependencies>
         <!-- Shared AM connection plumbing: model + port + adapter over rest-api core's AmConnectionService.
              All provided — the host rest-api supplies these at runtime. -->
