@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.gravitee.apim.plugin.entrypoint</groupId>
         <artifactId>gravitee-apim-plugin-entrypoint</artifactId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>4.12.20</version>
     </parent>
 
     <artifactId>gravitee-apim-plugin-entrypoint-handler</artifactId>
