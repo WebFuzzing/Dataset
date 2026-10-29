@@ -244,6 +244,11 @@ public class ExternalEvoMasterController extends ExternalSutController {
         return null;
     }
 
+    @Override
+    public Object getDynamoDbConnection() {
+        return dynamo;
+    }
+
     private void awaitDynamoDb() {
         long deadline = System.currentTimeMillis() + 120_000;
         while (true) {
