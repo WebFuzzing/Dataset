@@ -136,7 +136,8 @@ public class Bootstrap {
         System.setProperty(GRAVITEE_HOME_PROP, graviteeHomeDir.getAbsolutePath());
     }
 
-    // MODIFIED: unpacks gravitee-home/ of the WFD sut jar into a temp dir, also used by the embedded driver
+    // MODIFIED: Gravitee reads its config, plugins and libs from a gravitee.home folder on disk, not from the classpath.
+    // This unpacks that folder from the WFD sut jar: External runs it via main(), Embedded calls it directly.
     public static String unpackEmbeddedHome() {
         try {
             Path home = Files.createTempDirectory("gravitee-home");
@@ -162,7 +163,6 @@ public class Bootstrap {
             throw new RuntimeException("Cannot unpack the embedded Gravitee.io home", e);
         }
     }
-
     private void checkInstallRoot(File graviteeHomeDir) {
         // quick sanity check on the install root
         if (!graviteeHomeDir.isDirectory()) {
