@@ -85,7 +85,7 @@ How to setup authentication information, based on the current content of the ini
 Auth configuration files can found in the [auth](auth) folder. 
 
 
-### REST: Java/Kotlin (55)
+### REST: Java/Kotlin (56)
 
 * **AdoptMe** (not-known license), [jdk_21_maven/cs/rest/adoptme](jdk_21_maven/cs/rest/adoptme), from [https://github.com/daanimelian/Programacion3-TPO](https://github.com/daanimelian/Programacion3-TPO)
 
@@ -116,6 +116,8 @@ Auth configuration files can found in the [auth](auth) folder.
 * **Genome Nexus** (MIT), [jdk_8_maven/cs/rest-gui/genome-nexus](jdk_8_maven/cs/rest-gui/genome-nexus), from [https://github.com/genome-nexus/genome-nexus](https://github.com/genome-nexus/genome-nexus)
 
 * **Gestao Hospital** (not-known license), [jdk_8_maven/cs/rest-gui/gestaohospital](jdk_8_maven/cs/rest-gui/gestaohospital), from [https://github.com/ValchanOficial/GestaoHospital](https://github.com/ValchanOficial/GestaoHospital)
+
+* **Gravitee API Management - Management API** (Apache), [jdk_21_maven/cs/rest/gravitee](jdk_21_maven/cs/rest/gravitee), from [https://github.com/gravitee-io/gravitee-api-management](https://github.com/gravitee-io/gravitee-api-management)
 
 * **HTTP Patch Spring** (MIT), [jdk_11_maven/cs/rest/http-patch-spring](jdk_11_maven/cs/rest/http-patch-spring), from [https://github.com/cassiomolin/http-patch-spring](https://github.com/cassiomolin/http-patch-spring)
 

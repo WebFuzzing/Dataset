@@ -35,7 +35,8 @@
 
     <properties>
         <!-- Used by yarn-workspace-install and UI module Nx builds; override with -Dskip.ui.build=true to skip. -->
-        <skip.ui.build>false</skip.ui.build>
+        <!-- MODIFIED: UI modules are not copied into WFD, and the WFD build images have no yarn -->
+        <skip.ui.build>true</skip.ui.build>
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
     </properties>
 
@@ -100,7 +101,9 @@
         <module>gravitee-gamma-definition-model</module>
         <module>gravitee-gamma-plugin</module>
         <module>gravitee-gamma-rest-api</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-gamma-module-apim</module>
         <module>gravitee-gamma-module-platform</module>
+        -->
     </modules>
 </project>

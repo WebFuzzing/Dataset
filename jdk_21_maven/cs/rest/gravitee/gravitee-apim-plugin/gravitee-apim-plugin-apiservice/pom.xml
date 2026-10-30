@@ -34,9 +34,11 @@
 
     <modules>
         <module>gravitee-apim-plugin-apiservice-handler</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-plugin-apiservice-healthcheck-common</module>
         <module>gravitee-apim-plugin-apiservice-healthcheck-http</module>
         <module>gravitee-apim-plugin-apiservice-servicediscovery-consul</module>
         <module>gravitee-apim-plugin-apiservice-dynamicproperties</module>
+        -->
     </modules>
 </project>

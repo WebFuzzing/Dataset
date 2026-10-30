@@ -287,6 +287,27 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <!-- MODIFIED: gravitee-sut.jar for WFD -->
+                <executions>
+                    <execution>
+                        <id>sut</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>gravitee</finalName>
+                            <descriptors>
+                                <descriptor>src/main/assembly/sut.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <mainClass>io.gravitee.rest.api.standalone.boostrap.Bootstrap</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -23,6 +23,7 @@
 |REST|__gdpr-kv__|6399|62|7|Java|JDK 21|Gradle|DynamoDB||
 |REST|__genome-nexus__|30004|405|23|Java|JDK 8|Maven|MongoDB||
 |REST|__gestaohospital__|3506|33|20|Java|JDK 8|Maven|MongoDB||
+|REST|__gravitee__|886852|7349|1007|Java|JDK 21|Maven|MongoDB|&check;|
 |REST|__http-patch-spring__|1450|30|6|Java|JDK 11|Maven|||
 |REST|__jasper__|46791|337|61|Java|JDK 25|Maven|PostgreSQL|&check;|
 |REST|__joinus__|7906|101|37|Java|JDK 21|Maven|MongoDB, Neo4j|&check;|

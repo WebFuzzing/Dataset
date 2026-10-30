@@ -23,6 +23,7 @@
         <module>testing-system</module>
         <module>flight-search-api</module>
         <module>pn-paper-tracker</module>
+        <module>gravitee</module>
     </modules>
 
 

@@ -198,6 +198,7 @@ SUTS = [
     Sut("traccar", JDK_21),
     Sut("genome-nexus",  JDK_8),
     Sut("gestaohospital",  JDK_8),
+    Sut("gravitee", JDK_21),
     Sut("http-patch-spring", JDK_11),
     Sut("jasper",  JDK_25),
     Sut("joinus", JDK_21),

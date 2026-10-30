@@ -360,6 +360,8 @@ scripts/dockerize/dockerfiles
 /jdk_21_maven/cs/rest/pn-paper-tracker/target/
 /jdk_21_maven/em/external/rest/pn-paper-tracker/target/
 /jdk_21_maven/em/embedded/rest/pn-paper-tracker/target/
+/jdk_21_maven/em/external/rest/gravitee/target/
+/jdk_21_maven/em/embedded/rest/gravitee/target/
 /jdk_11_maven/em/embedded/rest/tracking-system/target/
 /jdk_11_maven/em/external/rest/tracking-system/target/
 /jdk_17_maven/em/embedded/rest/tiltaksgjennomforing/target/

@@ -35,14 +35,18 @@
 
     <modules>
         <module>gravitee-apim-repository-api</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-repository-elasticsearch</module>
+        -->
         <module>gravitee-apim-repository-noop</module>
         <module>gravitee-apim-repository-test</module>
         <module>gravitee-apim-repository-mongodb</module>
+        <!-- MODIFIED: not copied into WFD
         <module>gravitee-apim-repository-jdbc</module>
         <module>gravitee-apim-repository-redis</module>
         <module>gravitee-apim-repository-hazelcast</module>
         <module>gravitee-apim-repository-coverage</module>
+        -->
     </modules>
 
     <build>
