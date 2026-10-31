@@ -108,3 +108,7 @@ jobs:
       - name: Build WFD
         run: ${{ matrix.command }}
         working-directory: ${{ matrix.folder }}
+        # same speed-up flags as scripts/build/docker-compose.build.yml (ignored by Gradle)
+        env:
+          MAVEN_ARGS: "-Dmaven.javadoc.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Denforcer.skip=true"
+          MAVEN_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"

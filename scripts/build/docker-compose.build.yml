@@ -4,9 +4,10 @@
 # BUILD_EVOMASTER=false -> build APIs (cs/) only. BUILD_EVOMASTER=true -> build ONLY external drivers (no embedded).
 # Maven "-am" also builds the few cs/ modules that some external drivers depend on.
 
-# Faster Maven builds: parallel modules, skip check/doc-only plugins, quicker JIT for short-lived JVMs.
+# Faster Maven builds: skip check/doc-only plugins, quicker JIT for short-lived JVMs.
+# No "-T": some SUTs have module order dependencies not declared in their poms (eg market-coverage).
 x-maven-env: &maven-env
-  MAVEN_ARGS: "-T 1C -Dmaven.javadoc.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Denforcer.skip=true"
+  MAVEN_ARGS: "-Dmaven.javadoc.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Denforcer.skip=true"
   MAVEN_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
 
 services:
