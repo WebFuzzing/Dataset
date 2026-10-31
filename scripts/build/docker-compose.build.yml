@@ -4,12 +4,18 @@
 # BUILD_EVOMASTER=false -> build APIs (cs/) only. BUILD_EVOMASTER=true -> build ONLY external drivers (no embedded).
 # Maven "-am" also builds the few cs/ modules that some external drivers depend on.
 
+# Faster Maven builds: parallel modules, skip check/doc-only plugins, quicker JIT for short-lived JVMs.
+x-maven-env: &maven-env
+  MAVEN_ARGS: "-T 1C -Dmaven.javadoc.skip=true -Dcheckstyle.skip=true -Djacoco.skip=true -Denforcer.skip=true"
+  MAVEN_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+
 services:
   build-jdk8-maven:
     build:
       context: .
       dockerfile: Dockerfile.jdk8
     image: emb-build-jdk8
+    environment: *maven-env
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
@@ -95,6 +101,7 @@ services:
       context: .
       dockerfile: Dockerfile.jdk11
     image: emb-build-jdk11
+    environment: *maven-env
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
@@ -156,6 +163,7 @@ services:
       context: .
       dockerfile: Dockerfile.jdk17
     image: emb-build-jdk17
+    environment: *maven-env
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
@@ -218,6 +226,7 @@ services:
       context: .
       dockerfile: Dockerfile.jdk21
     image: emb-build-jdk21
+    environment: *maven-env
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
@@ -285,6 +294,7 @@ services:
       context: .
       dockerfile: Dockerfile.jdk25
     image: emb-build-jdk25
+    environment: *maven-env
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
