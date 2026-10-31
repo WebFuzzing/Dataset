@@ -16,7 +16,7 @@ jobs:
       - name: Checkout WFD
         uses: actions/checkout@v6
       - name: Build All With Docker
-        run: python scripts/dist-docker.py
+        run: python scripts/dist.py
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5

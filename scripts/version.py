@@ -73,11 +73,6 @@ def replace(file, regex, replacement):
             else:
                 sources.write(line)
 
-def replaceInDist():
-    regex = re.compile(r'.*EVOMASTER_VERSION.*=.*".*".*')
-    replacement = 'EVOMASTER_VERSION = "'+version+'"\n'
-    replace("scripts/dist-wb.py", regex, replacement)
-
 def replaceInDockerEnv():
     regex = re.compile(r'^EVOMASTER_VERSION\s*=\s*.*$')
     replacement = 'EVOMASTER_VERSION='+version+'\n'
@@ -151,7 +146,6 @@ if target == "em":
     replaceInGradle("jdk_11_gradle/build.gradle")
     replaceInGradle("jdk_17_gradle/build.gradle")
     replaceInGradle("jdk_21_gradle/build.gradle")
-    replaceInDist()
     replaceInDockerEnv()
 
 if target == "wfd":

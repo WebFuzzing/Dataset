@@ -173,8 +173,8 @@ class Sut:
 
 
 
-# To ge the SUTs, you need in EMB to run the script "scripts/dist.py True" to
-# generate a dist.zip file that you can upload on cluster.
+# To get the SUTs, you need in WFD to run "scripts/dist.py" and then "scripts/dist.py --evomaster".
+# This script reads the jars from $WFD_DIR/dist and copies the needed ones into the experiment folder.
 # Note: the values after the SUT names is multiplicative factor for how long
 # experiments should be run.
 # Depending on what experiments you are running, might want to de-select some

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Docker-based build script for WFD project.
 
-Builds all jdk_* projects using Docker containers
-and copies the results to the dist folder.
+dist.py              -> build the APIs (no EvoMaster) and copy JaCoCo files, ie, everything for black-box experiments.
+dist.py --evomaster  -> build ONLY what EvoMaster needs: external drivers and the instrumentation agent.
 """
 
 import argparse
@@ -80,16 +80,16 @@ def copy_additional_files(*, evomaster=False):
     dist = PROJ_DIR / "dist"
     dist.mkdir(parents=True, exist_ok=True)
 
-    jacoco_dir = PROJ_DIR / "jacoco"
-    for name in ["jacocoagent.jar", "jacococli.jar"]:
-        src = jacoco_dir / name
-        if src.exists():
-            shutil.copy2(src, dist / name)
-            print(f"  Copied {name}")
-        else:
-            print(f"  WARNING: {src} not found, skipping")
-
-    if evomaster:
+    if not evomaster:
+        jacoco_dir = PROJ_DIR / "jacoco"
+        for name in ["jacocoagent.jar", "jacococli.jar"]:
+            src = jacoco_dir / name
+            if src.exists():
+                shutil.copy2(src, dist / name)
+                print(f"  Copied {name}")
+            else:
+                print(f"  WARNING: {src} not found, skipping")
+    else:
         version = load_env("EVOMASTER_VERSION")
         if not version:
             print("  ERROR: EVOMASTER_VERSION not found in .env")
@@ -104,12 +104,6 @@ def copy_additional_files(*, evomaster=False):
             sys.exit(1)
 
     print("Additional files copied!\n")
-
-
-def show_jar(path):
-    p = PROJ_DIR / "dist" / path
-    if p.exists():
-        print(f"{p.name}  ({p.stat().st_size // 1024} KB)")
 
 
 def count_jars():
@@ -134,15 +128,13 @@ def parse_args():
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  dist-docker.py                    # Build all projects sequentially\n"
-            "  dist-docker.py --parallel         # Build all projects in parallel\n"
-            "  dist-docker.py 8 gradle           # Build only JDK 8 Gradle projects\n"
-            "  dist-docker.py 11 maven -p        # Build JDK 11 Maven in parallel mode\n"
-            "  dist-docker.py --copy-files       # Only copy additional files (jacoco)\n"
-            "  dist-docker.py --copy-files -E    # Copy additional files (jacoco + evomaster-agent)\n"
-            "  dist-docker.py --interactive      # Prompt before deleting dist/ on full build\n"
-            "  dist-docker.py --evomaster        # Also build evomaster runners + copy evomaster-agent\n"
-            "  dist-docker.py -E --parallel      # Full build in parallel"
+            "  dist.py                    # Build all APIs sequentially + copy jacoco\n"
+            "  dist.py --parallel         # Build all APIs in parallel\n"
+            "  dist.py 8 gradle           # Build only JDK 8 Gradle APIs\n"
+            "  dist.py 11 maven -p        # Build JDK 11 Maven APIs in parallel mode\n"
+            "  dist.py --interactive      # Prompt before deleting dist/ on full build\n"
+            "  dist.py --evomaster        # Build ONLY external drivers + copy evomaster-agent\n"
+            "  dist.py -E --parallel      # Same, in parallel"
         ),
     )
     parser.add_argument(
@@ -165,12 +157,6 @@ def parse_args():
         help="Run builds in parallel (faster but uses more resources)",
     )
     parser.add_argument(
-        "--copy-files", "-c",
-        action="store_true",
-        dest="copy_only",
-        help="Only copy additional files (evomaster-agent, jacoco)",
-    )
-    parser.add_argument(
         "--interactive", "-i",
         action="store_true",
         help="Prompt for confirmation before destructive operations (e.g. deleting dist/)",
@@ -178,8 +164,8 @@ def parse_args():
     parser.add_argument(
         "--evomaster", "-E",
         action="store_true",
-        help="Also build evomaster runner jars (em/) and copy additional files. "
-             "Default: SUT-only mode (only cs/ is built, no evomaster runners)",
+        help="Build ONLY the external driver jars and copy evomaster-agent.jar (no APIs, no embedded drivers). "
+             "Default: build the APIs (cs/) and copy jacoco",
     )
     args = parser.parse_args()
 
@@ -203,7 +189,7 @@ def main():
     print(f"JDK Version: {args.jdk_version}")
     print(f"Build Tool:  {args.build_tool}")
     print(f"Mode: {'PARALLEL' if args.parallel else 'Sequential'}")
-    print(f"Build scope: {'Full (SUT + Evomaster runners)' if args.evomaster else 'SUT-only (cs/ only)'}")
+    print(f"Build scope: {'EvoMaster only (external drivers + agent)' if args.evomaster else 'APIs only (cs/ + jacoco)'}")
     print(f"Using: {' '.join(compose)}\n")
 
     # Check Docker
@@ -215,17 +201,6 @@ def main():
 
     os.environ.setdefault("HOME", str(Path.home()))
 
-    # --- Copy-only mode ---
-    if args.copy_only:
-        print("Copy Additional Files Only Mode")
-        dist_dir.mkdir(parents=True, exist_ok=True)
-        os.chdir(PROJ_DIR)
-        copy_additional_files(evomaster=args.evomaster)
-        print("Files copied successfully!")
-        for f in ["evomaster-agent.jar", "jacocoagent.jar", "jacococli.jar"]:
-            show_jar(f)
-        return
-
     # --- Collect services ---
     services = [
         f"build-jdk{jdk}-{tool}"
@@ -235,7 +210,8 @@ def main():
     ]
 
     # --- Full-build warning & dist cleanup ---
-    if args.jdk_version == "all" and args.build_tool == "all":
+    # --evomaster only adds driver jars next to the APIs, so it never wipes dist/
+    if args.jdk_version == "all" and args.build_tool == "all" and not args.evomaster:
         print("WARNING: Full build mode detected!")
         print("This will DELETE the entire dist/ folder and rebuild all projects.\n")
         if dist_dir.exists():
@@ -253,8 +229,8 @@ def main():
 
             if reply not in ("y", "yes"):
                 print("\nBuild cancelled by user.")
-                print("Tip: Use 'dist-docker.py <JDK> <TOOL>' for incremental builds")
-                print("     Example: dist-docker.py 8 gradle")
+                print("Tip: Use 'dist.py <JDK> <TOOL>' for incremental builds")
+                print("     Example: dist.py 8 gradle")
                 return
 
         print("\nCleaning dist folder (building all projects)...")
@@ -268,12 +244,12 @@ def main():
         print("Building into existing dist folder (will overwrite duplicates)")
     print()
 
-    # --- Ensure Maven / Gradle cache dirs exist ---
-    home = Path.home()
-    for cache_name, cache_dir in [(".m2", home / ".m2"), (".gradle", home / ".gradle")]:
-        if not cache_dir.exists():
-            print(f"WARNING: {cache_name} cache not found at {cache_dir}, creating...")
-            cache_dir.mkdir(parents=True)
+    # Host ~/.m2 is mounted into every build container, so Maven Central libraries are downloaded only once
+    # and the locally installed EvoMaster SNAPSHOT is visible. Gradle caches use named Docker volumes.
+    m2 = Path.home() / ".m2"
+    if not m2.exists():
+        print(f"WARNING: .m2 cache not found at {m2}, creating...")
+        m2.mkdir(parents=True)
 
     os.chdir(PROJ_DIR)
 
