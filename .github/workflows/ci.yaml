@@ -8,7 +8,8 @@ on:
       - '**'
     paths:
       - '.github/workflows/ci.yaml'
-      - 'scripts/dist-docker.py'
+      - 'scripts/dist.py'
+      - 'scripts/build/**'
       - 'jdk_8_maven/**'
       - 'jdk_11_maven/**'
       - 'jdk_17_maven/**'
@@ -30,7 +31,7 @@ jobs:
       - name: Checkout WFD
         uses: actions/checkout@v6
       - name: Build All With Docker
-        run: python scripts/dist-docker.py
+        run: python scripts/dist.py
 
   direct-builds:
     needs: docker-build

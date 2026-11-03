@@ -1,3 +1,9 @@
+# Host ~/.m2 is mounted in every service so Maven Central libraries are downloaded only once and reused.
+# It also makes the locally installed EvoMaster SNAPSHOT visible, needed when BUILD_EVOMASTER=true.
+#
+# BUILD_EVOMASTER=false -> build APIs (cs/) only. BUILD_EVOMASTER=true -> build ONLY external drivers (no embedded).
+# Maven "-am" also builds the few cs/ modules that some external drivers depend on.
+
 services:
   build-jdk8-maven:
     build:
@@ -15,67 +21,47 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          mvn clean install -DskipTests
+          EM="em/external/rest/blogapi em/external/rest/user-management em/external/rest/features-service
+              em/external/rest/scout-api em/external/rest/proxyprint em/external/rest/catwatch em/external/rest/ncs
+              em/external/rest/youtube-mock em/external/rest/scs em/external/rest/news em/external/rest/ocvn
+              em/external/rest/languagetool em/external/rest/restcountries em/external/rest/session-service
+              em/external/rest/gestaohospital em/external/rest/genome-nexus em/external/rest/spring-batch-rest
+              em/external/rest/spring-actuator-demo em/external/rest/swagger-petstore em/external/rest/spring-ecommerce
+              em/external/rest/notebook-manager em/external/graphql/petclinic-graphql em/external/graphql/graphql-ncs
+              em/external/graphql/graphql-scs em/external/thrift/ncs em/external/thrift/scs
+              em/external/grpc/ncs em/external/grpc/scs"
+          mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
+          for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
           (cd cs && mvn clean install -DskipTests)
-        fi
-        cp cs/rest/original/blogapi/target/blogapi-sut.jar /dist/
-        cp cs/rest/original/user-management/target/user-management-sut.jar /dist/
-        cp cs/rest/original/features-service/target/features-service-sut.jar /dist/
-        cp cs/rest/original/scout-api/api/target/scout-api-sut.jar /dist/
-        cp cs/rest/original/proxyprint/target/proxyprint-sut.jar /dist/
-        cp cs/rest/original/catwatch/catwatch-backend/target/catwatch-sut.jar /dist/
-        cp cs/rest/artificial/ncs/target/rest-ncs-sut.jar /dist/
-        cp cs/rest/original/youtube-mock/target/youtube-mock-sut.jar /dist/
-        cp cs/rest/artificial/scs/target/rest-scs-sut.jar /dist/
-        cp cs/rest/artificial/news/target/rest-news-sut.jar /dist/
-        cp cs/rest-gui/ocvn/web/target/ocvn-sut.jar /dist/
-        cp cs/rest/original/languagetool/languagetool-server/target/languagetool-sut.jar /dist/
-        cp cs/rest/original/restcountries/target/restcountries-sut.jar /dist/
-        cp cs/rest/original/session-service/target/session-service-sut.jar /dist/
-        cp cs/rest-gui/gestaohospital/target/gestaohospital-sut.jar /dist/
-        cp cs/rest-gui/genome-nexus/web/target/genome-nexus-sut.jar /dist/
-        cp cs/rest/original/spring-batch-rest/example/api/target/spring-batch-rest-sut.jar /dist/
-        cp cs/rest/original/spring-actuator-demo/target/spring-actuator-demo-sut.jar /dist/
-        cp cs/rest/original/swagger-petstore/target/swagger-petstore-sut.jar /dist/
-        cp cs/rest/original/spring-ecommerce/target/spring-ecommerce-sut.jar /dist/
-        cp cs/rest/original/notebook-manager/target/notebook-manager-sut.jar /dist/
-        cp cs/graphql/petclinic-graphql/target/petclinic-graphql-sut.jar /dist/
-        cp cs/graphql/graphql-ncs/target/graphql-ncs-sut.jar /dist/
-        cp cs/graphql/graphql-scs/target/graphql-scs-sut.jar /dist/
-        cp cs/rpc/thrift/artificial/thrift-ncs/target/rpc-thrift-ncs-sut.jar /dist/
-        cp cs/rpc/thrift/artificial/thrift-scs/target/rpc-thrift-scs-sut.jar /dist/
-        cp cs/rpc/grpc/artificial/grpc-ncs/target/rpc-grpc-ncs-sut.jar /dist/
-        cp cs/rpc/grpc/artificial/grpc-scs/target/rpc-grpc-scs-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/rest/blogapi/target/blogapi-evomaster-runner.jar /dist/
-          cp em/external/rest/user-management/target/user-management-evomaster-runner.jar /dist/
-          cp em/external/rest/features-service/target/features-service-evomaster-runner.jar /dist/
-          cp em/external/rest/scout-api/target/scout-api-evomaster-runner.jar /dist/
-          cp em/external/rest/proxyprint/target/proxyprint-evomaster-runner.jar /dist/
-          cp em/external/rest/catwatch/target/catwatch-evomaster-runner.jar /dist/
-          cp em/external/rest/ncs/target/rest-ncs-evomaster-runner.jar /dist/
-          cp em/external/rest/youtube-mock/target/youtube-mock-evomaster-runner.jar /dist/
-          cp em/external/rest/scs/target/rest-scs-evomaster-runner.jar /dist/
-          cp em/external/rest/news/target/rest-news-evomaster-runner.jar /dist/
-          cp em/external/rest/ocvn/target/ocvn-evomaster-runner.jar /dist/
-          cp em/external/rest/languagetool/target/languagetool-evomaster-runner.jar /dist/
-          cp em/external/rest/restcountries/target/restcountries-evomaster-runner.jar /dist/
-          cp em/external/rest/session-service/target/session-service-evomaster-runner.jar /dist/
-          cp em/external/rest/gestaohospital/target/gestaohospital-evomaster-runner.jar /dist/
-          cp em/external/rest/genome-nexus/target/genome-nexus-evomaster-runner.jar /dist/
-          cp em/external/rest/spring-batch-rest/target/spring-batch-rest-evomaster-runner.jar /dist/
-          cp em/external/rest/spring-actuator-demo/target/spring-actuator-demo-evomaster-runner.jar /dist/
-          cp em/external/rest/swagger-petstore/target/swagger-petstore-evomaster-runner.jar /dist/
-          cp em/external/rest/spring-ecommerce/target/spring-ecommerce-evomaster-runner.jar /dist/
-          cp em/external/rest/notebook-manager/target/notebook-manager-evomaster-runner.jar /dist/
-          cp em/external/graphql/petclinic-graphql/target/petclinic-graphql-evomaster-runner.jar /dist/
-          cp em/external/graphql/graphql-ncs/target/graphql-ncs-evomaster-runner.jar /dist/
-          cp em/external/graphql/graphql-scs/target/graphql-scs-evomaster-runner.jar /dist/
-          cp em/external/thrift/ncs/target/rpc-thrift-ncs-evomaster-runner.jar /dist/
-          cp em/external/thrift/scs/target/rpc-thrift-scs-evomaster-runner.jar /dist/
-          cp em/external/grpc/ncs/target/rpc-grpc-ncs-evomaster-runner.jar /dist/
-          cp em/external/grpc/scs/target/rpc-grpc-scs-evomaster-runner.jar /dist/
+          cp cs/rest/original/blogapi/target/blogapi-sut.jar /dist/
+          cp cs/rest/original/user-management/target/user-management-sut.jar /dist/
+          cp cs/rest/original/features-service/target/features-service-sut.jar /dist/
+          cp cs/rest/original/scout-api/api/target/scout-api-sut.jar /dist/
+          cp cs/rest/original/proxyprint/target/proxyprint-sut.jar /dist/
+          cp cs/rest/original/catwatch/catwatch-backend/target/catwatch-sut.jar /dist/
+          cp cs/rest/artificial/ncs/target/rest-ncs-sut.jar /dist/
+          cp cs/rest/original/youtube-mock/target/youtube-mock-sut.jar /dist/
+          cp cs/rest/artificial/scs/target/rest-scs-sut.jar /dist/
+          cp cs/rest/artificial/news/target/rest-news-sut.jar /dist/
+          cp cs/rest-gui/ocvn/web/target/ocvn-sut.jar /dist/
+          cp cs/rest/original/languagetool/languagetool-server/target/languagetool-sut.jar /dist/
+          cp cs/rest/original/restcountries/target/restcountries-sut.jar /dist/
+          cp cs/rest/original/session-service/target/session-service-sut.jar /dist/
+          cp cs/rest-gui/gestaohospital/target/gestaohospital-sut.jar /dist/
+          cp cs/rest-gui/genome-nexus/web/target/genome-nexus-sut.jar /dist/
+          cp cs/rest/original/spring-batch-rest/example/api/target/spring-batch-rest-sut.jar /dist/
+          cp cs/rest/original/spring-actuator-demo/target/spring-actuator-demo-sut.jar /dist/
+          cp cs/rest/original/swagger-petstore/target/swagger-petstore-sut.jar /dist/
+          cp cs/rest/original/spring-ecommerce/target/spring-ecommerce-sut.jar /dist/
+          cp cs/rest/original/notebook-manager/target/notebook-manager-sut.jar /dist/
+          cp cs/graphql/petclinic-graphql/target/petclinic-graphql-sut.jar /dist/
+          cp cs/graphql/graphql-ncs/target/graphql-ncs-sut.jar /dist/
+          cp cs/graphql/graphql-scs/target/graphql-scs-sut.jar /dist/
+          cp cs/rpc/thrift/artificial/thrift-ncs/target/rpc-thrift-ncs-sut.jar /dist/
+          cp cs/rpc/thrift/artificial/thrift-scs/target/rpc-thrift-scs-sut.jar /dist/
+          cp cs/rpc/grpc/artificial/grpc-ncs/target/rpc-grpc-ncs-sut.jar /dist/
+          cp cs/rpc/grpc/artificial/grpc-scs/target/rpc-grpc-scs-sut.jar /dist/
         fi
         echo 'JDK 8 Maven build completed'
 
@@ -96,13 +82,11 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          gradle build -x test
+          gradle :em:external:rest:erc20-rest-service:build -x test
+          cp em/external/rest/erc20-rest-service/build/libs/erc20-rest-service-evomaster-runner.jar /dist/
         else
           gradle build -x test
-        fi
-        cp cs/rest/erc20-rest-service/build/libs/erc20-rest-service-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/rest/erc20-rest-service/build/libs/erc20-rest-service-evomaster-runner.jar /dist/
+          cp cs/rest/erc20-rest-service/build/libs/erc20-rest-service-sut.jar /dist/
         fi
         echo 'JDK 8 Gradle build completed'
 
@@ -122,27 +106,21 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          mvn clean install -DskipTests
+          EM="em/external/rest/tracking-system em/external/rest/cwa-verification em/external/graphql/timbuctoo
+              em/external/rest/market em/external/rest/pay-publicapi em/external/rest/http-patch-spring
+              em/external/rest/quartz-manager em/external/rest/management-cassandra"
+          mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
+          for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
           (cd cs && mvn clean install -DskipTests)
-        fi
-        cp cs/rest/tracking-system/target/tracking-system-sut.jar /dist/
-        cp cs/rest/cwa-verification-server/target/cwa-verification-sut.jar /dist/
-        cp cs/graphql/timbuctoo/timbuctoo-instancev4/target/timbuctoo-sut.jar /dist/
-        cp cs/rest-gui/market/market-rest/target/market-sut.jar /dist/
-        cp cs/rest/pay-publicapi/target/pay-publicapi-sut.jar /dist/
-        cp cs/rest/http-patch-spring/target/http-patch-spring-sut.jar /dist/
-        cp cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/quartz-manager-sut.jar /dist/
-        cp cs/rest/management-cassandra/management-api-server/target/management-cassandra-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/rest/tracking-system/target/tracking-system-evomaster-runner.jar /dist/
-          cp em/external/rest/cwa-verification/target/cwa-verification-evomaster-runner.jar /dist/
-          cp em/external/graphql/timbuctoo/target/timbuctoo-evomaster-runner.jar /dist/
-          cp em/external/rest/market/target/market-evomaster-runner.jar /dist/
-          cp em/external/rest/pay-publicapi/target/pay-publicapi-evomaster-runner.jar /dist/
-          cp em/external/rest/http-patch-spring/target/http-patch-spring-evomaster-runner.jar /dist/
-          cp em/external/rest/quartz-manager/target/quartz-manager-evomaster-runner.jar /dist/
-          cp em/external/rest/management-cassandra/target/management-cassandra-evomaster-runner.jar /dist/
+          cp cs/rest/tracking-system/target/tracking-system-sut.jar /dist/
+          cp cs/rest/cwa-verification-server/target/cwa-verification-sut.jar /dist/
+          cp cs/graphql/timbuctoo/timbuctoo-instancev4/target/timbuctoo-sut.jar /dist/
+          cp cs/rest-gui/market/market-rest/target/market-sut.jar /dist/
+          cp cs/rest/pay-publicapi/target/pay-publicapi-sut.jar /dist/
+          cp cs/rest/http-patch-spring/target/http-patch-spring-sut.jar /dist/
+          cp cs/rest-gui/quartz-manager/quartz-manager-parent/quartz-manager-web-showcase/target/quartz-manager-sut.jar /dist/
+          cp cs/rest/management-cassandra/management-api-server/target/management-cassandra-sut.jar /dist/
         fi
         echo 'JDK 11 Maven build completed'
 
@@ -163,15 +141,13 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          gradle build -x test
-        else
-          gradle build -x test
-        fi
-        cp cs/graphql/patio-api/build/libs/patio-api-sut.jar /dist/
-        cp cs/rest/reservations-api/build/libs/reservations-api-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          gradle :em:external:graphql:patio-api:build :em:external:rest:reservations-api:build -x test
           cp em/external/graphql/patio-api/build/libs/patio-api-evomaster-runner.jar /dist/
           cp em/external/rest/reservations-api/build/libs/reservations-api-evomaster-runner.jar /dist/
+        else
+          gradle build -x test
+          cp cs/graphql/patio-api/build/libs/patio-api-sut.jar /dist/
+          cp cs/rest/reservations-api/build/libs/reservations-api-sut.jar /dist/
         fi
         echo 'JDK 11 Gradle build completed'
 
@@ -191,29 +167,22 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          mvn clean install -DskipTests
+          EM="em/external/web/spring-petclinic em/external/grpc/signal-registration em/external/rest/familie-ba-sak
+              em/external/rest/tiltaksgjennomforing em/external/rest/ohsome-api em/external/rest/spring-rest-example
+              em/external/rest/digitalbanking em/external/rest/kafka-rest em/external/rest/petclinic-rest"
+          mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
+          for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
           (cd cs && mvn clean install -DskipTests)
-        fi
-        cp cs/web/spring-petclinic/target/spring-petclinic-sut.jar /dist/
-        cp cs/grpc/signal-registration/target/signal-registration-sut.jar /dist/
-        cp cs/rest/familie-ba-sak/target/familie-ba-sak-sut.jar /dist/
-        cp cs/rest/tiltaksgjennomforing/target/tiltaksgjennomforing-sut.jar /dist/
-        cp cs/rest/ohsome-api/target/ohsome-api-sut.jar /dist/
-        cp cs/rest/spring-rest-example/target/spring-rest-example-sut.jar /dist/
-        cp cs/rest/digitalbanking/target/digitalbanking-sut.jar /dist/
-        cp cs/rest/kafka-rest/kafka-rest/target/kafka-rest-sut.jar /dist/
-        cp cs/rest/petclinic-rest/target/petclinic-rest-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/web/spring-petclinic/target/spring-petclinic-evomaster-runner.jar /dist/
-          cp em/external/grpc/signal-registration/target/signal-registration-evomaster-runner.jar /dist/
-          cp em/external/rest/familie-ba-sak/target/familie-ba-sak-evomaster-runner.jar /dist/
-          cp em/external/rest/tiltaksgjennomforing/target/tiltaksgjennomforing-evomaster-runner.jar /dist/
-          cp em/external/rest/ohsome-api/target/ohsome-api-evomaster-runner.jar /dist/
-          cp em/external/rest/spring-rest-example/target/spring-rest-example-evomaster-runner.jar /dist/
-          cp em/external/rest/digitalbanking/target/digitalbanking-evomaster-runner.jar /dist/
-          cp em/external/rest/kafka-rest/target/kafka-rest-evomaster-runner.jar /dist/
-          cp em/external/rest/petclinic-rest/target/petclinic-rest-evomaster-runner.jar /dist/
+          cp cs/web/spring-petclinic/target/spring-petclinic-sut.jar /dist/
+          cp cs/grpc/signal-registration/target/signal-registration-sut.jar /dist/
+          cp cs/rest/familie-ba-sak/target/familie-ba-sak-sut.jar /dist/
+          cp cs/rest/tiltaksgjennomforing/target/tiltaksgjennomforing-sut.jar /dist/
+          cp cs/rest/ohsome-api/target/ohsome-api-sut.jar /dist/
+          cp cs/rest/spring-rest-example/target/spring-rest-example-sut.jar /dist/
+          cp cs/rest/digitalbanking/target/digitalbanking-sut.jar /dist/
+          cp cs/rest/kafka-rest/kafka-rest/target/kafka-rest-sut.jar /dist/
+          cp cs/rest/petclinic-rest/target/petclinic-rest-sut.jar /dist/
         fi
         echo 'JDK 17 Maven build completed'
 
@@ -234,15 +203,13 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          gradle build -x test -x spotlessCheck -x spotlessJavaCheck
-        else
-          gradle build -x test -x spotlessCheck -x spotlessJavaCheck
-        fi
-        cp cs/rest/bibliothek/build/libs/bibliothek-sut.jar /dist/
-        cp cs/rest/komga/komga/build/libs/komga-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          gradle :em:external:rest:bibliothek:build :em:external:rest:komga:build -x test
           cp em/external/rest/bibliothek/build/libs/bibliothek-evomaster-runner.jar /dist/
           cp em/external/rest/komga/build/libs/komga-evomaster-runner.jar /dist/
+        else
+          gradle build -x test -x spotlessCheck -x spotlessJavaCheck
+          cp cs/rest/bibliothek/build/libs/bibliothek-sut.jar /dist/
+          cp cs/rest/komga/komga/build/libs/komga-sut.jar /dist/
         fi
         echo 'JDK 17 Gradle build completed'
 
@@ -262,37 +229,27 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          mvn clean install -DskipTests
+          EM="em/external/rest/person-controller em/external/rest/redis-sample em/external/rest/adoptme
+              em/external/rest/arimaa em/external/rest/joinus em/external/rest/lovemining em/external/rest/movies-xml
+              em/external/rest/testing-system em/external/rest/flight-search-api em/external/rest/pn-paper-tracker
+              em/external/rest/gravitee em/external/rest-gui/webgoat em/external/rest-gui/microcks"
+          mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
+          for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
           (cd cs && mvn clean install -DskipTests)
-        fi
-        cp cs/rest/person-controller/target/person-controller-sut.jar /dist/
-        cp cs/rest/redis-sample/target/redis-sample-sut.jar /dist/
-        cp cs/rest/adoptme/target/adoptme-sut.jar /dist/
-        cp cs/rest/arimaa/target/arimaa-sut.jar /dist/
-        cp cs/rest/joinus/target/joinus-sut.jar /dist/
-        cp cs/rest/lovemining/target/lovemining-sut.jar /dist/
-        cp cs/rest/movies-xml/target/movies-xml-sut.jar /dist/
-        cp cs/rest/testing-system/target/testing-system-sut.jar /dist/
-        cp cs/rest/flight-search-api/target/flight-search-api-sut.jar /dist/
-        cp cs/rest/pn-paper-tracker/target/pn-paper-tracker-sut.jar /dist/
-        cp cs/rest/gravitee/gravitee-apim-rest-api/gravitee-apim-rest-api-standalone/gravitee-apim-rest-api-standalone-distribution/target/gravitee-sut.jar /dist/
-        cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
-        cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/rest/person-controller/target/person-controller-evomaster-runner.jar /dist/
-          cp em/external/rest/redis-sample/target/redis-sample-evomaster-runner.jar /dist/
-          cp em/external/rest/adoptme/target/adoptme-evomaster-runner.jar /dist/
-          cp em/external/rest/arimaa/target/arimaa-evomaster-runner.jar /dist/
-          cp em/external/rest/joinus/target/joinus-evomaster-runner.jar /dist/
-          cp em/external/rest/lovemining/target/lovemining-evomaster-runner.jar /dist/
-          cp em/external/rest/movies-xml/target/movies-xml-evomaster-runner.jar /dist/
-          cp em/external/rest/testing-system/target/testing-system-evomaster-runner.jar /dist/
-          cp em/external/rest/flight-search-api/target/flight-search-api-evomaster-runner.jar /dist/
-          cp em/external/rest/pn-paper-tracker/target/pn-paper-tracker-evomaster-runner.jar /dist/
-          cp em/external/rest/gravitee/target/gravitee-evomaster-runner.jar /dist/
-          cp em/external/rest-gui/webgoat/target/webgoat-evomaster-runner.jar /dist/
-          cp em/external/rest-gui/microcks/target/microcks-evomaster-runner.jar /dist/
+          cp cs/rest/person-controller/target/person-controller-sut.jar /dist/
+          cp cs/rest/redis-sample/target/redis-sample-sut.jar /dist/
+          cp cs/rest/adoptme/target/adoptme-sut.jar /dist/
+          cp cs/rest/arimaa/target/arimaa-sut.jar /dist/
+          cp cs/rest/joinus/target/joinus-sut.jar /dist/
+          cp cs/rest/lovemining/target/lovemining-sut.jar /dist/
+          cp cs/rest/movies-xml/target/movies-xml-sut.jar /dist/
+          cp cs/rest/testing-system/target/testing-system-sut.jar /dist/
+          cp cs/rest/flight-search-api/target/flight-search-api-sut.jar /dist/
+          cp cs/rest/pn-paper-tracker/target/pn-paper-tracker-sut.jar /dist/
+          cp cs/rest/gravitee/gravitee-apim-rest-api/gravitee-apim-rest-api-standalone/gravitee-apim-rest-api-standalone-distribution/target/gravitee-sut.jar /dist/
+          cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
+          cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
         fi
         echo 'JDK 21 Maven build completed'
 
@@ -312,12 +269,14 @@ services:
       - -c
       - |
         set -e
-        gradle build -x test
-        cp cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar /dist/
-        cp cs/rest/traccar/build/libs/traccar-sut.jar /dist/
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
+          gradle :em:external:rest:gdpr-kv:build :em:external:rest:traccar:build -x test
           cp em/external/rest/gdpr-kv/build/libs/gdpr-kv-evomaster-runner.jar /dist/
           cp em/external/rest/traccar/build/libs/traccar-evomaster-runner.jar /dist/
+        else
+          gradle build -x test
+          cp cs/rest/gdpr-kv/build/libs/gdpr-kv-sut.jar /dist/
+          cp cs/rest/traccar/build/libs/traccar-sut.jar /dist/
         fi
         echo 'JDK 21 Gradle build completed'
 
@@ -337,15 +296,13 @@ services:
       - |
         set -e
         if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          mvn clean install -DskipTests
+          EM="em/external/rest/commafeed em/external/rest/jasper"
+          mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
+          for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
           (cd cs && mvn clean install -DskipTests)
-        fi
-        cp cs/rest/commafeed/commafeed-server/target/commafeed-sut.jar /dist/
-        cp cs/rest/jasper/target/jasper-sut.jar /dist/
-        if [ "$${BUILD_EVOMASTER:-false}" = "true" ]; then
-          cp em/external/rest/commafeed/target/commafeed-evomaster-runner.jar /dist/
-          cp em/external/rest/jasper/target/jasper-evomaster-runner.jar /dist/
+          cp cs/rest/commafeed/commafeed-server/target/commafeed-sut.jar /dist/
+          cp cs/rest/jasper/target/jasper-sut.jar /dist/
         fi
         echo 'JDK 25 Maven build completed'
 

@@ -296,17 +296,15 @@ There are at least 2 main use cases for WFD:
 * Run experiments with __white-box__ _EvoMaster_
 
 
-_Black-box_ testing: you can build all the SUTs via Docker using  `scripts/dist-docker.py`. Once the script is completed, all the SUTs will be available under the `dist` folder. Each SUT can be started with the Docker Compose files under `dockerfiles`. For example:
+_Black-box_ testing: you can build all the SUTs via Docker using  `scripts/dist.py`. Once the script is completed, all the SUTs will be available under the `dist` folder. Each SUT can be started with the Docker Compose files under `dockerfiles`. For example:
 
 ```
 docker-compose -f dockerfiles/reservations-api.yaml up
 ```
 
-_White-box_ testing: everything can be setup by running the script `scripts/dist.py`.
-Note that you will need installed at least Maven, Gradle, JDK 8, JDK 11, JDK 17, JDK 21, JDK 25, NPM, as well as Docker.
-Also, you will need to setup environment variables like `JAVA_HOME_8`, `JAVA_HOME_11`,  `JAVA_HOME_17`, `JAVA_HOME_21` and `JAVA_HOME_25`.
-The script will issue error messages if any prerequisite is missing.
-Once the script is completed, not only all the SUTs will be available under the `dist` folder, but also all the _driver_ executables for _EvoMaster_. 
+_White-box_ testing: after `scripts/dist.py`, run `scripts/dist.py --evomaster`.
+This builds only the external _driver_ executables for _EvoMaster_ (no APIs) and copies `evomaster-agent.jar` into the `dist` folder.
+It requires the _EvoMaster_ version declared in `scripts/build/.env` to be installed in your local `~/.m2` (e.g., with `mvn install` in _EvoMaster_), as `~/.m2` is mounted into the Docker builds.
 
 Regarding Maven, most-third party dependencies are automatically downloaded from Maven Central.
 However, some dependencies are from GitHub, which unfortunately require authentication to be able to download such dependencies.
