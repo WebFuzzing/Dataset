@@ -24,54 +24,23 @@ on:
 
 jobs:
 
-  docker-build:
-    # this one doesn't use EvoMaster drivers by default
+  build-SUTs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout WFD
         uses: actions/checkout@v6
-      - name: Build All With Docker
+      #  this does not build EvoMaster drivers
+      - name: Build SUTs With Docker
         run: python scripts/dist.py
 
-  direct-builds:
-    needs: docker-build
-    runs-on:  ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        folder: [jdk_8_maven, jdk_11_maven, jdk_17_maven, jdk_21_maven, jdk_25_maven, jdk_8_gradle, jdk_11_gradle, jdk_17_gradle, jdk_21_gradle]
-        include:
-          # Maven
-          - folder: jdk_8_maven
-            jdk-version: 8
-            command: mvn clean install -DskipTests
-          - folder: jdk_11_maven
-            jdk-version: 11
-            command: mvn clean install -DskipTests
-          - folder: jdk_17_maven
-            jdk-version: 17
-            command: mvn clean install -DskipTests
-          - folder: jdk_21_maven
-            jdk-version: 21
-            command: mvn clean install -DskipTests
-          - folder: jdk_25_maven
-            jdk-version: 25
-            command: mvn clean install -DskipTests
-          # Gradle
-          - folder: jdk_8_gradle
-            jdk-version: 8
-            command: chmod +x gradlew & ./gradlew build -x test
-          - folder: jdk_11_gradle
-            jdk-version: 11
-            command: chmod +x gradlew & ./gradlew build -x test
-          - folder: jdk_17_gradle
-            jdk-version: 17
-            command: chmod +x gradlew & ./gradlew build -x test
-          - folder: jdk_21_gradle
-            jdk-version: 21
-            command: chmod +x gradlew & ./gradlew build -x test
+  build-drivers:
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout WFD
+        uses: actions/checkout@v6
+      # Drivers need dependency on EM client libraries.
+      # Those are published on Maven Central, but not for SNAPSHOT dependencies.
+      # So, we need to build and install them locally
       - name: Setup JDK for EvoMaster
         uses: actions/setup-java@v5
         with:
@@ -79,7 +48,7 @@ jobs:
           java-version: 17
           distribution: 'zulu'
       - name: Setup Maven
-        # runner images ship Maven 3.10.0, which builds invalid jars for some SUTs
+        # runner images ship Maven 3.10.0, which has some breaking changes we have not handled yet
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.9
@@ -95,16 +64,84 @@ jobs:
       - name: Install EvoMaster client-java
         run: mvn clean install -DskipTests
         working-directory: evomaster/client-java
-      - name: Setup JDK for WFD
-        uses: actions/setup-java@v5
-        with:
-          java-version: ${{ matrix.jdk-version }}
-          distribution: 'zulu'
-      - name: Enable long paths on Windows
-        if: runner.os == 'Windows'
-        run: git config --system core.longpaths true
-      - name: Checkout WFD
-        uses: actions/checkout@v6
-      - name: Build WFD
-        run: ${{ matrix.command }}
-        working-directory: ${{ matrix.folder }}
+      - name: Build EvoMaster Drivers
+        run: python scripts/dist.py --evomaster
+
+
+
+#### NOTE: As now we build everything via Docker, the following is no longer necessary
+#  direct-builds:
+#    needs: docker-build
+#    runs-on:  ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
+#        folder: [jdk_8_maven, jdk_11_maven, jdk_17_maven, jdk_21_maven, jdk_25_maven, jdk_8_gradle, jdk_11_gradle, jdk_17_gradle, jdk_21_gradle]
+#        include:
+#          # Maven
+#          - folder: jdk_8_maven
+#            jdk-version: 8
+#            command: mvn clean install -DskipTests
+#          - folder: jdk_11_maven
+#            jdk-version: 11
+#            command: mvn clean install -DskipTests
+#          - folder: jdk_17_maven
+#            jdk-version: 17
+#            command: mvn clean install -DskipTests
+#          - folder: jdk_21_maven
+#            jdk-version: 21
+#            command: mvn clean install -DskipTests
+#          - folder: jdk_25_maven
+#            jdk-version: 25
+#            command: mvn clean install -DskipTests
+#          # Gradle
+#          - folder: jdk_8_gradle
+#            jdk-version: 8
+#            command: chmod +x gradlew & ./gradlew build -x test
+#          - folder: jdk_11_gradle
+#            jdk-version: 11
+#            command: chmod +x gradlew & ./gradlew build -x test
+#          - folder: jdk_17_gradle
+#            jdk-version: 17
+#            command: chmod +x gradlew & ./gradlew build -x test
+#          - folder: jdk_21_gradle
+#            jdk-version: 21
+#            command: chmod +x gradlew & ./gradlew build -x test
+#    steps:
+#      - name: Setup JDK for EvoMaster
+#        uses: actions/setup-java@v5
+#        with:
+#          # client library is on 8, but, to build whole EM, need higher.
+#          java-version: 17
+#          distribution: 'zulu'
+#      - name: Setup Maven
+#        # runner images ship Maven 3.10.0, which builds invalid jars for some SUTs
+#        uses: stCarolas/setup-maven@v5
+#        with:
+#          maven-version: 3.9.9
+#      - name: Checkout EvoMaster
+#        uses: actions/checkout@v6
+#        with:
+#          repository: WebFuzzing/EvoMaster
+#          path: evomaster
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Install EvoMaster root pom.xml
+#        run: mvn -N clean install -DskipTests
+#        working-directory: evomaster
+#      - name: Install EvoMaster client-java
+#        run: mvn clean install -DskipTests
+#        working-directory: evomaster/client-java
+#      - name: Setup JDK for WFD
+#        uses: actions/setup-java@v5
+#        with:
+#          java-version: ${{ matrix.jdk-version }}
+#          distribution: 'zulu'
+#      - name: Enable long paths on Windows
+#        if: runner.os == 'Windows'
+#        run: git config --system core.longpaths true
+#      - name: Checkout WFD
+#        uses: actions/checkout@v6
+#      - name: Build WFD
+#        run: ${{ matrix.command }}
+#        working-directory: ${{ matrix.folder }}
