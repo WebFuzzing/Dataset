@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.evomaster</groupId>
         <artifactId>evomaster-benchmark-jdk25-em-embedded-rest</artifactId>
-        <version>4.4.0</version>
+        <version>4.4.1-SNAPSHOT</version>
     </parent>
 
     <!-- EvoMaster brings Jackson 2.14.3, Quarkus needs 2.22.0, and embedded mode shares one
