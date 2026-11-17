@@ -20,7 +20,7 @@ COPY jdk_8_maven/cs/rest/original/blogapi/target/classes  ${CLASS_FILES}/jdk_8_m
 COPY jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/catwatch/catwatch-backend/target/classes
 COPY jdk_25_maven/cs/rest/commafeed/commafeed-server/target/classes ${CLASS_FILES}/jdk_25_maven/cs/rest/commafeed/commafeed-server/target/classes
 COPY jdk_11_maven/cs/rest/cwa-verification-server/target/classes  ${CLASS_FILES}/jdk_11_maven/cs/rest/cwa-verification-server/target/classes
-COPY jdk_17_maven/cs/rest/digitalbanking/target/classes ${CLASS_FILES}/jdk_17_maven/cs/rest/digitalbanking/target/classes}jdk_17_maven/cs/rest/digitalbanking/target/classes
+COPY jdk_17_maven/cs/rest/digitalbanking/target/classes ${CLASS_FILES}/jdk_17_maven/cs/rest/digitalbanking/target/classes
 COPY jdk_8_gradle/cs/rest/erc20-rest-service/build/classes  ${CLASS_FILES}/jdk_8_gradle/cs/rest/erc20-rest-service/build/classes
 COPY jdk_17_maven/cs/rest/familie-ba-sak/target/classes  ${CLASS_FILES}/jdk_17_maven/cs/rest/familie-ba-sak/target/classes
 COPY jdk_8_maven/cs/rest/original/features-service/target/classes  ${CLASS_FILES}/jdk_8_maven/cs/rest/original/features-service/target/classes
