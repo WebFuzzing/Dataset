@@ -362,6 +362,9 @@ scripts/dockerize/dockerfiles
 /jdk_21_maven/em/embedded/rest/pn-paper-tracker/target/
 /jdk_21_maven/em/external/rest/gravitee/target/
 /jdk_21_maven/em/embedded/rest/gravitee/target/
+/jdk_21_maven/cs/rest/arcane-dam-server/target/
+/jdk_21_maven/em/external/rest/arcane-dam-server/target/
+/jdk_21_maven/em/embedded/rest/arcane-dam-server/target/
 /jdk_11_maven/em/embedded/rest/tracking-system/target/
 /jdk_11_maven/em/external/rest/tracking-system/target/
 /jdk_17_maven/em/embedded/rest/tiltaksgjennomforing/target/
