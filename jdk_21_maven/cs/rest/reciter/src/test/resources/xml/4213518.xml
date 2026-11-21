@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">4213518</PMID>
+        <DateCreated>
+            <Year>1974</Year>
+            <Month>12</Month>
+            <Day>16</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>1974</Year>
+            <Month>12</Month>
+            <Day>16</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2013</Year>
+            <Month>11</Month>
+            <Day>21</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">0007-1447</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>3</Volume>
+                    <Issue>5934</Issue>
+                    <PubDate>
+                        <Year>1974</Year>
+                        <Month>Sep</Month>
+                        <Day>28</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>British medical journal</Title>
+                <ISOAbbreviation>Br Med J</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Two cases of tuberculous lymphoedema.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>786</MedlinePgn>
+            </Pagination>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Hoda</LastName>
+                    <ForeName>S</ForeName>
+                    <Initials>S</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rab</LastName>
+                    <ForeName>S M</ForeName>
+                    <Initials>SM</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>ENGLAND</Country>
+            <MedlineTA>Br Med J</MedlineTA>
+            <NlmUniqueID>0372673</NlmUniqueID>
+            <ISSNLinking>0007-1447</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000995">Antitubercular Agents</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>EC 3.1.3.1</RegistryNumber>
+                <NameOfSubstance UI="D000469">Alkaline Phosphatase</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>RFM9X3LJ49</RegistryNumber>
+                <NameOfSubstance UI="D001663">Bilirubin</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>AIM</CitationSubset>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Br J Dis Chest. 1967 Apr;61(2):90-4</RefSource>
+                <PMID Version="1">6033814</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000328">Adult</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000469">Alkaline Phosphatase</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000097">blood</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000995">Antitubercular Agents</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001663">Bilirubin</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000097">blood</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001706">Biopsy</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005260">Female</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008198">Lymph Nodes</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000382">microbiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008209">Lymphedema</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000209">etiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D009169">Mycobacterium tuberculosis</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000302">isolation &amp; purification</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014374">Tuberculin Test</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014388">Tuberculosis, Lymph Node</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000150">complications</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000175">diagnosis</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000188">drug therapy</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">PMC1611907</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>1974</Year>
+                <Month>9</Month>
+                <Day>28</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>1974</Year>
+                <Month>9</Month>
+                <Day>28</Day>
+                <Hour>0</Hour>
+                <Minute>1</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>1974</Year>
+                <Month>9</Month>
+                <Day>28</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">4213518</ArticleId>
+            <ArticleId IdType="pmc">PMC1611907</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

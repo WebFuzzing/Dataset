@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">14691233</PMID>
+        <DateCreated>
+            <Year>2003</Year>
+            <Month>12</Month>
+            <Day>23</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2004</Year>
+            <Month>07</Month>
+            <Day>30</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2014</Year>
+            <Month>06</Month>
+            <Day>10</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">0961-8368</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>13</Volume>
+                    <Issue>1</Issue>
+                    <PubDate>
+                        <Year>2004</Year>
+                        <Month>Jan</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Protein science : a publication of the Protein Society</Title>
+                <ISOAbbreviation>Protein Sci.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Helix formation and the unfolded state of a 52-residue helical protein.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>177-89</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>A growing class of proteins in biological processes has been found to be unfolded on isolation under normal solution conditions. We have used NMR spectroscopy to characterize the structural and dynamic properties of the unfolded and partially folded states of a 52-residue alanine-rich protein (Ala-14) at temperatures from -5 degrees C to 40 degrees C. At 40 degrees C, alanine residues in Ala-14 adopt phi and psi angles, consistent with a significant ensemble population of polyproline II conformation. Analysis of relaxation rates in the protein reveals that a series of residues, Gln 35-Ala 36-Ala 37-Lys 38-Asp 39-Asp 40-Ala 41-Ala 42, displays slow motional dynamics at both -5 degrees C and 40 degrees C. Temperature-dependent chemical shift changes indicate that this region is the site of helix initiation. The remaining N-terminal residues become increasingly dynamic as they extend from the nucleation site. The C terminus remains dynamic and changes less with temperature, indicating it is relatively unstructured. Ala-14 provides a high-resolution portrait of the unfolded state and the process of helix nucleation and propagation in the absence of tertiary contacts, information that bears on early events in protein folding.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Cao</LastName>
+                    <ForeName>Wei</ForeName>
+                    <Initials>W</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Biochemistry, Weill Medical College of Cornell University, New York, New York 10021, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Bracken</LastName>
+                    <ForeName>Clay</ForeName>
+                    <Initials>C</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Kallenbach</LastName>
+                    <ForeName>Neville R</ForeName>
+                    <Initials>NR</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Lu</LastName>
+                    <ForeName>Min</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>AI42382</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+                <PublicationType UI="D013487">Research Support, U.S. Gov't, P.H.S.</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Protein Sci</MedlineTA>
+            <NlmUniqueID>9211750</NlmUniqueID>
+            <ISSNLinking>0961-8368</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000596">Amino Acids</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D010455">Peptides</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D011506">Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D011994">Recombinant Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>25191-13-3</RegistryNumber>
+                <NameOfSubstance UI="C011083">polyproline</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>OF5P57N2ZX</RegistryNumber>
+                <NameOfSubstance UI="D000409">Alanine</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biopolymers. 1991 Nov;31(13):1605-14</RefSource>
+                <PMID Version="1">1814507</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 2001 Nov;21(3):249-61</RefSource>
+                <PMID Version="1">11775741</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biochemistry. 1994 Aug 23;33(33):10022-5</RefSource>
+                <PMID Version="1">8060970</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1994 Nov;4(6):871-8</RefSource>
+                <PMID Version="1">7812158</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biochemistry. 1995 Jan 24;34(3):868-78</RefSource>
+                <PMID Version="1">7827045</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Pept Res. 2002 Jan;59(1):1-8</RefSource>
+                <PMID Version="1">11906602</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Acta Crystallogr D Biol Crystallogr. 2002 May;58(Pt 5):768-76</RefSource>
+                <PMID Version="1">11976487</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Biochem. 2002;71:783-815</RefSource>
+                <PMID Version="1">12045111</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Adv Protein Chem. 2002;62:163-240</RefSource>
+                <PMID Version="1">12418104</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 1987 Dec;84(24):8898-902</RefSource>
+                <PMID Version="1">3122208</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biophys Chem. 1988 Aug;31(1-2):143-6</RefSource>
+                <PMID Version="1">3233285</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Biophys Biophys Chem. 1991;20:519-38</RefSource>
+                <PMID Version="1">1867725</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1991 Nov 20;222(2):311-33</RefSource>
+                <PMID Version="1">1960729</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1992 Jan 5;223(1):343-50</RefSource>
+                <PMID Version="1">1731079</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1992 Feb 20;223(4):1121-38</RefSource>
+                <PMID Version="1">1538392</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1995 Jan 20;245(3):275-96</RefSource>
+                <PMID Version="1">7844817</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1995 Jan;5(1):14-24</RefSource>
+                <PMID Version="1">7881270</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1995 Jan;5(1):67-81</RefSource>
+                <PMID Version="1">7881273</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biophys Chem. 1995 Jun-Jul;55(1-2):127-35</RefSource>
+                <PMID Version="1">7632873</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 1995 Jul;4(7):1325-36</RefSource>
+                <PMID Version="1">7670375</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 1995 Aug;4(8):1446-56</RefSource>
+                <PMID Version="1">8520470</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Biotechnol. 1995 Aug;6(4):382-6</RefSource>
+                <PMID Version="1">7579647</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1995 Nov;6(3):277-93</RefSource>
+                <PMID Version="1">8520220</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1996 Jan 26;255(3):494-506</RefSource>
+                <PMID Version="1">8568893</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1995 Sep;6(2):135-40</RefSource>
+                <PMID Version="1">8589602</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1995 Sep;6(2):153-62</RefSource>
+                <PMID Version="1">8589604</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 1996 Feb 23;271(5252):1136-8</RefSource>
+                <PMID Version="1">8599093</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proteins. 1996 Apr;24(4):427-32</RefSource>
+                <PMID Version="1">9162943</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Struct Biol. 1997 Feb;7(1):10-4</RefSource>
+                <PMID Version="1">9032067</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1997 Feb;9(2):181-200</RefSource>
+                <PMID Version="1">9090132</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Struct Biol. 1997 Jun;7(3):388-93</RefSource>
+                <PMID Version="1">9204281</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biochemistry. 1997 Jul 8;36(27):8413-21</RefSource>
+                <PMID Version="1">9204889</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biophys J. 1997 Aug;73(2):1031-41</RefSource>
+                <PMID Version="1">9251820</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 1997 Aug;6(8):1694-700</RefSource>
+                <PMID Version="1">9260281</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Struct Biol. 1997 Dec;7(6):828-34</RefSource>
+                <PMID Version="1">9434903</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 1998 Jan;7(1):21-38</RefSource>
+                <PMID Version="1">9514257</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Methods Enzymol. 1998;295:1-26</RefSource>
+                <PMID Version="1">9750211</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1998 Nov 20;284(1):173-91</RefSource>
+                <PMID Version="1">9811549</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1999 Oct 22;293(2):321-31</RefSource>
+                <PMID Version="1">10550212</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 1998 Nov;7(11):2431-7</RefSource>
+                <PMID Version="1">9828010</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1999 Feb 5;285(5):2133-46</RefSource>
+                <PMID Version="1">9925790</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Trends Biochem Sci. 1999 Jan;24(1):26-33</RefSource>
+                <PMID Version="1">10087919</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Trends Biochem Sci. 1999 Feb;24(2):77-83</RefSource>
+                <PMID Version="1">10098403</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Virol. 1999 May;73(5):4433-8</RefSource>
+                <PMID Version="1">10196341</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1999 Mar;13(3):289-302</RefSource>
+                <PMID Version="1">10212987</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 1999 Jun 4;289(2):205-9</RefSource>
+                <PMID Version="1">10366499</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>FEBS Lett. 1999 Jul 23;455(3):372-6</RefSource>
+                <PMID Version="1">10437807</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proteins. 1999 Sep 1;36(4):400-6</RefSource>
+                <PMID Version="1">10450081</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 2000 Mar 3;296(4):1105-16</RefSource>
+                <PMID Version="1">10686107</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Biol. 2000 Jun 16;299(4):1101-12</RefSource>
+                <PMID Version="1">10843861</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2002 Dec 13;277(50):48708-13</RefSource>
+                <PMID Version="1">12368282</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biopolymers. 1968;6(9):1379-82</RefSource>
+                <PMID Version="1">5669472</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biopolymers. 1971;10(7):1207-12</RefSource>
+                <PMID Version="1">5095092</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Biophys J. 1981 Dec;36(3):575-88</RefSource>
+                <PMID Version="1">7326325</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proteins. 2001 Feb 15;42(3):345-54</RefSource>
+                <PMID Version="1">11151006</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Struct Biol. 2001 Apr;11(2):212-6</RefSource>
+                <PMID Version="1">11297930</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Protein Sci. 2001 May;10(5):1056-66</RefSource>
+                <PMID Version="1">11316886</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Mol Graph Model. 2001;19(1):3-12</RefSource>
+                <PMID Version="1">11381530</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 2001 May;20(1):71-5</RefSource>
+                <PMID Version="1">11430757</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 2001 Jul 20;293(5529):487-9</RefSource>
+                <PMID Version="1">11463915</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biomol NMR. 1992 Mar;2(2):195-202</RefSource>
+                <PMID Version="1">1422152</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000409">Alanine</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000737">chemistry</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000595">Amino Acid Sequence</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000596">Amino Acids</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000737">chemistry</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D002942">Circular Dichroism</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D019281">Dimerization</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D004926">Escherichia coli</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006863">Hydrogen-Ion Concentration</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008958">Models, Molecular</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008969">Molecular Sequence Data</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D009038">Motion</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D019906">Nuclear Magnetic Resonance, Biomolecular</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D010455">Peptides</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000737">chemistry</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011487">Protein Conformation</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y" UI="D011489">Protein Denaturation</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D017510">Protein Folding</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y" UI="D017433">Protein Structure, Secondary</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011506">Proteins</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000737">chemistry</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000235">genetics</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011994">Recombinant Proteins</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000737">chemistry</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D013696">Temperature</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014461">Ultracentrifugation</DescriptorName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">PMC2286529</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2003</Year>
+                <Month>12</Month>
+                <Day>24</Day>
+                <Hour>5</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2004</Year>
+                <Month>7</Month>
+                <Day>31</Day>
+                <Hour>5</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2003</Year>
+                <Month>12</Month>
+                <Day>24</Day>
+                <Hour>5</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">14691233</ArticleId>
+            <ArticleId IdType="pmc">PMC2286529</ArticleId>
+            <ArticleId IdType="doi">10.1110/ps.03383004</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

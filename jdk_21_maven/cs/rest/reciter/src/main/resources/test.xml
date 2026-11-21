@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE eSearchResult PUBLIC "-//NLM//DTD esearch 20060628//EN" "https://eutils.ncbi.nlm.nih.gov/eutils/dtd/20060628/esearch.dtd">
+<eSearchResult>
+<Count>6</Count><RetMax>6</RetMax><RetStart>0</RetStart><QueryKey>1</QueryKey><WebEnv>NCID_1_26330832_130.14.22.215_9001_1478459619_1621538136_0MetA0_S_MegaStore_F_1</WebEnv>
+<IdList>
+    <Id>27699883</Id>
+    <Id>27365331</Id>
+    <Id>27256856</Id>
+    <Id>19965112</Id>
+    <Id>11228581</Id>
+    <Id>11161182</Id>
+</IdList>
+<TranslationSet/><TranslationStack>   <TermSet>    <Term>yiwang@med.cornell.edu[All Fields]</Term>    <Field>All Fields</Field>    <Count>6</Count>    <Explode>N</Explode>   </TermSet>   <OP>GROUP</OP>  </TranslationStack><QueryTranslation>yiwang@med.cornell.edu[All Fields]</QueryTranslation>
+
+</eSearchResult>

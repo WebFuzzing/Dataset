@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">19944046</PMID>
+        <DateCreated>
+            <Year>2009</Year>
+            <Month>11</Month>
+            <Day>30</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2010</Year>
+            <Month>03</Month>
+            <Day>03</Day>
+        </DateCompleted>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1646-0758</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>22</Volume>
+                    <Issue>5</Issue>
+                    <PubDate>
+                        <MedlineDate>2009 Sep-Oct</MedlineDate>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Acta mÃ©dica portuguesa</Title>
+                <ISOAbbreviation>Acta Med Port</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>[Osteoid osteoma].</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>613-6</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>Osteoid osteoma is the third most common benign bone tumor. It usually affects the diaphysis of long bones, especially the femur or the tibia. This paper presents the case of a 22-year-old male patient, with pain in the left knee. The x-ray and ultrasound of the knee were normal. The three phase bone scintigraphy revealed a focal uptake in the mid shaft of the left femur, strongly suggestive of osteoid osteoma. This case shows the significant role of bone scintigraphy in the diagnosis of an osteoma osteoid with atipical presentation.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>PatrÃ­cio</LastName>
+                    <ForeName>J Pedro</ForeName>
+                    <Initials>JP</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>ServiÃ§o de Medicina Nuclear. Hospital de S. JoÃ£o. Porto.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Oliveira</LastName>
+                    <ForeName>P</ForeName>
+                    <Initials>P</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Fernandes</LastName>
+                    <ForeName>HÃ©lder</ForeName>
+                    <Initials>H</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Oliveira</LastName>
+                    <ForeName>Ana</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Faria</LastName>
+                    <ForeName>Maria Teresa</ForeName>
+                    <Initials>MT</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>PÃ©rez</LastName>
+                    <ForeName>Maria Berta</ForeName>
+                    <Initials>MB</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Pereira</LastName>
+                    <ForeName>Jorge</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+            </AuthorList>
+            <Language>por</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D002363">Case Reports</PublicationType>
+                <PublicationType UI="D004740">English Abstract</PublicationType>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <VernacularTitle>Osteoma osteÃ³ide.</VernacularTitle>
+            <ArticleDate DateType="Electronic">
+                <Year>2009</Year>
+                <Month>10</Month>
+                <Day>22</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Portugal</Country>
+            <MedlineTA>Acta Med Port</MedlineTA>
+            <NlmUniqueID>7906803</NlmUniqueID>
+            <ISSNLinking>0870-399X</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005266">Femoral Neoplasms</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000175">diagnosis</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008297">Male</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D010017">Osteoma, Osteoid</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000175">diagnosis</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D055815">Young Adult</DescriptorName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2008</Year>
+                <Month>2</Month>
+                <Day>27</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2008</Year>
+                <Month>10</Month>
+                <Day>28</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="epublish">
+                <Year>2009</Year>
+                <Month>10</Month>
+                <Day>22</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2009</Year>
+                <Month>12</Month>
+                <Day>1</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2009</Year>
+                <Month>12</Month>
+                <Day>1</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2010</Year>
+                <Month>3</Month>
+                <Day>4</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">19944046</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

@@ -1,0 +1,200 @@
+{
+  "articleId": 23729306,
+  "articleTitle": "Re: Stoehr et al. Lack of evidence for frequent MED12 p.L1224F mutation in prostate tumours from Caucasian patients. J Pathol 2013; 230: 453-456.",
+  "articleCoAuthors": {
+    "authors": [
+      {
+        "name": {
+          "firstName": "Christopher E",
+          "firstInitial": "C",
+          "middleName": "",
+          "middleInitial": "",
+          "lastName": "Barbieri"
+        },
+        "affiliation": "Department of Urology, Weill Cornell Medical College, New York, NY, 10065, USA; Department of Pathology and Laboratory Medicine, Weill Cornell Medical College, New York, NY, 10065, USA.",
+        "rank": 1,
+        "targetAuthor": false
+      },
+      {
+        "name": {
+          "firstName": "Andrea",
+          "firstInitial": "A",
+          "middleName": "",
+          "middleInitial": "",
+          "lastName": "Sboner"
+        },
+        "rank": 2,
+        "targetAuthor": false
+      },
+      {
+        "name": {
+          "firstName": "Mark-Andrew James",
+          "firstInitial": "M",
+          "middleName": "",
+          "middleInitial": "",
+          "lastName": "Rubin"
+        },
+        "rank": 3,
+        "targetAuthor": true
+      },
+      {
+        "name": {
+          "firstName": "Levi A",
+          "firstInitial": "L",
+          "middleName": "",
+          "middleInitial": "",
+          "lastName": "Garraway"
+        },
+        "rank": 4,
+        "targetAuthor": false
+      }
+    ]
+  },
+  "journal": {
+    "journalTitle": "The Journal of pathology",
+    "journalIssn": [
+      {
+        "issntype": "Electronic",
+        "issn": "1096-9896"
+      },
+      {
+        "issntype": "Linking",
+        "issn": "0022-3417"
+      }
+    ],
+    "journalIssuePubDateYear": 2013,
+    "isoAbbreviation": "J. Pathol."
+  },
+  "articleKeywords": {
+    "keywords": []
+  },
+  "completenessScore": 0.0,
+  "reCiterArticleFeatures": {
+    "journalName": "The Journal of pathology",
+    "coAuthors": [
+      "C.Barbieri",
+      "A.Sboner",
+      "M.Rubin",
+      "L.Garraway"
+    ],
+    "meshMajor": [],
+    "affiliationIds": [
+      60002746,
+      60001001,
+      60014334,
+      60007997
+    ],
+    "featureCount": 9
+  },
+  "scopusArticle": {
+    "scopusDocId": "84883858637",
+    "pubmedId": 23729306,
+    "doi": "10.1002/path.4216",
+    "title": "Re: Stoehr et al. Lack of evidence for frequent MED12 p.L1224F mutation in prostate tumours from Caucasian patients. J Pathol 2013; 230: 453-456",
+    "publicationName": "Journal of Pathology",
+    "coverDate": "2013-10-01",
+    "coverDisplayDate": "October 2013",
+    "issn": "00223417",
+    "eIssn": "10969896",
+    "volume": "231",
+    "issueIdentifier": "2",
+    "pageRange": "271",
+    "subType": "le",
+    "subTypeDescription": "Letter",
+    "citedByCount": 1,
+    "affiliations": [
+      {
+        "afid": 60002746,
+        "affilname": "Harvard Medical School",
+        "affiliationCity": "Boston",
+        "affiliationCountry": "United States"
+      },
+      {
+        "afid": 60014334,
+        "affilname": "Dana-Farber Cancer Institute",
+        "affiliationCity": "Boston",
+        "affiliationCountry": "United States"
+      },
+      {
+        "afid": 60007997,
+        "affilname": "Weill Cornell Medical College",
+        "affiliationCity": "New York",
+        "affiliationCountry": "United States"
+      },
+      {
+        "afid": 60001001,
+        "affilname": "Broad Institute",
+        "affiliationCity": "Cambridge",
+        "affiliationCountry": "United States"
+      }
+    ],
+    "authors": [
+      {
+        "seq": 1,
+        "authid": 7103147392,
+        "authname": "Barbieri C.",
+        "surname": "Barbieri",
+        "givenName": "Christopher E.",
+        "initials": "C.E.",
+        "afids": [
+          60007997
+        ]
+      },
+      {
+        "seq": 2,
+        "authid": 55884911800,
+        "authname": "Sboner A.",
+        "surname": "Sboner",
+        "givenName": "Andrea",
+        "initials": "A.",
+        "afids": [
+          60007997
+        ]
+      },
+      {
+        "seq": 3,
+        "authid": 7402540442,
+        "authname": "Rubin M.",
+        "surname": "Rubin",
+        "givenName": "Mark A.",
+        "initials": "M.A.",
+        "afids": [
+          60007997
+        ]
+      },
+      {
+        "seq": 4,
+        "authid": 6506345072,
+        "authname": "Garraway L.",
+        "surname": "Garraway",
+        "givenName": "Levi A.",
+        "initials": "L.A.",
+        "afids": [
+          60002746,
+          60001001,
+          60014334
+        ]
+      }
+    ]
+  },
+  "grantList": [],
+  "matchingGrantList": [],
+  "shouldRemoveValue": false,
+  "foundAuthorWithSameFirstNameValue": false,
+  "foundMatchingAuthorValue": false,
+  "clusterInfo": "",
+  "totalArticleScoreWithoutClustering": 0.0,
+  "totalArticleScoreNonStandardized": 0.0,
+  "totalArticleScoreStandardized": 0.0,
+  "emailStrategyScore": 0.0,
+  "matchingEmails": [],
+  "departmentStrategyScore": 0.0,
+  "publicationTypePubmed": [
+    "Letter",
+    "Comment"
+  ],
+  "publicationTypeScopus": {
+    "publicationTypeScopusAbbreviation": "le",
+    "publicationTypeScopusLabel": "Letter"
+  }
+ }

@@ -1,0 +1,473 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">23965901</PMID>
+        <DateCreated>
+            <Year>2013</Year>
+            <Month>10</Month>
+            <Day>03</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2014</Year>
+            <Month>05</Month>
+            <Day>08</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2015</Year>
+            <Month>04</Month>
+            <Day>23</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Print">1078-0432</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>19</Volume>
+                    <Issue>19</Issue>
+                    <PubDate>
+                        <Year>2013</Year>
+                        <Month>Oct</Month>
+                        <Day>1</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Clinical cancer research : an official journal of the American Association for Cancer Research</Title>
+                <ISOAbbreviation>Clin. Cancer Res.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Phase II trial of bicalutamide in patients with androgen receptor-positive, estrogen receptor-negative metastatic Breast Cancer.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>5505-12</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1158/1078-0432.CCR-12-3327</ELocationID>
+            <Abstract>
+                <AbstractText Label="PURPOSE" NlmCategory="OBJECTIVE">Patients with hormone receptor-negative breast cancer generally do not benefit from endocrine-targeted therapies. However, a subset with androgen receptor (AR) expression is predicted to respond to antiandrogen therapies. This phase II study explored bicalutamide in AR-positive, estrogen receptor (ER), and progesterone receptor (PgR)-negative metastatic breast cancer.</AbstractText>
+                <AbstractText Label="EXPERIMENTAL DESIGN" NlmCategory="METHODS">Tumors from patients with ER/PgR-negative advanced breast cancer were tested centrally for AR [immunohistochemistry (IHC) &gt; 10% nuclear staining considered positive]. If either the primary or a metastatic site was positive, patients were eligible to receive the AR antagonist bicalutamide at a dose of 150 mg daily. Clinical benefit rate (CBR), the primary endpoint, was defined as the total number of patients who show a complete response (CR), partial response (PR), or stable disease (SD) &gt; 6 months; secondary endpoints included progression-free survival (PFS) and toxicity. Correlative studies included measurement of circulating endocrine markers and IHC surrogates for basal-like breast cancer.</AbstractText>
+                <AbstractText Label="RESULTS" NlmCategory="RESULTS">Of 424 patients with ER/PgR-negative breast cancer, 12% tested AR-positive. The 6-month CBR was 19% [95% confidence interval (CI), 7%-39%] for bicalutamide. The median PFS was 12 weeks (95% CI, 11-22 weeks). Bicalutamide was well-tolerated with no grade 4/5 treatment-related adverse events observed.</AbstractText>
+                <AbstractText Label="CONCLUSION" NlmCategory="CONCLUSIONS">AR was expressed in 12% of patients with ER/PgR-negative breast cancer screened for this trial. The CBR of 19% observed with bicalutamide shows proof of principle for the efficacy of minimally toxic androgen blockade in a select group of patients with ER/PgR-negative, AR-positive breast cancer.</AbstractText>
+                <CopyrightInformation>©2013 AACR.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Gucalp</LastName>
+                    <ForeName>Ayca</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Authors' Affiliations: Breast Cancer Medicine Service, Departments of Pathology, Biostatistics, and Radiology, Memorial Sloan-Kettering Cancer Center; Weill Medical College of Cornell University, New York; Dana-Farber Cancer Institute; Massachusetts General Hospital, Boston, Massachusetts; Mayo Clinic, Rochester, Minnesota; Georgetown Lombardi Comprehensive Cancer Center, Washington, District of Columbia; University of North Carolina at Chapel Hill, Chapel Hill; Duke University Medical Center, Durham, North Carolina; University of California, San Francisco Helen Diller Family Comprehensive Cancer Center, UCSF, San Francisco, California; University of Alabama at Birmingham, Birmingham, Alabama; and The Sidney Kimmel Comprehensive Cancer Center at Johns Hopkins University, Baltimore, Maryland.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Tolaney</LastName>
+                    <ForeName>Sara</ForeName>
+                    <Initials>S</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Isakoff</LastName>
+                    <ForeName>Steven J</ForeName>
+                    <Initials>SJ</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ingle</LastName>
+                    <ForeName>James N</ForeName>
+                    <Initials>JN</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Liu</LastName>
+                    <ForeName>Minetta C</ForeName>
+                    <Initials>MC</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Carey</LastName>
+                    <ForeName>Lisa A</ForeName>
+                    <Initials>LA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Blackwell</LastName>
+                    <ForeName>Kimberly</ForeName>
+                    <Initials>K</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rugo</LastName>
+                    <ForeName>Hope</ForeName>
+                    <Initials>H</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Nabell</LastName>
+                    <ForeName>Lisle</ForeName>
+                    <Initials>L</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Forero</LastName>
+                    <ForeName>Andres</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Stearns</LastName>
+                    <ForeName>Vered</ForeName>
+                    <Initials>V</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Doane</LastName>
+                    <ForeName>Ashley S</ForeName>
+                    <Initials>AS</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Danso</LastName>
+                    <ForeName>Michael</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Moynahan</LastName>
+                    <ForeName>Mary Ellen</ForeName>
+                    <Initials>ME</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Momen</LastName>
+                    <ForeName>Lamia F</ForeName>
+                    <Initials>LF</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gonzalez</LastName>
+                    <ForeName>Joseph M</ForeName>
+                    <Initials>JM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Akhtar</LastName>
+                    <ForeName>Arooj</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Giri</LastName>
+                    <ForeName>Dilip D</ForeName>
+                    <Initials>DD</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Patil</LastName>
+                    <ForeName>Sujata</ForeName>
+                    <Initials>S</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Feigin</LastName>
+                    <ForeName>Kimberly N</ForeName>
+                    <Initials>KN</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Hudis</LastName>
+                    <ForeName>Clifford A</ForeName>
+                    <Initials>CA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Traina</LastName>
+                    <ForeName>Tiffany A</ForeName>
+                    <Initials>TA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <CollectiveName>Translational Breast Cancer Research Consortium (TBCRC 011)</CollectiveName>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>P30 CA006973</GrantID>
+                    <Acronym>CA</Acronym>
+                    <Agency>NCI NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D017427">Clinical Trial, Phase II</PublicationType>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D016448">Multicenter Study</PublicationType>
+                <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2013</Year>
+                <Month>08</Month>
+                <Day>21</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Clin Cancer Res</MedlineTA>
+            <NlmUniqueID>9502500</NlmUniqueID>
+            <ISSNLinking>1078-0432</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000726">Androgen Antagonists</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000813">Anilides</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000970">Antineoplastic Agents</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D006728">Hormones</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D009570">Nitriles</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D011944">Receptors, Androgen</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D011960">Receptors, Estrogen</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D014105">Tosyl Compounds</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>A0Z3NAU9DP</RegistryNumber>
+                <NameOfSubstance UI="C053541">bicalutamide</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Gynecol Endocrinol. 2002 Feb;16(1):63-6</RefSource>
+                <PMID Version="1">11915584</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Oncol. 2012 Jul 20;30(21):2615-23</RefSource>
+                <PMID Version="1">22665533</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Tumori. 1988 Feb 29;74(1):53-6</RefSource>
+                <PMID Version="1">3354065</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Invest New Drugs. 1988 Sep;6(3):207-10</RefSource>
+                <PMID Version="1">3192386</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Endocrinol Metab. 1998 Jan;83(1):99-102</RefSource>
+                <PMID Version="1">9435423</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Horm Res. 2004;62(6):283-7</RefSource>
+                <PMID Version="1">15542929</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Oncogene. 2005 Jul 7;24(29):4660-71</RefSource>
+                <PMID Version="1">15897907</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Oncogene. 2006 Jun 29;25(28):3994-4008</RefSource>
+                <PMID Version="1">16491124</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer. 2007 May 1;109(9):1721-8</RefSource>
+                <PMID Version="1">17387718</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Cancer Res. 2007 Aug 1;13(15 Pt 1):4429-34</RefSource>
+                <PMID Version="1">17671126</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer. 2007 Dec 1;110(11):2448-56</RefSource>
+                <PMID Version="1">17918264</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Neoplasia. 2008 Jun;10(6):542-8</RefSource>
+                <PMID Version="1">18516291</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer. 2008 Nov 15;113(10):2638-45</RefSource>
+                <PMID Version="1">18833576</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Breast Cancer. 2009 Feb;9(1):29-33</RefSource>
+                <PMID Version="1">19299237</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Cancer Res. 2009 Apr 1;15(7):2472-8</RefSource>
+                <PMID Version="1">19276248</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Breast Cancer Res Treat. 2009 May;115(2):423-8</RefSource>
+                <PMID Version="1">18543098</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Ann Oncol. 2010 Mar;21(3):488-92</RefSource>
+                <PMID Version="1">19887463</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Oncol. 2010 Jun 1;28(16):2784-95</RefSource>
+                <PMID Version="1">20404251</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer Lett. 2010 Dec 1;298(1):74-87</RefSource>
+                <PMID Version="1">20605569</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>N Engl J Med. 2011 Jan 20;364(3):205-14</RefSource>
+                <PMID Version="1">21208101</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Ann Oncol. 2011 Jun;22(6):1288-94</RefSource>
+                <PMID Version="1">21109569</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mod Pathol. 2011 Jul;24(7):924-31</RefSource>
+                <PMID Version="1">21552212</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer Cell. 2011 Jul 12;20(1):119-31</RefSource>
+                <PMID Version="1">21741601</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2011 Jul;121(7):2750-67</RefSource>
+                <PMID Version="1">21633166</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Ann Oncol. 2011 Aug;22(8):1755-62</RefSource>
+                <PMID Version="1">21310761</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Breast Cancer Res Treat. 2011 Nov;130(2):477-87</RefSource>
+                <PMID Version="1">21837479</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Breast Cancer Res. 2011;13(2):R36</RefSource>
+                <PMID Version="1">21457548</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>CA Cancer J Clin. 2012 Jan-Feb;62(1):10-29</RefSource>
+                <PMID Version="1">22237781</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Cancer Res. 2004 Aug 15;10(16):5367-74</RefSource>
+                <PMID Version="1">15328174</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000328">Adult</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000368">Aged</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000369">Aged, 80 and over</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000726">Androgen Antagonists</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000008">administration &amp; dosage</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000009">adverse effects</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000813">Anilides</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000008">administration &amp; dosage</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000009">adverse effects</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000970">Antineoplastic Agents</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000008">administration &amp; dosage</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000009">adverse effects</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001943">Breast Neoplasms</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000188">drug therapy</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000401">mortality</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000473">pathology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005260">Female</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006728">Hormones</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000097">blood</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008875">Middle Aged</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D009362">Neoplasm Metastasis</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D009570">Nitriles</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000008">administration &amp; dosage</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000009">adverse effects</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011944">Receptors, Androgen</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011960">Receptors, Estrogen</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014105">Tosyl Compounds</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000008">administration &amp; dosage</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000009">adverse effects</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000627">therapeutic use</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016896">Treatment Outcome</DescriptorName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">NIHMS564164</OtherID>
+        <OtherID Source="NLM">PMC4086643</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2013</Year>
+                <Month>8</Month>
+                <Day>21</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2013</Year>
+                <Month>9</Month>
+                <Day>16</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2013</Year>
+                <Month>8</Month>
+                <Day>23</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2013</Year>
+                <Month>8</Month>
+                <Day>24</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2014</Year>
+                <Month>5</Month>
+                <Day>9</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">1078-0432.CCR-12-3327</ArticleId>
+            <ArticleId IdType="doi">10.1158/1078-0432.CCR-12-3327</ArticleId>
+            <ArticleId IdType="pubmed">23965901</ArticleId>
+            <ArticleId IdType="pmc">PMC4086643</ArticleId>
+            <ArticleId IdType="mid">NIHMS564164</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

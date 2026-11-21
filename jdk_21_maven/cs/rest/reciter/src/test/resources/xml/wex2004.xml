@@ -1,0 +1,2745 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">19648924</PMID>
+        <DateCreated>
+            <Year>2009</Year>
+            <Month>08</Month>
+            <Day>20</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2009</Year>
+            <Month>09</Month>
+            <Day>08</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2014</Year>
+            <Month>12</Month>
+            <Day>07</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1529-2916</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>10</Volume>
+                    <Issue>9</Issue>
+                    <PubDate>
+                        <Year>2009</Year>
+                        <Month>Sep</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Nature immunology</Title>
+                <ISOAbbreviation>Nat. Immunol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>HIV-1 evades virus-specific IgG2 and IgA responses by targeting systemic and intestinal B cells via long-range intercellular conduits.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>1008-17</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1038/ni.1753</ELocationID>
+            <Abstract>
+                <AbstractText>Contact-dependent communication between immune cells generates protection but also facilitates viral spread. Here we found that macrophages formed long-range actin-propelled conduits in response to negative factor (Nef), a human immunodeficiency virus type 1 (HIV-1) protein with immunosuppressive functions. Conduits attenuated immunoglobulin G2 (IgG2) and IgA class switching in systemic and intestinal lymphoid follicles by shuttling Nef from infected macrophages to B cells through a guanine-exchange factor-dependent pathway involving the amino-terminal anchor, central core and carboxy-terminal flexible loop of Nef. By showing stronger virus-specific IgG2 and IgA responses in patients with Nef-deficient virions, our data suggest that HIV-1 exploits intercellular 'highways' as a 'Trojan horse' to deliver Nef to B cells and evade humoral immunity systemically and at mucosal sites of entry.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Weill Medical College of Cornell University, New York, New York, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Santini</LastName>
+                    <ForeName>Paul A</ForeName>
+                    <Initials>PA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Sullivan</LastName>
+                    <ForeName>John S</ForeName>
+                    <Initials>JS</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>He</LastName>
+                    <ForeName>Bing</ForeName>
+                    <Initials>B</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Shan</LastName>
+                    <ForeName>Meimei</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ball</LastName>
+                    <ForeName>Susan C</ForeName>
+                    <Initials>SC</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Dyer</LastName>
+                    <ForeName>Wayne B</ForeName>
+                    <Initials>WB</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ketas</LastName>
+                    <ForeName>Thomas J</ForeName>
+                    <Initials>TJ</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chadburn</LastName>
+                    <ForeName>Amy</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cohen-Gould</LastName>
+                    <ForeName>Leona</ForeName>
+                    <Initials>L</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Knowles</LastName>
+                    <ForeName>Daniel M</ForeName>
+                    <Initials>DM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chiu</LastName>
+                    <ForeName>April</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Sanders</LastName>
+                    <ForeName>Rogier W</ForeName>
+                    <Initials>RW</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chen</LastName>
+                    <ForeName>Kang</ForeName>
+                    <Initials>K</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cerutti</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>AI07621</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-01A1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-02</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-02S1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-03</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-04</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-05</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-01A1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-02</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-03</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-04</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01AI057653-S1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+                <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2009</Year>
+                <Month>08</Month>
+                <Day>02</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Nat Immunol</MedlineTA>
+            <NlmUniqueID>100941354</NlmUniqueID>
+            <ISSNLinking>1529-2908</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D000199">Actins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D019013">Antigens, CD40</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D015483">HIV Antibodies</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D016655">HIV Core Protein p24</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007070">Immunoglobulin A</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007074">Immunoglobulin G</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D054311">nef Gene Products, Human Immunodeficiency Virus</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C514837">nef protein, Human immunodeficiency virus 1</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C514799">p24 protein, Human Immunodeficiency Virus Type 1</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2002 Sep;2(9):706-13</RefSource>
+                <PMID Version="1">12209139</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2002 Jul;17(1):51-62</RefSource>
+                <PMID Version="1">12150891</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2003 Feb;3(2):97-107</RefSource>
+                <PMID Version="1">12563294</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2003 May 13;100(10):6057-62</RefSource>
+                <PMID Version="1">12730375</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>AIDS. 2003 Sep 5;17(13):1983-5</RefSource>
+                <PMID Version="1">12960832</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 2004 Feb 13;303(5660):1007-10</RefSource>
+                <PMID Version="1">14963329</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2004 Mar;5(3):233-6</RefSource>
+                <PMID Version="1">14985706</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2004 Mar 15;103(6):2180-6</RefSource>
+                <PMID Version="1">14604962</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>N Engl J Med. 1983 Aug 25;309(8):453-8</RefSource>
+                <PMID Version="1">6224088</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1991 May 17;65(4):651-62</RefSource>
+                <PMID Version="1">2032289</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1994 Mar 11;76(5):853-64</RefSource>
+                <PMID Version="1">8124721</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>FEBS Lett. 1996 Sep 9;393(1):93-6</RefSource>
+                <PMID Version="1">8804432</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Virol. 1997 Apr;71(4):2799-809</RefSource>
+                <PMID Version="1">9060635</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1997 Dec 1;16(23):6964-76</RefSource>
+                <PMID Version="1">9384576</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1998 May 1;17(9):2472-81</RefSource>
+                <PMID Version="1">9564030</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 1998 May 15;17(10):2777-89</RefSource>
+                <PMID Version="1">9582271</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Biol. 1998 Nov 5;8(22):1239-42</RefSource>
+                <PMID Version="1">9811611</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Virol. 1999 Jan;73(1):436-43</RefSource>
+                <PMID Version="1">9847349</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 1999 May 25;96(11):6324-9</RefSource>
+                <PMID Version="1">10339586</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 1999 Jun;3(6):729-39</RefSource>
+                <PMID Version="1">10394361</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>AIDS Res Hum Retroviruses. 2004 Sep;20(9):972-88</RefSource>
+                <PMID Version="1">15585085</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Infect Dis. 2005 Jun 15;191(12):2053-63</RefSource>
+                <PMID Version="1">15897991</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Virol. 2005 Sep;79(17):10978-87</RefSource>
+                <PMID Version="1">16103149</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Acquir Immune Defic Syndr. 2005 Sep 1;40(1):1-11</RefSource>
+                <PMID Version="1">16123674</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2005 Sep;23(3):309-18</RefSource>
+                <PMID Version="1">16169503</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2005 Oct 11;102(41):14807-12</RefSource>
+                <PMID Version="1">16199516</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2005 Nov 15;175(10):6560-9</RefSource>
+                <PMID Version="1">16272310</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2006 Jan 17;103(3):738-43</RefSource>
+                <PMID Version="1">16407131</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2006 Mar;7(3):302-10</RefSource>
+                <PMID Version="1">16429138</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2006 Mar;7(3):235-9</RefSource>
+                <PMID Version="1">16482171</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2006 Apr 1;176(7):3931-41</RefSource>
+                <PMID Version="1">16547227</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2006 May;24(5):547-61</RefSource>
+                <PMID Version="1">16713973</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2006 Jul;7(7):773-82</RefSource>
+                <PMID Version="1">16767092</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Retrovirology. 2006;3:33</RefSource>
+                <PMID Version="1">16764724</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2006 Sep 1;108(5):1580-7</RefSource>
+                <PMID Version="1">16645169</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Immunol. 2007 Jan;44(4):583-90</RefSource>
+                <PMID Version="1">16580072</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2007 Jan 5;282(1):731-42</RefSource>
+                <PMID Version="1">17090531</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2007 Mar;8(3):294-303</RefSource>
+                <PMID Version="1">17259987</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2007 Mar;7(3):238-43</RefSource>
+                <PMID Version="1">17290299</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Cell Biol. 2007 Mar;9(3):310-5</RefSource>
+                <PMID Version="1">17293854</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2007 Apr;7(4):310-7</RefSource>
+                <PMID Version="1">17380160</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2007 Jun 15;178(12):8212-20</RefSource>
+                <PMID Version="1">17548660</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2007 Jun;26(6):812-26</RefSource>
+                <PMID Version="1">17570691</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Virol. 2007 Sep;81(17):9078-87</RefSource>
+                <PMID Version="1">17581988</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 2007 Nov 1;450(7166):110-4</RefSource>
+                <PMID Version="1">17934446</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Cell Biol. 2008 Feb;10(2):211-9</RefSource>
+                <PMID Version="1">18193035</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2008 May;118(5):1765-75</RefSource>
+                <PMID Version="1">18431514</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Host Microbe. 2008 Jul 17;4(1):63-76</RefSource>
+                <PMID Version="1">18621011</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2008 Aug 4;205(8):1797-805</RefSource>
+                <PMID Version="1">18625747</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Trends Cell Biol. 2008 Sep;18(9):414-20</RefSource>
+                <PMID Version="1">18703335</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2009 Apr;9(4):235-45</RefSource>
+                <PMID Version="1">19319142</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2002 Sep;3(9):822-9</RefSource>
+                <PMID Version="1">12154359</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2001 Aug;15(2):173-85</RefSource>
+                <PMID Version="1">11520454</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunol Lett. 2001 Oct 1;78(3):195-200</RefSource>
+                <PMID Version="1">11578695</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Gut. 2002 May;50(5):608-14</RefSource>
+                <PMID Version="1">11950804</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2002 Dec 13;111(6):853-66</RefSource>
+                <PMID Version="1">12526811</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000199">Actins</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D019013">Antigens, CD40</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y" UI="D002450">Cell Communication</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D018858">Germinal Center</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015483">HIV Antibodies</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016655">HIV Core Protein p24</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015497">HIV-1</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007070">Immunoglobulin A</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D017578">Immunoglobulin Class Switching</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007074">Immunoglobulin G</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008264">Macrophages</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000821">virology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020298">U937 Cells</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D054311">nef Gene Products, Human Immunodeficiency Virus</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">NIHMS117331</OtherID>
+        <OtherID Source="NLM">PMC2784687</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2009</Year>
+                <Month>3</Month>
+                <Day>31</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2009</Year>
+                <Month>5</Month>
+                <Day>13</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2009</Year>
+                <Month>8</Month>
+                <Day>02</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2009</Year>
+                <Month>8</Month>
+                <Day>4</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2009</Year>
+                <Month>8</Month>
+                <Day>4</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2009</Year>
+                <Month>9</Month>
+                <Day>9</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">ni.1753</ArticleId>
+            <ArticleId IdType="doi">10.1038/ni.1753</ArticleId>
+            <ArticleId IdType="pubmed">19648924</ArticleId>
+            <ArticleId IdType="pmc">PMC2784687</ArticleId>
+            <ArticleId IdType="mid">NIHMS117331</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">19561614</PMID>
+        <DateCreated>
+            <Year>2009</Year>
+            <Month>07</Month>
+            <Day>21</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2009</Year>
+            <Month>10</Month>
+            <Day>14</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2014</Year>
+            <Month>12</Month>
+            <Day>07</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1529-2916</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>10</Volume>
+                    <Issue>8</Issue>
+                    <PubDate>
+                        <Year>2009</Year>
+                        <Month>Aug</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Nature immunology</Title>
+                <ISOAbbreviation>Nat. Immunol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Immunoglobulin D enhances immune surveillance by activating antimicrobial, proinflammatory and B cell-stimulating programs in basophils.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>889-98</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1038/ni.1748</ELocationID>
+            <Abstract>
+                <AbstractText>Immunoglobulin D (IgD) is an enigmatic antibody isotype that mature B cells express together with IgM through alternative RNA splicing. Here we report active T cell-dependent and T cell-independent IgM-to-IgD class switching in B cells of the human upper respiratory mucosa. This process required activation-induced cytidine deaminase (AID) and generated local and circulating IgD-producing plasmablasts reactive to respiratory bacteria. Circulating IgD bound to basophils through a calcium-mobilizing receptor that induced antimicrobial, opsonizing, inflammatory and B cell-stimulating factors, including cathelicidin, interleukin 1 (IL-1), IL-4 and B cell-activating factor (BAFF), after IgD crosslinking. By showing dysregulation of IgD class-switched B cells and 'IgD-armed' basophils in autoinflammatory syndromes with periodic fever, our data indicate that IgD orchestrates an ancestral surveillance system at the interface between immunity and inflammation.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Chen</LastName>
+                    <ForeName>Kang</ForeName>
+                    <Initials>K</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Weill Cornell Medical College, New York, New York, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Wilson</LastName>
+                    <ForeName>Melanie</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>He</LastName>
+                    <ForeName>Bing</ForeName>
+                    <Initials>B</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Miller</LastName>
+                    <ForeName>Norman W</ForeName>
+                    <Initials>NW</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Bengtén</LastName>
+                    <ForeName>Eva</ForeName>
+                    <Initials>E</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Edholm</LastName>
+                    <ForeName>Eva-Stina</ForeName>
+                    <Initials>ES</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Santini</LastName>
+                    <ForeName>Paul A</ForeName>
+                    <Initials>PA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rath</LastName>
+                    <ForeName>Poonam</ForeName>
+                    <Initials>P</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chiu</LastName>
+                    <ForeName>April</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cattalini</LastName>
+                    <ForeName>Marco</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Litzman</LastName>
+                    <ForeName>Jiri</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>B Bussel</LastName>
+                    <ForeName>James</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Huang</LastName>
+                    <ForeName>Bihui</ForeName>
+                    <Initials>B</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Meini</LastName>
+                    <ForeName>Antonella</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Riesbeck</LastName>
+                    <ForeName>Kristian</ForeName>
+                    <Initials>K</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cunningham-Rundles</LastName>
+                    <ForeName>Charlotte</ForeName>
+                    <Initials>C</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Plebani</LastName>
+                    <ForeName>Alessandro</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cerutti</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>P01 AI061093</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-04</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-05</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-059001</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-06</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-065490</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>P01 AI061093-065495</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-01A1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-02</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-02S1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-03</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-04</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653-05</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-01A1</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-02</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-03</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378-04</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>T32 AI07621</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+                <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2009</Year>
+                <Month>06</Month>
+                <Day>28</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Nat Immunol</MedlineTA>
+            <NlmUniqueID>100941354</NlmUniqueID>
+            <ISSNLinking>1529-2908</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053264">B-Cell Activating Factor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D054804">Cathelicidins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C508598">IL4 protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007072">Immunoglobulin D</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007075">Immunoglobulin M</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007375">Interleukin-1</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C505719">TNFSF13B protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>207137-56-2</RegistryNumber>
+                <NameOfSubstance UI="D015847">Interleukin-4</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>EC 3.5.4.5</RegistryNumber>
+                <NameOfSubstance UI="D003564">Cytidine Deaminase</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2006 Aug;6(8):573-83</RefSource>
+                <PMID Version="1">16868548</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2006 Jul 11;103(28):10723-8</RefSource>
+                <PMID Version="1">16818885</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Immunol. 2007 Feb;19(1):31-8</RefSource>
+                <PMID Version="1">17126541</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2007 Mar;8(3):294-303</RefSource>
+                <PMID Version="1">17259987</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2007 Jun;117(6):1550-7</RefSource>
+                <PMID Version="1">17492055</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2007 Jun;117(6):1558-65</RefSource>
+                <PMID Version="1">17510706</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 2007 Jun;26(6):812-26</RefSource>
+                <PMID Version="1">17570691</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Allergy Clin Immunol. 2007 Nov;120(5):1178-85</RefSource>
+                <PMID Version="1">17983875</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2008 Mar;9(3):310-8</RefSource>
+                <PMID Version="1">18300366</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Immunol. 2008;26:133-69</RefSource>
+                <PMID Version="1">18370921</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2008 Jun;8(6):421-34</RefSource>
+                <PMID Version="1">18483500</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2008 Jul;9(7):733-42</RefSource>
+                <PMID Version="1">18516038</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Top Microbiol Immunol. 2008;321:169-84</RefSource>
+                <PMID Version="1">18727492</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2008 Dec 15;181(12):8267-77</RefSource>
+                <PMID Version="1">19050243</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2009 Jan;9(1):9-13</RefSource>
+                <PMID Version="1">19039320</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunol Rev. 1999 Oct;171:45-87</RefSource>
+                <PMID Version="1">10582165</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Diagn Lab Immunol. 2000 Mar;7(2):131-40</RefSource>
+                <PMID Version="1">10702483</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 2000 Sep 1;102(5):553-63</RefSource>
+                <PMID Version="1">11007474</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Immunol. 2000 Oct;37(15):871-87</RefSource>
+                <PMID Version="1">11282392</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2001 Sep;2(9):882-8</RefSource>
+                <PMID Version="1">11526406</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 2001 Sep 14;293(5537):2111-4</RefSource>
+                <PMID Version="1">11509691</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Biol Chem. 2002 Aug 9;277(32):29005-11</RefSource>
+                <PMID Version="1">12023968</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2002 Sep 1;169(5):2488-97</RefSource>
+                <PMID Version="1">12193718</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2002 Sep 1;169(5):2516-23</RefSource>
+                <PMID Version="1">12193721</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2002 Sep;3(9):822-9</RefSource>
+                <PMID Version="1">12154359</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2002 Oct 15;169(8):4408-16</RefSource>
+                <PMID Version="1">12370374</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2003 Nov;3(11):890-9</RefSource>
+                <PMID Version="1">14668805</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2004 Jul;4(7):541-52</RefSource>
+                <PMID Version="1">15229473</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2004 Aug 16;200(4):507-17</RefSource>
+                <PMID Version="1">15314076</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1981 May;24(2):353-65</RefSource>
+                <PMID Version="1">6786756</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eur J Immunol. 1983 Mar;13(3):208-13</RefSource>
+                <PMID Version="1">6601015</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Clin Exp Immunol. 1983 Sep;53(3):689-96</RefSource>
+                <PMID Version="1">6616961</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1984 Jan 1;159(1):103-13</RefSource>
+                <PMID Version="1">6363593</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1990 May 1;171(5):1497-508</RefSource>
+                <PMID Version="1">2332730</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 1991 Apr 1;88(7):2835-9</RefSource>
+                <PMID Version="1">1826367</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1993 Jan 1;177(1):45-55</RefSource>
+                <PMID Version="1">8418208</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1993 Jan 29;72(2):291-300</RefSource>
+                <PMID Version="1">7678782</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 1993 Mar 1;90(5):1887-91</RefSource>
+                <PMID Version="1">8446604</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 1993 Sep 23;365(6444):340-3</RefSource>
+                <PMID Version="1">7690905</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 1994 Mar 1;152(5):2180-9</RefSource>
+                <PMID Version="1">8133033</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 1995 Dec 15;270(5243):1845-7</RefSource>
+                <PMID Version="1">8525383</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Eur J Immunol. 1995 Dec;25(12):3504-8</RefSource>
+                <PMID Version="1">8566044</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunity. 1996 Jun;4(6):603-13</RefSource>
+                <PMID Version="1">8673707</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Immunology. 1996 Jul;88(3):355-62</RefSource>
+                <PMID Version="1">8774350</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Adv Immunol. 1996;61:79-146</RefSource>
+                <PMID Version="1">8834495</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Int Immunol. 1996 Dec;8(12):1897-904</RefSource>
+                <PMID Version="1">8982774</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1998 Apr 20;187(8):1169-78</RefSource>
+                <PMID Version="1">9547329</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nature. 1998 Jun 25;393(6687):797-801</RefSource>
+                <PMID Version="1">9655395</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1998 Nov 2;188(9):1679-89</RefSource>
+                <PMID Version="1">9802980</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Immunol. 1999 Apr;11(2):172-9</RefSource>
+                <PMID Version="1">10322151</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1965 Jan 1;121:171-84</RefSource>
+                <PMID Version="1">14253482</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2005 Jan 3;201(1):35-9</RefSource>
+                <PMID Version="1">15630136</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Immunol. 2005;23:337-66</RefSource>
+                <PMID Version="1">15771574</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Immunol. 2005 Aug;17(4):359-65</RefSource>
+                <PMID Version="1">15955682</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2005 Jul 15;106(2):593-600</RefSource>
+                <PMID Version="1">15827133</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Genet. 2005 Aug;37(8):829-34</RefSource>
+                <PMID Version="1">16007086</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2005 Sep;5(9):688-98</RefSource>
+                <PMID Version="1">16138102</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2005 Nov;5(11):880-92</RefSource>
+                <PMID Version="1">16261175</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Crit Rev Immunol. 2006;26(4):353-76</RefSource>
+                <PMID Version="1">17073558</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053264">B-Cell Activating Factor</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001491">Basophils</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D054804">Cathelicidins</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D002460">Cell Line</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D003564">Cytidine Deaminase</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D010505">Familial Mediterranean Fever</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006193">Haemophilus influenzae</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000254">growth &amp; development</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D017578">Immunoglobulin Class Switching</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007072">Immunoglobulin D</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000096">biosynthesis</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007075">Immunoglobulin M</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007375">Interleukin-1</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015847">Interleukin-4</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D054078">Mevalonate Kinase Deficiency</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001936">Moraxella (Branhamella) catarrhalis</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000254">growth &amp; development</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000502">physiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D011485">Protein Binding</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020545">Respiratory Mucosa</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000382">microbiology</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">NIHMS116768</OtherID>
+        <OtherID Source="NLM">PMC2785232</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2008</Year>
+                <Month>12</Month>
+                <Day>15</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2009</Year>
+                <Month>5</Month>
+                <Day>11</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2009</Year>
+                <Month>6</Month>
+                <Day>28</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2009</Year>
+                <Month>6</Month>
+                <Day>30</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2009</Year>
+                <Month>6</Month>
+                <Day>30</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2009</Year>
+                <Month>10</Month>
+                <Day>15</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">ni.1748</ArticleId>
+            <ArticleId IdType="doi">10.1038/ni.1748</ArticleId>
+            <ArticleId IdType="pubmed">19561614</ArticleId>
+            <ArticleId IdType="pmc">PMC2785232</ArticleId>
+            <ArticleId IdType="mid">NIHMS116768</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">17570691</PMID>
+        <DateCreated>
+            <Year>2007</Year>
+            <Month>06</Month>
+            <Day>21</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2007</Year>
+            <Month>08</Month>
+            <Day>17</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2013</Year>
+            <Month>05</Month>
+            <Day>17</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">1074-7613</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>26</Volume>
+                    <Issue>6</Issue>
+                    <PubDate>
+                        <Year>2007</Year>
+                        <Month>Jun</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Immunity</Title>
+                <ISOAbbreviation>Immunity</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Intestinal bacteria trigger T cell-independent immunoglobulin A(2) class switching by inducing epithelial-cell secretion of the cytokine APRIL.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>812-26</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>Bacteria colonize the intestine shortly after birth and thereafter exert several beneficial functions, including induction of protective immunoglobulin A (IgA) antibodies. The distal intestine contains IgA(2), which is more resistant to bacterial proteases than is IgA(1). The mechanism by which B cells switch from IgM to IgA(2) remains unknown. We found that human intestinal epithelial cells (IECs) triggered IgA(2) class switching in B cells, including IgA(1)-expressing B cells arriving from mucosal follicles, through a CD4(+) T cell-independent pathway involving a proliferation-inducing ligand (APRIL). IECs released APRIL after sensing bacteria through Toll-like receptors (TLRs) and further increased APRIL production by activating dendritic cells via thymic stromal lymphopoietin. Our data indicate that bacteria elicit IgA(2) class switching by linking lamina propria B cells with IECs through a TLR-inducible signaling program requiring APRIL. Thus, mucosal vaccines should activate IECs to induce more effective IgA(2) responses.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>He</LastName>
+                    <ForeName>Bing</ForeName>
+                    <Initials>B</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Weill Medical College of Cornell University, 1300 York Avenue, New York, NY 10021, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Santini</LastName>
+                    <ForeName>Paul A</ForeName>
+                    <Initials>PA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Polydorides</LastName>
+                    <ForeName>Alexandros D</ForeName>
+                    <Initials>AD</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chiu</LastName>
+                    <ForeName>April</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Estrella</LastName>
+                    <ForeName>Jeannelyn</ForeName>
+                    <Initials>J</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Shan</LastName>
+                    <ForeName>Meimei</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chadburn</LastName>
+                    <ForeName>Amy</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Villanacci</LastName>
+                    <ForeName>Vincenzo</ForeName>
+                    <Initials>V</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Plebani</LastName>
+                    <ForeName>Alessandro</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Knowles</LastName>
+                    <ForeName>Daniel M</ForeName>
+                    <Initials>DM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Rescigno</LastName>
+                    <ForeName>Maria</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cerutti</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R21 AI057130</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>T32 AI07621</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+                <PublicationType UI="D013485">Research Support, Non-U.S. Gov't</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Immunity</MedlineTA>
+            <NlmUniqueID>9432918</NlmUniqueID>
+            <ISSNLinking>1074-7613</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D019013">Antigens, CD40</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D001428">Bacterial Vaccines</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D016207">Cytokines</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007070">Immunoglobulin A</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C491959">Tnfsf13 protein, mouse</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D051193">Toll-Like Receptors</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053300">Tumor Necrosis Factor Ligand Superfamily Member 13</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="CommentIn">
+                <RefSource>Immunity. 2007 Jun;26(6):755-7</RefSource>
+                <PMID Version="1">17582349</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D019013">Antigens, CD40</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000032">analysis</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000382">microbiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001419">Bacteria</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001428">Bacterial Vaccines</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001483">Base Sequence</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015496">CD4-Positive T-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016207">Cytokines</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D003713">Dendritic Cells</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007070">Immunoglobulin A</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000235">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y" UI="D017578">Immunoglobulin Class Switching</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007413">Intestinal Mucosa</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000382">microbiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007422">Intestines</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000166">cytology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000382">microbiology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008969">Molecular Sequence Data</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D009092">Mucous Membrane</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D051193">Toll-Like Receptors</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053300">Tumor Necrosis Factor Ligand Superfamily Member 13</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2006</Year>
+                <Month>12</Month>
+                <Day>10</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2007</Year>
+                <Month>4</Month>
+                <Day>2</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2007</Year>
+                <Month>4</Month>
+                <Day>25</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2007</Year>
+                <Month>6</Month>
+                <Day>16</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2007</Year>
+                <Month>8</Month>
+                <Day>19</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2007</Year>
+                <Month>6</Month>
+                <Day>16</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">S1074-7613(07)00287-7</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.immuni.2007.04.014</ArticleId>
+            <ArticleId IdType="pubmed">17570691</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">17259987</PMID>
+        <DateCreated>
+            <Year>2007</Year>
+            <Month>02</Month>
+            <Day>16</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2007</Year>
+            <Month>05</Month>
+            <Day>01</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2013</Year>
+            <Month>05</Month>
+            <Day>17</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Print">1529-2908</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>8</Volume>
+                    <Issue>3</Issue>
+                    <PubDate>
+                        <Year>2007</Year>
+                        <Month>Mar</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Nature immunology</Title>
+                <ISOAbbreviation>Nat. Immunol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Epithelial cells trigger frontline immunoglobulin class switching through a pathway regulated by the inhibitor SLPI.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>294-303</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>Epithelial cells (ECs) transport class-switched immunoglobulin G (IgG) and IgA antibodies across mucous membranes. Whether ECs initiate class switching remains unknown. Here we found that ECs lining tonsillar crypts formed pockets populated by B cells expressing activation-induced cytidine deaminase (AID), an enzyme associated with ongoing class switching. ECs released B cell-activating AID-inducing factors after sensing microbial products through Toll-like receptors. The resulting class switching was amplified by thymic stromal lymphopoietin, an epithelial interleukin 7-like cytokine that enhanced the B cell 'licensing' function of dendritic cells, and was restrained by secretory leukocyte protease inhibitor, an epithelial homeostatic protein that inhibited AID induction in B cells. Thus, ECs may function as mucosal 'guardians' orchestrating frontline IgG and IgA class switching through a Toll-like receptor-inducible signaling program regulated by secretory leukocyte protease inhibitor.NOTE: In the version of this article initially published online, the middle label above Figure 6c is incorrect. The correct label should be 'BAFF'. The error has been corrected for all versions of the article.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Weill Medical College of Cornell University, New York, New York 10021, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>He</LastName>
+                    <ForeName>Bing</ForeName>
+                    <Initials>B</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chiu</LastName>
+                    <ForeName>April</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chadburn</LastName>
+                    <ForeName>Amy</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Shan</LastName>
+                    <ForeName>Meimei</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Buldys</LastName>
+                    <ForeName>Malwina</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ding</LastName>
+                    <ForeName>Aihao</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Knowles</LastName>
+                    <ForeName>Daniel M</ForeName>
+                    <Initials>DM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Santini</LastName>
+                    <ForeName>Paul A</ForeName>
+                    <Initials>PA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cerutti</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R21 AI057130</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>T32 AI07621</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2007</Year>
+                <Month>01</Month>
+                <Day>28</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Nat Immunol</MedlineTA>
+            <NlmUniqueID>100941354</NlmUniqueID>
+            <ISSNLinking>1529-2908</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053264">B-Cell Activating Factor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D016207">Cytokines</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007070">Immunoglobulin A</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007074">Immunoglobulin G</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D012367">RNA, Viral</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C506814">SLPI protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053481">Secretory Leukocyte Peptidase Inhibitor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C505719">TNFSF13B protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D051193">Toll-Like Receptors</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C116914">thymic stromal lymphopoietin</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>130068-27-8</RegistryNumber>
+                <NameOfSubstance UI="D016753">Interleukin-10</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="CommentIn">
+                <RefSource>Nat Immunol. 2007 Mar;8(3):230-2</RefSource>
+                <PMID Version="1">17304230</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053264">B-Cell Activating Factor</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D002478">Cells, Cultured</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016207">Cytokines</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D024202">Electrophoretic Mobility Shift Assay</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D004797">Enzyme-Linked Immunosorbent Assay</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D004847">Epithelial Cells</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005434">Flow Cytometry</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D018928">Immunity, Mucosal</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015151">Immunoblotting</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007070">Immunoglobulin A</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="Y" UI="D017578">Immunoglobulin Class Switching</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007074">Immunoglobulin G</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007150">Immunohistochemistry</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D017403">In Situ Hybridization</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016753">Interleukin-10</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014066">Palatine Tonsil</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000166">cytology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D012367">RNA, Viral</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020133">Reverse Transcriptase Polymerase Chain Reaction</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053481">Secretory Leukocyte Peptidase Inhibitor</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015398">Signal Transduction</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D051193">Toll-Like Receptors</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2006</Year>
+                <Month>9</Month>
+                <Day>12</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2006</Year>
+                <Month>12</Month>
+                <Day>21</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2007</Year>
+                <Month>1</Month>
+                <Day>28</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2007</Year>
+                <Month>1</Month>
+                <Day>30</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2007</Year>
+                <Month>5</Month>
+                <Day>2</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2007</Year>
+                <Month>1</Month>
+                <Day>30</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">ni1434</ArticleId>
+            <ArticleId IdType="doi">10.1038/ni1434</ArticleId>
+            <ArticleId IdType="pubmed">17259987</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">16960154</PMID>
+        <DateCreated>
+            <Year>2007</Year>
+            <Month>01</Month>
+            <Day>09</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2007</Year>
+            <Month>08</Month>
+            <Day>30</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2014</Year>
+            <Month>09</Month>
+            <Day>08</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Print">0006-4971</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>109</Volume>
+                    <Issue>2</Issue>
+                    <PubDate>
+                        <Year>2007</Year>
+                        <Month>Jan</Month>
+                        <Day>15</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Blood</Title>
+                <ISOAbbreviation>Blood</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Hodgkin lymphoma cells express TACI and BCMA receptors and generate survival and proliferation signals in response to BAFF and APRIL.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>729-39</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>Hodgkin lymphoma (HL) originates from the clonal expansion of malignant Hodgkin and Reed-Sternberg (HRS) cells. These B-cell-derived elements constitute less than 10% of the tumoral mass. The remaining tissue is comprised of an inflammatory infiltrate that includes myeloid cells. Myeloid cells activate B cells by producing BAFF and APRIL, which engage TACI, BCMA, and BAFF-R receptors on the B cells. Here, we studied the role of BAFF and APRIL in HL. Inflammatory and HRS cells from HL tumors expressed BAFF and APRIL. Unlike their putative germinal center B-cell precursors, HRS cells lacked BAFF-R, but expressed TACI and BCMA, a phenotype similar to that of plasmacytoid B cells. BAFF and APRIL enhanced HRS cell survival and proliferation by delivering nonredundant signals via TACI and BCMA receptors through both autocrine and paracrine pathways. These signals caused NF-kappaB activation; Bcl-2, Bcl-xL, and c-Myc up-regulation; and Bax down-regulation, and were amplified by APRIL-binding proteoglycans on HRS cells. Interruption of BAFF and APRIL signaling by TACI-Ig decoy receptor, which binds to and neutralizes BAFF and APRIL, or by small-interfering RNAs targeting BAFF, APRIL, TACI, and BCMA inhibited HRS cell accumulation in vitro and might attenuate HL expansion in vivo.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Chiu</LastName>
+                    <ForeName>April</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Laboratory Medicine, Weill Medical College, Cornell University, 1300 York Ave, Rm C-410, New York, NY 10021, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>He</LastName>
+                    <ForeName>Bing</ForeName>
+                    <Initials>B</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Dillon</LastName>
+                    <ForeName>Stacey R</ForeName>
+                    <Initials>SR</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gross</LastName>
+                    <ForeName>Jane A</ForeName>
+                    <Initials>JA</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Sievers</LastName>
+                    <ForeName>Eric</ForeName>
+                    <Initials>E</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Qiao</LastName>
+                    <ForeName>Xugang</ForeName>
+                    <Initials>X</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Santini</LastName>
+                    <ForeName>Paul</ForeName>
+                    <Initials>P</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Hyjek</LastName>
+                    <ForeName>Elizabeth</ForeName>
+                    <Initials>E</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Lee</LastName>
+                    <ForeName>Joong-won</ForeName>
+                    <Initials>JW</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cesarman</LastName>
+                    <ForeName>Ethel</ForeName>
+                    <Initials>E</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Chadburn</LastName>
+                    <ForeName>Amy</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Knowles</LastName>
+                    <ForeName>Daniel M</ForeName>
+                    <Initials>DM</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Cerutti</LastName>
+                    <ForeName>Andrea</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>AI057530</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI057653</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R01 AI074378</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+                <Grant>
+                    <GrantID>R21 AI057130</GrantID>
+                    <Acronym>AI</Acronym>
+                    <Agency>NIAID NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2006</Year>
+                <Month>09</Month>
+                <Day>07</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Blood</MedlineTA>
+            <NlmUniqueID>7603509</NlmUniqueID>
+            <ISSNLinking>0006-4971</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053264">B-Cell Activating Factor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053301">B-Cell Maturation Antigen</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C114631">TNFSF13 protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C505719">TNFSF13B protein, human</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053303">Transmembrane Activator and CAML Interactor Protein</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D053300">Tumor Necrosis Factor Ligand Superfamily Member 13</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>AIM</CitationSubset>
+        <CitationSubset>IM</CitationSubset>
+        <CommentsCorrectionsList>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Exp Hematol. 2002 Feb;30(2):135-41</RefSource>
+                <PMID Version="1">11823048</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2002 Apr 15;99(8):3060-2</RefSource>
+                <PMID Version="1">11929801</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Oncogene. 2002 Apr 11;21(16):2493-503</RefSource>
+                <PMID Version="1">11971184</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Immunol. 2002 Sep;3(9):822-9</RefSource>
+                <PMID Version="1">12154359</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2002 Oct 15;100(8):2973-9</RefSource>
+                <PMID Version="1">12351410</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO J. 2002 Nov 1;21(21):5711-20</RefSource>
+                <PMID Version="1">12411489</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Cell. 2002 Oct;10(4):693-5</RefSource>
+                <PMID Version="1">12419209</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer Cell. 2002 Nov;2(5):363-6</RefSource>
+                <PMID Version="1">12450791</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2003 Jan 15;101(2):681-9</RefSource>
+                <PMID Version="1">12393683</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2003 Feb 15;101(4):1505-12</RefSource>
+                <PMID Version="1">12393731</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2005 Dec 15;106(13):4287-93</RefSource>
+                <PMID Version="1">16123212</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Oncol. 2006 Feb 20;24(6):983-7</RefSource>
+                <PMID Version="1">16432079</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Drug Discov. 2006 Mar;5(3):235-46</RefSource>
+                <PMID Version="1">16474316</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2006 Apr 1;176(7):3931-41</RefSource>
+                <PMID Version="1">16547227</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2006 Apr 1;107(7):2882-8</RefSource>
+                <PMID Version="1">16304043</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2006 Jun 1;107(11):4540-8</RefSource>
+                <PMID Version="1">16497967</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Immunol. 2003;21:231-64</RefSource>
+                <PMID Version="1">12427767</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2003 Jun 1;101(11):4464-71</RefSource>
+                <PMID Version="1">12531790</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Mol Med. 2003 Mar-Apr;9(3-4):85-95</RefSource>
+                <PMID Version="1">12865944</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2003 Aug 1;102(3):1019-27</RefSource>
+                <PMID Version="1">12689928</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2003 Nov 15;171(10):5215-24</RefSource>
+                <PMID Version="1">14607922</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2004 Jan 15;103(2):679-88</RefSource>
+                <PMID Version="1">14504101</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2004 Jan 15;103(2):689-94</RefSource>
+                <PMID Version="1">14512299</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2004 Jan 5;199(1):91-8</RefSource>
+                <PMID Version="1">14707116</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2004 Jan 15;172(2):812-22</RefSource>
+                <PMID Version="1">14707051</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2004 Mar 1;172(5):3268-79</RefSource>
+                <PMID Version="1">14978135</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2004 Apr 15;103(8):3148-57</RefSource>
+                <PMID Version="1">15070697</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Pharmacol. 2004 Aug;4(4):347-54</RefSource>
+                <PMID Version="1">15251127</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2004 Oct 1;173(7):4479-91</RefSource>
+                <PMID Version="1">15383579</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2004 Oct 15;104(8):2247-53</RefSource>
+                <PMID Version="1">15251985</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cancer Cell. 2004 Oct;6(4):399-408</RefSource>
+                <PMID Version="1">15488762</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Leuk Lymphoma. 1993 Jan;9(1-2):1-25</RefSource>
+                <PMID Version="1">7682880</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1995 Feb 1;85(3):780-9</RefSource>
+                <PMID Version="1">7530508</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Int Immunol. 1995 Jul;7(7):1093-106</RefSource>
+                <PMID Version="1">8527407</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1996 Apr 15;87(8):3418-28</RefSource>
+                <PMID Version="1">8605360</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 2003 Feb;111(4):529-37</RefSource>
+                <PMID Version="1">12588891</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Curr Opin Immunol. 2005 Jun;17(3):282-9</RefSource>
+                <PMID Version="1">15886118</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell Death Differ. 2005 Jun;12(6):637-48</RefSource>
+                <PMID Version="1">15846369</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Virchows Arch. 2005 Jul;447(1):53-60</RefSource>
+                <PMID Version="1">16025281</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2005 Aug 1;106(3):1021-30</RefSource>
+                <PMID Version="1">15827134</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2005 Aug 1;106(3):1012-20</RefSource>
+                <PMID Version="1">15860672</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Genet. 2005 Aug;37(8):829-34</RefSource>
+                <PMID Version="1">16007086</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Genet. 2005 Aug;37(8):820-8</RefSource>
+                <PMID Version="1">16007087</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Nat Rev Immunol. 2005 Oct;5(10):749-59</RefSource>
+                <PMID Version="1">16175180</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Hum Pathol. 2005 Oct;36(10):1113-9</RefSource>
+                <PMID Version="1">16226112</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1996 Apr 15;87(8):3429-36</RefSource>
+                <PMID Version="1">8605361</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Am J Pathol. 1996 Aug;149(2):469-81</RefSource>
+                <PMID Version="1">8701986</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1996 Oct 1;184(4):1495-505</RefSource>
+                <PMID Version="1">8879220</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1996 Nov 1;88(9):3299-305</RefSource>
+                <PMID Version="1">8896393</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Science. 1997 Oct 3;278(5335):138-41</RefSource>
+                <PMID Version="1">9311921</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Cell. 1997 Sep 19;90(6):1073-83</RefSource>
+                <PMID Version="1">9323135</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Clin Invest. 1997 Dec 15;100(12):2961-9</RefSource>
+                <PMID Version="1">9399941</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Immunol. 1998;16:225-60</RefSource>
+                <PMID Version="1">9597130</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Annu Rev Immunol. 1998;16:471-93</RefSource>
+                <PMID Version="1">9597138</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 1998 Sep 21;188(6):1185-90</RefSource>
+                <PMID Version="1">9743536</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1998 Oct 1;92(7):2220-8</RefSource>
+                <PMID Version="1">9746758</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1999 Jun 1;93(11):3964-72</RefSource>
+                <PMID Version="1">10339506</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Proc Natl Acad Sci U S A. 2004 Dec 21;101(51):17789-94</RefSource>
+                <PMID Version="1">15591344</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2005 Jan 15;105(2):830-7</RefSource>
+                <PMID Version="1">15358625</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2005 Mar 1;174(5):3015-23</RefSource>
+                <PMID Version="1">15728515</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2005 May 2;201(9):1375-83</RefSource>
+                <PMID Version="1">15851487</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 1999 Nov 1;94(9):3129-34</RefSource>
+                <PMID Version="1">10556199</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Int J Biol Markers. 1999 Jul-Sep;14(3):135-43</RefSource>
+                <PMID Version="1">10569134</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Exp Med. 2000 Jan 17;191(2):387-94</RefSource>
+                <PMID Version="1">10637283</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2000 Feb 15;95(4):1207-13</RefSource>
+                <PMID Version="1">10666192</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2000 Feb 15;95(4):1443-50</RefSource>
+                <PMID Version="1">10666223</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2000 May 15;95(10):3020-4</RefSource>
+                <PMID Version="1">10807764</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>J Immunol. 2000 Aug 1;165(3):1322-30</RefSource>
+                <PMID Version="1">10903733</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2000 Oct 15;96(8):2841-8</RefSource>
+                <PMID Version="1">11023520</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2001 Jan 1;97(1):198-204</RefSource>
+                <PMID Version="1">11133761</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2001 Jan 15;97(2):496-501</RefSource>
+                <PMID Version="1">11154228</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2001 May 1;97(9):2798-807</RefSource>
+                <PMID Version="1">11313274</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>EMBO Rep. 2001 Oct;2(10):945-51</RefSource>
+                <PMID Version="1">11571266</PMID>
+            </CommentsCorrections>
+            <CommentsCorrections RefType="Cites">
+                <RefSource>Blood. 2001 Nov 1;98(9):2784-90</RefSource>
+                <PMID Version="1">11675352</PMID>
+            </CommentsCorrections>
+        </CommentsCorrectionsList>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053264">B-Cell Activating Factor</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000494">pharmacology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053301">B-Cell Maturation Antigen</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000096">biosynthesis</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000235">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D045744">Cell Line, Tumor</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D049109">Cell Proliferation</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000187">drug effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D002470">Cell Survival</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000187">drug effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020869">Gene Expression Profiling</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006689">Hodgkin Disease</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000175">diagnosis</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000473">pathology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D016130">Immunophenotyping</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D034622">RNA Interference</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020133">Reverse Transcriptase Polymerase Chain Reaction</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000379">methods</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015398">Signal Transduction</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053303">Transmembrane Activator and CAML Interactor Protein</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000096">biosynthesis</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000235">genetics</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D053300">Tumor Necrosis Factor Ligand Superfamily Member 13</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000494">pharmacology</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+        <OtherID Source="NLM">PMC1785096</OtherID>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2006</Year>
+                <Month>9</Month>
+                <Day>7</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2006</Year>
+                <Month>9</Month>
+                <Day>9</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2007</Year>
+                <Month>8</Month>
+                <Day>31</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2006</Year>
+                <Month>9</Month>
+                <Day>9</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">blood-2006-04-015958</ArticleId>
+            <ArticleId IdType="doi">10.1182/blood-2006-04-015958</ArticleId>
+            <ArticleId IdType="pubmed">16960154</ArticleId>
+            <ArticleId IdType="pmc">PMC1785096</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">16301649</PMID>
+        <DateCreated>
+            <Year>2005</Year>
+            <Month>11</Month>
+            <Day>22</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2006</Year>
+            <Month>01</Month>
+            <Day>17</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2008</Year>
+            <Month>11</Month>
+            <Day>21</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">0022-1767</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>175</Volume>
+                    <Issue>11</Issue>
+                    <PubDate>
+                        <Year>2005</Year>
+                        <Month>Dec</Month>
+                        <Day>1</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Journal of immunology (Baltimore, Md. : 1950)</Title>
+                <ISOAbbreviation>J. Immunol.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Stat1-dependent synergistic activation of T-bet for IgG2a production during early stage of B cell activation.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>7419-24</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>During the adaptive phase of an immune response, naive B cells receive multiple signals to become activated. Among them are the engagement of the B cell Ag receptor and stimulation by cytokines. Specifically for an anti-microbial response, the recognition of viral or bacterial Ags by the BCR and the stimulation of IFN-gamma result in the predominant production of IgG2a. The T-bet protein has been shown to be required for class switching to IgG2a. In this report we further investigated the regulation of T-bet gene expression during the early stage of B cell activation. We show that there is a striking synergistic activation of T-bet in primary B cells when both the BCR and IFN-gamma signaling pathways are activated. The synergistic activation of T-bet correlates with a 100% increase in the number of B cells that produce IgG2a. This transcription synergy on T-bet is transient in the first 24 h of B cell activation. Furthermore, we demonstrate that the synergistic activation of T-bet is dependent on Stat1 and that Stat1 is required for the IgG2a germline transcription and the production of IgG2a in response to the simultaneous signaling of BCR and IFN-gamma. Finally, we show that Stat1 directly regulates the expression of T-bet by binding to the T-bet promoter. These results reveal the mechanism of regulation of T-bet expression and uncover a novel physiological function of Stat1 for B cell activation.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Xu</LastName>
+                    <ForeName>Weifeng</ForeName>
+                    <Initials>W</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Pathology and Molecular Medicine, Weill Medical College of Cornell University, New York, NY 10021, USA.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Zhang</LastName>
+                    <ForeName>J Jillian</ForeName>
+                    <Initials>JJ</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <GrantList CompleteYN="Y">
+                <Grant>
+                    <GrantID>GM61652</GrantID>
+                    <Acronym>GM</Acronym>
+                    <Agency>NIGMS NIH HHS</Agency>
+                    <Country>United States</Country>
+                </Grant>
+            </GrantList>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D052061">Research Support, N.I.H., Extramural</PublicationType>
+            </PublicationTypeList>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>J Immunol</MedlineTA>
+            <NlmUniqueID>2985117R</NlmUniqueID>
+            <ISSNLinking>0022-1767</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D007074">Immunoglobulin G</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D050794">STAT1 Transcription Factor</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D020825">T-Box Domain Proteins</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="C406820">T-box transcription factor TBX21</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D014157">Transcription Factors</NameOfSubstance>
+            </Chemical>
+            <Chemical>
+                <RegistryNumber>82115-62-6</RegistryNumber>
+                <NameOfSubstance UI="D007371">Interferon-gamma</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>AIM</CitationSubset>
+        <CitationSubset>IM</CitationSubset>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000818">Animals</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001402">B-Lymphocytes</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015153">Blotting, Western</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D024202">Electrophoretic Mobility Shift Assay</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005434">Flow Cytometry</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D015870">Gene Expression</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005786">Gene Expression Regulation</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D017578">Immunoglobulin Class Switching</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007074">Immunoglobulin G</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000096">biosynthesis</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D007371">Interferon-gamma</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008213">Lymphocyte Activation</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000276">immunology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D051379">Mice</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020133">Reverse Transcriptase Polymerase Chain Reaction</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D050794">STAT1 Transcription Factor</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D020825">T-Box Domain Proteins</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D014157">Transcription Factors</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000276">immunology</QualifierName>
+                <QualifierName MajorTopicYN="Y" UI="Q000378">metabolism</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2005</Year>
+                <Month>11</Month>
+                <Day>23</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2006</Year>
+                <Month>1</Month>
+                <Day>18</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2005</Year>
+                <Month>11</Month>
+                <Day>23</Day>
+                <Hour>9</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pii">175/11/7419</ArticleId>
+            <ArticleId IdType="pubmed">16301649</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>

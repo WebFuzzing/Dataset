@@ -232,7 +232,7 @@ services:
           EM="em/external/rest/person-controller em/external/rest/redis-sample em/external/rest/adoptme
               em/external/rest/arimaa em/external/rest/joinus em/external/rest/lovemining em/external/rest/movies-xml
               em/external/rest/testing-system em/external/rest/flight-search-api em/external/rest/pn-paper-tracker
-              em/external/rest/gravitee em/external/rest-gui/webgoat em/external/rest-gui/microcks"
+              em/external/rest/gravitee em/external/rest/reciter em/external/rest-gui/webgoat em/external/rest-gui/microcks"
           mvn clean install -DskipTests -am -pl $$(echo $$EM | tr ' ' ,)
           for m in $$EM; do cp $$m/target/*-evomaster-runner.jar /dist/; done
         else
@@ -248,6 +248,7 @@ services:
           cp cs/rest/flight-search-api/target/flight-search-api-sut.jar /dist/
           cp cs/rest/pn-paper-tracker/target/pn-paper-tracker-sut.jar /dist/
           cp cs/rest/gravitee/gravitee-apim-rest-api/gravitee-apim-rest-api-standalone/gravitee-apim-rest-api-standalone-distribution/target/gravitee-sut.jar /dist/
+          cp cs/rest/reciter/target/reciter-sut.jar /dist/
           cp cs/rest-gui/webgoat/target/webgoat-sut.jar /dist/
           cp cs/rest-gui/microcks/webapp/target/microcks-sut.jar /dist/
         fi

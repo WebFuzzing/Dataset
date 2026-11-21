@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2015//EN" "http://www.ncbi.nlm.nih.gov/corehtml/query/DTD/pubmed_150101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Owner="NLM" Status="MEDLINE">
+        <PMID Version="1">21740463</PMID>
+        <DateCreated>
+            <Year>2011</Year>
+            <Month>07</Month>
+            <Day>11</Day>
+        </DateCreated>
+        <DateCompleted>
+            <Year>2011</Year>
+            <Month>12</Month>
+            <Day>28</Day>
+        </DateCompleted>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1468-3083</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>25</Volume>
+                    <Issue>8</Issue>
+                    <PubDate>
+                        <Year>2011</Year>
+                        <Month>Aug</Month>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Journal of the European Academy of Dermatology and Venereology : JEADV</Title>
+                <ISOAbbreviation>J Eur Acad Dermatol Venereol</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Bullous cryothermic dermatitis artefacta induced by deodorant spray abuse.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>978-82</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1111/j.1468-3083.2010.03861.x</ELocationID>
+            <Abstract>
+                <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">Dermatitis artefacta belongs to a broad spectrum of factitious diseases of lesions usually self-induced by patients. Here we report a surprisingly effective induction of blisters and thermic dermatitis by excessive abuse of common deodorant sprays.</AbstractText>
+                <AbstractText Label="OBJECTIVES" NlmCategory="OBJECTIVE">We evaluated the clinical course and outcome in three patients with dermatitis artefacta induced by deodorant spray.</AbstractText>
+                <AbstractText Label="METHODS" NlmCategory="METHODS">A 12-year-old boy only admitted the abuse of deodorant spray after psychiatric intervention. Two adults (21-year-old and 37-year-old women) had borderline personality disorder and frankly reported the urge to induce pain by spraying for at least 100 s at a short distance.</AbstractText>
+                <AbstractText Label="RESULTS" NlmCategory="RESULTS">Bullous dermatitis was the acute presenting sign in all patients. The bullae were found on the extensor surfaces of the extremities, with a distribution of older lesions showing erosions and scarring and fresh lesions with intact bullae with a diameter of 3-15 cm. After searching for the causative agent and removal of the deodorant spray, clinical outcome showed a healing without and with scars.</AbstractText>
+                <AbstractText Label="CONCLUSIONS" NlmCategory="CONCLUSIONS">Cryo-damage by abuse of common deodorant sprays seems to become a popular mechanism by which an impressive bullous dermatitis can be artificially induced. Dermatologists and psychiatrist should be aware of this method of injury.</AbstractText>
+                <CopyrightInformation>© 2010 The Authors. Journal of the European Academy of Dermatology and Venereology © 2010 European Academy of Dermatology and Venereology.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Jacobi</LastName>
+                    <ForeName>A</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Dermatology, Philipps-University Marburg, Marburg, Germany. arnd.jacobi@med.uni-marburg.de</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Bender</LastName>
+                    <ForeName>A</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Hertl</LastName>
+                    <ForeName>M</ForeName>
+                    <Initials>M</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>König</LastName>
+                    <ForeName>A</ForeName>
+                    <Initials>A</Initials>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2010</Year>
+                <Month>10</Month>
+                <Day>03</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Netherlands</Country>
+            <MedlineTA>J Eur Acad Dermatol Venereol</MedlineTA>
+            <NlmUniqueID>9216037</NlmUniqueID>
+            <ISSNLinking>0926-9959</ISSNLinking>
+        </MedlineJournalInfo>
+        <ChemicalList>
+            <Chemical>
+                <RegistryNumber>0</RegistryNumber>
+                <NameOfSubstance UI="D003836">Deodorants</NameOfSubstance>
+            </Chemical>
+        </ChemicalList>
+        <CitationSubset>IM</CitationSubset>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D000328">Adult</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001768">Blister</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000209">etiology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000523">psychology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D001883">Borderline Personality Disorder</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000150">complications</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D002648">Child</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D003080">Cold Temperature</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000009">adverse effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D003836">Deodorants</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000009">adverse effects</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D003872">Dermatitis</DescriptorName>
+                <QualifierName MajorTopicYN="Y" UI="Q000209">etiology</QualifierName>
+                <QualifierName MajorTopicYN="N" UI="Q000523">psychology</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D005260">Female</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D006801">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D008297">Male</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D013315">Stress, Psychological</DescriptorName>
+                <QualifierName MajorTopicYN="N" UI="Q000150">complications</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName MajorTopicYN="N" UI="D055815">Young Adult</DescriptorName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="aheadofprint">
+                <Year>2010</Year>
+                <Month>10</Month>
+                <Day>3</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2011</Year>
+                <Month>7</Month>
+                <Day>12</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2011</Year>
+                <Month>7</Month>
+                <Day>12</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2011</Year>
+                <Month>12</Month>
+                <Day>29</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="doi">10.1111/j.1468-3083.2010.03861.x</ArticleId>
+            <ArticleId IdType="pubmed">21740463</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+</PubmedArticleSet>
