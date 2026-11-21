@@ -1,0 +1,1441 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: 'Example microservice deploy'
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: 'Usually pn can be pnXYZ where XYZ are the feature number, useful to create
+      experimental environments without crash official development environment'
+
+  AlarmSNSTopicArn:
+    Type: String
+    Description: ARN of alarm topic
+
+  DestApiDnsName:
+    Type: String
+    Description: 'The DNS name used for B2B PG rest API.'
+  
+  CorsAllowedDomains:
+    Type: String
+    Description: 'Comma separated list of domains allowed to make cross origin request'
+
+  ContainerImageUri:
+    Type: String
+    Description: 'Exact container image URI with full repository and image digest'
+
+  MicroserviceNumber:
+    Type: Number
+    Description: 'Disambiguation useful for load balancer rules'
+
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: 'The S3 bucket from which to fetch the templates used by this stack.'
+
+  ECSClusterName:
+    Type: String
+    Description: 'The name of the ECS cluster where the microservice is going to be deployed'
+
+  SubnetsIds:
+    Type: String
+    Description: 'subnets ids comma separated list. Where to deploy the microservice'
+
+  VpcEgressSubnetsIds:
+    Type: String
+    Description: subnets where to install PN-CORE
+
+  VpcId:
+    Type: String
+    Description: 'VpcId where the microservice is going to be deployed'
+  
+  EcsDefaultSecurityGroup:
+    Type: String
+    Description: 'Default security group required by infrastructure'
+
+  ApplicationLoadBalancerListenerArn:
+    Type: String
+    Description: 'Load balancer listener where HTTP endpoints is going to be registered'
+
+  ApplicationLoadBalancerDomain:
+    Type: String
+    Description: 'Base URL of the load balancer where the service is going to be reachable'
+
+  NetworkLoadBalancerLink:
+    Type: String
+    Description: 'network load balancer link for API-GW'
+
+  EnableAPIGatewayAppIO:
+    Type: String
+    Description: 'Determina se le risorse API Gateway debbano essere create (true/false)'
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+
+  # OpenApi Bucket params
+  MicroserviceBucketName:
+    Type: String
+    Default: ''
+    Description: 'Name of the bucket where the microservice files are copied during deploy'
+
+  MicroserviceBucketBaseKey:
+    Type: String
+    Default: ''
+    Description: 'Base key of the microservice in the s3 bucket'
+
+  MandatesDynamoTableName:
+    Type: String
+    Description: 'Name of dynamodb table containing mandates'
+
+  MandatesDynamoTableHistoryName:
+    Type: String
+    Description: 'Name of dynamodb table containing mandates history'
+
+  MandatesDynamoTableArn:
+    Type: String
+    Description: 'ARN of dynamodb table containing mandates'
+
+  PnMandateInputsQueueURL:
+    Type: String
+    Description: pn-mandate_inputs queue URL
+
+  MandatesDynamoTableHistoryArn:
+    Type: String
+    Description: 'ARN of dynamodb table containing mandates history'
+
+  MandatesDynamoTableNameStreamArn:
+    Type: String
+    Description: ARN of dynamodb table containing stream mandates
+
+  PnMandateExpiredTriggerDLQAlarmARN:
+    Type: String
+    Description: pn-mandate_expired_trigger_DLQ alarm ARN
+
+  PnMandateInputsQueueAgeAlarmARN:
+    Type: String
+    Description: pn-mandate_inputs queue age ARN DLQ
+
+  PnMandateExpiredTriggerDLQARN:
+    Type: String
+    Description: pn-mandate_expired_trigger_DLQ queue ARN
+
+  PnMandateInputsQueueARN:
+    Type: String
+    Description: pn-mandate_inputs queue ARN
+
+  PnMandateInputsQueueAlarmARN:
+    Type: String
+    Description: pn-mandate_inputs queue ARN DLQ
+
+  PnMandateInputsQueueName:
+    Type: String
+    Description: pn-mandate_inputs queue name
+
+  LogsKinesisSourceStreamArn:
+    Type: String
+    Description: 'Kinesis stream that receive logs'
+  
+  Version:
+    Type: String
+    Description: 'keep track of used projects commitIds'
+
+  AlbSecurityGroup:
+    Type: String
+    Description: 'Application load balancer security group'
+
+  Mandate2DeliveryQueueName:
+    Type: String
+    Description: 'The name of the SQS queue used to communicate with pn-delivery module.'
+
+  Mandate2DeliveryQueueARN:
+    Type: String
+    Description: 'Identify the resource that the policy applies to.'
+
+  PendingDuration:
+    Type: String
+    Description: 'Durata del pending massima oltre il quale la delega non accettata scade'
+
+  CiePendingDuration:
+    Type: String
+    Description: 'Durata del pending massima oltre il quale la delega creata con AppIO non accettata scade'
+
+  CieValidToDuration:
+    Type: String
+    Description: 'Durata della validità della delega creata con AppIO (impostata nel processo di accettazione)'
+
+  RevokeCieMandateOnVerificationFailure:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: 'Se true, la revoca della delega CIE viene effettuata automaticamente in caso di nonce incongruente rispetto al validationCode della delega'
+
+  PnMandateExpiredTriggerLambdaEventSourceMappingBatchSize:
+    Type: String
+    Description: 'BatchSize stream mapping'
+
+  PnMandateExpiredTriggerLambdaEventSourceMappingMaximumBatchingWindowInSeconds:
+    Type: String
+    Description: 'BatchWindow stream mapping'
+
+  PnMandateExpiredTriggerLambdaEventSourceMappingMaximumRetryAttempts:
+    Type: String
+    Description: 'MaxRetry stream mapping'
+
+  LogsKinesisFilterPattern:
+    Type: String
+    Default: ""
+    Description: 'Log kinesis filter pattern'
+
+  # Log group exports
+  EcsLogGroup:
+    Type: String
+
+  PnMandateExpiredTriggerLambdaName:
+    Type: String
+
+  # Heath Check parameters
+  HealthCheckInterval:
+    Description: Seconds between two health check
+    Type: Number
+    Default: 60
+
+  HealthCheckTimeout:
+    Description: health check timeout seconds
+    Type: Number
+    Default: 5
+  
+  HealthyThresholdCount:
+    Description: |
+      The number of consecutive health checks successes required before considering 
+      an unhealthy target healthy. 
+    Type: Number
+    Default: 5
+  
+  UnhealthyThresholdCount:
+    Description: |
+      The number of consecutive health check failures required before considering a target unhealthy. 
+    Type: Number
+    Default: 2
+
+  # Instance parameters
+  # 256 (.25 vCPU) - Available memory values: 0.5GB, 1GB, 2GB
+  # 512 (.5 vCPU) - Available memory values: 1GB, 2GB, 3GB, 4GB
+  # 1024 (1 vCPU) - Available memory values: 2GB, 3GB, 4GB, 5GB, 6GB, 7GB, 8GB
+  # 2048 (2 vCPU) - Available memory values: Between 4GB and 16GB in 1GB increments
+  # 4096 (4 vCPU) - Available memory values: Between 8GB and 30GB in 1GB increments
+  CpuValue:
+    Type: Number
+    Default: 1024
+    Description: Fargate virtual CPU quantity 1024 equals one vCPU
+
+  # 0.5GB, 1GB, 2GB - Available cpu values: 256 (.25 vCPU)
+  # 1GB, 2GB, 3GB, 4GB - Available cpu values: 512 (.5 vCPU)
+  # 2GB, 3GB, 4GB, 5GB, 6GB, 7GB, 8GB - Available cpu values: 1024 (1 vCPU)
+  # Between 4GB and 16GB in 1GB increments - Available cpu values: 2048 (2 vCPU)
+  # Between 8GB and 30GB in 1GB increments - Available cpu values: 4096 (4 vCPU)
+  MemoryAmount:
+    Type: String
+    Default: 2GB
+    Description: memory amount reserved to the task pod.
+    AllowedValues: [ 2GB, 4GB, 6GB, 8GB ]
+
+  # Autoscaling parameters
+  AutoscalingCheckPeriod:
+    Default: 60
+    Type: Number
+    Description: minimum autoscaling number of tasks\
+
+  AutoscalingDataPointN:
+    Default: 1
+    Type: Number
+    Description: activate when N datapoint on M
+
+  AutoscalingDataPointM:
+    Default: 1
+    Type: Number
+    Description: activate when N datapoint on M
+
+  AutoscalingThreshold:
+    Default: 70
+    Type: String
+  
+  MinTasksNumber:
+    Default: 1
+    Type: Number
+    Description: minimum autoscaling number of tasks
+
+  MaxTasksNumber:
+    Default: 6
+    Type: Number
+    Description: maximum autoscaling number of tasks
+
+  LogAlarmStrategy:
+    Type: String
+    Default: 'FATAL'
+
+  B2bPgLimit:
+    Default: 600000
+    Type: Number
+    Description: B2B PG WAG limit
+
+  # EFS parameters
+  FargateEFSFileSystemID:
+    Type: String
+    Description: "EFS Filesystem"
+
+  MountEfs:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+
+  # Logging parameters
+  WireTapLogActivation:
+    Type: String
+    Default: false
+    Description: Activation of wire logs
+    AllowedValues:
+      - true
+      - false
+
+  PnCronAnalyzer:
+    Type: String
+    Default: '-'
+    Description: Cron for which you send the metric to CloudWatch
+  
+  CscaMasterlistUrl:
+    Type: String
+    Default: 'https://csca-ita.interno.gov.it/certificatiCSCA/IT_MasterListCSCA.zip'
+    Description: 'URL of the CSCA masterlist zip file to download'
+
+  CscaSyncSchedule:
+    Type: String
+    Default: 'rate(10 minutes)'
+    Description: 'Schedule expression for the CSCA masterlist sync lambda (e.g., rate(1 hour) or cron expression)'
+
+  CscaMasterlistSyncAlarmPeriod:
+    Type: Number
+    Default: 600
+    Description: 'Period in seconds for the CSCA masterlist sync Lambda alarm metrics'
+
+  CscaMasterlistSyncAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+    Description: 'Number of periods evaluated by the CSCA masterlist sync Lambda alarm'
+
+  CscaMasterlistSyncAlarmDatapointsToAlarm:
+    Type: Number
+    Default: 10
+    Description: 'Number of breaching periods required for the CSCA masterlist sync Lambda alarm'
+
+  CscaSha256SsmParameterName:
+    Type: String
+    Default: '/pn-mandate/csca-masterlist/latest-sha256'
+    Description: 'Full name of the SSM Parameter Store parameter to store the last SHA256 hash'
+  
+  CscaSyncS3BucketPrefix:
+    Type: String
+    Description: 'S3 bucket prefix for the CSCA Masterlist zip file'
+  
+  IoApiDnsName:
+    Type: String
+    Description: "The DNS name used for IO rest API."
+  
+  IOBackendCidrs:
+    Type: String
+    Default: ''
+
+  ApplicativeEnvFileChecksum:
+    Type: String
+    Default: ''
+    Description: 'Applicative environment variable file checksum'
+
+  IsLollipopActive:
+    Type: String
+    Description: "lollipop authorization activation flag"
+    AllowedValues: [ true, false ]
+    Default: false
+
+  LollipopExpectedLcOriginalUrl:
+    Type: String
+    Description: "expected lollipop consumer original url"
+
+  LollipopEnableConsumerLogging:
+    Type: String
+    Description: "enable lollipop consumer logging"
+
+  LollipopIdpRestConfigReadTimeout:
+    Type: String
+    Default: "8000ms"
+    Description: Read timeout for Lollipop Idp endpoint in duration format
+
+  LollipopIdpRestConfigConnectionTimeout:
+    Type: String
+    Default: "3000ms"
+    Description: Connection timeout for Lollipop Idp endpoint in duration format
+
+  LollipopAssertionRestConfigReadTimeout:
+    Type: String
+    Default: "8000ms"
+    Description: Read timeout for Lollipop Assertion endpoint in duration format
+
+  LollipopAssertionRestConfigConnectionTimeout:
+    Type: String
+    Default: "3000ms"
+    Description: Connection timeout for Lollipop Assertion endpoint in duration format
+
+  LollipopExpectedLcOriginalMethod:
+    Type: String
+    Description: "expected lollipop consumer original method (list separated by ;)"
+
+  CieValidationCertS3Path:
+    Type: String
+    Description: "S3 path to the validation certificate (env-specific)."
+  
+  CscaMasterlistSyncLambdaName:
+    Type: String
+    Description: 'Name of the CscaMasterlistSync lambda function, valorized by storage.yml related output.'
+
+  LollipopWhiteList:
+    Type: String
+    Description: "Comma separated list of whitelisted CNs for Lollipop requests"
+    Default: ""
+
+  # Custom metrics parameters
+  MetricNamespace:
+    Type: String
+    Description: "CloudWatch custom metric namespace"
+    Default: "Advanced"
+
+  MandateAcceptanceFailureF01AlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureF01AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureF01AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF01AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureF01AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF01AlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureF01AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureF01AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureF01AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureF01AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF02AlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureF02AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureF02AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF02AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureF02AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF02AlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureF02AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureF02AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureF02AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureF02AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF03AlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureF03AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureF03AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF03AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureF03AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF03AlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureF03AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureF03AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureF03AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureF03AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF04AlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureF04AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureF04AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF04AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureF04AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureF04AlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureF04AlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureF04AlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureF04AlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureF04AlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateExpiredAlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureMandateExpiredAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureMandateExpiredAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateExpiredAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureMandateExpiredAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateExpiredAlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureMandateExpiredAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureMandateExpiredAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureMandateExpiredAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureMandateExpiredAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateNotFoundAlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureMandateNotFoundAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureMandateNotFoundAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateNotFoundAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureMandateNotFoundAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureMandateNotFoundAlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureMandateNotFoundAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureMandateNotFoundAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureMandateNotFoundAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureMandateNotFoundAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureInvalidMandateAlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureInvalidMandateAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureInvalidMandateAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureInvalidMandateAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureInvalidMandateAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureInvalidMandateAlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureInvalidMandateAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureInvalidMandateAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureInvalidMandateAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureInvalidMandateAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureTechAlarmPeriodFilterPattern:
+    Type: String
+
+  MandateAcceptanceFailureTechAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  MandateAcceptanceFailureTechAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureTechAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  MandateAcceptanceFailureTechAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  MandateAcceptanceFailureTechAlarmEnableOncall:
+    Type: String
+    Description: "Create onCall alarm"
+    Default: false
+    AllowedValues:
+      - true
+      - false
+
+  OncallMandateAcceptanceFailureTechAlarmPeriod:
+    Type: Number
+    Default: 300
+
+  OncallMandateAcceptanceFailureTechAlarmThreshold:
+    Type: Number
+    Default: 1
+
+  OncallMandateAcceptanceFailureTechAlarmEvaluationPeriods:
+    Type: Number
+    Default: 12
+
+  OncallMandateAcceptanceFailureTechAlarmPeriodDatapointsToAlarm:
+    Type: Number
+    Default: 1
+
+  CpuArchitecture:
+    Type: String
+    Default: 'ARM'
+    Description: CPU architecture for the Fargate tasks
+
+  JavaToolOptions:
+    Type: String
+    Default: ''
+    Description: Java tool options for the Fargate tasks
+
+Conditions:
+    ShouldEnableApiGatewayIO: !Equals [!Ref EnableAPIGatewayAppIO, "true"]
+
+Resources:
+
+  # PN-Mandate microservice
+  MandateMicroservice:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/ecs-service.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub '${ProjectName}-mandate'
+        CpuValue: !Ref CpuValue
+        MemoryAmount: !Ref MemoryAmount
+        HealthCheckTimeout: !Ref HealthCheckTimeout
+        HealthCheckInterval: !Ref HealthCheckInterval
+        HealthyThresholdCount: !Ref HealthyThresholdCount
+        UnhealthyThresholdCount: !Ref UnhealthyThresholdCount
+        AutoscalingStrategy: REST-API
+        AutoscalingThreshold: !Ref AutoscalingThreshold
+        AutoscalingCheckPeriod: !Ref AutoscalingCheckPeriod
+        MinTasksNumber: !Ref MinTasksNumber
+        MaxTasksNumber: !Ref MaxTasksNumber
+        AutoscalingDataPointN: !Ref AutoscalingDataPointN
+        AutoscalingDataPointM: !Ref AutoscalingDataPointM
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        EfsFilesystem: !Ref FargateEFSFileSystemID
+        MountEfs: !Ref MountEfs
+        ContainerImageURI: !Sub '${ContainerImageUri}'
+        ContainerEnvEntry1: !Sub 'AWS_REGIONCODE=${AWS::Region}'
+        ContainerEnvEntry2: !Sub 'CORS_ALLOWED_DOMAINS=${CorsAllowedDomains}'
+        ContainerEnvEntry3: !Sub 'AWS_DYNAMODB_TABLE=${MandatesDynamoTableName}'
+        ContainerEnvEntry4: !Sub 'AWS_DYNAMODB_TABLE_HISTORY=${MandatesDynamoTableHistoryName}'
+        ContainerEnvEntry5: 'PN_MANDATE_CLIENT_DATAVAULT_BASEPATH=http://alb.confidential.pn.internal:8080'
+        ContainerEnvEntry6: !Sub 'PN_MANDATE_CLIENT_EXTREG_BASEPATH=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry7: !Sub 'PN_MANDATE_TOPICS_MANDATE-INPUTS=${PnMandateInputsQueueName}'
+        ContainerEnvEntry8: !Sub 'PN_MANDATE_SQS_TO_PN_DELIVERY_NAME=${Mandate2DeliveryQueueName}'
+        ContainerEnvEntry9: !Sub 'PN_MANDATE_PENDINGDURATION=${PendingDuration}'
+        ContainerEnvEntry10: !Sub 'PN_CRON_ANALYZER=${PnCronAnalyzer}'
+        ContainerEnvEntry11: !Sub 'WIRE_TAP_LOG=${WireTapLogActivation}'
+        ContainerEnvEntry12: !Sub 'PN_MANDATE_CLIENT_DELIVERY_BASEPATH=http://${ApplicationLoadBalancerDomain}:8080'
+        ContainerEnvEntry13: !Sub 'PN_MANDATE_CIEPENDINGDURATION=${CiePendingDuration}'
+        ContainerEnvEntry14: !Sub 'PN_MANDATE_CIEVALIDTODURATION=${CieValidToDuration}'
+        ContainerEnvEntry15: !Sub 'PN_MANDATE_REVOKECIEMANDATEONVERIFICATIONFAILURE=${RevokeCieMandateOnVerificationFailure}'
+        ContainerEnvEntry16: !Sub "LOLLIPOP_ACTIVE=${IsLollipopActive}"
+        ContainerEnvEntry17: !Sub "LOLLIPOP_EXPECTED_LC_ORIGINAL_URL=${LollipopExpectedLcOriginalUrl}"
+        ContainerEnvEntry18: !Sub "LOLLIPOP_ENABLE_CONSUMER_LOGGING=${LollipopEnableConsumerLogging}"
+        ContainerEnvEntry19: !Sub "LOLLIPOP_IDP_REST_CONFIG_READ_TIMEOUT=${LollipopIdpRestConfigReadTimeout}"
+        ContainerEnvEntry20: !Sub "LOLLIPOP_IDP_REST_CONFIG_CONNECTION_TIMEOUT=${LollipopIdpRestConfigConnectionTimeout}"
+        ContainerEnvEntry21: !Sub "LOLLIPOP_ASSERTION_REST_CONFIG_READ_TIMEOUT=${LollipopAssertionRestConfigReadTimeout}"
+        ContainerEnvEntry22: !Sub "LOLLIPOP_ASSERTION_REST_CONFIG_CONNECTION_TIMEOUT=${LollipopAssertionRestConfigConnectionTimeout}"
+        ContainerEnvEntry23: !Sub 'CSCA_MASTERLIST_S3_PATH=s3://pn-runtime-environment-variables-${AWS::Region}-${AWS::AccountId}/${CieValidationCertS3Path}'
+        ContainerEnvEntry24: !Sub 'LOLLIPOP_WHITE_LIST=${LollipopWhiteList}'
+        ContainerEnvEntry25: !Sub "LOLLIPOP_EXPECTED_LC_ORIGINAL_METHOD=${LollipopExpectedLcOriginalMethod}"
+        ContainerSecret1: !Sub "ASSERTION_REST_SUBSCRIPTION_KEY=arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:pn-Mandate-Secrets:AssertionRestSubscriptionKey:AWSCURRENT:"
+        MicroServiceSecretPrefix: pn-Mandate-Secrets
+        ApplicativeEnvFileChecksum: !Ref ApplicativeEnvFileChecksum
+        MappedPaths: '/mandate/*,/mandate-private/*'
+        ECSClusterName: !Ref ECSClusterName
+        Subnets: !Ref VpcEgressSubnetsIds
+        VpcId: !Ref VpcId
+        EcsDefaultSecurityGroup: !Ref EcsDefaultSecurityGroup
+        LoadBalancerListenerArn: !Ref ApplicationLoadBalancerListenerArn
+        LoadbalancerRulePriority: !Ref MicroserviceNumber
+        AlbSecurityGroup: !Ref AlbSecurityGroup
+        TaskRoleManagedPolicyArn: !Ref MandateMicroserviceTaskManagedPolicy
+        EcsLogGroup: !Ref EcsLogGroup
+        LogAlarmStrategyV1: !Ref LogAlarmStrategy
+        CpuArchitecture: !Ref CpuArchitecture
+        JavaToolOptions: !Ref JavaToolOptions
+
+
+  # Grant operational rights to PN-Mandate microservice
+  MandateMicroserviceTaskManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:ExecuteTransaction
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:Query
+              - dynamodb:TransactGetItems
+              - dynamodb:TransactWriteItems
+              - dynamodb:UpdateItem
+            Resource:
+              - !Sub "${MandatesDynamoTableArn}"
+              - !Sub "${MandatesDynamoTableArn}/*"
+              - !Sub "${MandatesDynamoTableHistoryArn}"
+          - Effect: Allow
+            Action:
+              - sqs:ChangeMessageVisibility
+              - sqs:ChangeMessageVisibilityBatch
+              - sqs:DeleteMessage
+              - sqs:DeleteMessageBatch
+              - sqs:GetQueueAttributes
+              - sqs:GetQueueUrl
+              - sqs:ReceiveMessage
+              - sqs:SendMessage
+              - sqs:SendMessageBatch
+            Resource:
+              - !Ref PnMandateInputsQueueARN
+              - !Ref Mandate2DeliveryQueueARN
+          - Effect: Allow
+            Action:
+              - ssm:GetParameter
+              - ssm:GetParameters
+            Resource:
+              - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/MapTaxIdWhiteList'
+              - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/AARQrUrlConfigs'
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+              - s3:GetObjectVersion
+            Resource: !Sub "arn:aws:s3:::pn-runtime-environment-variables-${AWS::Region}-${AWS::AccountId}/pn-mandate/*"
+
+  # Expose PN-Mandate microservice public API with API-GW for B2BPG usage
+  MandateMicroserviceB2BPGApi:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-expose-service-openapi.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub '${ProjectName}-mandate'
+        IntendedUsage: B2BPG
+        DnsName: !Ref DestApiDnsName
+        ProjectName: !Ref ProjectName
+        ServiceApiPath: 'mandate'
+        NetworkLoadBalancerLink: !Ref NetworkLoadBalancerLink
+        ApplicationLoadBalancerDomain: !Ref ApplicationLoadBalancerDomain
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        CloudwatchLogKinesisStreamArn: !Ref LogsKinesisSourceStreamArn
+        OpenApiBucketName: !Ref MicroserviceBucketName
+        OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-mandate-B2BPG-aws.yaml
+
+  MandateMicroserviceB2BPGApiWaf:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-waf-acl.yaml"
+      Parameters:
+        WAFName: !Sub '${ProjectName}-mandate-b2b-pg'
+        IntendedUsage: B2BPG
+        APIGatewayARNs: !GetAtt MandateMicroserviceB2BPGApi.Outputs.APIGatewayARN
+        Limit: !Ref B2bPgLimit
+        ExcludedRule0: CrossSiteScripting_BODY,SizeRestrictions_BODY
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+  
+  # Expose PN-MANDATE microservice public API with API-GW for IO Backend usage
+  MandateMicroservicePublicIoAPI:
+    Type: AWS::CloudFormation::Stack
+    Condition: ShouldEnableApiGatewayIO
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-expose-service-openapi.yaml"
+      Parameters:
+        MicroServiceUniqueName: !Sub "${ProjectName}-mandate"
+        IntendedUsage: IO_EXP
+        DnsName: !Ref IoApiDnsName
+        ProjectName: !Ref ProjectName
+        ServiceApiPath: "mandate"
+        NetworkLoadBalancerLink: !Ref NetworkLoadBalancerLink
+        ApplicationLoadBalancerDomain: !Ref ApplicationLoadBalancerDomain
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        CloudwatchLogKinesisStreamArn: !Ref LogsKinesisSourceStreamArn
+        OpenApiBucketName: !Ref MicroserviceBucketName
+        OpenApiBucketKey: !Sub ${MicroserviceBucketBaseKey}/docs/openapi/aws/api-mandate-IO-aws.yaml
+  
+  MandateMicroservicePublicIoApiWaf:
+    Type: AWS::CloudFormation::Stack
+    Condition: ShouldEnableApiGatewayIO
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/api-gw-waf-acl.yaml"
+      Parameters:
+        WAFName: !Sub "${ProjectName}-mandate-io"
+        IntendedUsage: IO
+        APIGatewayARNs: !GetAtt MandateMicroservicePublicIoAPI.Outputs.APIGatewayARN
+        Limit: 0 # disable IP limit based rule
+        AllowedCidrs: !Ref IOBackendCidrs
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+
+  MandateMicroserviceCloudWatchDashboard:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/microservice-cloudwatch-dashboard.yaml"
+      Parameters:
+        DashboardName: !Sub "${ProjectName}-mandate"
+        DynamoDBTableNames: !Join
+          - ','
+          - - !Ref MandatesDynamoTableName
+            - !Ref MandatesDynamoTableHistoryName
+        RestApiStageArns: !Join
+          - ','
+          - - !GetAtt MandateMicroserviceB2BPGApi.Outputs.RestApiStageArn
+        LambdaArns: !Join
+          - ','
+          - - !GetAtt PnMandateExpiredTriggerLambda.Arn
+        RestApiNames: !Join
+          - ','
+          - - !GetAtt MandateMicroserviceB2BPGApi.Outputs.RestApiName
+        AlarmArns: !Join
+          - ','
+          - - !GetAtt MandateMicroservice.Outputs.FatalLogsMetricAlarmArn
+            - !GetAtt MandateMicroserviceB2BPGApi.Outputs.RestApiErrorAlarmArn
+            - !GetAtt MandateMicroserviceB2BPGApi.Outputs.RestApiLatencyAlarmArn
+            - !Ref PnMandateExpiredTriggerDLQAlarmARN
+            - !Ref PnMandateInputsQueueAlarmARN
+            - !Ref PnMandateInputsQueueAgeAlarmARN
+        QueueArns: !Join
+          - ','
+          - - !Ref Mandate2DeliveryQueueARN
+        LogGroupsNames: !Join
+          - ','
+          - - !Sub '/aws/ecs/${ProjectName}-mandate'
+
+  PnMandateExpiredTriggerLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-PnMandateExpiredTriggerLambdaRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-PnMandateExpiredTriggerLambdaRolePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: WriteOnQueue
+                Effect: Allow
+                Action:
+                  - sqs:ChangeMessageVisibility
+                  - sqs:GetQueueAttributes
+                  - sqs:GetQueueUrl
+                  - sqs:SendMessage
+                Resource:
+                  - !Ref PnMandateInputsQueueARN
+                  - !Ref PnMandateExpiredTriggerDLQARN
+              - Sid: ReceiveDynamoStream
+                Effect: Allow
+                Action:
+                  - "dynamodb:DescribeStream"
+                  - "dynamodb:GetRecords"
+                  - "dynamodb:GetShardIterator"
+                  - "dynamodb:ListStreams"
+                Resource:
+                  - !Ref MandatesDynamoTableNameStreamArn
+              - Sid: CanWriteLogs
+                Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+
+  PnMandateExpiredTriggerLambdaEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !Ref MandatesDynamoTableNameStreamArn
+      StartingPosition: LATEST
+      BatchSize: !Sub ${PnMandateExpiredTriggerLambdaEventSourceMappingBatchSize}
+      MaximumBatchingWindowInSeconds: !Sub ${PnMandateExpiredTriggerLambdaEventSourceMappingMaximumBatchingWindowInSeconds}
+      MaximumRetryAttempts: !Sub ${PnMandateExpiredTriggerLambdaEventSourceMappingMaximumRetryAttempts}
+      FilterCriteria:
+        Filters: [{"Pattern": "{\"userIdentity\":{\"type\":[\"Service\"],\"principalId\":[\"dynamodb.amazonaws.com\"]}}"}]
+      FunctionName: !GetAtt PnMandateExpiredTriggerLambda.Arn
+      # Add an OnFailure destination on the event source mapping
+      DestinationConfig:
+        OnFailure:
+          Destination: !Ref PnMandateExpiredTriggerDLQARN
+
+
+
+  PnMandateExpiredTriggerLambda:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs24.x
+      FunctionName: !Ref PnMandateExpiredTriggerLambdaName
+      Description: 'It triggers expired mandates for moving them to history'
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt PnMandateExpiredTriggerLambdaRole.Arn
+      Layers:
+        - !Sub "arn:aws:lambda:${AWS::Region}:339249233099:layer:LambdaInsightsExtension:13"
+      Environment:
+        Variables:
+          QUEUE_URL: !Ref PnMandateInputsQueueURL
+      Code:
+        ZipFile: |
+          const { SQSClient, SendMessageCommand } = require("@aws-sdk/client-sqs");
+          const clientSQS = new SQSClient();
+          
+          const QUEUE_URL = process.env.QUEUE_URL
+          
+          exports.handler = async (event) => {
+            console.log(JSON.stringify(event, null, 2));
+            console.log(QUEUE_URL);
+              
+            for(var i = 0;i<event.Records.length;i++) {
+              let record = event.Records[i];
+              if (record.eventName != 'REMOVE')
+                continue;
+          
+              console.log('Processing dynamoDB Record: %j', record.dynamodb);
+              const sortkey = record.dynamodb.Keys.sk.S;
+          
+              if (sortkey.match(/^MANDATETRIGGERHELPER#.*/)==null)
+                continue;
+          
+              const delegatorInternalUserid = record.dynamodb.Keys.pk.S;
+              const mandateId = sortkey.replace("MANDATETRIGGERHELPER#","");
+          
+              const delegatorUserid = record.dynamodb.OldImage.s_delegatoruid.S;
+              const delegatorCxType = record.dynamodb.OldImage.s_delegatortype.S;
+          
+              var message = {
+                DelaySeconds: 0,
+                MessageGroupId: 'MANDATE',
+                MessageDeduplicationId: sortkey + "_remove",
+                MessageAttributes: {
+                  "createdAt": {
+                    DataType: "String",
+                    StringValue: new Date().toISOString()
+                  },
+                  "eventId": {
+                    DataType: "String",
+                    StringValue: sortkey + "_remove"
+                  },
+                  "eventType": {
+                    DataType: "String",
+                    StringValue: "MANDATE_EXPIRED"
+                  },
+                  "publisher": {
+                    DataType: "String",
+                    StringValue: "MANDATE"
+                  }
+                },
+                MessageBody: JSON.stringify({delegatorInternalUserid: delegatorInternalUserid, mandateId: mandateId, delegatorUserid: delegatorUserid, delegatorCxType: delegatorCxType}),
+                QueueUrl: QUEUE_URL
+              }
+          
+              console.log('Sending message: %j', message);
+              try{
+                const command = new SendMessageCommand(message);
+                const queueRes = await clientSQS.send(command);
+                console.log("Sent message", queueRes.MessageId);
+              }catch(exc){
+                console.log("error sending message", exc)
+                throw exc;
+              }
+            }
+            const response = {
+              StatusCode: 200
+            };
+            return response;
+          };
+      #ENDpnmandateexpiredtrigger
+      #Non rimuovere o modificare il commento sopra, è usato come placeholder negli script
+  
+  CscaMasterlistSyncRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-CscaMasterlistSyncRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-CscaMasterlistSyncPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: AllowSSMAccess
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:PutParameter
+                Resource: 
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${CscaSha256SsmParameterName}"
+              - Sid: AllowS3PutObject
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource: !Sub "arn:aws:s3:::pn-runtime-environment-variables-${AWS::Region}-${AWS::AccountId}/pn-mandate/*"
+              - Sid: AllowECSUpdateService
+                Effect: Allow
+                Action:
+                  - ecs:UpdateService
+                Resource: !GetAtt MandateMicroservice.Outputs.ServiceARN
+    
+  CscaMasterlistSync:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref CscaMasterlistSyncLambdaName
+      Runtime: nodejs22.x
+      Handler: "index.handler"
+      Code:
+        S3Bucket: !Ref MicroserviceBucketName
+        S3Key: !Sub "${MicroserviceBucketBaseKey}/functions_zip/CscaMasterlistSync.zip"
+      Role: !GetAtt CscaMasterlistSyncRole.Arn
+      MemorySize: 256
+      Timeout: 300
+      Environment:
+        Variables:
+          CSCA_MASTERLIST_URL: !Ref CscaMasterlistUrl
+          SHA256_SSM_PARAMETER_NAME: !Ref CscaSha256SsmParameterName
+          S3_BUCKET_NAME: !Sub pn-runtime-environment-variables-${AWS::Region}-${AWS::AccountId}
+          S3_OBJECT_KEY: !Ref CscaSyncS3BucketPrefix
+          ECS_CLUSTER_NAME: !Ref ECSClusterName
+          ECS_SERVICE_NAME: !GetAtt MandateMicroservice.Outputs.ServiceName
+
+  CscaMasterlistSyncSchedulerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${ProjectName}-CscaMasterlistSyncSchedulerRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: scheduler.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: !Sub ${ProjectName}-CscaMasterlistSyncSchedulerInvokePolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: !GetAtt CscaMasterlistSync.Arn
+
+  CscaMasterlistSyncSchedule:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: !Sub ${ProjectName}-CscaMasterlistSyncSchedule
+      Description: 'Triggers the CscaMasterlistSync Lambda periodically'
+      ScheduleExpression: !Ref CscaSyncSchedule
+      FlexibleTimeWindow:
+        Mode: 'OFF'
+      State: ENABLED
+      Target:
+        Arn: !GetAtt CscaMasterlistSync.Arn
+        RoleArn: !GetAtt CscaMasterlistSyncSchedulerRole.Arn
+
+  CscaMasterlistSyncInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt CscaMasterlistSync.Arn
+      Action: "lambda:InvokeFunction"
+      Principal: "scheduler.amazonaws.com"
+      SourceArn: !GetAtt CscaMasterlistSyncSchedule.Arn
+      SourceAccount: !Ref AWS::AccountId
+  
+  CscaMasterlistSyncAlarms:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/lambda-alarms.yaml"
+      Parameters:
+        FunctionName: !Ref CscaMasterlistSync
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        Period: !Ref CscaMasterlistSyncAlarmPeriod
+        EvaluationPeriods: !Ref CscaMasterlistSyncAlarmEvaluationPeriods
+        DataPointsToAlarm: !Ref CscaMasterlistSyncAlarmDatapointsToAlarm
+
+  MandateAcceptanceFailureF01DetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-f01"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureF01AlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureF01AlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureF01AlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureF01AlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureF01AlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureF01AlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureF01AlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureF01AlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureF01AlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureF01AlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+
+  MandateAcceptanceFailureF02DetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-f02"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureF02AlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureF02AlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureF02AlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureF02AlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureF02AlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureF02AlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureF02AlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureF02AlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureF02AlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureF02AlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+
+  MandateAcceptanceFailureF03DetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-f03"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureF03AlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureF03AlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureF03AlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureF03AlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureF03AlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureF03AlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureF03AlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureF03AlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureF03AlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureF03AlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+        HasAlarm: false
+
+  MandateAcceptanceFailureF04DetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-f04"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureF04AlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureF04AlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureF04AlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureF04AlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureF04AlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureF04AlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureF04AlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureF04AlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureF04AlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureF04AlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+
+  MandateAcceptanceFailureMandateExpiredDetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-mandate-expired"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureMandateExpiredAlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureMandateExpiredAlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureMandateExpiredAlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureMandateExpiredAlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureMandateExpiredAlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureMandateExpiredAlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureMandateExpiredAlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureMandateExpiredAlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureMandateExpiredAlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureMandateExpiredAlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+        HasAlarm: false
+
+  MandateAcceptanceFailureMandateNotFoundDetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-mandate-not-found"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureMandateNotFoundAlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureMandateNotFoundAlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureMandateNotFoundAlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureMandateNotFoundAlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureMandateNotFoundAlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureMandateNotFoundAlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureMandateNotFoundAlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureMandateNotFoundAlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureMandateNotFoundAlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureMandateNotFoundAlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+        HasAlarm: false
+
+  MandateAcceptanceFailureInvalidMandateDetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-invalid-mandate"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureInvalidMandateAlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureInvalidMandateAlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureInvalidMandateAlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureInvalidMandateAlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureInvalidMandateAlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureInvalidMandateAlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureInvalidMandateAlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureInvalidMandateAlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureInvalidMandateAlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureInvalidMandateAlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum
+        HasAlarm: false
+
+  MandateAcceptanceFailureTechDetectionAlarm:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/custom-metric.yaml"
+      Parameters:
+        AlarmSNSTopicArn: !Ref AlarmSNSTopicArn
+        MetricName: !Sub "${ProjectName}-mandate-acceptance-failure-tech"
+        MetricNamespace: !Ref MetricNamespace
+        LogGroupName: "/aws/ecs/pn-mandate"
+        FilterPattern: !Ref MandateAcceptanceFailureTechAlarmPeriodFilterPattern
+        Period: !Ref MandateAcceptanceFailureTechAlarmPeriod
+        Threshold: !Ref MandateAcceptanceFailureTechAlarmThreshold
+        EvaluationPeriods: !Ref MandateAcceptanceFailureTechAlarmEvaluationPeriods
+        DatapointsToAlarm: !Ref MandateAcceptanceFailureTechAlarmPeriodDatapointsToAlarm
+        Statistic: Sum
+        ComparisonOperator: GreaterThanOrEqualToThreshold
+        HasOncall: !Ref MandateAcceptanceFailureTechAlarmEnableOncall
+        OncallPeriod: !Ref OncallMandateAcceptanceFailureTechAlarmPeriod
+        OncallThreshold: !Ref OncallMandateAcceptanceFailureTechAlarmThreshold
+        OncallEvaluationPeriods: !Ref OncallMandateAcceptanceFailureTechAlarmEvaluationPeriods
+        OncallDatapointsToAlarm: !Ref OncallMandateAcceptanceFailureTechAlarmPeriodDatapointsToAlarm
+        OncallComparisonOperator: GreaterThanOrEqualToThreshold
+        OncallStatistic: Sum

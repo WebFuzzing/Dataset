@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>it.pagopa.pn</groupId>
+		<artifactId>pn-parent</artifactId>
+		<version>2.1.3-SPRINGBOOT3</version>
+		<!-- MODIFIED: resolve pn-parent from local-repo -->
+		<relativePath>../../../local-repo/it/pagopa/pn/pn-parent/2.1.3-SPRINGBOOT3/pn-parent-2.1.3-SPRINGBOOT3.pom</relativePath>
+	</parent>
+	<artifactId>pn-mandate</artifactId>
+	<version>2.14.1-SNAPSHOT</version>
+	<name>pn-mandate</name>
+	<description>Mandate microservice</description>
+	<scm>
+		<connection>${git.conn}</connection>
+		<developerConnection>${git.devConn}</developerConnection>
+		<url>${git.url}</url>
+		<tag>HEAD</tag>
+	</scm>
+	<!-- MODIFIED: PagoPA artifacts are in local-repo -->
+	<repositories>
+		<repository>
+			<id>local-repo</id>
+			<url>file://${project.basedir}/../../../local-repo</url>
+		</repository>
+	</repositories>
+	<properties>
+		<awaitility.version>4.1.1</awaitility.version>
+		<ant.windows_bash_exe>c:\Program Files\Git\bin\bash.exe</ant.windows_bash_exe>
+
+		<pagopa.codegen.version>v01.16.01</pagopa.codegen.version>
+		<bouncycastle.version>1.86</bouncycastle.version>
+		<!-- MODIFIED: allow building in multi-module tree without enforcing upstream coverage threshold -->
+		<jacoco.min.line.cover.ratio>0.00</jacoco.min.line.cover.ratio>
+		<!-- MODIFIED: the Docker build sees no .git directory -->
+		<maven.gitcommitid.skip>true</maven.gitcommitid.skip>
+	</properties>
+
+	<!-- Ensure BC modules are aligned at one version for the whole reactor -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk18on</artifactId>
+				<version>${bouncycastle.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk18on</artifactId>
+				<version>${bouncycastle.version}</version>
+			</dependency>
+			<dependency>
+				<!-- NEW: pin bcutil to the same version to avoid operator/asn1 mismatches -->
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcutil-jdk18on</artifactId>
+				<version>${bouncycastle.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- FIX: ripristino pn-commons con esclusioni BouncyCastle legacy/FIPS -->
+		<dependency>
+			<groupId>it.pagopa.pn</groupId>
+			<artifactId>pn-commons</artifactId>
+			<version>2.19.0-SPRINGBOOT3</version>
+		</dependency>
+
+		<!-- MODIFIED: use pn-model 2.13.0-SPRINGBOOT3 from local-repo (tag 2.11.0-SPRINGBOOT3 does not exist upstream) -->
+		<dependency>
+			<groupId>it.pagopa.pn</groupId>
+			<artifactId>pn-model</artifactId>
+			<version>2.13.0-SPRINGBOOT3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.6.5</version>
+		</dependency>
+
+        <dependency>
+            <groupId>it.pagopa.pn</groupId>
+            <artifactId>pn-lollipop-client</artifactId>
+            <version>1.4.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
+        </dependency>
+		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/dynamodb-enhanced -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>dynamodb-enhanced</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+		</dependency>
+
+		<!-- Bouncy-Castle: provider JCA/JCE -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>${bouncycastle.version}</version>
+		</dependency>
+
+		<!-- CHANGE: rimosso bc-fips per evitare mix FIPS/non-FIPS che causa NoSuchFieldError -->
+
+		<!-- Bouncy-Castle: API PKIX/CMS/OCSP/… -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk18on</artifactId>
+			<version>${bouncycastle.version}</version>
+		</dependency>
+
+		<!-- Decodifica HEX (equivalente di tr + xxd) -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.19.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.idealo.spring</groupId>
+			<artifactId>spring-cloud-stream-binder-sqs</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.awspring.cloud</groupId>
+			<artifactId>spring-cloud-aws-starter-sqs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.payneteasy</groupId>
+			<artifactId>ber-tlv</artifactId>
+			<version>1.0-11</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mock-server</groupId>
+			<artifactId>mockserver-junit-jupiter</artifactId>
+			<version>5.11.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>localstack</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<version>${awaitility.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- sotto il cofano, testcontainer usa aws1 e quindi serve la dipendenza -->
+		<!-- dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.332</version>
+			<scope>test</scope>
+		</dependency -->
+
+		<!-- Sebbene non usata dal codice, in intelliJ non si riusciva a risolvere il plugin antrun semplicemetne dichiarandolo
+             Mettendolo come dipedenza, si aggira il problema -->
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-antrun-plugin</artifactId>
+			<version>3.1.0</version>
+			<type>maven-plugin</type>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<!-- MODIFIED: bundle config/application.properties at classpath:/benchmark/ -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>config</directory>
+				<targetPath>benchmark</targetPath>
+				<includes>
+					<include>application.properties</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+		<!-- Plugin per creare un JAR eseguibile -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.5.0</version>
+				<executions>
+					<execution>
+						<id>shade-generator</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<finalName>ciechecker-generator-tool</finalName>
+
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>it.pagopa.pn.ciechecker.generator.Main</mainClass>
+								</transformer>
+							</transformers>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<includes>
+										<include>it/pagopa/pn/ciechecker/**</include>
+									</includes>
+									<excludes>
+										<exclude>it/pagopa/pn/mandate/**</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- MODIFIED: build pn-mandate-sut.jar while keeping plain JAR as main artifact for embedded controller -->
+				<configuration>
+					<finalName>pn-mandate</finalName>
+					<classifier>sut</classifier>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/generated/**</exclude>
+						<exclude>**it/pagopa/pn/mandate/rest/mandate/v1/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<configuration>
+							<target>
+								<property name="windows_bash_exe" value="${ant.windows_bash_exe}" />
+								<ant antfile="${basedir}/scripts/aws/lambda/build.xml">
+									<target name="default" />
+								</ant>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>print-message</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<echo level="info" message="NB: Per lo sviluppo in localstack, ricordarsi di lanciare il goal maven di deploy della lambda: mvn antrun:run" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>7.15.0</version>
+				<executions>
+					<execution>
+						<id>generate-mandate-server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<inputSpec>${project.basedir}/docs/openapi/pn-mandate-internal.yaml</inputSpec>
+							<typeMappings>
+								<typeMapping>Date=Instant</typeMapping>
+							</typeMappings>
+							<importMappings>
+								<importMapping>java.util.Date=java.time.Instant</importMapping>
+								<importMapping>Date=java.time.Instant</importMapping>
+							</importMappings>
+							<generatorName>spring</generatorName>
+							<library>spring-boot</library>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<dateLibrary>java11</dateLibrary>
+								<delegatePattern>true</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<annotationLibrary>none</annotationLibrary>
+								<documentationProvider>source</documentationProvider>
+								<openApiNullable>false</openApiNullable>
+								<reactive>true</reactive>
+								<skipDefaultInterface>false</skipDefaultInterface>
+								<useTags>true</useTags>
+								<basePackage>${project.groupId}.mandate.generated.openapi.server.v1</basePackage>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.server.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.generated.openapi.server.v1.api</apiPackage>
+								<configPackage>${project.groupId}.mandate.generated.openapi.server.v1.config</configPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+                    <execution>
+                        <id>generate-appio-reverse-mandate-server</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <inputSpec>${project.basedir}/docs/openapi/pn-mandate-b2b-internal-appio.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+                                <dateLibrary>java11</dateLibrary>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>source</documentationProvider>
+                                <openApiNullable>false</openApiNullable>
+                                <reactive>true</reactive>
+                                <skipDefaultInterface>false</skipDefaultInterface>
+                                <useTags>true</useTags>
+                                <basePackage>${project.groupId}.mandate.appio.reverse.generated.openapi.server.v1</basePackage>
+                                <modelPackage>${project.groupId}.mandate.appio.generated.openapi.server.v1.dto</modelPackage>
+                                <apiPackage>${project.groupId}.mandate.appio.reverse.generated.openapi.server.v1.api</apiPackage>
+                                <configPackage>${project.groupId}.mandate.appio.reverse.generated.openapi.server.v1.config</configPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+					<execution>
+						<id>generate-reverse-mandate-server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<inputSpec>${project.basedir}/docs/openapi/pn-mandate-b2b-pg-internal.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<library>spring-boot</library>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<dateLibrary>java11</dateLibrary>
+								<delegatePattern>true</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<annotationLibrary>none</annotationLibrary>
+								<documentationProvider>source</documentationProvider>
+								<openApiNullable>false</openApiNullable>
+								<reactive>true</reactive>
+								<skipDefaultInterface>false</skipDefaultInterface>
+								<useTags>true</useTags>
+								<basePackage>${project.groupId}.mandate.reverse.generated.openapi.server.v1</basePackage>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.server.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.reverse.generated.openapi.server.v1.api</apiPackage>
+								<configPackage>${project.groupId}.mandate.reverse.generated.openapi.server.v1.config</configPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>generate-client-extreg-selfcare</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-registries/85b27c9f915f10da5487da6e6b5cc041f4f68990/docs/openapi/pn-selfcare-internal-v1.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<library>webclient</library>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<generateSupportingFiles>true</generateSupportingFiles>
+							<modelNameSuffix>Dto</modelNameSuffix>
+							<configOptions>
+								<useJakartaEe>true</useJakartaEe>
+								<swaggerAnnotations>false</swaggerAnnotations>
+								<openApiNullable>false</openApiNullable>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.msclient.extregselfcare.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.generated.openapi.msclient.extregselfcare.v1.api</apiPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>generate-client-extreg-prvt</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-external-registries/9f9bed8a85ab9ac5720294895afd26abccde5be6/docs/openapi/api-private-v1.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<library>webclient</library>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<generateSupportingFiles>true</generateSupportingFiles>
+							<modelNameSuffix>Dto</modelNameSuffix>
+							<configOptions>
+								<useJakartaEe>true</useJakartaEe>
+								<swaggerAnnotations>false</swaggerAnnotations>
+								<openApiNullable>false</openApiNullable>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.msclient.extregselfcaregroups.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.generated.openapi.msclient.extregselfcaregroups.v1.api</apiPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+
+                    <execution>
+                        <id>generate-client-delivery</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <inputSpec>https://raw.githubusercontent.com/pagopa/pn-delivery/81b4883f36b2b809d50b2f421e60a6fda0cdc9a3/docs/openapi/api-private.yaml</inputSpec>
+                            <generatorName>java</generatorName>
+                            <library>webclient</library>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateSupportingFiles>true</generateSupportingFiles>
+							<modelNameSuffix>Dto</modelNameSuffix>
+                            <configOptions>
+								<useJakartaEe>true</useJakartaEe>
+                                <swaggerAnnotations>false</swaggerAnnotations>
+                                <openApiNullable>false</openApiNullable>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.msclient.delivery.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.generated.openapi.msclient.delivery.v1.api</apiPackage>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+
+					<execution>
+						<id>generate-client-datavault</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<inputSpec>https://raw.githubusercontent.com/pagopa/pn-data-vault/b8417e6086bfb26c6246502c6841b3ec5d2a52fd/docs/openapi/pn-datavault-api-v1.yaml</inputSpec>
+							<generatorName>java</generatorName>
+							<library>webclient</library>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<generateSupportingFiles>true</generateSupportingFiles>
+							<modelNameSuffix>Dto</modelNameSuffix>
+							<configOptions>
+								<useJakartaEe>true</useJakartaEe>
+								<swaggerAnnotations>false</swaggerAnnotations>
+								<openApiNullable>false</openApiNullable>
+								<modelPackage>${project.groupId}.mandate.generated.openapi.msclient.datavault.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.mandate.generated.openapi.msclient.datavault.v1.api</apiPackage>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Data quality template, creates a nested stack for Glue Table and Crawler
+
+Parameters:
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: The S3 bucket from which to fetch the templates used by this stack.
+  GlueServiceRoleArn:
+    Type: String
+    Description: Service role for the Glue Crawler.
+  LogsBucketName:
+    Type: String
+    Description: Logs bucket name
+  GlueDatabaseName:
+    Description: Name of the Glue Database
+    Type: String
+  MandatesDynamoTableName:
+    Type: String
+    Description: |
+      DynamoDb table name for pn-mandate, valorized by the related output
+      in the storage.yaml template, used also for identifying the S3 bucket
+      directory where related CDC files are stored.
+  
+  MandatesGlueTableName:
+    Type: String
+    AllowedPattern: '^[a-z_]+$'
+    ConstraintDescription: | 
+       Glue table name for pn-mandate, accept only lowercase values and underscores.
+    Default: pn_mandate
+
+  MandatesDynamoTableHistoryName:
+    Type: String
+    Description: |
+      DynamoDb table name for pn-mandate-history, valorized by the related output
+      in the storage.yaml template, used also for identifying the S3 bucket
+      directory where related CDC files are stored.
+  
+  MandateHistoryGlueTableName:
+    Type: String
+    AllowedPattern: '^[a-z_]+$'
+    ConstraintDescription: |
+       Glue table name for pn-mandate-history, accept only lowercase values and underscores.
+    Default: pn_mandate_history
+
+Resources:
+  PnMandateDataQualityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/cdc-glue.yaml"
+      Parameters:
+        DynamoTableName: !Ref MandatesDynamoTableName
+        GlueTableName: !Ref MandatesGlueTableName
+        GlueServiceRoleArn: !Ref GlueServiceRoleArn
+        LogsBucketName: !Ref LogsBucketName
+        GlueDatabaseName: !Ref GlueDatabaseName
+        DynamoDBKeysStructure: |
+            struct<pk:struct<S:string>,sk:struct<S:string>>
+        DynamoDBNewImageStructure: |
+            struct<
+              pk:struct<S:string>,
+              sk:struct<S:string>,
+              s_delegate:struct<S:string>,
+              i_state:struct<N:string>,
+              d_validto:struct<S:string,NULL:boolean>,
+              s_delegatoruid:struct<S:string,NULL:boolean>,
+              s_validationcode:struct<S:string,NULL:boolean>,
+              b_delegateisperson:struct<BOOL:boolean,NULL:boolean>,
+              d_validfrom:struct<S:string,NULL:boolean>,
+              s_mandateid:struct<S:string>,
+              t_created:struct<S:string,NULL:boolean>,
+              b_delegatorisperson:struct<BOOL:boolean,NULL:boolean>,
+              i_ttl:struct<N:string,NULL:boolean>,
+              s_delegatortype:struct<S:string,NULL:boolean>,
+              mandateId:struct<S:string,NULL:boolean>,
+              t_accepted:struct<S:string,NULL:boolean>,
+              t_rejected:struct<S:string,NULL:boolean>,
+              t_revoked:struct<S:string,NULL:boolean>,
+              a_visibilityids:struct<L:array<struct<S:string>>,NULL:boolean>,
+              a_groups:struct<L:array<struct<S:string>>,NULL:boolean>,
+              s_workflowtype:struct<S:string,NULL:boolean>,
+              s_srcchannel:struct<S:string,NULL:boolean>,
+              a_iuns:struct<L:array<struct<S:string>>,NULL:boolean>,
+              a_taxonomycodes:struct<L:array<struct<S:string>>,NULL:boolean>,
+              i_pendingcount:struct<N:string,NULL:boolean>
+            >
+  
+  PnMandateHistoryDataQualityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/cdc-glue.yaml"
+      Parameters:
+        DynamoTableName: !Ref MandatesDynamoTableHistoryName
+        GlueTableName: !Ref MandateHistoryGlueTableName
+        GlueServiceRoleArn: !Ref GlueServiceRoleArn
+        LogsBucketName: !Ref LogsBucketName
+        GlueDatabaseName: !Ref GlueDatabaseName
+        DynamoDBKeysStructure: |
+            struct<pk:struct<S:string>,sk:struct<S:string>>
+        DynamoDBNewImageStructure: |
+            struct<
+              pk:struct<S:string>,
+              sk:struct<S:string>,
+              s_delegate:struct<S:string>,
+              i_state:struct<N:string>,
+              s_mandateid:struct<S:string>,
+              b_delegatorisperson:struct<BOOL:boolean,NULL:boolean>,
+              b_delegateisperson:struct<BOOL:boolean,NULL:boolean>,
+              d_validfrom:struct<S:string,NULL:boolean>,
+              d_validto:struct<S:string,NULL:boolean>,
+              t_created:struct<S:string,NULL:boolean>,
+              t_accepted:struct<S:string,NULL:boolean>,
+              t_rejected:struct<S:string,NULL:boolean>,
+              t_revoked:struct<S:string,NULL:boolean>,
+              s_validationcode:struct<S:string,NULL:boolean>,
+              a_visibilityids:struct<L:array<struct<S:string>>,NULL:boolean>,
+              s_delegatoruid:struct<S:string,NULL:boolean>,
+              a_groups:struct<L:array<struct<S:string>>,NULL:boolean>,
+              s_workflowtype:struct<S:string,NULL:boolean>,
+              s_srcchannel:struct<S:string,NULL:boolean>,
+              a_iuns:struct<L:array<struct<S:string>>,NULL:boolean>,
+              a_taxonomycodes:struct<L:array<struct<S:string>>,NULL:boolean>,
+              i_ttl:struct<N:string,NULL:boolean>
+            >

@@ -1,0 +1,539 @@
+openapi: 3.0.1
+info:
+  title: >-
+    ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
+  version: MYu55iOpoum7txEWp1r+NlF19fdmZYTE+GFDX25UODE=
+servers:
+  - url: https://${stageVariables.DnsName}/{basePath}
+    variables:
+      basePath:
+        default: /${stageVariables.ServiceApiPath}
+    x-amazon-apigateway-endpoint-configuration:
+      disableExecuteApiEndpoint: true
+paths:
+  /api/v1/io/mandate:
+    post:
+      tags:
+        - AppIO-PN-Mandate-Create
+      summary: Crea una delega temporanea in stato PENDING
+      description: >-
+        Crea una nuova delega in stato PENDING che in seguito all'accettazione
+        può permettere l'accesso temporaneo ad una notifica. Restituisce i dati
+        della delega in caso di successo
+      operationId: createIOMandate
+      parameters:
+        - $ref: '#/components/parameters/cxTaxIdAuthFleet'
+        - $ref: '#/components/parameters/lollipopOriginalUrl'
+        - $ref: '#/components/parameters/lollipopOriginalMethod'
+        - $ref: '#/components/parameters/lollipopPublicKey'
+        - $ref: '#/components/parameters/lollipopAssertionRef'
+        - $ref: '#/components/parameters/lollipopAssertionType'
+        - $ref: '#/components/parameters/lollipopAuthJwt'
+        - $ref: '#/components/parameters/lollipopUserId'
+        - $ref: '#/components/parameters/lollipopSignatureInput'
+        - $ref: '#/components/parameters/lollipopSignature'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateCreationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCreationResponse'
+        '400':
+          description: Bad Request - QRCode non trovato o in formato non corretto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                createMandateInvalidQRError:
+                  $ref: '#/components/examples/CreateMandateInvalidQRError'
+                createMandateQRNotFoundError:
+                  $ref: '#/components/examples/CreateMandateQRNotFoundError'
+        '401':
+          description: Unauthorized - Token di autenticazione mancante o non valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                unauthorizedError:
+                  $ref: '#/components/examples/UnauthorizedError'
+        '403':
+          description: Forbidden - Utente non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                forbiddenError:
+                  $ref: '#/components/examples/ForbiddenError'
+        '409':
+          description: >-
+            Conflict - Esiste già una delega in stato attiva o pending tra il
+            delegante e delegato per lo stesso IUN.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                createMandateConflictError:
+                  $ref: '#/components/examples/CreateMandateConflictError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+      security:
+        - pn-auth-fleet_LollipopAuthorizer_openapi: []
+        - api_key_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/io/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''IO'''
+          integration.request.header.x-pagopa-pn-name: context.authorizer.name
+          integration.request.header.x-pagopa-pn-family-name: context.authorizer.familyName
+          integration.request.header.x-pagopa-pn-result-code: context.authorizer.resultCode
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/io/mandate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/io/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/io/mandate/{mandateId}/cie/accept:
+    patch:
+      tags:
+        - AppIO-PN-Mandate-Create
+      summary: >-
+        Accetta la delega fornendo i dati della CIE del delegante. La delega
+        passa in stato ACTIVE in caso di successo.
+      operationId: acceptIOMandate
+      parameters:
+        - $ref: '#/components/parameters/cxTaxIdAuthFleet'
+        - $ref: '#/components/parameters/lollipopOriginalUrl'
+        - $ref: '#/components/parameters/lollipopOriginalMethod'
+        - $ref: '#/components/parameters/lollipopPublicKey'
+        - $ref: '#/components/parameters/lollipopAssertionRef'
+        - $ref: '#/components/parameters/lollipopAssertionType'
+        - $ref: '#/components/parameters/lollipopAuthJwt'
+        - $ref: '#/components/parameters/lollipopUserId'
+        - $ref: '#/components/parameters/lollipopSignatureInput'
+        - $ref: '#/components/parameters/lollipopSignature'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: >-
+              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CIEValidationData'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request - Dati CIE non forniti o in formato non corretto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                missingCIEValidationDataError:
+                  $ref: '#/components/examples/MissingCIEValidationDataError'
+                invalidCIEValidationDataError:
+                  $ref: '#/components/examples/InvalidCIEValidationDataError'
+        '401':
+          description: Unauthorized - Token di autenticazione mancante o non valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                unauthorizedError:
+                  $ref: '#/components/examples/UnauthorizedError'
+        '403':
+          description: Forbidden - Utente non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                forbiddenError:
+                  $ref: '#/components/examples/ForbiddenError'
+        '422':
+          description: Unprocessable Entity - Verifiche CIE/NONCE non riuscite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                acceptMandateCIEValidationError:
+                  $ref: '#/components/examples/AcceptMandateCIEValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+      security:
+        - pn-auth-fleet_LollipopAuthorizer_openapi: []
+        - api_key_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/io/mandate/{mandateId}/cie/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: '''IO'''
+          integration.request.header.x-pagopa-pn-name: context.authorizer.name
+          integration.request.header.x-pagopa-pn-family-name: context.authorizer.familyName
+          integration.request.header.x-pagopa-pn-result-code: context.authorizer.resultCode
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/io/mandate/{mandateId}/cie/accept API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/io/mandate/{mandateId}/cie/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+components:
+  parameters:
+    lollipopOriginalUrl:
+      name: x-pagopa-lollipop-original-url
+      in: header
+      description: lollipop expected lc original url
+      required: false
+      schema:
+        type: string
+    lollipopOriginalMethod:
+      name: x-pagopa-lollipop-original-method
+      in: header
+      description: lollipop expected lc original method
+      required: false
+      schema:
+        type: string
+    lollipopPublicKey:
+      name: x-pagopa-lollipop-public-key
+      in: header
+      description: lollipop public key
+      required: false
+      schema:
+        type: string
+    lollipopAssertionRef:
+      name: x-pagopa-lollipop-assertion-ref
+      in: header
+      description: lollipop assertion reference
+      required: false
+      schema:
+        type: string
+    lollipopAssertionType:
+      name: x-pagopa-lollipop-assertion-type
+      in: header
+      description: lollipop assertion type (SAML)
+      required: false
+      schema:
+        type: string
+    lollipopAuthJwt:
+      name: x-pagopa-lollipop-auth-jwt
+      in: header
+      description: lollipop authentication jwt
+      required: false
+      schema:
+        type: string
+    lollipopUserId:
+      name: x-pagopa-lollipop-user-id
+      in: header
+      description: lollipop user id
+      required: false
+      schema:
+        type: string
+    lollipopSignatureInput:
+      name: signature-input
+      in: header
+      description: lollipop signature input
+      required: false
+      schema:
+        type: string
+    lollipopSignature:
+      name: signature
+      in: header
+      description: lollipop signature
+      required: false
+      schema:
+        type: string
+    cxTaxIdAuthFleet:
+      name: x-pagopa-cx-taxid
+      in: header
+      description: Customer taxId, used in B2B AppIO.
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 16
+        pattern: >-
+          ^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}
+  schemas:
+    MandateCreationRequest:
+      type: object
+      required:
+        - aarQrCodeValue
+      properties:
+        aarQrCodeValue:
+          type: string
+          description: valore del token QR-Code presente sull'avviso di avvenuta ricezione
+          pattern: ^[ -~]*$
+          maxLength: 300
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          description: Available always, not required on mandate creation.
+          oneOf:
+            - type: string
+              maxLength: 36
+              pattern: >-
+                ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+            - type: 'null'
+        verificationCode:
+          description: Available only for request where requesting user is the delegator
+          oneOf:
+            - type: string
+              maxLength: 5
+              pattern: ^[0-9]*$
+            - type: 'null'
+        dateTo:
+          type: string
+          description: ISO 8601 format
+    MandateCreationResponse:
+      type: object
+      required:
+        - requestTTL
+        - mandate
+      properties:
+        requestTTL:
+          type: number
+        mandate:
+          $ref: '#/components/schemas/MandateDto'
+    CIEValidationData:
+      type: object
+      required:
+        - signedNonce
+        - nisData
+        - mrtdData
+      properties:
+        signedNonce:
+          type: string
+        nisData:
+          $ref: '#/components/schemas/NISData'
+        mrtdData:
+          $ref: '#/components/schemas/MRTDData'
+    NISData:
+      type: object
+      required:
+        - nis
+        - pub_key
+        - sod
+      properties:
+        nis:
+          type: string
+          nullable: false
+        pub_key:
+          type: string
+          nullable: false
+        sod:
+          type: string
+          nullable: false
+    MRTDData:
+      type: object
+      required:
+        - dg1
+        - dg11
+        - sod
+      properties:
+        dg1:
+          type: string
+          nullable: false
+        dg11:
+          type: string
+          nullable: false
+        sod:
+          type: string
+          nullable: false
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthorized
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: >-
+            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
+            | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: >-
+            A human readable explanation specific to this occurrence of the
+            problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+        - code
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: >-
+            The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          type: number
+          example: 503
+          maximum: 600
+          minimum: 100
+          exclusiveMaximum: true
+        title:
+          description: >-
+            A short, summary of the problem type. Written in english and
+            readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+        - status
+        - errors
+  responses: {}
+  securitySchemes:
+    api_key_openapi:
+      type: apiKey
+      name: x-api-key
+      in: header
+    pn-auth-fleet_LollipopAuthorizer_openapi:
+      type: apiKey
+      name: x-pagopa-lollipop-auth-jwt
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        authorizerUri: >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-lollipopAuthorizerLambda/invocations
+        authorizerResultTtlInSeconds: 300
+        identitySource: >-
+          method.request.header.x-pagopa-lollipop-auth-jwt,
+          method.request.header.x-pagopa-cx-taxid
+        type: request
+tags:
+  - name: AppIO-PN-Mandate-Create
+    description: Mandate Creation
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  BAD_REQUEST_PARAMETERS:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_PARAMETERS",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+  BAD_REQUEST_BODY:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_BODY",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: basic

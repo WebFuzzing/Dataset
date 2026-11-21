@@ -1,0 +1,232 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Some storage with input and output
+
+Parameters:
+  ProjectName:
+    Type: String
+    Description: Nome dell'ambiente destinazione
+
+  # Unused but required by CD pipeline
+  MicroserviceNumber:
+    Type: Number
+    Description: An unique number that identify the microservice inside the ECS cluster.
+
+  # Unused but required by CD pipeline
+  TemplateBucketBaseUrl:
+    Type: String
+    Description: URL da cui caricare i frammenti di template di infrastruttura
+  
+  Version:
+    Type: String
+    Description: 'keep track of used projects commitIds'
+  
+  CdcKinesisSourceStreamArn:
+    Type: String
+    Description: 'Where to send CDC'
+
+  AlarmSNSTopicName:
+    Type: String
+    Description: 'Topic alarm'
+
+  LogsKinesisSourceStreamArn:
+    Type: String
+    Description: 'Where to send Logs'
+  
+  LogRetention:
+    Type: Number
+    Default: 14
+
+Resources:
+
+  MandatesDynamoTable:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TableName: !Sub '${ProjectName}-Mandate'
+      AttributeDefinitions:
+        - AttributeName: "pk"
+          AttributeType: "S"
+        - AttributeName: "sk"
+          AttributeType: "S"
+        - AttributeName: "s_delegate"
+          AttributeType: "S"
+        - AttributeName: "i_state"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "pk"
+          KeyType: "HASH"
+        - AttributeName: "sk"
+          KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        -
+          IndexName: "delegate-state-gsi"
+          KeySchema:
+            -
+              AttributeName: "s_delegate"
+              KeyType: "HASH"
+            - 
+              AttributeName: "i_state"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+      BillingMode: "PAY_PER_REQUEST"            
+      TimeToLiveSpecification:
+        AttributeName: "i_ttl"
+        Enabled: true
+      KinesisStreamSpecification:
+        StreamArn: !Ref CdcKinesisSourceStreamArn
+      StreamSpecification: 
+        StreamViewType: NEW_AND_OLD_IMAGES
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true       
+
+  MandatesDynamoTableHistory:
+    Type: AWS::DynamoDB::Table
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TableName: !Sub '${ProjectName}-MandateHistory'
+      AttributeDefinitions:
+        - AttributeName: "pk"
+          AttributeType: "S"
+        - AttributeName: "sk"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "pk"
+          KeyType: "HASH"
+        - AttributeName: "sk"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
+      KinesisStreamSpecification:
+        StreamArn: !Ref CdcKinesisSourceStreamArn
+      StreamSpecification: 
+        StreamViewType: NEW_AND_OLD_IMAGES      
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: "i_ttl"
+        Enabled: true
+
+  ### DLQ used by lambda for handling expired Mandates ###
+  # NB: la coda stessa è di DLQ, quindi va allarmata. Non è necessario invece che sia allarmata la sua DLQ
+  PnMandateExpiredTriggerDLQ:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/sqs-queue.yaml"
+      Parameters:
+        QueueName: !Sub '${ProjectName}-mandate_expired_trigger_DLQ'
+        DelaySeconds: 1
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        HasDLQ:  "false"
+        QueueHasAlarm:  "true"
+
+  ### Communication for expired mandates ###
+  PnMandateInputsQueue:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/sqs-queue.yaml"
+      Parameters:
+        QueueName: !Sub '${ProjectName}-mandate_inputs'
+        DelaySeconds: 2
+        AlarmSNSTopicName: !Ref AlarmSNSTopicName
+        FifoQueue: true
+
+  PnMandateLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/log-group.yaml"
+      Parameters:
+        LogGroupName: !Sub '${ProjectName}-mandate'
+        LogGroupRetention: !Ref LogRetention
+        LogsKinesisSourceStreamArn: !Ref LogsKinesisSourceStreamArn
+
+  PnMandateExpiredTriggerLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain    
+    Properties:
+      TemplateURL: !Sub "${TemplateBucketBaseUrl}/fragments/log-group.yaml"
+      Parameters:
+        LogGroupName: !Sub "${ProjectName}-mandate-expired-trigger-lambda"
+        LogGroupRetention: !Ref LogRetention
+        LogGroupPrefix: '/aws/lambda'
+  
+  CscaMasterlistSyncLogGroup:
+    Type: AWS::CloudFormation::Stack
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      TemplateURL: !Sub ${TemplateBucketBaseUrl}/fragments/log-group.yaml
+      Parameters:
+        LogGroupName: !Sub ${ProjectName}-CscaMasterlistSync
+        LogGroupRetention: !Ref LogRetention
+        LogGroupPrefix: /aws/lambda
+
+Outputs:
+  MandatesDynamoTableName:
+    Description: Name of dynamodb table containing mandates
+    Value: !Ref MandatesDynamoTable
+
+  MandatesDynamoTableHistoryName:
+    Description: Name of dynamodb table containing mandates history
+    Value: !Ref MandatesDynamoTableHistory
+
+  MandatesDynamoTableNameStreamArn:
+      Description: ARN of dynamodb table containing stream mandates
+      Value: !GetAtt MandatesDynamoTable.StreamArn
+
+  MandatesDynamoTableArn:
+    Description: ARN of dynamodb table containing mandates
+    Value: !Sub '${MandatesDynamoTable.Arn}'
+
+  MandatesDynamoTableHistoryArn:
+    Description: ARN of dynamodb table containing mandates history
+    Value: !Sub '${MandatesDynamoTableHistory.Arn}'
+
+
+  # Mandate Expired Insert Trigger DLQ
+  PnMandateExpiredTriggerDLQName:
+    Value: !GetAtt PnMandateExpiredTriggerDLQ.Outputs.QueueName
+    Description: pn-mandate_expired_trigger_DLQ queue name
+  PnMandateExpiredTriggerDLQURL:
+    Value: !GetAtt PnMandateExpiredTriggerDLQ.Outputs.QueueURL
+    Description: pn-mandate_expired_trigger_DLQ queue URL
+  PnMandateExpiredTriggerDLQARN:
+    Value: !GetAtt PnMandateExpiredTriggerDLQ.Outputs.QueueARN
+    Description: pn-mandate_expired_trigger_DLQ queue ARN
+  PnMandateExpiredTriggerDLQAlarmARN:
+    Value: !GetAtt PnMandateExpiredTriggerDLQ.Outputs.SqsDLQAlarmArn
+    Description: pn-mandate_expired_trigger_DLQ alarm ARN
+
+
+  # Mandate input DLQ
+  PnMandateInputsQueueName:
+    Value: !GetAtt PnMandateInputsQueue.Outputs.QueueName
+    Description: pn-mandate_inputs queue name
+  PnMandateInputsQueueURL:
+    Value: !GetAtt PnMandateInputsQueue.Outputs.QueueURL
+    Description: pn-mandate_inputs queue URL
+  PnMandateInputsQueueARN:
+    Value: !GetAtt PnMandateInputsQueue.Outputs.QueueARN
+    Description: pn-mandate_inputs queue ARN
+  PnMandateInputsQueueAlarmARN:
+    Value: !GetAtt PnMandateInputsQueue.Outputs.SqsDLQAlarmArn
+    Description: pn-mandate_inputs alarm ARN
+  PnMandateInputsQueueAgeAlarmARN:
+    Value: !GetAtt PnMandateInputsQueue.Outputs.SqsAgeAlarmArn
+    Description: pn-mandate_inputs age alarm ARN
+
+  # Log group exports
+  EcsLogGroup:
+    Value: !GetAtt PnMandateLogGroup.Outputs.LogGroupName
+  PnMandateExpiredTriggerLambdaName:
+    Value: !Sub "${ProjectName}-mandate-expired-trigger-lambda"
+  CscaMasterlistSyncLambdaName:
+    Value: !Sub ${ProjectName}-CscaMasterlistSync

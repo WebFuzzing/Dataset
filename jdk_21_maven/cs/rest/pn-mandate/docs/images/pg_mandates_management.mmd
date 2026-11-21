@@ -1,0 +1,18 @@
+sequenceDiagram
+    autonumber
+    PG->>SeND:  POST /mandate/api/v1/reverse-mandate
+    SeND-->>PG: identificativo delega creata (mandateId_1)
+    PG->>SeND:  PATCH /mandate/api/v1/mandate/{mandateId_1}/accept
+    SeND-->>PG: HTTP 204    
+    PG->>SeND:  GET /mandate/api/v1/mandates-by-delegate
+    SeND-->>PG: Dati Delegante1: {NomeMostrato, codice_fiscale, nome, cognome} <br> Dati Delegato1: {NomeMostrato, codice_fiscale, nome, cognome}<br>Dati Delega1: [{mandateId_1, stato_delega, [identificativi gruppi], valida_da, valida_sino_a, codice_verifica, [identificativi_enti_mittenti_per_delega]}]
+    PG->>SeND:  POST /mandate/api/v1/reverse-mandate
+    SeND-->>PG: identificativo delega creata (mandateId_2)
+    PG->>SeND:  PATCH /mandate/api/v1/mandate/{mandateId_1}/accept
+    SeND-->>PG: HTTP 204    
+    PG->>SeND:  GET /mandate/api/v1/mandates-by-delegate
+    SeND-->>PG: [{Dati Delegante1: {NomeMostrato, codice_fiscale, nome, cognome}, Dati Delegato1: {NomeMostrato, codice_fiscale, nome, cognome}, Dati Delega1: {mandateId_1, stato_delega, [identificativi gruppi], valida_da, valida_sino_a, codice_verifica, [identificativi_enti_mittenti_per_delega]}}, <br>{{Dati Delegante2: {NomeMostrato, codice_fiscale, nome, cognome}, Dati Delegato2: {NomeMostrato, codice_fiscale, nome, cognome}, Dati Delega2: [{mandateId_2, stato_delega, [identificativi gruppi], valida_da, valida_sino_a, codice_verifica, [identificativi_enti_mittenti_per_delega]}}]
+
+
+    
+

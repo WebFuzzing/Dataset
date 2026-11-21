@@ -1,0 +1,839 @@
+openapi: 3.0.1
+info:
+  title: PN Mandate u-service
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-mandate
+  x-summary: 'Piattaforma Notifiche: API gestione deleghe'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://api.pn.pagopa.it
+    description: Generated server url
+paths:
+  /status:
+    get:
+      summary: healthCheck path
+      description: health check path per verificare lo stato del micro servizio
+      tags:
+        - HealthCheck
+      operationId: status
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Internal Server Error
+  /mandate-private/api/v1/mandates-by-internaldelegate/{internaluserId}:                          # NO EXTERNAL
+    get:                                                                                          # NO EXTERNAL
+      tags:                                                                                       # NO EXTERNAL
+        - mandate-private-service                                                                 # NO EXTERNAL
+      summary: Return only active mandates for delegate, optionally filtered by single mandateId  # NO EXTERNAL
+      operationId: listMandatesByDelegate                                                         # NO EXTERNAL
+      parameters:                                                                                 # NO EXTERNAL
+        - name: x-pagopa-pn-cx-type                                                               # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: cx-type (PF, PG, PA)                                                       # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            $ref: '#/components/schemas/cxTypeAuthFleet'                                          # NO EXTERNAL
+        - name: internaluserId                                                                    # NO EXTERNAL
+          in: path                                                                                # NO EXTERNAL
+          required: true                                                                          # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            # ASCII printable characters                                                          # NO EXTERNAL
+            maxLength: 39                                                                         # NO EXTERNAL
+            pattern: ^[ -~ ]*$                                                                    # NO EXTERNAL
+        - name: mandateId                                                                         # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            maxLength: 36                                                                         # NO EXTERNAL
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$    # NO EXTERNAL
+        - name: x-pagopa-pn-cx-groups                                                             # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: array                                                                           # NO EXTERNAL
+            items:                                                                                # NO EXTERNAL
+              type: string                                                                        # NO EXTERNAL
+              # ASCII printable characters                                                        # NO EXTERNAL
+              maxLength: 1024                                                                     # NO EXTERNAL
+              pattern: ^[ -~ ]*$                                                                  # NO EXTERNAL
+      responses:                                                                                  # NO EXTERNAL
+        '200':                                                                                    # NO EXTERNAL
+          description: OK                                                                         # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                type: array                                                                       # NO EXTERNAL
+                items:                                                                            # NO EXTERNAL
+                  $ref: '#/components/schemas/InternalMandateDto'                                 # NO EXTERNAL
+        '400':                                                                                    # NO EXTERNAL
+          description: Bad Request                                                                # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'                              # NO EXTERNAL
+  /mandate-private/api/v1/mandates-by-internaldelegator/{internaluserId}:                         # NO EXTERNAL
+    get:                                                                                          # NO EXTERNAL
+      tags:                                                                                       # NO EXTERNAL
+        - mandate-private-service                                                                 # NO EXTERNAL
+      summary: Return only active mandates for delegator, optionally filtered by single mandateId # NO EXTERNAL
+      operationId: listMandatesByDelegator                                                        # NO EXTERNAL
+      parameters:                                                                                 # NO EXTERNAL
+        - name: x-pagopa-pn-cx-type                                                               # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: cx-type (PF, PG, PA)                                                       # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            $ref: '#/components/schemas/cxTypeAuthFleet'                                          # NO EXTERNAL
+        - name: internaluserId                                                                    # NO EXTERNAL
+          in: path                                                                                # NO EXTERNAL
+          required: true                                                                          # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            # ASCII printable characters                                                          # NO EXTERNAL
+            maxLength: 39                                                                         # NO EXTERNAL
+            pattern: ^[ -~ ]*$                                                                    # NO EXTERNAL
+        - name: mandateId                                                                         # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            maxLength: 36                                                                         # NO EXTERNAL
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$   # NO EXTERNAL
+        - name: x-pagopa-pn-cx-groups                                                             # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: array                                                                           # NO EXTERNAL
+            items:                                                                                # NO EXTERNAL
+              type: string                                                                        # NO EXTERNAL
+              # ASCII printable characters                                                        # NO EXTERNAL
+              maxLength: 1024                                                                     # NO EXTERNAL
+              pattern: ^[ -~ ]*$                                                                  # NO EXTERNAL
+        - name: cx-role                                                                           # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            # ASCII printable characters                                                          # NO EXTERNAL
+            pattern: ^[ -~]*$                                                                     # NO EXTERNAL
+            maxLength: 64                                                                         # NO EXTERNAL
+        - name: delegateType                                                                      # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: delegate type (PF, PG)                                                     # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            $ref: '#/components/schemas/delegateType'                                             # NO EXTERNAL
+      responses:                                                                                  # NO EXTERNAL
+        '200':                                                                                    # NO EXTERNAL
+          description: OK                                                                         # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                type: array                                                                       # NO EXTERNAL
+                items:                                                                            # NO EXTERNAL
+                  $ref: '#/components/schemas/InternalMandateDto'                                 # NO EXTERNAL
+        '400':                                                                                    # NO EXTERNAL
+          description: Bad Request                                                                # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'                              # NO EXTERNAL
+  /mandate-private/api/v1/mandates-by-internaldelegators:                                         # NO EXTERNAL
+    post:                                                                                         # NO EXTERNAL
+      tags:                                                                                       # NO EXTERNAL
+        - mandate-private-service                                                                 # NO EXTERNAL
+      summary: Return only active mandates for delegators, filtered by multiple mandateId         # NO EXTERNAL
+      operationId: listMandatesByDelegators                                                       # NO EXTERNAL
+      parameters:                                                                                 # NO EXTERNAL
+        - name: delegateType                                                                      # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: delegate type (PF, PG)                                                     # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            $ref: '#/components/schemas/delegateType'                                             # NO EXTERNAL
+        - name: delegateGroups                                                                    # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: delegate groups                                                            # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: array                                                                           # NO EXTERNAL
+            items:                                                                                # NO EXTERNAL
+              type: string                                                                        # NO EXTERNAL
+              # ASCII printable characters                                                        # NO EXTERNAL
+              maxLength: 80                                                                       # NO EXTERNAL
+              pattern: ^[ -~ ]*$                                                                  # NO EXTERNAL
+      requestBody:                                                                                # NO EXTERNAL
+        content:                                                                                  # NO EXTERNAL
+          application/json:                                                                       # NO EXTERNAL
+            schema:                                                                               # NO EXTERNAL
+              type: array                                                                         # NO EXTERNAL
+              items:                                                                              # NO EXTERNAL
+                $ref: '#/components/schemas/MandateByDelegatorRequestDto'                         # NO EXTERNAL
+      responses:                                                                                  # NO EXTERNAL
+        '200':                                                                                    # NO EXTERNAL
+          description: OK                                                                         # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                type: array                                                                       # NO EXTERNAL
+                items:                                                                            # NO EXTERNAL
+                  $ref: '#/components/schemas/InternalMandateDto'                                 # NO EXTERNAL
+        '400':                                                                                    # NO EXTERNAL
+          description: Bad Request                                                                # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'                              # NO EXTERNAL
+  /mandate-private/api/v2/mandates-by-internaldelegate/{internaluserId}:                          # NO EXTERNAL
+    get:                                                                                          # NO EXTERNAL
+      tags:                                                                                       # NO EXTERNAL
+        - mandate-private-service-v2                                                              # NO EXTERNAL
+      summary: Return only active and valid mandates for delegate, filtered by given filters      # NO EXTERNAL
+      operationId: listMandatesByDelegateV2                                                       # NO EXTERNAL
+      parameters:                                                                                 # NO EXTERNAL
+        - name: x-pagopa-pn-cx-type                                                               # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: cx-type (PF, PG, PA)                                                       # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            $ref: '#/components/schemas/cxTypeAuthFleet'                                          # NO EXTERNAL
+        - name: internaluserId                                                                    # NO EXTERNAL
+          in: path                                                                                # NO EXTERNAL
+          required: true                                                                          # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            # ASCII printable characters                                                          # NO EXTERNAL
+            maxLength: 39                                                                         # NO EXTERNAL
+            pattern: ^[ -~ ]*$                                                                    # NO EXTERNAL
+        - name: mandateId                                                                         # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            maxLength: 36                                                                         # NO EXTERNAL
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$    # NO EXTERNAL
+        - name: x-pagopa-pn-cx-groups                                                             # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: array                                                                           # NO EXTERNAL
+            items:                                                                                # NO EXTERNAL
+              type: string                                                                        # NO EXTERNAL
+              # ASCII printable characters                                                        # NO EXTERNAL
+              maxLength: 1024                                                                     # NO EXTERNAL
+              pattern: ^[ -~ ]*$                                                                  # NO EXTERNAL
+        - name: notificationSentAt                                                                # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: filter mandates with start validation date lower than or equal to this value (ISO 8601 format)  # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+            format: date-time                                                                     # NO EXTERNAL
+        - name: iun                                                                               # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: filter mandates which are associated to this iun                           # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+        - name: rootSenderId                                                                      # NO EXTERNAL
+          in: query                                                                               # NO EXTERNAL
+          description: filter mandates with visibilityId that is null or contains this rootSenderId # NO EXTERNAL
+          schema:                                                                                 # NO EXTERNAL
+            type: string                                                                          # NO EXTERNAL
+      responses:                                                                                  # NO EXTERNAL
+        '200':                                                                                    # NO EXTERNAL
+          description: OK                                                                         # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                type: array                                                                       # NO EXTERNAL
+                items:                                                                            # NO EXTERNAL
+                  $ref: '#/components/schemas/InternalMandateDto'                                 # NO EXTERNAL
+        '400':                                                                                    # NO EXTERNAL
+          description: Bad Request                                                                # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'                              # NO EXTERNAL
+        '500':                                                                                    # NO EXTERNAL
+          description: Internal Server Error                                                      # NO EXTERNAL
+          content:                                                                                # NO EXTERNAL
+            application/json:                                                                     # NO EXTERNAL
+              schema:                                                                             # NO EXTERNAL
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'                              # NO EXTERNAL
+  /mandate/api/v1/count-by-delegate:
+    get:
+      tags:
+        - mandate-service
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      summary: >-
+        Return total mandates based on required status if filter's specified. 
+        If no filter is present, returns total of all pending and active mandates
+      operationId: countMandatesByDelegate
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCountsDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate:
+    post:
+      tags:
+        - mandate-service
+      summary: Create a new mandate, returns the just created mandate if successful
+      operationId: createMandate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:                                                               # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/uidAuthFleet'          # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/headerSourceChannel'   # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/accept:
+    patch:
+      tags:
+        - mandate-service
+      summary: Accept a mandate
+      operationId: acceptMandate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/update:
+    patch:
+      tags:
+        - mandate-service
+      summary: Update a mandate
+      operationId: updateMandate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/reject:
+    patch:
+      tags:
+        - mandate-service
+      summary: Reject a mandate
+      operationId: rejectMandate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/revoke:
+    patch:
+      tags:
+        - mandate-service
+      summary: Revoke a mandate
+      operationId: revokeMandate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on required status if filter's specified. If no filter is present, returns all pending and active mandates
+      operationId: listMandatesByDelegate_1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+    post:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on status, groups and delegators (taxId)
+      operationId: searchMandatesByDelegate
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            maximum: 50
+        - name: nextPageKey
+          in: query
+          schema:
+            type: string
+            # ASCII printable characters
+            maxLength: 4096
+            pattern: ^[ -~ ]*$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegator:
+    get:
+      tags:
+        - mandate-service
+      summary: Return all pending and active mandates
+      operationId: listMandatesByDelegator_1
+#      security:                                                                # ONLY EXTERNAL
+#        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:                                                               # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+tags:
+  - name: HealthCheck
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+  - name: mandate-service
+    description: >-
+      Servizi per gestione delega
+
+components:
+  parameters:
+    cxRoleAuthFleet:
+      name: x-pagopa-pn-cx-role
+      in: header
+      description: Ruolo (estratto da token di Self Care)
+      required: false
+      schema:
+        type: string
+        # ASCII printable characters
+        pattern: ^[ -~]*$
+        maxLength: 64
+  schemas:
+    cxTypeAuthFleet:                                                                  # NO EXTERNAL
+      type: string                                                                    # NO EXTERNAL
+      enum:                                                                           # NO EXTERNAL
+        - PG                                                                          # NO EXTERNAL
+        - PF                                                                          # NO EXTERNAL
+        - PA                                                                          # NO EXTERNAL
+    delegateType:                                                                     # NO EXTERNAL
+      type: string                                                                    # NO EXTERNAL
+      enum:                                                                           # NO EXTERNAL
+        - PG                                                                          # NO EXTERNAL
+        - PF                                                                          # NO EXTERNAL
+    WorkflowType:                                                                     # NO EXTERNAL
+      description: It identifies the workflow type of the process of creation and acceptance of a mandate  # NO EXTERNAL
+      type: string                                                                    # NO EXTERNAL
+      enum:                                                                           # NO EXTERNAL
+        - STANDARD                                                                    # NO EXTERNAL
+        - REVERSE                                                                     # NO EXTERNAL
+        - CIE                                                                         # NO EXTERNAL
+    InternalMandateDto:                                                               # NO EXTERNAL
+      type: object                                                                    # NO EXTERNAL
+      properties:                                                                     # NO EXTERNAL
+        mandateId:                                                                    # NO EXTERNAL
+          type: string                                                                # NO EXTERNAL
+        delegator:                                                                    # NO EXTERNAL
+          type: string                                                                # NO EXTERNAL
+        delegate:                                                                     # NO EXTERNAL
+          type: string                                                                # NO EXTERNAL
+        visibilityIds:                                                                # NO EXTERNAL
+          type: array                                                                 # NO EXTERNAL
+          items:                                                                      # NO EXTERNAL
+            type: string                                                              # NO EXTERNAL
+        datefrom:                                                                     # NO EXTERNAL
+          type: string                                                                # NO EXTERNAL
+          description: ISO 8601 format                                                # NO EXTERNAL
+        dateto:                                                                       # NO EXTERNAL
+          type: string                                                                # NO EXTERNAL
+          description: ISO 8601 format                                                # NO EXTERNAL
+        groups:                                                                       # NO EXTERNAL
+          type: array                                                                 # NO EXTERNAL
+          items:                                                                      # NO EXTERNAL
+            type: string                                                              # NO EXTERNAL
+        workflowType:                                                                 # NO EXTERNAL
+          $ref: '#/components/schemas/WorkflowType'                                   # NO EXTERNAL
+        iuns:                                                                         # NO EXTERNAL
+          type: array                                                                 # NO EXTERNAL
+          items:                                                                      # NO EXTERNAL
+            type: string                                                              # NO EXTERNAL
+    MandateCountsDto:
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int32
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Available always, not required on mandate creation.
+          nullable: true
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          type: string
+          description: Available always, not required on mandate creation.
+          nullable: true
+          enum:
+            - pending
+            - active
+            - revoked
+            - rejected
+            - expired
+        visibilityIds:
+          type: array
+          description: Available always, not required on mandate creation.
+          nullable: true
+          items:
+            $ref: '#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        datefrom:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    OrganizationIdDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+          pattern: ^([\x20-\xFF]{1,250})$
+        uniqueIdentifier:
+          type: string
+          maxLength: 50
+          # ASCII printable characters
+          pattern: ^[ -~ ]*$
+      description: Available always, not required on mandate creation.
+      nullable: true
+    UserDto:
+      type: object
+      properties:
+        displayName:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        firstName:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        lastName:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        companyName:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          maxLength: 250
+          pattern: '^([\x20-\xFF]{1,250})$'
+        fiscalCode:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          maxLength: 16
+          pattern: '^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$'
+        person:
+          type: boolean
+      description: Available only for request where requesting user is the delegator
+      nullable: true
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          # ASCII printable characters
+          pattern: ^[ -~ ]*$
+        name:
+          type: string
+          # ASCII printable characters
+          maxLength: 80
+          pattern: ^[ -~ ]*$
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+        groups:
+          type: array
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          x-field-extra-annotation: "@lombok.ToString.Exclude"                                             # NO EXTERNAL
+          format: password # NO EXTERNAL
+          minLength: 11
+          maxLength: 16
+          pattern: "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$"
+        groups:
+          type: array
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/>
+            Valorizzato solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    MandateByDelegatorRequestDto:
+      type: object
+      required:
+        - mandateId
+        - delegatorId
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        delegatorId:
+          type: string
+          # ASCII printable characters
+          maxLength: 39
+          pattern: ^[ -~ ]*$
+#  securitySchemes:                                      # ONLY EXTERNAL
+#    bearerAuth:                                         # ONLY EXTERNAL
+#      type: http                                        # ONLY EXTERNAL
+#      scheme: bearer                                    # ONLY EXTERNAL
+#      bearerFormat: JWT                                 # ONLY EXTERNAL
+#security:                                               # ONLY EXTERNAL
+# - bearerAuth: []                                       # ONLY EXTERNAL
+              

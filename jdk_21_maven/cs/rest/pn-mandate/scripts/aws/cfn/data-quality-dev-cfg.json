@@ -1,0 +1,5 @@
+{
+  "Parameters" : {
+    "MandatesGlueTableName": "pn_mandate"
+  }
+}

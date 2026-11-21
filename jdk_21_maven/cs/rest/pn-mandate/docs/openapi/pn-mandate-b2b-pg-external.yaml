@@ -1,0 +1,554 @@
+openapi: 3.0.1
+info:
+  title: PN Mandate MicroService
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-mandate
+  x-summary: 'Piattaforma Notifiche: API B2B per la gestione delle deleghe'
+  version: '1.0.0'
+  description: >-
+    ## Abstract
+      API utilizzate dalle persone giuridiche per avere la lista delle notifiche e il dettaglio di ognuna di queste.
+    ## Due dei possibili utilizzi che possono essere fatti
+    
+    ### La creazione di una delega inversa
+    <img src="https://raw.githubusercontent.com/pagopa/pn-mandate/refs/heads/develop/docs/images/pg_reverse_mandate_creation.svg">
+
+    #### Descrizione delle operazioni:
+
+    <ul>
+      <li>1) Richiesta di creazione di una delega a favore della PG con dati della PG e del delegante/li>
+      <li>3) Accettazione della notifica fornendo il mandateId ricevuto in fase di richiesta di creazione e il verification code fornito dal delegante</li>
+    </ul>
+
+
+    ### Un workflow comprensivo di creazione delega inversa e interrogazione
+    <img src="https://raw.githubusercontent.com/pagopa/pn-mandate/refs/heads/develop/docs/images/pg_mandates_management.svg">
+
+    Descrizione delle operazioni:
+    <ul>
+      <li>1) Richiesta di creazione di una delega a favore della PG con dati della PG e del delegante_1/li>
+      <li>3) Accettazione della notifica fornendo il mandateId ricevuto in fase di richiesta di creazione e il verification code fornito dal delegante_1</li>
+      <li>5) lista delle deleghe ricevute (si riceverà una lista di un elemento contenente i dati della delega appena creata [la PG delegata, il delegante "delegato 1", la data di validitò della delega...])</li>
+      <li>7) Richiesta di creazione di una delega a favore della PG con dati della PG e del delegante_2/li>
+      <li>9) Accettazione della notifica fornendo il mandateId ricevuto in fase di richiesta di creazione e il verification code fornito dal delegante_2</li>
+      <li>5) lista delle deleghe ricevute (si riceverà una lista di due elementi contenente i dati delle due deleghe create</li>
+    </ul>
+
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://api.prod.notifichedigitali.it
+    description: Ambiente di produzione
+  - url: https://api.uat.notifichedigitali.it
+    description: Ambiente di UAT
+  - url: https://api.test.notifichedigitali.it
+    description: Ambiente di test
+  - url: https://api.dev.notifichedigitali.it
+    description: Ambiente di sviluppo
+paths:
+  /mandate/api/v1/mandate:
+    post:
+      tags:
+        - mandate-service
+      summary: Crea una nuova delega restituendone l'identificativo in caso di successo
+      operationId: createMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/accept:
+    patch:
+      tags:
+        - mandate-service
+      summary: Accettazione di una delega
+      operationId: acceptMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/update:
+    patch:
+      tags:
+        - mandate-service
+      summary: Update a mandate
+      operationId: updateMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/reject:
+    patch:
+      tags:
+        - mandate-service
+      summary: Rifiuta il conferimento di una delega
+      operationId: rejectMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/revoke:
+    patch:
+      tags:
+        - mandate-service
+      summary: Annulla/Ritira una delega
+      operationId: revokeMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: >-
+        Restituisce la lista filtrata delle deleghe per delegato filtrate per il filtro passato come parametro.
+        Se non viene impostato nessun filtro, restituisce tutte le deleghe attive e in attesa (status=pending)
+      operationId: listMandatesByDelegate_1
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+    post:
+      tags:
+        - mandate-service
+      summary: Restituisce la lista delle deleghe filtrata per stato, gruppi e deleganti(taxId)
+      operationId: searchMandatesByDelegate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      parameters:
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            maximum: 50
+        - name: nextPageKey
+          in: query
+          schema:
+            type: string
+            # ASCII printable characters
+            maxLength: 4096
+            pattern: ^[ -~ ]*$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegator:
+    get:
+      tags:
+        - mandate-service
+      summary: Restituisce la lista di tutte le deleghe pending o attive per un delegante
+      operationId: listMandatesByDelegator_1
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      x-api-permissions:
+        - 'BASE'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/reverse-mandate:
+    post:
+      tags:
+        - mandate-reverse-service
+      summary: Crea una delega inversa (a richiederla è il delegato). Se ha successo, restituisce i dati della delega creata
+      operationId: createReverseMandate
+      x-api-permissions:
+        - 'REVERSE_MANDATE'
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDtoRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDtoResponse'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+
+tags:
+  - name: HealthCheck
+    description: >-
+      Invocazioni per sapere lo stato del microservizio
+  - name: mandate-service
+    description: >-
+      Servizi per gestione delega
+
+components:
+  parameters:
+    cxRoleAuthFleet:
+      name: x-pagopa-pn-cx-role
+      in: header
+      description: Ruolo (estratto da token di Self Care)
+      required: false
+      schema:
+        type: string
+        # ASCII printable characters
+        pattern: ^[ -~]*$
+        maxLength: 64
+  schemas:
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Identificativo della delega, non richiesto alla creazione della delega.
+          nullable: true
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          type: string
+          description: Stato della delega, non richiesto alla creazione della delega.
+          nullable: true
+          enum:
+            - pending
+            - active
+            - revoked
+            - rejected
+            - expired
+        visibilityIds:
+          type: array
+          description: Enti mittenti per cui è valida la delega
+          nullable: true
+          items:
+            $ref: '#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Codice di verifica della delega. Disponibile solo per le richieste ricevute dal delegante.
+          nullable: true
+        datefrom:
+          type: string
+          description: Data in formato ISO 8601
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: Data in formato ISO 8601
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          description: Gruppi di utenti a cui la delega è concessa
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    OrganizationIdDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+          pattern: ^([\x20-\xFF]{1,250})$
+        uniqueIdentifier:
+          type: string
+          maxLength: 50
+          # ASCII printable characters
+          pattern: ^[ -~ ]*$
+      description: Dati degli enti mittenti
+      nullable: true
+    UserDto:
+      type: object
+      properties:
+        displayName:
+          type: string
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        firstName:
+          type: string
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        lastName:
+          type: string
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        companyName:
+          type: string
+          maxLength: 250
+          pattern: '^([\x20-\xFF]{1,250})$'
+        fiscalCode:
+          type: string
+          maxLength: 16
+          pattern: '^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$'
+        person:
+          type: boolean
+      description: Dati utente
+      nullable: true
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          # ASCII printable characters
+          pattern: ^[ -~ ]*$
+        name:
+          type: string
+          # ASCII printable characters
+          maxLength: 80
+          pattern: ^[ -~ ]*$
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+        groups:
+          type: array
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          minLength: 11
+          maxLength: 16
+          pattern: "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$"
+        groups:
+          type: array
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/>
+            Valorizzato solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    MandateDtoRequest:
+      type: object
+      properties:
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        datefrom:
+          type: string
+          description: >-
+            Data in formato ISO 8601. Questo campo è al momento ignorato e automaticamente impostato a 120 
+            giorni prima della creazione della delega.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: Data in formato ISO 8601. Questo campo deve essere almeno un giorno dopo la data di crezione della delega.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+    MandateDtoResponse:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Identificativo univoco della delega
+          nullable: false
+
+  securitySchemes:                                      # ONLY EXTERNAL
+    bearerAuth:                                         # ONLY EXTERNAL
+      type: http                                        # ONLY EXTERNAL
+      scheme: bearer                                    # ONLY EXTERNAL
+      bearerFormat: JWT                                 # ONLY EXTERNAL
+security:                                               # ONLY EXTERNAL
+ - bearerAuth: []                                       # ONLY EXTERNAL
+              

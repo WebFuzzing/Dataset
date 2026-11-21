@@ -1,0 +1,49 @@
+<project name="PnMandateDeployLambdaInLocalstack" default="default" basedir=".">
+    <description>
+        File di build e deploy della lambda in localstack.
+        Si preoccupa di eseguire gli script di extract, zippare (che purtroppo su win non c'è disponibile come comando) e deployare
+    </description>
+
+    <property name="windows_bash_exe" value="${windows_bash_exe}" />
+
+
+    <target name="default" depends="deploy">
+        <echo  level="info" message="Procedura terminata"/>
+    </target>
+
+    <target name="deploy" depends="zip"
+            description="Esegue il deploy della lambda">
+
+        <echo  level="info" message="Esegue il deploy dello zip lambda.zip in localstack"/>
+
+        <exec dir="." executable="${windows_bash_exe}" osfamily="windows">
+            <arg value="${basedir}/scripts/aws/lambda/deploy-lambda-in-localstack.sh" />
+        </exec>
+        <exec dir="." executable="/bin/bash" osfamily="unix">
+            <arg value="${basedir}/scripts/aws/lambda/deploy-lambda-in-localstack.sh" />
+        </exec>
+    </target>
+
+    <target name="zip" depends="extract"
+            description="Crea il file lambda.zip">
+
+        <echo  level="info" message="Zippo il file index.js nel file lambda.zip"/>
+
+        <zip destfile="${basedir}/scripts/aws/lambda/lambda.zip"
+             basedir="${basedir}/scripts/aws/lambda"
+             includes="index.js"/>
+    </target>
+
+    <target name="extract"
+            description="Estrae dal file storage.yml il codice della lambda e crea il file index.js">
+
+        <echo level="info" message="Estraggo dal file storage.yml il codice della lambda e crea il file index.js"/>
+
+        <exec dir="." executable="${windows_bash_exe}" osfamily="windows">
+            <arg value="${basedir}/scripts/aws/lambda/extract-lambda-in-single-file-js.sh" />
+        </exec>
+        <exec dir="." executable="/bin/bash" osfamily="unix">
+            <arg value="${basedir}/scripts/aws/lambda/extract-lambda-in-single-file-js.sh" />
+        </exec>
+    </target>
+</project>
