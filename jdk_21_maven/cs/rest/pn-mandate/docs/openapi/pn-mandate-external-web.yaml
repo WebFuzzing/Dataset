@@ -1,0 +1,446 @@
+openapi: 3.0.1
+info:
+  title: PN Mandate u-service
+  description: Documentation APIs v1.0
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-mandate
+  x-summary: 'Piattaforma Notifiche: API gestione deleghe'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://api.pn.pagopa.it
+    description: Generated server url
+paths:
+  /status:
+    get:
+      summary: healthCheck path
+      description: health check path per verificare lo stato del micro servizio
+      tags:
+        - HealthCheck
+      operationId: status
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: Internal Server Error
+  /mandate/api/v1/count-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      summary: >-
+        Return total mandates based on required status if filter's specified. 
+        If no filter is present, returns total of all pending and active mandates
+      operationId: countMandatesByDelegate
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCountsDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate:
+    post:
+      tags:
+        - mandate-service
+      summary: Create a new mandate, returns the just created mandate if successful
+      operationId: createMandate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/accept:
+    patch:
+      tags:
+        - mandate-service
+      summary: Accept a mandate
+      operationId: acceptMandate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/update:
+    patch:
+      tags:
+        - mandate-service
+      summary: Update a mandate
+      operationId: updateMandate
+      #      security:                                                                # ONLY EXTERNAL
+      #        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - $ref: 'remote-refs.yaml#/components/parameters/cxIdAuthFleet'         # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxTypeAuthFleet'       # NO EXTERNAL
+        - $ref: 'remote-refs.yaml#/components/parameters/cxGroupsAuthFleet'     # NO EXTERNAL
+        - $ref: '#/components/parameters/cxRoleAuthFleet'                       # NO EXTERNAL
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/reject:
+    patch:
+      tags:
+        - mandate-service
+      summary: Reject a mandate
+      operationId: rejectMandate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandate/{mandateId}/revoke:
+    patch:
+      tags:
+        - mandate-service
+      summary: Revoke a mandate
+      operationId: revokeMandate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on required status if filter's specified. If no filter is present, returns all pending and active mandates
+      operationId: listMandatesByDelegate_1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+    post:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on status, groups and delegators (taxId)
+      operationId: searchMandatesByDelegate
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      parameters:
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            maximum: 50
+        - name: nextPageKey
+          in: query
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+  /mandate/api/v1/mandates-by-delegator:
+    get:
+      tags:
+        - mandate-service
+      summary: Return all pending and active mandates
+      operationId: listMandatesByDelegator_1
+      security:                                                                # ONLY EXTERNAL
+        - bearerAuth: [ ]                                                      # ONLY EXTERNAL
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: 'remote-refs.yaml#/components/schemas/Problem'
+components:
+  parameters:
+    cxRoleAuthFleet:
+      name: x-pagopa-pn-cx-role
+      in: header
+      description: Ruolo (estratto da token di Self Care)
+      required: false
+      schema:
+        type: string
+        # ASCII printable characters
+        pattern: ^[ -~]*$
+        maxLength: 64
+  schemas:
+    MandateCountsDto:
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int32
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          description: Available always, not required on mandate creation.
+          nullable: true
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          type: string
+          description: Available always, not required on mandate creation.
+          nullable: true
+          enum:
+            - pending
+            - active
+            - revoked
+            - rejected
+            - expired
+        visibilityIds:
+          type: array
+          description: Available always, not required on mandate creation.
+          nullable: true
+          items:
+            $ref: '#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        datefrom:
+          type: string
+          description: ISO 8601 format
+        dateto:
+          type: string
+          description: ISO 8601 format
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    OrganizationIdDto:
+      type: object
+      properties:
+        name:
+          type: string
+        uniqueIdentifier:
+          type: string
+      description: Available always, not required on mandate creation.
+      nullable: true
+    UserDto:
+      type: object
+      properties:
+        displayName:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        fiscalCode:
+          type: string
+        person:
+          type: boolean
+      description: Available only for request where requesting user is the delegator
+      nullable: true
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+        groups:
+          type: array
+          items:
+            type: string
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          minLength: 11
+          maxLength: 16
+          pattern: "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$"
+        groups:
+          type: array
+          items:
+            type: string
+            # ASCII printable characters
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/>
+            Valorizzato solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    MandateByDelegatorRequestDto:
+      type: object
+      required:
+        - mandateId
+        - delegatorId
+      properties:
+        mandateId:
+          type: string
+        delegatorId:
+          type: string
+  securitySchemes:                                      # ONLY EXTERNAL
+    bearerAuth:                                         # ONLY EXTERNAL
+      type: http                                        # ONLY EXTERNAL
+      scheme: bearer                                    # ONLY EXTERNAL
+      bearerFormat: JWT                                 # ONLY EXTERNAL
+security:                                               # ONLY EXTERNAL
+ - bearerAuth: []                                       # ONLY EXTERNAL

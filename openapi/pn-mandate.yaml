@@ -1,0 +1,1302 @@
+openapi: 3.0.1
+info:
+  title: PN Mandate u-service
+  description: Offline merged OpenAPI specification for PN Mandate microservice (internal, B2B PG reverse mandate, and AppIO endpoints)
+  termsOfService: https://termofservice.it
+  x-api-id: api-internal-mandate
+  x-summary: 'Piattaforma Notifiche: API gestione deleghe'
+  version: '1.0.0'
+  contact:
+    email: pn@pagopa.it
+  license:
+    name: Licenza di PN
+    url: 'https://da-definire/'
+servers:
+  - url: https://api.pn.pagopa.it
+    description: Generated server url
+tags:
+  - name: mandate-private-service
+    description: Servizi privati per gestione delega v1
+  - name: mandate-private-service-v2
+    description: Servizi privati per gestione delega v2
+  - name: mandate-service
+    description: Servizi per gestione delega
+  - name: mandate-reverse-service
+    description: Servizi per creazione delega inversa
+  - name: AppIO-PN-Mandate-Create
+    description: Mandate Creation AppIO
+paths:
+  /mandate-private/api/v1/mandates-by-internaldelegate/{internaluserId}:
+    get:
+      tags:
+        - mandate-private-service
+      summary: Return only active mandates for delegate, optionally filtered by single mandateId
+      operationId: listMandatesByDelegate
+      parameters:
+        - name: x-pagopa-pn-cx-type
+          in: query
+          description: cx-type (PF, PG, PA)
+          schema:
+            $ref: '#/components/schemas/cxTypeAuthFleet'
+        - name: internaluserId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+        - name: mandateId
+          in: query
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        - name: x-pagopa-pn-cx-groups
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              maxLength: 1024
+              pattern: ^[ -~ ]*$
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternalMandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate-private/api/v1/mandates-by-internaldelegator/{internaluserId}:
+    get:
+      tags:
+        - mandate-private-service
+      summary: Return only active mandates for delegator, optionally filtered by single mandateId
+      operationId: listMandatesByDelegator
+      parameters:
+        - name: x-pagopa-pn-cx-type
+          in: query
+          description: cx-type (PF, PG, PA)
+          schema:
+            $ref: '#/components/schemas/cxTypeAuthFleet'
+        - name: internaluserId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+        - name: mandateId
+          in: query
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        - name: x-pagopa-pn-cx-groups
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              maxLength: 1024
+              pattern: ^[ -~ ]*$
+        - name: cx-role
+          in: query
+          schema:
+            type: string
+            pattern: ^[ -~]*$
+            maxLength: 64
+        - name: delegateType
+          in: query
+          description: delegate type (PF, PG)
+          schema:
+            $ref: '#/components/schemas/delegateType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternalMandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate-private/api/v1/mandates-by-internaldelegators:
+    post:
+      tags:
+        - mandate-private-service
+      summary: Return only active mandates for delegators, filtered by multiple mandateId
+      operationId: listMandatesByDelegators
+      parameters:
+        - name: delegateType
+          in: query
+          description: delegate type (PF, PG)
+          schema:
+            $ref: '#/components/schemas/delegateType'
+        - name: delegateGroups
+          in: query
+          description: delegate groups
+          schema:
+            type: array
+            items:
+              type: string
+              maxLength: 80
+              pattern: ^[ -~ ]*$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/MandateByDelegatorRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternalMandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate-private/api/v2/mandates-by-internaldelegate/{internaluserId}:
+    get:
+      tags:
+        - mandate-private-service-v2
+      summary: Return only active and valid mandates for delegate, filtered by given filters
+      operationId: listMandatesByDelegateV2
+      parameters:
+        - name: x-pagopa-pn-cx-type
+          in: query
+          description: cx-type (PF, PG, PA)
+          schema:
+            $ref: '#/components/schemas/cxTypeAuthFleet'
+        - name: internaluserId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+        - name: mandateId
+          in: query
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        - name: x-pagopa-pn-cx-groups
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              maxLength: 1024
+              pattern: ^[ -~ ]*$
+        - name: notificationSentAt
+          in: query
+          description: filter mandates with start validation date lower than or equal to this value (ISO 8601 format)
+          schema:
+            type: string
+            format: date-time
+        - name: iun
+          in: query
+          description: filter mandates which are associated to this iun
+          schema:
+            type: string
+        - name: rootSenderId
+          in: query
+          description: filter mandates with visibilityId that is null or contains this rootSenderId
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InternalMandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/count-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: >-
+        Return total mandates based on required status if filter's specified.
+        If no filter is present, returns total of all pending and active mandates
+      operationId: countMandatesByDelegate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCountsDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandate:
+    post:
+      tags:
+        - mandate-service
+      summary: Create a new mandate, returns the just created mandate if successful
+      operationId: createMandate
+      parameters:
+        - $ref: '#/components/parameters/uidAuthFleet'
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/headerSourceChannel'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandate/{mandateId}/accept:
+    patch:
+      tags:
+        - mandate-service
+      summary: Accept a mandate
+      operationId: acceptMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandate/{mandateId}/update:
+    patch:
+      tags:
+        - mandate-service
+      summary: Update a mandate
+      operationId: updateMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandate/{mandateId}/reject:
+    patch:
+      tags:
+        - mandate-service
+      summary: Reject a mandate
+      operationId: rejectMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandate/{mandateId}/revoke:
+    patch:
+      tags:
+        - mandate-service
+      summary: Revoke a mandate
+      operationId: revokeMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandates-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on required status if filter's specified. If no filter is present, returns all pending and active mandates
+      operationId: listMandatesByDelegate_1
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+    post:
+      tags:
+        - mandate-service
+      summary: Return filtered mandates based on status, groups and delegators (taxId)
+      operationId: searchMandatesByDelegate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+            maximum: 50
+        - name: nextPageKey
+          in: query
+          schema:
+            type: string
+            maxLength: 4096
+            pattern: ^[ -~ ]*$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/mandates-by-delegator:
+    get:
+      tags:
+        - mandate-service
+      summary: Return all pending and active mandates
+      operationId: listMandatesByDelegator_1
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/reverse-mandate:
+    post:
+      tags:
+        - mandate-reverse-service
+      summary: Crea una delega inversa (a richiederla è il delegato). Se ha successo, restituisce i dati della delega creata
+      operationId: createReverseMandate
+      parameters:
+        - $ref: '#/components/parameters/uidAuthFleet'
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/cxGroupsAuthFleet'
+        - $ref: '#/components/parameters/cxRoleAuthFleet'
+        - $ref: '#/components/parameters/headerSourceChannel'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDtoRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDtoResponse'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /mandate/api/v1/io/mandate:
+    post:
+      tags:
+        - AppIO-PN-Mandate-Create
+      summary: Crea una delega temporanea in stato PENDING
+      description: Crea una nuova delega in stato PENDING che in seguito all'accettazione può permettere l'accesso temporaneo ad una notifica. Restituisce i dati della delega in caso di successo
+      operationId: createIOMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - $ref: '#/components/parameters/lollipopUserName'
+        - $ref: '#/components/parameters/lollipopUserFamilyName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateCreationRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateCreationResponse'
+        '400':
+          description: Bad Request - QRCode non trovato o in formato non corretto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                createMandateInvalidQRError:
+                  $ref: '#/components/examples/CreateMandateInvalidQRError'
+                createMandateQRNotFoundError:
+                  $ref: '#/components/examples/CreateMandateQRNotFoundError'
+        '401':
+          description: Unauthorized - Token di autenticazione mancante o non valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                unauthorizedError:
+                  $ref: '#/components/examples/UnauthorizedError'
+        '403':
+          description: Forbidden - Utente non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                forbiddenError:
+                  $ref: '#/components/examples/ForbiddenError'
+        '409':
+          description: Conflict - Esiste già una delega in stato attiva o pending tra il delegante e delegato per lo stesso IUN.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                createMandateConflictError:
+                  $ref: '#/components/examples/CreateMandateConflictError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+
+  /mandate/api/v1/io/mandate/{mandateId}/cie/accept:
+    patch:
+      tags:
+        - AppIO-PN-Mandate-Create
+      summary: Accetta la delega fornendo i dati della CIE del delegante. La delega passa in stato ACTIVE in caso di successo.
+      operationId: acceptIOMandate
+      parameters:
+        - $ref: '#/components/parameters/cxIdAuthFleet'
+        - $ref: '#/components/parameters/cxTypeAuthFleet'
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CIEValidationData'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request - Dati CIE non forniti o in formato non corretto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                missingCIEValidationDataError:
+                  $ref: '#/components/examples/MissingCIEValidationDataError'
+                invalidCIEValidationDataError:
+                  $ref: '#/components/examples/InvalidCIEValidationDataError'
+        '401':
+          description: Unauthorized - Token di autenticazione mancante o non valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                unauthorizedError:
+                  $ref: '#/components/examples/UnauthorizedError'
+        '403':
+          description: Forbidden - Utente non autorizzato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+              examples:
+                forbiddenError:
+                  $ref: '#/components/examples/ForbiddenError'
+        '422':
+          description: Unprocessable Entity - Verifiche CIE/NONCE non riuscite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                acceptMandateCIEValidationError:
+                  $ref: '#/components/examples/AcceptMandateCIEValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                internalServerError:
+                  $ref: '#/components/examples/InternalServerError'
+
+components:
+  parameters:
+    uidAuthFleet:
+      name: x-pagopa-pn-uid
+      in: header
+      description: User Identifier
+      required: true
+      schema:
+        type: string
+        maxLength: 64
+        pattern: ^[ -~]*$
+    cxIdAuthFleet:
+      name: x-pagopa-pn-cx-id
+      in: header
+      description: Customer/Receiver Identifier
+      required: true
+      schema:
+        type: string
+        maxLength: 64
+        pattern: ^[ -~]*$
+    cxTypeAuthFleet:
+      name: x-pagopa-pn-cx-type
+      in: header
+      description: Customer/Receiver Type
+      required: true
+      schema:
+        $ref: '#/components/schemas/cxTypeAuthFleet'
+    cxGroupsAuthFleet:
+      name: x-pagopa-pn-cx-groups
+      in: header
+      description: Customer Groups
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          maxLength: 1024
+          pattern: ^[ -~]*$
+    cxRoleAuthFleet:
+      name: x-pagopa-pn-cx-role
+      in: header
+      description: Ruolo (estratto da token di Self Care)
+      required: false
+      schema:
+        type: string
+        pattern: ^[ -~]*$
+        maxLength: 64
+    headerSourceChannel:
+      name: x-pagopa-pn-src-ch
+      in: header
+      description: User login source channel
+      required: true
+      schema:
+        type: string
+        maxLength: 5
+        pattern: B2B|WEB|TPP|IO|B2BPG
+    lollipopUserName:
+      name: x-pagopa-lollipop-user-name
+      in: header
+      description: lollipop user name
+      required: false
+      schema:
+        type: string
+    lollipopUserFamilyName:
+      name: x-pagopa-lollipop-user-family-name
+      in: header
+      description: lollipop user family name
+      required: false
+      schema:
+        type: string
+
+  schemas:
+    cxTypeAuthFleet:
+      type: string
+      enum:
+        - PG
+        - PF
+        - PA
+    delegateType:
+      type: string
+      enum:
+        - PG
+        - PF
+    WorkflowType:
+      description: It identifies the workflow type of the process of creation and acceptance of a mandate
+      type: string
+      enum:
+        - STANDARD
+        - REVERSE
+        - CIE
+    InternalMandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+        delegator:
+          type: string
+        delegate:
+          type: string
+        visibilityIds:
+          type: array
+          items:
+            type: string
+        datefrom:
+          type: string
+          description: ISO 8601 format
+        dateto:
+          type: string
+          description: ISO 8601 format
+        groups:
+          type: array
+          items:
+            type: string
+        workflowType:
+          $ref: '#/components/schemas/WorkflowType'
+        iuns:
+          type: array
+          items:
+            type: string
+    MandateCountsDto:
+      type: object
+      properties:
+        value:
+          type: integer
+          format: int32
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Available always, not required on mandate creation.
+          nullable: true
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          type: string
+          description: Available always, not required on mandate creation.
+          nullable: true
+          enum:
+            - pending
+            - active
+            - revoked
+            - rejected
+            - expired
+        visibilityIds:
+          type: array
+          description: Available always, not required on mandate creation.
+          nullable: true
+          items:
+            $ref: '#/components/schemas/OrganizationIdDto'
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        datefrom:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: ISO 8601 format
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    OrganizationIdDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 250
+          pattern: ^([\x20-\xFF]{1,250})$
+        uniqueIdentifier:
+          type: string
+          maxLength: 50
+          pattern: ^[ -~ ]*$
+      description: Available always, not required on mandate creation.
+      nullable: true
+    UserDto:
+      type: object
+      properties:
+        displayName:
+          type: string
+          format: password
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        firstName:
+          type: string
+          format: password
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        lastName:
+          type: string
+          format: password
+          maxLength: 80
+          pattern: '^([\x20-\xFF]{1,80})$'
+        companyName:
+          type: string
+          format: password
+          maxLength: 250
+          pattern: '^([\x20-\xFF]{1,250})$'
+        fiscalCode:
+          type: string
+          format: password
+          maxLength: 16
+          pattern: '^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$'
+        person:
+          type: boolean
+      description: Available only for request where requesting user is the delegator
+      nullable: true
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          pattern: ^[ -~ ]*$
+        name:
+          type: string
+          maxLength: 80
+          pattern: ^[ -~ ]*$
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          format: password
+          minLength: 11
+          maxLength: 16
+          pattern: "^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$"
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le
+            pagine di risultati successive a quella corrente. <br/>
+            Valorizzato solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    MandateByDelegatorRequestDto:
+      type: object
+      required:
+        - mandateId
+        - delegatorId
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+        delegatorId:
+          type: string
+          maxLength: 39
+          pattern: ^[ -~ ]*$
+    MandateDtoRequest:
+      type: object
+      properties:
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        datefrom:
+          type: string
+          description: Data in formato ISO 8601.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: Data in formato ISO 8601. Questo campo deve essere almeno un giorno dopo la data di crezione della delega.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+    MandateDtoResponse:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Identificativo univoco della delega
+          nullable: false
+    MandateCreationRequest:
+      type: object
+      required:
+        - aarQrCodeValue
+      properties:
+        aarQrCodeValue:
+          type: string
+          description: valore del token QR-Code presente sull'avviso di avvenuta ricezione
+          pattern: ^[ -~]*$
+          maxLength: 300
+    IoMandateDto:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Available always, not required on mandate creation.
+          nullable: true
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+          description: Available only for request where requesting user is the delegator
+          nullable: true
+        dateTo:
+          type: string
+          description: ISO 8601 format
+    MandateCreationResponse:
+      type: object
+      required:
+        - requestTTL
+        - mandate
+      properties:
+        requestTTL:
+          type: integer
+          format: int32
+        mandate:
+          $ref: '#/components/schemas/IoMandateDto'
+    CIEValidationData:
+      type: object
+      required:
+        - signedNonce
+        - nisData
+        - mrtdData
+      properties:
+        signedNonce:
+          type: string
+        nisData:
+          $ref: '#/components/schemas/NISData'
+        mrtdData:
+          $ref: '#/components/schemas/MRTDData'
+    NISData:
+      type: object
+      required:
+        - nis
+        - pub_key
+        - sod
+      properties:
+        nis:
+          type: string
+          nullable: false
+        pub_key:
+          type: string
+          nullable: false
+        sod:
+          type: string
+          nullable: false
+    MRTDData:
+      type: object
+      required:
+        - dg1
+        - dg11
+        - sod
+      properties:
+        dg1:
+          type: string
+          nullable: false
+        dg11:
+          type: string
+          nullable: false
+        sod:
+          type: string
+          nullable: false
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Unauthorized
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          type: integer
+          format: int32
+          example: 503
+          maximum: 600
+          minimum: 100
+          exclusiveMaximum: true
+        title:
+          description: A short, summary of the problem type. Written in english and readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: 2022-07-27T12:22:33.444Z
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+        - status
+        - errors
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: 'body.order.item[2].quantity'
+          type: string
+        detail:
+          description: A human readable explanation specific to this occurrence of the problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+        - code
+
+  examples:
+    UnauthorizedError:
+      summary: Example of a 401 Unauthorized response
+      value:
+        message: Unauthorized
+    ForbiddenError:
+      summary: Example of a 403 Forbidden response
+      value:
+        message: User is not authorized to access this resource with an explicit deny
+    CreateMandateInvalidQRError:
+      summary: Esempio di risposta 400 in caso di QRCode non valido
+      value:
+        type: "GENERIC_ERROR"
+        status: 400
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_MANDATE_AARQRCODE_NOT_VALID"
+            element: null
+            detail: "none"
+    CreateMandateQRNotFoundError:
+      summary: Esempio di risposta 400 in caso di QRCode non trovato
+      value:
+        type: "GENERIC_ERROR"
+        status: 400
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_MANDATE_QR_TOKEN_NOT_FOUND"
+            element: null
+            detail: "none"
+    CreateMandateConflictError:
+      summary: Esempio di risposta 409 in caso di delega già esistente
+      value:
+        type: "GENERIC_ERROR"
+        status: 409
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:de97fe15-f2b9-46c6-a029-1c18c9baec0c"
+        timestamp: "2025-09-15T14:53:22.304Z"
+        errors:
+          - code: "PN_MANDATE_ALREADYEXISTS"
+            element: null
+            detail: "none"
+    InternalServerError:
+      summary: Esempio di risposta 500 in caso di errore generico
+      value:
+        type: "GENERIC_ERROR"
+        status: 500
+        title: "Unhandled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_GENERIC_ERROR"
+            element: null
+            detail: "none"
+    MissingCIEValidationDataError:
+      summary: Esempio di risposta 400 in caso di dati CIE mancanti
+      value:
+        type: "GENERIC_ERROR"
+        status: 400
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_GENERIC_INVALIDPARAMETER"
+            element: "nisData.nis"
+            detail: "must not be null"
+    InvalidCIEValidationDataError:
+      summary: Esempio di risposta 400 in caso di dati CIE non validi
+      value:
+        type: "GENERIC_ERROR"
+        status: 400
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_MANDATE_BADREQUEST"
+            element: null
+            detail: "Invalid Base64 encoding in field: nisData.nis"
+    AcceptMandateCIEValidationError:
+      summary: Esempio di risposta 422 in caso di errore di validazione CIE
+      value:
+        type: "GENERIC_ERROR"
+        status: 422
+        title: "Handled error"
+        detail: "See logs for details in PN-MANDATE"
+        traceId: "trace_id:f474bb7c-e0cd-46b0-9ddf-8b0006fd33d4"
+        timestamp: "2025-09-15T14:49:27.179Z"
+        errors:
+          - code: "PN_MANDATE_CIE_VALIDATION_ERROR"
+            element: null
+            detail: "none"

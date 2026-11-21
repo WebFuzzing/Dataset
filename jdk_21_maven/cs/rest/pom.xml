@@ -24,6 +24,7 @@
         <module>flight-search-api</module>
         <module>pn-paper-tracker</module>
         <module>gravitee</module>
+        <module>pn-mandate</module>
     </modules>
 
 

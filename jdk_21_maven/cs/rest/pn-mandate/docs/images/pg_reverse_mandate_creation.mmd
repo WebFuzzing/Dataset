@@ -1,0 +1,10 @@
+sequenceDiagram
+    autonumber
+    PG->>SeND:  POST /mandate/api/v1/reverse-mandate
+    SeND-->>PG: identificativo delega creata (mandateId)
+    PG->>SeND:  PATCH /mandate/api/v1/mandate/{mandateId}/accept
+    SeND-->>PG: HTTP 204
+
+
+    
+

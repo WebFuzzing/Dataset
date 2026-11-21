@@ -1,0 +1,899 @@
+openapi: 3.0.1
+info:
+  title: >-
+    ${stageVariables.ProjectName}-${stageVariables.MicroServiceUniqueName}-${stageVariables.IntendedUsage}
+  version: 0TdeKm94ReJX/1lrdEw/RQvHEL/6vzFahdZ4mQhniwQ=
+servers:
+  - url: https://${stageVariables.DnsName}/{basePath}
+    variables:
+      basePath:
+        default: /${stageVariables.ServiceApiPath}
+    x-amazon-apigateway-endpoint-configuration:
+      disableExecuteApiEndpoint: true
+paths:
+  /api/v1/mandate:
+    post:
+      tags:
+        - mandate-service
+      summary: Crea una nuova delega restituendone l'identificativo in caso di successo
+      operationId: createMandate
+      x-api-permissions:
+        - BASE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDto'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /api/v1/mandate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandate/{mandateId}/accept:
+    patch:
+      tags:
+        - mandate-service
+      summary: Accettazione di una delega
+      operationId: acceptMandate
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: >-
+              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptRequestDto'
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/mandate/{mandateId}/accept API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/accept
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandate/{mandateId}/update:
+    patch:
+      tags:
+        - mandate-service
+      summary: Update a mandate
+      operationId: updateMandate
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRequestDto'
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/mandate/{mandateId}/update API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/update
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandate/{mandateId}/reject:
+    patch:
+      tags:
+        - mandate-service
+      summary: Rifiuta il conferimento di una delega
+      operationId: rejectMandate
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: >-
+              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/mandate/{mandateId}/reject API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/reject
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandate/{mandateId}/revoke:
+    patch:
+      tags:
+        - mandate-service
+      summary: Annulla/Ritira una delega
+      operationId: revokeMandate
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: mandateId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 36
+            pattern: >-
+              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+      responses:
+        '204':
+          description: Nessun contenuto
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/revoke
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/mandate/{mandateId}/revoke API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandate/{mandateId}/revoke
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.path.mandateId: method.request.path.mandateId
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandates-by-delegate:
+    get:
+      tags:
+        - mandate-service
+      summary: >-
+        Restituisce la lista filtrata delle deleghe per delegato filtrate per il
+        filtro passato come parametro. Se non viene impostato nessun filtro,
+        restituisce tutte le deleghe attive e in attesa (status=pending)
+      operationId: listMandatesByDelegate_1
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - pending
+              - active
+              - revoked
+              - rejected
+              - expired
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandates-by-delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    post:
+      tags:
+        - mandate-service
+      summary: >-
+        Restituisce la lista delle deleghe filtrata per stato, gruppi e
+        deleganti(taxId)
+      operationId: searchMandatesByDelegate
+      x-api-permissions:
+        - BASE
+      parameters:
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: number
+            maximum: 50
+        - name: nextPageKey
+          in: query
+          schema:
+            type: string
+            maxLength: 4096
+            pattern: ^[ -~ ]*$
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchMandateRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchMandateResponseDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandates-by-delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+    options:
+      operationId: Options for /api/v1/mandates-by-delegate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandates-by-delegate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/mandates-by-delegator:
+    get:
+      tags:
+        - mandate-service
+      summary: >-
+        Restituisce la lista di tutte le deleghe pending o attive per un
+        delegante
+      operationId: listMandatesByDelegator_1
+      x-api-permissions:
+        - BASE
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MandateDto'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandates-by-delegator
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /api/v1/mandates-by-delegator API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/mandates-by-delegator
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+  /api/v1/reverse-mandate:
+    post:
+      tags:
+        - mandate-reverse-service
+      summary: >-
+        Crea una delega inversa (a richiederla è il delegato). Se ha successo,
+        restituisce i dati della delega creata
+      operationId: createReverseMandate
+      x-api-permissions:
+        - REVERSE_MANDATE
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MandateDtoRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MandateDtoResponse'
+        '400':
+          description: Richiesta Errata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+      security:
+        - pn-auth-fleet_b2bAuthorizer_openapi: []
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/reverse-mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters:
+          integration.request.header.x-pagopa-pn-cx-id: context.authorizer.cx_id
+          integration.request.header.x-pagopa-pn-cx-role: context.authorizer.cx_role
+          integration.request.header.x-pagopa-pn-uid: context.authorizer.uid
+          integration.request.header.x-pagopa-pn-jti: context.authorizer.cx_jti
+          integration.request.header.x-pagopa-pn-cx-type: context.authorizer.cx_type
+          integration.request.header.x-pagopa-pn-cx-groups: context.authorizer.cx_groups
+          integration.request.header.x-pagopa-pn-src-ch-details: context.authorizer.sourceChannelDetails
+          integration.request.header.x-pagopa-pn-src-ch: context.authorizer.sourceChannel
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+      parameters: []
+    options:
+      operationId: Options for /api/v1/reverse-mandate API CORS
+      x-amazon-apigateway-integration:
+        uri: >-
+          http://${stageVariables.ApplicationLoadBalancerDomain}:8080/${stageVariables.ServiceApiPath}/api/v1/reverse-mandate
+        connectionId: ${stageVariables.NetworkLoadBalancerLink}
+        httpMethod: ANY
+        requestParameters: {}
+        passthroughBehavior: when_no_match
+        connectionType: VPC_LINK
+        timeoutInMillis: 29000
+        type: http_proxy
+components:
+  parameters:
+    cxRoleAuthFleet:
+      name: x-pagopa-pn-cx-role
+      in: header
+      description: Ruolo (estratto da token di Self Care)
+      required: false
+      schema:
+        type: string
+        pattern: ^[ -~]*$
+        maxLength: 64
+  schemas:
+    MandateDto:
+      type: object
+      properties:
+        mandateId:
+          description: >-
+            Identificativo della delega, non richiesto alla creazione della
+            delega.
+          oneOf:
+            - type: string
+              maxLength: 36
+              pattern: >-
+                ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+            - type: 'null'
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        delegate:
+          $ref: '#/components/schemas/UserDto'
+        status:
+          description: Stato della delega, non richiesto alla creazione della delega.
+          oneOf:
+            - type: string
+              enum:
+                - pending
+                - active
+                - revoked
+                - rejected
+                - expired
+            - type: 'null'
+        visibilityIds:
+          description: Enti mittenti per cui è valida la delega
+          oneOf:
+            - type: array
+              items:
+                $ref: '#/components/schemas/OrganizationIdDto'
+            - type: 'null'
+        verificationCode:
+          description: >-
+            Codice di verifica della delega. Disponibile solo per le richieste
+            ricevute dal delegante.
+          oneOf:
+            - type: string
+              maxLength: 5
+              pattern: ^[0-9]*$
+            - type: 'null'
+        datefrom:
+          type: string
+          description: Data in formato ISO 8601
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: Data in formato ISO 8601
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        groups:
+          type: array
+          description: Gruppi di utenti a cui la delega è concessa
+          items:
+            $ref: '#/components/schemas/GroupDto'
+    OrganizationIdDto:
+      description: Dati degli enti mittenti
+      oneOf:
+        - type: object
+          properties:
+            name:
+              type: string
+              maxLength: 250
+              pattern: ^([\x20-\xFF]{1,250})$
+            uniqueIdentifier:
+              type: string
+              maxLength: 50
+              pattern: ^[ -~ ]*$
+        - type: 'null'
+    UserDto:
+      description: Dati utente
+      oneOf:
+        - type: object
+          properties:
+            displayName:
+              type: string
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            firstName:
+              type: string
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            lastName:
+              type: string
+              maxLength: 80
+              pattern: ^([\x20-\xFF]{1,80})$
+            companyName:
+              type: string
+              maxLength: 250
+              pattern: ^([\x20-\xFF]{1,250})$
+            fiscalCode:
+              type: string
+              maxLength: 16
+              pattern: >-
+                ^([A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})|([0-9]{11})$
+            person:
+              type: boolean
+        - type: 'null'
+    GroupDto:
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          pattern: ^[ -~ ]*$
+        name:
+          type: string
+          maxLength: 80
+          pattern: ^[ -~ ]*$
+    AcceptRequestDto:
+      type: object
+      properties:
+        verificationCode:
+          type: string
+          maxLength: 5
+          pattern: ^[0-9]*$
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+    UpdateRequestDto:
+      type: object
+      properties:
+        groups:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 39
+            pattern: ^[ -~ ]*$
+    SearchMandateRequestDto:
+      type: object
+      properties:
+        taxId:
+          type: string
+          minLength: 11
+          maxLength: 16
+          pattern: >-
+            ^[A-Z]{6}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1}$|^(IT)?[0-9]{11}$
+        groups:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+            pattern: ^[ -~ ]*$
+        status:
+          type: array
+          items:
+            type: string
+            maxLength: 10
+            pattern: ^[A-Za-z]+$
+    SearchMandateResponseDto:
+      type: object
+      properties:
+        resultsPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/MandateDto'
+        moreResult:
+          description: Indica se sono presenti ulteriori pagine di risultati
+          type: boolean
+        nextPagesKey:
+          description: >-
+            Elenco, non esaustivo, delle chiavi da usare per richiedere le 
+            pagine di risultati successive a quella corrente. <br/> Valorizzato
+            solo se il campo __moreResult__ ha valore __true__.
+          type: array
+          items:
+            type: string
+    MandateDtoRequest:
+      type: object
+      properties:
+        delegator:
+          $ref: '#/components/schemas/UserDto'
+        datefrom:
+          type: string
+          description: >-
+            Data in formato ISO 8601. Questo campo è al momento ignorato e
+            automaticamente impostato a 120  giorni prima della creazione della
+            delega.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+        dateto:
+          type: string
+          description: >-
+            Data in formato ISO 8601. Questo campo deve essere almeno un giorno
+            dopo la data di crezione della delega.
+          maxLength: 10
+          pattern: ^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$
+    MandateDtoResponse:
+      type: object
+      properties:
+        mandateId:
+          type: string
+          maxLength: 36
+          pattern: >-
+            ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+          description: Identificativo univoco della delega
+          nullable: false
+    ProblemError:
+      properties:
+        code:
+          description: Internal code of the error, in human-readable format
+          example: >-
+            PN_PARAMETER_TOO_LONG | PN_PARAMETER_TOO_SHORT | PN_DUPLICATE_ENTRY
+            | etc...
+          type: string
+        element:
+          description: Parameter or request body field name for validation error
+          example: body.order.item[2].quantity
+          type: string
+        detail:
+          description: >-
+            A human readable explanation specific to this occurrence of the
+            problem.
+          example: Parameter not valid
+          maxLength: 1024
+          type: string
+      required:
+        - code
+    Problem:
+      properties:
+        type:
+          description: URI reference of type definition
+          type: string
+        status:
+          description: >-
+            The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          type: number
+          example: 503
+          maximum: 600
+          minimum: 100
+          exclusiveMaximum: true
+        title:
+          description: >-
+            A short, summary of the problem type. Written in english and
+            readable
+          example: Service Unavailable
+          maxLength: 64
+          pattern: ^[ -~]{0,64}$
+          type: string
+        detail:
+          description: A human readable explanation of the problem.
+          example: Request took too long to complete.
+          maxLength: 4096
+          pattern: ^.{0,4096}$
+          type: string
+        traceId:
+          description: Internal support identifier associated to error
+          example: 123e4567-e89b-12d3-a456-426614174000
+          type: string
+        timestamp:
+          description: date and time referred to UTC
+          example: '2022-07-27T12:22:33.444Z'
+          type: string
+          format: date-time
+        errors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ProblemError'
+      required:
+        - status
+        - errors
+  responses: {}
+  securitySchemes:
+    pn-auth-fleet_b2bAuthorizer_openapi:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        authorizerUri: >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:pn-b2bAuthorizerLambda/invocations
+        authorizerResultTtlInSeconds: 60
+        identitySource: method.request.header.Authorization
+        type: request
+tags:
+  - name: HealthCheck
+    description: Invocazioni per sapere lo stato del microservizio
+  - name: mandate-service
+    description: Servizi per gestione delega
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+  BAD_REQUEST_PARAMETERS:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_PARAMETERS",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+  BAD_REQUEST_BODY:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+    responseTemplates:
+      application/json: >-
+        {"status": 400, "title": "VALIDATION ERROR", "traceId":
+        "$context.xrayTraceId", "errors": [ { "code": "PN_INVALID_BODY",
+        "detail": "Validation errors: $context.error.validationErrorString" } ]}
+x-amazon-apigateway-request-validators:
+  basic:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+x-amazon-apigateway-request-validator: basic
