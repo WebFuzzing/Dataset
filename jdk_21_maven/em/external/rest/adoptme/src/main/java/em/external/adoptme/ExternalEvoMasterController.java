@@ -69,15 +69,17 @@ public class ExternalEvoMasterController extends ExternalSutController {
             timeoutSeconds = Integer.parseInt(args[3]);
         }
 
-        String command = "java";
+        String command;
         if (args.length > 4) {
             command = args[4];
+        } else {
+            command = getJavaCommandFromEnvironmentVariablesUsingJDK(21);
         }
 
         ExternalEvoMasterController controller =
                 new ExternalEvoMasterController(controllerPort, jarLocation, sutPort, timeoutSeconds, command);
 
-        controller.setNeedsJdk17Options(true);
+        controller.setNeedsOptionsForJdk21(true);
 
         InstrumentedSutStarter starter = new InstrumentedSutStarter(controller);
 
