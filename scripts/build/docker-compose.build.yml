@@ -13,7 +13,7 @@ services:
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
-      - ${JDK_8_MVN_FOLDER}:/build/jdk_8_maven
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_8_maven
     command:
       - bash
@@ -74,7 +74,7 @@ services:
       - ${HOME}/.m2:/root/.m2
       - gradle-cache-jdk8:/root/.gradle
       - ${DIST_FOLDER}:/dist
-      - ${JDK_8_GRADLE_FOLDER}:/build/jdk_8_gradle
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_8_gradle
     command:
       - bash
@@ -98,7 +98,7 @@ services:
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
-      - ${JDK_11_MVN_FOLDER}:/build/jdk_11_maven
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_11_maven
     command:
       - bash
@@ -133,7 +133,7 @@ services:
       - ${HOME}/.m2:/root/.m2
       - gradle-cache-jdk11:/root/.gradle
       - ${DIST_FOLDER}:/dist
-      - ${JDK_11_GRADLE_FOLDER}:/build/jdk_11_gradle
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_11_gradle
     command:
       - bash
@@ -159,7 +159,7 @@ services:
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
-      - ${JDK_17_MVN_FOLDER}:/build/jdk_17_maven
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_17_maven
     command:
       - bash
@@ -195,7 +195,7 @@ services:
       - ${HOME}/.m2:/root/.m2
       - gradle-cache-jdk17:/root/.gradle
       - ${DIST_FOLDER}:/dist
-      - ${JDK_17_GRADLE_FOLDER}:/build/jdk_17_gradle
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_17_gradle
     command:
       - bash
@@ -221,7 +221,7 @@ services:
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
-      - ${JDK_21_MVN_FOLDER}:/build/jdk_21_maven
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_21_maven
     command:
       - bash
@@ -262,7 +262,7 @@ services:
       - ${HOME}/.m2:/root/.m2
       - gradle-cache-jdk21:/root/.gradle
       - ${DIST_FOLDER}:/dist
-      - ${JDK_21_GRADLE_FOLDER}:/build/jdk_21_gradle
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_21_gradle
     command:
       - bash
@@ -288,7 +288,7 @@ services:
     volumes:
       - ${HOME}/.m2:/root/.m2
       - ${DIST_FOLDER}:/dist
-      - ${JDK_25_MVN_FOLDER}:/build/jdk_25_maven
+      - ${ROOT_FOLDER}:/build
     working_dir: /build/jdk_25_maven
     command:
       - bash
